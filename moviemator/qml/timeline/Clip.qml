@@ -535,6 +535,95 @@ Rectangle {
 //        }
 //    }
 
+    // Add -Start
+    // 可以一直显示裁剪时候的红色边界
+    // ①专门用来显示在左边裁剪的边界
+    Rectangle {
+        id: trimInBracket
+        anchors.left: parent.left
+        anchors.leftMargin: 0
+        height: parent.height
+        width: 5
+        color: "red"
+        visible: false
+        
+        Rectangle {
+            id: trimInBracketTop
+            anchors.top: parent.top
+            anchors.left: parent.right
+            height: parent.width
+            width: parent.width
+            color: parent.color
+        }
+
+        Rectangle {
+            id: trimInBracketBottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.right
+            height: parent.width
+            width: parent.width
+            color: parent.color
+        }
+    }
+
+    function showTrimInBracket(){
+        trimInBracket.visible = true
+        trimInBracket.z = 1
+        trimInBracketTop.z = 1
+        trimInBracketBottom.z = 1
+    }
+
+    function hideTrimInBracket(){
+        trimInBracket.visible = false
+        trimInBracket.z = 0
+        trimInBracketTop.z = 0
+        trimInBracketBottom.z = 0
+    }
+    
+    // ②专门用来显示在右边裁剪的边界
+    Rectangle {
+        id: trimOutBracket
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        height: parent.height
+        width: 5
+        color: 'red'
+        visible: false
+
+        Rectangle {
+            id: trimOutBracketTop
+            anchors.top: parent.top
+            anchors.right: parent.left
+            height: parent.width
+            width: parent.width
+            color: parent.color
+        }
+
+        Rectangle {
+            id: trimOutBracketBottom
+            anchors.bottom: parent.bottom
+            anchors.right: parent.left
+            height: parent.width
+            width: parent.width
+            color: parent.color
+        }
+    }
+
+    function showTrimOutBracket(){
+        trimOutBracket.visible = true
+        trimOutBracket.z = 1
+        trimOutBracketTop.z = 1
+        trimOutBracketBottom.z = 1
+    }
+
+    function hideTrimOutBracket(){
+        trimOutBracket.visible = false
+        trimOutBracket.z = 0
+        trimOutBracketTop.z = 0
+        trimOutBracketBottom.z = 0
+    }
+    // Add -End
+
     Rectangle {
         id: trimIn
         enabled: !isBlank && !isTransition
@@ -542,7 +631,7 @@ Rectangle {
         anchors.leftMargin: 0
         height: parent.height
         width: 5
-        color: isAudio? 'green' : 'lawngreen'
+        // color: isAudio? 'green' : 'lawngreen'
         opacity: 0
         Drag.active: trimInMouseArea.drag.active
         Drag.proposedAction: Qt.MoveAction
@@ -561,15 +650,24 @@ Rectangle {
                 startX = mapToItem(null, x, y).x
                 originalX = 0 // reusing originalX to accumulate delta for bubble help
                 parent.anchors.left = undefined
+                
+                // Add 显示边界框
+                showTrimInBracket()
             }
             onReleased: {
                 root.stopScrolling = false
                 parent.anchors.left = clipRoot.left
                 clipRoot.trimmedIn(clipRoot)
                 parent.opacity = 0
+
+                // Add 隐藏边界框
+                hideTrimInBracket()
             }
             onPositionChanged: {
                 if (mouse.buttons === Qt.LeftButton) {
+                    // Add 显示边界框
+                    showTrimInBracket()
+
                     var newX = mapToItem(null, x, y).x
                     var delta = Math.round((newX - startX) / timeScale)
 
@@ -582,10 +680,11 @@ Rectangle {
                     }
                 }
             }
-            onEntered: parent.opacity = 0.5
-            onExited: parent.opacity = 0
+            onEntered: showTrimInBracket()  // parent.opacity = 0.5
+            onExited: hideTrimInBracket()   // parent.opacity = 0
         }
     }
+
     Rectangle {
         id: trimOut
         enabled: !isBlank && !isTransition
@@ -593,7 +692,7 @@ Rectangle {
         anchors.rightMargin: 0
         height: parent.height
         width: 5
-        color: 'red'
+        // color: 'red'
         opacity: 0
         Drag.active: trimOutMouseArea.drag.active
         Drag.proposedAction: Qt.MoveAction
@@ -612,14 +711,23 @@ Rectangle {
                 duration = clipDuration
                 originalX = 0 // reusing originalX to accumulate delta for bubble help
                 parent.anchors.right = undefined
+
+                // Add 显示边界框
+                showTrimOutBracket()
             }
             onReleased: {
                 root.stopScrolling = false
                 parent.anchors.right = clipRoot.right
                 clipRoot.trimmedOut(clipRoot)
+
+                // Add 隐藏边界框
+                hideTrimOutBracket()
             }
             onPositionChanged: {
                 if (mouse.buttons === Qt.LeftButton) {
+                    // Add 显示边界框
+                    showTrimOutBracket()
+
                     var newDuration = Math.round((parent.x + parent.width) / timeScale)
                     var delta = duration - newDuration
                     if (Math.abs(delta) > 0) {
@@ -630,8 +738,8 @@ Rectangle {
                     }
                 }
             }
-            onEntered: parent.opacity = 0.5
-            onExited: parent.opacity = 0
+            onEntered: showTrimOutBracket() // parent.opacity = 0.5
+            onExited: hideTrimOutBracket()  // parent.opacity = 0
         }
     }
 
