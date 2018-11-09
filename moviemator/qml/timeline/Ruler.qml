@@ -9,7 +9,7 @@ Rectangle {
 
     
     // Add 每秒有24帧。
-    property int frames: 24
+    property real frames: profile.fps
 
     // Add 每个刻度值之间分成4份
     property int interval: 4
