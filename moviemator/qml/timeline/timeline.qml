@@ -317,9 +317,10 @@ Rectangle {
                     verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
                     Ruler {
                         id: ruler
-                        width: (tracksContainer.width < width) ? width : tracksContainer.width
-                        index: index
+                        width: scrollView.width
                         timeScale: multitrack.scaleFactor
+                        wholeWidth: (tracksContainer.width < width) ? width : tracksContainer.width
+                        startX: scrollView.flickableItem.contentX
                     }
                 }
                 ScrollView {
@@ -666,7 +667,7 @@ Rectangle {
         }
         onContentXChanged:
         {
-            rulerScrollView.flickableItem.contentX =  scrollView.flickableItem.contentX
+//            rulerScrollView.flickableItem.contentX =  scrollView.flickableItem.contentX
         }
     }
 
