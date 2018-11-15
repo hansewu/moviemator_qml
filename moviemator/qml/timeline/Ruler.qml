@@ -9,7 +9,7 @@ Rectangle {
 
     property real frames: profile.fps
 
-    property real minimalStepSize: 20
+    property real minimalStepSize: 50 // 太小了刷新比较卡
     property real stepSize: frames * timeScale
     property real ratio: stepSize / minimalStepSize
     //刻度分割和合并因子：缩放时刻度宽度会变化，刻度太窄合并，刻度太宽分割刻度。。。1/8、1/4、1/2、1、2、4、8。。。
