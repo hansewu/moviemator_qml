@@ -319,7 +319,6 @@ Rectangle {
                         id: ruler
                         width: scrollView.width
                         timeScale: multitrack.scaleFactor
-                        wholeWidth: (tracksContainer.width < width) ? width : tracksContainer.width
                         startX: scrollView.flickableItem.contentX
                     }
                 }

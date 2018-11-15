@@ -4,47 +4,24 @@ import QtQuick.Controls 1.0
 
 Rectangle {
     //property int stepSize: 34
-    property real wholeWidth: 0
     property real startX: 0
     property real timeScale: 1.0
 
-    
-    // Add 每秒有24帧。
     property real frames: profile.fps
 
-
-
-
-//    property real stepSize: wholeWidth /(frames * timeScale)
-    property real minimalStepSize: 34
+    property real minimalStepSize: 20
     property real stepSize: frames * timeScale
     property real ratio: stepSize / minimalStepSize
-    property real stepRatio: 1 / Math.pow(2, Math.floor(Math.log(ratio) / Math.LN2))
-
-//    property real stepSizeFactor:  Math.floor(ratio) >= 2 ? Math.floor(ratio) - Math.floor(ratio) % 2
-
+    //刻度分割和合并因子：缩放时刻度宽度会变化，刻度太窄合并，刻度太宽分割刻度。。。1/8、1/4、1/2、1、2、4、8。。。
+    property real stepRatio: 1 / Math.pow(2, Math.floor(Math.log(ratio) / Math.LN2)) //负数的向下取整可能有问题
+    //开始画刻度的位置
     property real markStartX: Math.ceil(startX / (stepSize*stepRatio)) * (stepSize*stepRatio) - startX
 
-    /*
-     * Add 用来调整时间刻度每隔几个显示一个值；
-     * 需要保证每4个刻度显示一个值；
-     * 如果刻度很大，那么每1或2个刻度可以显示一个值；
-     * 每3个刻度不显示值。
-     */
 
-    // Add 每个刻度值之间分成4份
+    //显示长刻度的间隔
     property int interval: 4
+    //显示时间的间隔
     property real timecodeInterval: 1/stepRatio > 4 ? Math.round(1/stepRatio) : 4
-
-
-    property int factor: (Math.ceil(interval / timeScale) % interval == 0 ||
-                          Math.ceil(interval / timeScale) <= 2) ?
-                             Math.ceil(interval / timeScale) :
-                             (Math.ceil(interval / timeScale) + interval -
-                              Math.ceil(interval / timeScale) % interval)
-
-
-
 
     SystemPalette { id: activePalette }
 
@@ -106,7 +83,7 @@ Rectangle {
             Label {
                 color: activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio + 2
-                text: timeline.timecode((startX + markStartX + index * stepSize * stepRatio) / timeScale)    // timeline.timecode(index * stepSize * 4 / timeScale)
+                text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
                 font.pointSize: 7.5
                 visible: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval) == 0
             }
