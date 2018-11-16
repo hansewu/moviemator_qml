@@ -8,4 +8,17 @@ Metadata {
     mlt_service: "loudness"
     qml: "ui.qml"
     isClipOnly: true
+    keyframes {
+        allowAnimateIn: true
+        allowAnimateOut: true
+        simpleProperties: ['program']
+        parameters: [
+            Parameter {
+                name: qsTr('program')
+                property: 'program'
+                isSimple: true
+                isCurve: true
+            }
+        ]
+    }
 }

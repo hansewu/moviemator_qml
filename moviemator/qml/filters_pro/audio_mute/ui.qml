@@ -8,7 +8,7 @@ Item {
     Component.onCompleted: {
         if (filter.isNew) {
             // Set default parameter values
-           filter.set(gainParameter, 0)
+            filter.set(gainParameter, 0)
         }
     }
 }

@@ -8,26 +8,18 @@ Item {
     property var defaultParameters: ['gamma_r', 'gamma_g', 'gamma_b', 'gain_r', 'gain_g', 'gain_b']
     property double gammaFactor: 2.0
     property double gainFactor: 2.0
-    property double gammaKeyValue: 0
-    property string animValue:""
- //   property bool bReadKeyValue: falses
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
     
     function setControls() {
-
-
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-gamma_r");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("gamma_r");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-gamma_r");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-gamma_r");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "gamma_r");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "gamma_r");
                 var sliderValue = keyValue/gammaFactor*100.0;
                 var gammaValue = (1.0 - sliderValue/100.0) * gammaFactor;
                 var gainValue = sliderValue/100.0 * gainFactor;
@@ -43,53 +35,11 @@ Item {
             }
             filter.combineAllKeyFramePara();
 
-            contrastSlider.value = filter.getKeyValueOnProjectOnIndex(0, "anim-gamma_r") / gammaFactor * 100.0
+            contrastSlider.value = filter.getKeyValueOnProjectOnIndex(0, "gamma_r") / gammaFactor * 100.0
         }
         else
         {
             contrastSlider.value = filter.getDouble("gamma_r") / gammaFactor * 100.0
-        }
-    }
-
-    function setKeyFrameValue(bKeyFrame)
-    {
-        var nFrame = keyFrame.getCurrentFrame();
-        var contrastValue = contrastSlider.value;
-        var gammaValue = (1.0 - contrastValue/100.0) * gammaFactor;
-        var gainValue = contrastValue/100.0 * gainFactor;
-        if(bKeyFrame)
-        {
-            filter.setKeyFrameParaValue(nFrame,"gamma_r", gammaValue.toString() );
-            filter.setKeyFrameParaValue(nFrame,"gamma_g", gammaValue.toString() )
-            filter.setKeyFrameParaValue(nFrame,"gamma_b", gammaValue.toString() )
-
-            filter.setKeyFrameParaValue(nFrame,"gain_r", gainValue.toString() )
-            filter.setKeyFrameParaValue(nFrame,"gain_g", gainValue.toString() )
-            filter.setKeyFrameParaValue(nFrame,"gain_b", gainValue.toString() )
-
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            //Todo, delete the keyframe date of the currentframe
-            filter.removeKeyFrameParaValue(nFrame);
-            if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("gamma_r","")
-                filter.anim_set("gamma_g","")
-                filter.anim_set("gamma_b","")
-                filter.anim_set("gain_r","")
-                filter.anim_set("gain_g","")
-                filter.anim_set("gain_b","")
-            }
-            filter.set("gamma_r", gammaValue);
-            filter.set("gamma_g", gammaValue);
-            filter.set("gamma_b", gammaValue);
-
-            filter.set("gain_r",  gainValue);
-            filter.set("gain_g",  gainValue);
-            filter.set("gain_b",  gainValue);
-
         }
     }
     
@@ -100,7 +50,7 @@ Item {
             filter.set("gamma_g", 1.0);
             filter.set("gamma_b", 1.0);
             filter.set("gain_r", 1.0);
-            filter.set("gain_g", 1.0);	
+            filter.set("gain_g", 1.0);
             filter.set("gain_b", 1.0);
             filter.savePreset(defaultParameters)
         }
@@ -115,15 +65,16 @@ Item {
         KeyFrame{
         	id: keyFrame
         	Layout.columnSpan:3
-       // 	currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-               setKeyFrameValue(bKeyFrame)
-            }
-
             onLoadKeyFrame:
             {
-                 gammaKeyValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gamma_r");
+                var gammaKeyValue = -1
+                console.log("onLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
+                console.log("gammaValue1 is:")
+                console.log(gammaKeyValue)
+                gammaKeyValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gamma_r");
+                console.log("gammaValue2 is:")
+                console.log(gammaKeyValue)
+
                 if(gammaKeyValue != -1.0)
                 {
             //    gammaValue = (1.0 - contrastValue/100.0) * gammaFactor;
@@ -144,10 +95,9 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
-            enabled: bEnableControls
             Layout.columnSpan: 2
             parameters: defaultParameters
             onPresetSelected: {
@@ -158,30 +108,50 @@ Item {
         Label {
             text: qsTr('Contrast')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: contrastSlider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 100
             decimals: 1
             spinnerWidth: 80
             suffix: ' %'
             onValueChanged: {
-                //var v = value / 100.0
-              //  if(bReadKeyValue)
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                var nFrame = keyFrame.getCurrentFrame();
+                var contrastValue = contrastSlider.value;
+                var gammaValue = (1.0 - contrastValue/100.0) * gammaFactor;
+                var gainValue = contrastValue/100.0 * gainFactor;
+                if(keyFrame.bKeyFrame)
+                {
+                    filter.setKeyFrameParaValue(nFrame,"gamma_r", gammaValue.toString() );
+                    filter.setKeyFrameParaValue(nFrame,"gamma_g", gammaValue.toString() )
+                    filter.setKeyFrameParaValue(nFrame,"gamma_b", gammaValue.toString() )
 
+                    filter.setKeyFrameParaValue(nFrame,"gain_r", gainValue.toString() )
+                    filter.setKeyFrameParaValue(nFrame,"gain_g", gainValue.toString() )
+                    filter.setKeyFrameParaValue(nFrame,"gain_b", gainValue.toString() )
+
+                    filter.combineAllKeyFramePara();
+                }
+                else
+                {
+                    //Todo, delete the keyframe date of the currentframe
+                    //filter.removeKeyFrameParaValue(nFrame);
+                    filter.set("gamma_r", gammaValue);
+                    filter.set("gamma_g", gammaValue);
+                    filter.set("gamma_b", gammaValue);
+
+                    filter.set("gain_r",  gainValue);
+                    filter.set("gain_g",  gainValue);
+                    filter.set("gain_b",  gainValue);
+
+                }
+                
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: 
-            {
-                contrastSlider.value = 50
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: contrastSlider.value = 50
         }
 
         Item {

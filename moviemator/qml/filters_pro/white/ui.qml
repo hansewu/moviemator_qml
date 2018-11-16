@@ -7,58 +7,22 @@ import QtQuick.Controls.Styles 1.1
 
 Item {
     property var defaultParameters: []
-    property var neutralParam: ""
-    property var tempParam: ""
+    property var neutralParam
+    property var tempParam
     property var defaultNeutral: "#7f7f7f"
     property var defaultTemp: 6500.0
     property var tempScale: 15000.0
     width: 300
     height: 250
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
-
-    function setKeyFrameValue(bKeyFrame)
-     {
-         var nFrame = keyFrame.getCurrentFrame();
-         if(bKeyFrame)
-         {
-
-             var whiteValue = colorPicker.value;
-
-             filter.setKeyFrameParaValue(nFrame,neutralParam, whiteValue.toString() )
-
-             whiteValue = tempslider.value;
-             filter.setKeyFrameParaValue(nFrame, tempParam, (whiteValue / tempScale).toString())
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-             {
-                filter.anim_set(neutralParam,defaultNeutral)
-                filter.anim_set(tempParam,(defaultTemp / tempScale).toString())
-                
-             }
-
-             filter.set(neutralParam, ""+colorPicker.value);
-             filter.set(tempParam, tempslider.value/tempScale);
-
-         }
-     }
 
     Component.onCompleted: {
         if (filter.get("mlt_service").indexOf("movit.") == 0 ) {
             // Movit filter
-            console.log("white balance: movit");
             neutralParam = "neutral_color"
             tempParam = "color_temperature"
             tempScale = 1;
         } else {
             // Frei0r filter
-            console.log("white balance: Frei0r")
             neutralParam = "0"
             tempParam = "1"
             tempScale = 15000.0
@@ -73,15 +37,15 @@ Item {
             filter.savePreset(defaultParameters)
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-"+tempParam);
+        var keyFrameCount = filter.getKeyFrameCountOnProject(tempParam);
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
                 console.log("1.....")
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-"+tempParam);
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-"+tempParam);
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, tempParam);
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, tempParam);
 
 
                 console.log(nFrame)
@@ -89,7 +53,7 @@ Item {
                 console.log(keyValue)
                 filter.setKeyFrameParaValue(nFrame, tempParam, keyValue)
 
-                keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-"+neutralParam);
+                keyValue = filter.getStringKeyValueOnProjectOnIndex(index, neutralParam);
                 console.log(nFrame)
                 console.log(tempParam)
                 console.log(keyValue)
@@ -98,11 +62,11 @@ Item {
             }
             filter.combineAllKeyFramePara();
 
-            var frame = filter.getKeyFrameOnProjectOnIndex(0, "anim-"+tempParam);
+            var frame = filter.getKeyFrameOnProjectOnIndex(0, tempParam);
 
-            tempslider.value = parseFloat(filter.getKeyFrameOnProjectOnIndex(0, "anim-"+tempParam) * tempScale)
-            tempspinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, "anim-"+neutralParam) * tempScale)
-            colorPicker.value = filter.getKeyFrameParaValue(frame, "anim-"+neutralParam)//filter.getKeyValueOnProjectOnIndex(0, "anim-"+neutralParam)
+            tempslider.value = parseFloat(filter.getKeyFrameOnProjectOnIndex(0, tempParam) * tempScale)
+            tempspinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, neutralParam) * tempScale)
+            colorPicker.value = filter.getKeyFrameParaValue(frame, neutralParam)//filter.getKeyValueOnProjectOnIndex(0, ""+neutralParam)
         }
         else
         {
@@ -122,28 +86,23 @@ Item {
         KeyFrame{
              id: keyFrame
              Layout.columnSpan:3
-        // 	currentPosition: filterDock.getCurrentPosition()
-             onSetAsKeyFrame:
-             {
-                setKeyFrameValue(bKeyFrame)
-             }
-
              onLoadKeyFrame:
              {
+                 
+                 console.log("onLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
                  var whiteValue = filter.getKeyFrameParaValue(keyFrameNum, neutralParam);
                  if(whiteValue != -1.0)
                  {
-                     console.log("1 colorPick value changed")
-                     console.log(whiteValue)
-                     console.log(keyFrameNum)
                      colorPicker.value = whiteValue
                  }
+                 console.log("whiteValue1: " + whiteValue)
 
                  whiteValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, tempParam);
                  if(whiteValue != -1.0)
                  {
                      tempslider.value = whiteValue * tempScale
                  }
+                 console.log("whiteValue2: " + whiteValue)
 
              }
         }
@@ -151,16 +110,13 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             id: presetItem
-            enabled: bEnableControls
             Layout.columnSpan: 2
             onPresetSelected: {
                 tempslider.value = filter.getDouble(tempParam) * tempScale
-                console.log('2 colorPicker value changed')
-                console.log(filter.get(neutralParam))
                 colorPicker.value = filter.get(neutralParam)
             }
         }
@@ -169,34 +125,25 @@ Item {
         Label {
             text: qsTr('Neutral color')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         ColorPicker {
             id: colorPicker
-            enabled: bEnableControls
             property bool isReady: false
             Component.onCompleted: isReady = true
-            onValueChanged:
-            {
+            onValueChanged: {
                 if (isReady) {
                     if(keyFrame.bKeyFrame)
                     {
                         var nFrame = keyFrame.getCurrentFrame();
-                        console.log("keyframe,colorPicker value:")
-                        console.log(value)
-                        filter.setKeyFrameParaValue(nFrame,neutralParam, value.toString())
+                        filter.setKeyFrameParaValue(nFrame,neutralParam, value)
                         filter.combineAllKeyFramePara()
-                        console.log(filter.getKeyFrameParaValue(nFrame, neutralParam))
                     }
                     else
                     {
-                        console.log("non-keyframe,colorPicker value:")
-                        console.log(value)
                         filter.set(neutralParam, ""+value)
-
                     }
                     filter.set("disable", 0);
-                  //  setKeyFrameValue(keyFrame.bKeyFrame)
                 }
             }
             onPickStarted: {
@@ -204,24 +151,18 @@ Item {
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                console.log('3 colorPicker value changed')
-                colorPicker.value = defaultNeutral
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: colorPicker.value = defaultNeutral
         }
 
         // Row 2
         Label {
             text: qsTr('Color temperature')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RowLayout {
             Slider {
                 id: tempslider
-                enabled: bEnableControls
                 Layout.fillWidth: true
                 Layout.maximumHeight: tempspinner.height
                 style: SliderStyle {
@@ -258,7 +199,7 @@ Item {
                         if(keyFrame.bKeyFrame)
                         {
                             var nFrame = keyFrame.getCurrentFrame();
-                            filter.setKeyFrameParaValue(nFrame,tempParam, (value/tempScale).toString())
+                            filter.setKeyFrameParaValue(nFrame,tempParam, (value/tempScale))
                             filter.combineAllKeyFramePara()
                             tempspinner.value = value
                         }
@@ -267,16 +208,11 @@ Item {
                             tempspinner.value = value
                             filter.set(tempParam, value / tempScale)
                         }
-                      //  setKeyFrameValue(keyFrame.bKeyFrame)
-
-                        
-
                     }
                 }
             }
             SpinBox {
                 id: tempspinner
-                enabled: bEnableControls
                 Layout.minimumWidth: 100
                 minimumValue: 1000.0
                 maximumValue: 15000.0
@@ -287,12 +223,7 @@ Item {
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: 
-            {
-                tempslider.value = defaultTemp
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: tempslider.value = defaultTemp
         }
 
         Item {

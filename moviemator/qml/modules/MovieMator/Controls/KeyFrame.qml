@@ -6,165 +6,180 @@ import QtQuick.Controls.Styles 1.0
 RowLayout{
 
     id: keyFrame
+    visible: false
+    
+    property double currentFrame: 0
+    property bool bKeyFrame: false
+    
 
-    property bool bKeyFrame: isKeyFrame.checked
-    property int currentPosition: 0
-
-
-    function getCurrentFrame(){
-        return currentFrameBox.value;
-    }
-    //Tell parent UI this frame will be set to key frame or not
     signal setAsKeyFrame(bool bKeyFrame)
     signal loadKeyFrame(double keyFrameNum)
 
-    Item{
-        width: 10
+    function getCurrentFrame(){
+        return currentFrame;
     }
 
-    Label{
-        text: qsTr('Frame:')
-        color: '#ffffff'
-        Layout.alignment: Qt.AlignRight
-    }
+    function addKeyFrameValue()
+    {
+        
+        console.log("11111111111111111111111111111111111: ")
+        var position = timeline.getPositionInCurrentClip()
+        console.log("position: " + position)
+        if (position < 0) return
 
-    SpinBox{
-
-        property bool blockSignals: false
-        id: currentFrameBox
-        implicitWidth: 90
-
-        maximumValue: 65535
-        stepSize:1
-        onValueChanged: {
-            if (!blockSignals)
-                filterDock.position = value;
-            if(filter.bKeyFrame(currentFrameBox.value))
+        //添加首尾关键帧
+        if (filter.getKeyFrameNumber() <= 0)
+        {
+            var paramCount = metadata.keyframes.parameterCount
+            for(var i = 0; i < paramCount; i++)
             {
-                isKeyFrame.blockSignals = true
-                isKeyFrame.checked = true;
-                isKeyFrame.blockSignals = false
-                loadKeyFrame(currentFrameBox.value)
-            }
-            else
-            {
-                isKeyFrame.blockSignals = true
-                isKeyFrame.checked = false;
-                isKeyFrame.blockSignals = false
+                var key = metadata.keyframes.parameters[i].property
+                var value = filter.get(key)
+
+                var position2 = filter.producerOut - filter.producerIn + 1 - 5
+                
+                filter.setKeyFrameParaValue(position2, key, value.toString() );
+                filter.setKeyFrameParaValue(0, key, value.toString() );
             }
         }
+
+        //插入关键帧
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++)
+        {
+            var key = metadata.keyframes.parameters[i].property
+            var value = filter.get(key)
+            
+            console.log("key: "+key)
+            console.log("value: "+value)
+            console.log("values: "+value.toString())
+            
+            
+
+            filter.setKeyFrameParaValue(position, key, value.toString() );
+            
+        }
+        filter.combineAllKeyFramePara();
+
+        //确认关键帧是否加入成功
+        console.log("121212121212121212121212121212211221212: " + position)
+        //var textValue = filter.getKeyFrameParaValue(position, "transition.rect");
+        for(var i = 0; i < paramCount; i++)
+        {
+            var key = metadata.keyframes.parameters[i].property
+            var value = filter.getKeyFrameParaValue(position, key);
+            
+            console.log("key: "+key)
+            console.log("value: "+value)
+            console.log("values: "+value.toString())
+            
+            
+        }
+        console.log("2222222222222222222222222222222222222222: ")
+        
+
     }
+
+
+    // function addKeyFrameValue()
+    // {
+        
+    //     console.log("11111111111111111111111111111111111: ")
+    //     //查看set的数据
+    //     var position = timeline.getPositionInCurrentClip()
+    //     if (position < 0) return
+
+    //     var paramCount = metadata.keyframes.parameterCount
+    //     for(var i = 0; i < paramCount; i++)
+    //     {
+    //         var key = metadata.keyframes.parameters[i].property
+    //         var value = filter.get(key)
+    //         console.log(paramCount + ": position: " + position)
+    //         console.log("key: " + key)
+    //         console.log("value: " + value)
+            
+    //     }
+        
+    //     //添加关键帧
+    //     for(var i = 0; i < paramCount; i++)
+    //     {
+    //         var key = metadata.keyframes.parameters[i].property
+    //         var value = filter.get(key)
+            
+    //         console.log("position: " + position)
+    //         console.log("key: " + key)
+    //         console.log("value: " + value)
+
+    //         filter.setKeyFrameParaValue(position, key, value.toString() );
+
+    //         filter.combineAllKeyFramePara();
+            
+    //     }
+
+    //     //初始化首尾关键帧
+    //     // if (filter.getKeyFrameNumber() <= 0)
+    //     // {
+    //     //     var position2 = filter.producerOut - filter.producerIn + 1 - 5
+    //     //     var paramCount = metadata.keyframes.parameterCount
+    //     //     for(var i = 0; i < paramCount; i++)
+    //     //     {
+    //     //         var key = metadata.keyframes.parameters[i].property
+    //     //         var value = filter.get(key)
+
+    //     //         filter.setKeyFrameParaValue(position2, key, value.toString() );
+    //     //         filter.setKeyFrameParaValue(0, key, value.toString() );
+
+    //     //         filter.combineAllKeyFramePara();
+                
+    //     //     }
+            
+            
+    //     // }
+
+    //     //查看保存的数据是否正确
+    //     console.log("121212121212121212121212121212121212121212121212: ")
+    //     for(var i = 0; i < paramCount; i++)
+    //     {
+    //         var key = metadata.keyframes.parameters[i].property
+    //         var value = filter.get(key)
+            
+    //         console.log("position: " + position)
+    //         console.log("key: " + key)
+    //         console.log("value: " + value)   
+    //     }
+        
+    //     console.log("2222222222222222222222222222222222222222: ")
+        
+
+    //  }
 
     Component.onCompleted:
     {
-        currentFrameBox.blockSignals = true;
-        currentFrameBox.value = timeline.getPositionInCurrentClip();
-        currentFrameBox.blockSignals = false;
+        currentFrame = timeline.getPositionInCurrentClip()
     }
 
     Connections {
-             target: filterDock
-             onPositionChanged: {
-                 currentFrameBox.blockSignals = true;
-                 currentFrameBox.value = timeline.getPositionInCurrentClip();
-                 currentFrameBox.blockSignals = false;
-
+             target: keyFrameControl
+             onAddFrameChanged: {
+                 bKeyFrame = true
+                 //setAsKeyFrame(true)
+                 addKeyFrameValue()
              }
     }
-
     Connections {
-        target: multitrack
-        onModified:{
-            currentFrameBox.blockSignals = true;
-            currentFrameBox.value = timeline.getPositionInCurrentClip();
-            currentFrameBox.blockSignals = false;
-        }
+             target: keyFrameControl
+             onFrameChanged: {
+                 currentFrame = keyFrameNum
+                 bKeyFrame = filter.bKeyFrame(currentFrame)
+                 loadKeyFrame(keyFrameNum)
+             }
     }
-
-
-    Item{
-        width: 5
+    Connections {
+             target: keyFrameControl
+             onRemoveKeyFrame: {
+                 bKeyFrame = false
+             }
     }
-
-    CheckBox{
-        id: isKeyFrame
-        property bool blockSignals: false
-        checked: filter.bKeyFrame(currentFrameBox.value)
-        style: CheckBoxStyle {
-            label: Text {
-                color: "white"
-                text: qsTr("KeyFrame")
-            }
-        }
-       
-        onCheckedChanged: {
-            if (!blockSignals)
-                setAsKeyFrame(checked)
-        }
-    }
-
-    Button{
-        id: preKeyFrame
-        implicitWidth:15
-        implicitHeight:15
-        
-        iconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
-        enabled: filter.bHasPreKeyFrame(currentFrameBox.value)
-
-        style: ButtonStyle {
-                padding {
-                    left: 0
-                    right: 0
-                    top: 0
-                    bottom: 0
-                }
-        }
-
-        onClicked: {
-
-            var nFrame = filter.getPreKeyFrameNum(currentFrameBox.value)
-            if(nFrame != -1)
-            {
-                currentFrameBox.value = nFrame
-                loadKeyFrame(nFrame)
-                isKeyFrame.blockSignals = true
-                isKeyFrame.checked = filter.bKeyFrame(nFrame)
-                isKeyFrame.blockSignals = false
-            }
-
-        }
-    }
-
-    Button{
-        id: nextKeyFrame
-        implicitWidth:15
-        implicitHeight:15
-        x: preKeyFrame.x+23
-
-      
-        iconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        enabled: filter.bHasNextKeyFrame(currentFrameBox.value)
-        style: ButtonStyle {
-                padding {
-                    left: 0
-                    right: 0
-                    top: 0
-                    bottom: 0
-                }
-    }
-        onClicked: {
-            var nFrame = filter.getNextKeyFrameNum(currentFrameBox.value)
-            if(nFrame != -1)
-            {
-                currentFrameBox.value = nFrame
-                loadKeyFrame(nFrame)
-                isKeyFrame.checked = filter.bKeyFrame(nFrame)
-            }
-
-        }
-    }
-
-
 
 }
 

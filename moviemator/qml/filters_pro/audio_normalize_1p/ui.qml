@@ -91,9 +91,7 @@ Item {
             suffix: ' LUFS'
             spinnerWidth: 100
             value: filter.getDouble('target_loudness')
-            onValueChanged:{
-                filter.set('target_loudness', value)
-            } 
+            onValueChanged: filter.set('target_loudness', value)
         }
         UndoButton {
             onClicked: programSlider.value = -23.0

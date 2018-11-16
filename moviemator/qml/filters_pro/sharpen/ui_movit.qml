@@ -6,8 +6,6 @@ import MovieMator.Controls 1.0
 
 Item {
     property var defaultParameters: ['circle_radius','gaussian_radius', 'correlation', 'noise']
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
     Component.onCompleted: {
@@ -23,23 +21,23 @@ Item {
             corrslider.value = filter.getDouble("correlation")
             noiseslider.value = filter.getDouble("noise")
         }
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-circle_radius");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("circle_radius");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-circle_radius");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-circle_radius");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "circle_radius");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "circle_radius");
                 filter.setKeyFrameParaValue(nFrame, "circle_radius", keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-gaussian_radius");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "gaussian_radius");
                 filter.setKeyFrameParaValue(nFrame, "gaussian_radius", keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-correlation");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "correlation");
                 filter.setKeyFrameParaValue(nFrame, "correlation", sharpenValue.toString)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-noise");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "noise");
                 filter.setKeyFrameParaValue(nFrame, "noise", sharpenValue.toString())
             }
             filter.combineAllKeyFramePara();
@@ -53,44 +51,6 @@ Item {
         }
     }
 
-    function setKeyFrameValue(bKeyFrame)
-     {
-         var nFrame = keyFrame.getCurrentFrame();
-         if(bKeyFrame)
-         {
-
-             var sharpenValue = cradiusslider.value;
-             filter.setKeyFrameParaValue(nFrame, "circle_radius", sharpenValue.toString())
-
-             sharpenValue = gradiusslider.value;
-             filter.setKeyFrameParaValue(nFrame, "gaussian_radius", sharpenValue.toString())
-
-             sharpenValue = corrslider.value;
-             filter.setKeyFrameParaValue(nFrame, "correlation", sharpenValue.toString)
-
-             sharpenValue = noiseslider.value;
-             filter.setKeyFrameParaValue(nFrame, "noise", sharpenValue.toString())
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("circle_radius","")
-                filter.anim_set("gaussian_radius","")
-                filter.anim_set("correlation","")
-                filter.anim_set("noise","")
-            }
-             filter.set("circle_radius", cradiusslider.value)
-             filter.set("gaussian_radius", gradiusslider.value)
-             filter.set("correlation", corrslider.value)
-             filter.set("noise", noiseslider.value)
-         }
-     }
-
     GridLayout {
         columns: 3
         anchors.fill: parent
@@ -99,12 +59,6 @@ Item {
         KeyFrame{
              id: keyFrame
              Layout.columnSpan:3
-        // 	currentPosition: filterDock.getCurrentPosition()
-             onSetAsKeyFrame:
-             {
-                setKeyFrameValue(bKeyFrame)
-             }
-
              onLoadKeyFrame:
              {
                  var sharpenValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "circle_radius");
@@ -135,11 +89,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             Layout.columnSpan: 2
-            enabled: bEnableControls
             parameters: defaultParameters
             onPresetSelected: {
                 cradiusslider.value = filter.getDouble("circle_radius")
@@ -157,99 +110,107 @@ Item {
         }
         SliderSpinner {
             id: cradiusslider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 99.99
             decimals: 2
             stepSize: 0.1
             value: filter.getDouble("circle_radius")
-            onValueChanged:
-            {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "circle_radius", value)
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("circle_radius", value)
             }
+            
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                cradiusslider.value = 2
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: cradiusslider.value = 2
         }
         
         // Row 3
         Label {
             text: qsTr('Gaussian radius')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: gradiusslider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 99.99
             decimals: 2
             stepSize: 0.1
             value: filter.getDouble("gaussian_radius")
             onValueChanged: {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "gaussian_radius", value)
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("gaussian_radius", value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                gradiusslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: gradiusslider.value = 0
         }
 
         // Row 4
         Label {
             text: qsTr('Correlation')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: corrslider
-            enabled: bEnableControls
             minimumValue: 0.0
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("correlation")
-            onValueChanged:{
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "correlation", value)
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("correlation", value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked:{
-                 corrslider.value = 0.95
-                 setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: corrslider.value = 0.95
         }
 
         // Row 5
         Label {
             text: qsTr('Noise')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: noiseslider
-            enabled: bEnableControls
             minimumValue: 0.0
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("noise")
-            onValueChanged:{
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "noise", value)
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("noise", value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked:{
-                noiseslider.value = 0.01
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: noiseslider.value = 0.01
         }
 
         Item {

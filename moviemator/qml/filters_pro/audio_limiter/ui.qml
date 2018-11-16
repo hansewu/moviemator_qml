@@ -69,7 +69,7 @@ Item {
             spinnerWidth: 80
             value: filter.getDouble('0')
             onValueChanged: {
-               filter.set('0', value)
+                filter.set('0', value)
             }
         }
         UndoButton {

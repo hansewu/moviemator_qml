@@ -40,27 +40,25 @@ Item {
             brightnessSlider.value = filter.getDouble("level") * 100.0
     }
 
-    Connections {
-        target: filterDock
-        onPositionChanged:
-        {
-            var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.bKeyFrame(position)
-            if (bKeyFrame)
-            {
-                var sliderValue = filter.getKeyFrameParaDoubleValue(position, "level");
-                if(sliderValue >= 0.0)
-                {
-                    brightnessSlider.value = sliderValue * 100.0
-                }
-            }
-        }
-    }
-
     GridLayout {
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
+
+        KeyFrame{
+             id: keyFrame
+             Layout.columnSpan:3
+
+             onLoadKeyFrame:
+             {
+                 var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "level");
+                 if(sliderValue != -1.0)
+                 {
+                     brightnessSlider.value = sliderValue * 100.0
+                 }
+
+             }
+         }
 
         Label {
             text: qsTr('Brightness')

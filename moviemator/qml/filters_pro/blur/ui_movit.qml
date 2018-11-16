@@ -8,33 +8,6 @@ Item {
     width: 300
     height: 250
 
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
-    function setKeyFrameValue(bKeyFrame)
-     {
-         var nFrame = keyFrame.getCurrentFrame();
-         var sliderValue = slider.value;
-         if(bKeyFrame)
-         {
-
-             filter.setKeyFrameParaValue(nFrame,"radius", sliderValue.toString() );
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("radius","")
-                
-            }
-             filter.set("radius", sliderValue);
-
-         }
-     }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
@@ -42,12 +15,6 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-               // 	currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-                 setKeyFrameValue(bKeyFrame)
-            }
-
             onLoadKeyFrame:
             {
                  var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "radius");
@@ -62,27 +29,27 @@ Item {
         RowLayout {
             Label {
                 text: qsTr('Radius')
-                color: bEnableControls?'#ffffff': '#828282'
+                color: '#ffffff'
             }
             SliderSpinner {
                 id: slider
-                enabled: bEnableControls
                 minimumValue: 0
                 maximumValue: 99.99
                 value: filter.getDouble('radius')
                 decimals: 2
                 onValueChanged: {
-                    setKeyFrameValue(keyFrame.bKeyFrame)
-                   // filter.set('radius', value)
-                }
+                    if(keyFrame.bKeyFrame)
+                    {
+                        var nFrame = keyFrame.getCurrentFrame();
+                        filter.setKeyFrameParaValue(nFrame, "radius", value.toString())
+                        filter.combineAllKeyFramePara()
+                    }
+                    else
+                        filter.set('radius', value)
+                    }
             }
             UndoButton {
-                enabled: bEnableControls
-
-                onClicked: {
-                    slider.value = 3.0
-                    setKeyFrameValue(keyFrame.bKeyFrame)
-                }
+                onClicked: slider.value = 3.0
             }
         }
         

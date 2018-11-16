@@ -1,4 +1,20 @@
-
+/*
+ * Copyright (c) 2014-2015 Meltytech, LLC
+ * Author: Dan Dennedy <dan@dennedy.org>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 import QtQuick 2.0
 import QtQuick.Controls 1.1
@@ -12,11 +28,8 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect: filter.getRect(rectProperty)
     property var _locale: Qt.locale(application.numericLocale)
-    property bool _bKeyFrame: false
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 330
-    height: 400
+    height: 370
 
     Component.onCompleted: {
         if (filter.isNew) {
@@ -58,68 +71,68 @@ Item {
             filter.set('size', filterRect.height)
             filter.savePreset(preset.parameters)
 
-            filter.set(rectProperty, filter.getRect(rectProperty))
+            //filter.set(rectProperty, filter.getRect(rectProperty))
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-argument");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("argument");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-argument");
-              var keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-argument");
+              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "argument");
+              var keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "argument");
               filter.setKeyFrameParaValue(nFrame, "argument", keyValue)
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-fgcolour");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "fgcolour");
               filter.setKeyFrameParaValue(nFrame, "fgcolour", keyValue)
 
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-family");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "family");
               filter.setKeyFrameParaValue(nFrame, "family", keyValue)
 
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-weight");
+              keyValue = filter.getKeyValueOnProjectOnIndex(index, "weight");
               filter.setKeyFrameParaValue(nFrame, "weight", keyValue)
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-olcolour");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "olcolour");
               filter.setKeyFrameParaValue(nFrame, "olcolour", keyValue)
 
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-outline");
+              keyValue = filter.getKeyValueOnProjectOnIndex(index, "outline");
               filter.setKeyFrameParaValue(nFrame, "outline", keyValue)
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-bgcolour");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "bgcolour");
               filter.setKeyFrameParaValue(nFrame, "bgcolour", keyValue)
 
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-pad");
+              keyValue = filter.getKeyValueOnProjectOnIndex(index, "pad");
               filter.setKeyFrameParaValue(nFrame, "pad", keyValue)
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-halign");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "halign");
               filter.setKeyFrameParaValue(nFrame, halignProperty, keyValue)
 
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "anim-valign");
+              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "valign");
               filter.setKeyFrameParaValue(nFrame, valignProperty, keyValue)
 
             }
 
             filter.combineAllKeyFramePara();
 
-            textArea.text = filter.getStringKeyValueOnProjectOnIndex(0, "anim-argument")
-            fgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "anim-fgcolour")
-            fontButton.text = filter.getStringKeyValueOnProjectOnIndex(0, "anim-family")
+            textArea.text = filter.getStringKeyValueOnProjectOnIndex(0, "argument")
+            fgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "fgcolour")
+            fontButton.text = filter.getStringKeyValueOnProjectOnIndex(0, "family")
             weightCombo.currentIndex = weightCombo.valueToIndex()
-            outlineColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "anim-olcolour")
-            outlineSpinner.value = filter.getKeyValueOnProjectOnIndex(0, "anim-outline")
-            bgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "anim-bgcolour")
-            padSpinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, "anim-pad"))
-            var align = filter.getStringKeyValueOnProjectOnIndex(0, "anim-halign")
+            outlineColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "olcolour")
+            outlineSpinner.value = filter.getKeyValueOnProjectOnIndex(0, "outline")
+            bgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "bgcolour")
+            padSpinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, "pad"))
+            var align = filter.getStringKeyValueOnProjectOnIndex(0, "halign")
             if (align === 'left')
                 leftRadioButton.checked = true
             else if (align === 'center' || align === 'middle')
                 centerRadioButton.checked = true
             else if (filter.get(halignProperty) === 'right')
                 rightRadioButton.checked = true
-            align = filter.getStringKeyValueOnProjectOnIndex(0, "anim-valign")
+            align = filter.getStringKeyValueOnProjectOnIndex(0, "valign")
             if (align === 'top')
                 topRadioButton.checked = true
             else if (align === 'center' || align === 'middle')
@@ -131,47 +144,10 @@ Item {
         setControls()
     }
 
-    function setFilter() {
-        var x = parseFloat(rectX.text)
-        var y = parseFloat(rectY.text)
-        var w = parseFloat(rectW.text)
-        var h = parseFloat(rectH.text)
-        if (x !== filterRect.x ||
-            y !== filterRect.y ||
-            w !== filterRect.width ||
-            h !== filterRect.height) {
-            filterRect.x = x
-            filterRect.y = y
-            filterRect.width = w
-            filterRect.height = h
-            if(_bKeyFrame)
-            {
-                var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
-            }
-            else
-            {
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-                filter.set(rectProperty, filter.getRect(rectProperty))
-            }
-        }
-    }
-
     function setControls() {
-
         textArea.text = filter.get('argument')
         fgColor.value = filter.get('fgcolour')
         fontButton.text = filter.get('family')
-        console.log("1.. text, setControls, fontButton.text:")
-        console.log(fontButton.text);
         weightCombo.currentIndex = weightCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
         outlineSpinner.value = filter.getDouble('outline')
@@ -191,125 +167,49 @@ Item {
             middleRadioButton.checked = true
         else if (align === 'bottom')
             bottomRadioButton.checked = true
-
-
-
     }
 
-    function setKeyFrameValue(bKeyFrame)
-    {
-        var nFrame = keyFrame.getCurrentFrame();
-        if(bKeyFrame)
-        {
-            var textValue = fgColor.value
-            filter.setKeyFrameParaValue(nFrame, "fgcolour", textValue.toString())
-
-            textValue = textArea.text
-            filter.setKeyFrameParaValue(nFrame, "argument", textValue.toString())
-
-            textValue = fontButton.text//fontFamily
-            filter.setKeyFrameParaValue(nFrame, "family", textValue.toString())
-
-            textValue = 10*weightCombo.values[weightCombo.currentIndex]
-            filter.setKeyFrameParaValue(nFrame, "weight", textValue.toString())
-
-            textValue = outlineColor.value
-            filter.setKeyFrameParaValue(nFrame, "olcolour", textValue.toString())
-
-            textValue = outlineSpinner.value
-            filter.setKeyFrameParaValue(nFrame, "outline", textValue.toString())
-
-            textValue = bgColor.value
-            filter.setKeyFrameParaValue(nFrame, "bgcolour", textValue.toString())
-
-            textValue = padSpinner.value
-            filter.setKeyFrameParaValue(nFrame, "pad", textValue.toString())
-
-            if(leftRadioButton.checked)
-                textValue = "left"
-            else if(centerRadioButton.checked)
-                textValue = "center"
-            else if(rightRadioButton.checked)
-                textValue = "right"
-            filter.setKeyFrameParaValue(nFrame, halignProperty, textValue)
-
-
-            if(topRadioButton.checked)
-                textValue = "top"
-            else if(middleRadioButton.checked)
-                textValue = "middle"
-            else if(bottomRadioButton.checked)
-                textValue = "bottom"
-            filter.setKeyFrameParaValue(nFrame, valignProperty, textValue)
-
-            setFilter()
-
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            //Todo, delete the keyframe date of the currentframe
-            filter.removeKeyFrameParaValue(nFrame);
-            if(!filter.getKeyFrameNumber())
+    function setFilter() {
+        var x = parseFloat(rectX.text)
+        var y = parseFloat(rectY.text)
+        var w = parseFloat(rectW.text)
+        var h = parseFloat(rectH.text)
+        if (x !== filterRect.x ||
+            y !== filterRect.y ||
+            w !== filterRect.width ||
+            h !== filterRect.height) {
+            filterRect.x = x
+            filterRect.y = y
+            filterRect.width = w
+            filterRect.height = h
+            if(keyFrame.bKeyFrame)
             {
-
-                filter.anim_set("fgcolour", "")
-                filter.anim_set("argument", "")
-                filter.anim_set("family", "")
-                filter.anim_set( "weight", "")
-                filter.anim_set("olcolour", "")
-                filter.anim_set("outline", "")
-                filter.anim_set( "bgcolour", "")
-                filter.anim_set("pad", "")
-                filter.anim_set( halignProperty, "")
-                filter.anim_set(valignProperty, "")
+                var nFrame = keyFrame.getCurrentFrame()
+                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
+                           .arg((x / profile.width * 100).toLocaleString(_locale))
+                           .arg((y / profile.height * 100).toLocaleString(_locale))
+                           .arg((w / profile.width * 100).toLocaleString(_locale))
+                           .arg((h / profile.height * 100).toLocaleString(_locale)))
+                
+                console.log("3333333333333333333333333333333331: ")
+                
+                console.log("rectProperty: " + filter.getKeyFrameParaValue(nFrame, rectProperty))
+                
             }
-
-            var textValue = fgColor.value
-            filter.set("fgcolour", textValue)
-
-            textValue = textArea.text
-            filter.set("argument", textValue)
-
-            textValue = fontButton.text
-            filter.set("family", textValue)
-
-            textValue = 10*weightCombo.values[weightCombo.currentIndex]
-            filter.set("weight", textValue)
-
-            textValue = outlineColor.value
-            filter.set("olcolour", textValue)
-
-            textValue = outlineSpinner.value
-            filter.set("outline", textValue)
-
-            textValue = bgColor.value
-            filter.set("bgcolour", textValue)
-
-            textValue = padSpinner.value
-            filter.set("pad", textValue)
-
-            if(leftRadioButton.checked)
-                textValue = "left"
-            else if(centerRadioButton.checked)
-                textValue = "center"
-            else if(rightRadioButton.checked)
-                textValue = "right"
-            filter.set(halignProperty, textValue)
-
-            if(topRadioButton.checked)
-                textValue = "top"
-            else if(middleRadioButton.checked)
-                textValue = "middle"
-            else if(bottomRadioButton.checked)
-                textValue = "bottom"
-            filter.set(valignProperty, textValue)
-
-            setFilter()
-
-
+            else
+            {
+                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
+                       .arg((x / profile.width * 100).toLocaleString(_locale))
+                       .arg((y / profile.height * 100).toLocaleString(_locale))
+                       .arg((w / profile.width * 100).toLocaleString(_locale))
+                       .arg((h / profile.height * 100).toLocaleString(_locale)))
+               // filter.set(rectProperty, filter.getRect(rectProperty))
+                console.log("3333333333333333333333333333333332: ")
+                console.log("rectProperty: " + filter.get(rectProperty))
+            }
         }
     }
+
 
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
@@ -324,17 +224,29 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
-       //   currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-                setKeyFrameValue(bKeyFrame)
-                _bKeyFrame = bKeyFrame;
-            }
-
             onLoadKeyFrame:
             {
+                
+                // console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
+                // console.log("rectProperty: " + rectProperty)
+                
+                // var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
+                // var x = textValue.substring(0,textValue.lastIndexOf("\/")-1)
+                // var y = textValue.substring(textValue.lastIndexOf("\/")+1,textValue.lastIndexOf("\:")-1)
+                // var w = textValue.substring(textValue.lastIndexOf("\:")+1,textValue.lastIndexOf("x")-1)
+                // var h = textValue.substring(textValue.lastIndexOf("x")+1,textValue.length)
+                // rectX.text = x
+                // rectY.text = y
+                // rectW.text = w
+                // rectH.text = h
+                
+                // console.log("textValue: " + textValue)
+                // console.log("x: " + x)
+                // console.log("y: " + y)
+                // console.log("w: " + w)
+                // console.log("h: " + h)
 
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, "fgcolour");
+                textValue = filter.getKeyFrameParaValue(keyFrameNum, "fgcolour");
                 if(textValue != "")
                     fgColor.value = textValue;
 
@@ -383,32 +295,28 @@ Item {
 
         Label {
             text: qsTr('Preset')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             id: preset
-            
 
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             Layout.columnSpan: 4
             onPresetSelected: {
                 setControls()
-                filter.set(rectProperty, filter.getRect(rectProperty))
+               // filter.set(rectProperty, filter.getRect(rectProperty))
             }
         }
 
         Label {
             text: qsTr('Text')
-
             Layout.alignment: Qt.AlignRight | Qt.AlignTop
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         TextArea {
             id: textArea
-            enabled: bEnableControls
             Layout.columnSpan: 4
             textFormat: TextEdit.PlainText
             wrapMode: TextEdit.NoWrap
@@ -419,7 +327,6 @@ Item {
             text: '__empty__' // workaround initialization problem
             property int maxLength: 256
             onTextChanged: {
-
                 if (text === '__empty__') return
                 if (length > maxLength) {
                     text = text.substring(0, maxLength)
@@ -429,9 +336,8 @@ Item {
                 var nFrame = keyFrame.getCurrentFrame();
                 if(keyFrame.bKeyFrame)
                 {
-                  //  filter.setKeyFrameParaValue(nFrame, "argument", text)
-                    setKeyFrameValue(true)
-                //    filter.combineAllKeyFramePara();
+                    filter.setKeyFrameParaValue(nFrame, "argument", text)
+                    filter.combineAllKeyFramePara();
                 }
                 else
                     filter.set('argument', text)
@@ -440,29 +346,25 @@ Item {
 
         Label {
             text: qsTr('Insert field')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RowLayout {
             Layout.columnSpan: 4
             Button {
                 text: qsTr('Timecode')
-                enabled: bEnableControls
                 onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
             }
             Button {
                 text: qsTr('Frame #', 'Frame number')
-                enabled: bEnableControls
                 onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
             }
         }
         
         Label {
                text: qsTr('Insert field')
-
                Layout.alignment: Qt.AlignRight
-               color: bEnableControls?'#ffffff': '#828282'
+               color: '#ffffff'
             }
 
         RowLayout{
@@ -471,21 +373,18 @@ Item {
 
             Button {
                 text: qsTr('File date')
-                enabled: bEnableControls
                 onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
             }
             Button {
                 text: qsTr('File name')
-                enabled: bEnableControls
                 onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
             }
         }
 
         Label {
             text: qsTr('Font')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         
         RowLayout {
@@ -493,7 +392,6 @@ Item {
 
             ColorPicker {
                 id: fgColor
-                enabled: bEnableControls
                 eyedropper: false
                 alpha: true
                 onValueChanged: 
@@ -501,9 +399,8 @@ Item {
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
                     {
-                       // filter.setKeyFrameParaValue(nFrame, "fgcolour",value.toString())
-                        setKeyFrameValue(true)
-                     //   filter.combineAllKeyFramePara()
+                        filter.setKeyFrameParaValue(nFrame, "fgcolour",value)
+                        filter.combineAllKeyFramePara()
                     }
                     else
                         filter.set("fgcolour", value);
@@ -513,22 +410,19 @@ Item {
 
             Button {
                 id: fontButton
-                property string fontFamily: ''
-
-                enabled: bEnableControls
                 onClicked: {
                     fontDialog.font = Qt.font({ family: filter.get('family'), pointSize: 24, weight: Font.Normal })
                     fontDialog.open()
                 }
                 FontDialog {
                     id: fontDialog
-                  //  enabled: bEnableControls
                     title: "Please choose a font"
                     onFontChanged: {
                         if(keyFrame.bKeyFrame)
                         {
                             fontButton.fontFamily = font.family
-                            setKeyFrameValue(true)
+                            filter.setKeyFrameParaValue(nFrame, "family",font.family)
+                            filter.combineAllKeyFramePara()
                         }
                         else
                         {
@@ -540,7 +434,8 @@ Item {
                         if(keyFrame.bKeyFrame)
                         {
                             fontButton.fontFamily = fontButton.text
-                            setKeyFrameValue(true)
+                            filter.setKeyFrameParaValue(nFrame, "family",fontButton.text)
+                            filter.combineAllKeyFramePara()
                         }
                         else
                             filter.set('family', fontButton.text)
@@ -549,7 +444,6 @@ Item {
             }
             ComboBox {
                 id: weightCombo
-                enabled: bEnableControls
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
                 property var values: [Font.Normal, Font.Bold, Font.Light]
                 function valueToIndex() {
@@ -562,10 +456,9 @@ Item {
                 onActivated: {
                     if(keyFrame.bKeyFrame)
                     {
-                      //  var nFrame = keyFrame.getCurrentFrame();
-                     //   filter.setKeyFrameParaValue(nFrame, "weight", (10 * values[index]).toString() )
-                        setKeyFrameValue(true)
-                     //   filter.combineAllKeyFramePara()
+                        var nFrame = keyFrame.getCurrentFrame();
+                        filter.setKeyFrameParaValue(nFrame, "weight", 10 * values[index])
+                        filter.combineAllKeyFramePara()
                     }
                     else
                         filter.set('weight', 10 * values[index])
@@ -574,22 +467,20 @@ Item {
         }
         Label {
             text: qsTr('Outline')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
+          //  Layout.column: 0
         }
         ColorPicker {
             id: outlineColor
-            enabled: bEnableControls
             eyedropper: false
             alpha: true
             onValueChanged: {
                 if(keyFrame.bKeyFrame)
                 {
-                  //  var nFrame = keyFrame.getCurrentFrame();
-                  //  filter.setKeyFrameParaValue(nFrame, "olcolour", value.toString())
-                    setKeyFrameValue(true)
-                //    filter.combineAllKeyFramePara()
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "olcolour", value)
+                    filter.combineAllKeyFramePara()
                 }
                 else
                     filter.set('olcolour', value)
@@ -597,13 +488,11 @@ Item {
         }
         Label {
             text: qsTr('Thickness')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SpinBox {
             id: outlineSpinner
-            enabled: bEnableControls
             Layout.minimumWidth: 50
             Layout.columnSpan: 2
             minimumValue: 0
@@ -612,10 +501,9 @@ Item {
             onValueChanged: {
                 if(keyFrame.bKeyFrame)
                 {
-                 //   var nFrame = keyFrame.getCurrentFrame();
-                 //   filter.setKeyFrameParaValue(nFrame, "outline", value.toString())
-                    setKeyFrameValue(true)
-                 //   filter.combineAllKeyFramePara()
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "outline", value)
+                    filter.combineAllKeyFramePara()
                 }
                 else
                     filter.set('outline', value)
@@ -624,22 +512,19 @@ Item {
 
         Label {
             text: qsTr('Background')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         ColorPicker {
             id: bgColor
-            enabled: bEnableControls
             eyedropper: false
             alpha: true
             onValueChanged:
             {
                 if(keyFrame.bKeyFrame)
                 {
-                  //  var nFrame = keyFrame.getCurrentFrame();
-                 //   filter.setKeyFrameParaValue(nFrame, "bgcolour",value.toString)
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "bgcolour",value)
                     filter.combineAllKeyFramePara()
                 }
                 else
@@ -648,13 +533,11 @@ Item {
         }
         Label {
             text: qsTr('Padding')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SpinBox {
             id: padSpinner
-            enabled: bEnableControls
             Layout.minimumWidth: 50
             Layout.columnSpan: 2
             minimumValue: 0
@@ -664,38 +547,34 @@ Item {
             {
                 if(keyFrame.bKeyFrame)
                 {
-                //    var nFrame = keyFrame.getCurrentFrame();
-                //    filter.setKeyFrameParaValue(nFrame, "pad", value.toString())
-                    setKeyFrameValue(true)
-                   // filter.combineAllKeyFramePara()
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "pad", value)
+                    filter.combineAllKeyFramePara()
                 }
                 else
                     filter.set('pad', value)
             }
         }
-
+////////////////////////////////////////////////////////////////
         Label {
             text: qsTr('Position')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RowLayout {
             Layout.columnSpan: 4
             TextField {
                 id: rectX
-                enabled: bEnableControls
                 text: filterRect.x
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
             Label {
                 text: ','
-                color: bEnableControls?'#ffffff': '#828282'
+                color: '#ffffff'
             }
             TextField {
                 id: rectY
-                enabled: bEnableControls
                 text: filterRect.y
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
@@ -703,27 +582,23 @@ Item {
         }
         Label {
             text: qsTr('Size')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RowLayout {
             Layout.columnSpan: 4
             TextField {
                 id: rectW
-                enabled: bEnableControls
                 text: filterRect.width
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
             Label {
                 text: 'x'
-
-                color: bEnableControls?'#ffffff': '#828282'
+                color: '#ffffff'
             }
             TextField {
                 id: rectH
-                enabled: bEnableControls
                 text: filterRect.height
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
@@ -732,23 +607,20 @@ Item {
 
         Label {
             text: qsTr('X fit')
-
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RadioButton {
             id: leftRadioButton
-            enabled: bEnableControls
             text: qsTr('Left')
             exclusiveGroup: halignGroup
             onClicked:
             {
                 if(keyFrame.bKeyFrame)
                 {
-                 //   var nFrame = keyFrame.getCurrentFrame();
-                 //   filter.setKeyFrameParaValue(nFrame, halignProperty, "left")
-                    setKeyFrameValue(true)
-                  //  filter.combineAllKeyFramePara()
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, halignProperty, "left")
+                    filter.combineAllKeyFramePara()
                 }
                 else
                     filter.set(halignProperty, 'left')
@@ -756,15 +628,13 @@ Item {
         }
         RadioButton {
             id: centerRadioButton
-            enabled: bEnableControls
             text: qsTr('Center')
             exclusiveGroup: halignGroup
             onClicked: {
                 if(keyFrame.bKeyFrame)
                 {
-                  //  var nFrame = keyFrame.getCurrentFrame();
-                 //   filter.setKeyFrameParaValue(nFrame, halignProperty, "center")
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, halignProperty, "center")
                 }
                 else
                      filter.set(halignProperty, 'center')
@@ -772,15 +642,13 @@ Item {
         }
         RadioButton {
             id: rightRadioButton
-            enabled: bEnableControls
             text: qsTr('Right')
             exclusiveGroup: halignGroup
             onClicked:{
                 if(keyFrame.bKeyFrame)
                 {
-                  //  var nFrame = keyFrame.getCurrentFrame();
-                  //  filter.setKeyFrameParaValue(nFrame, halignProperty, "right")
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, halignProperty, "right")
                 }
                 else
                     filter.set(halignProperty, 'right')
@@ -789,10 +657,9 @@ Item {
         Item { Layout.fillWidth: true }
 
         Label {
-            text: qsTr('Y fit')
-
+            text: qsTr('Vertical fit')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         RadioButton {
             id: topRadioButton
@@ -802,9 +669,8 @@ Item {
             {
                 if(keyFrame.bKeyFrame)
                 {
-                 //   var nFrame = keyFrame.getCurrentFrame();
-                 //   filter.setKeyFrameParaValue(nFrame, valignProperty, "top")
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, valignProperty, "top")
                 }
                 else
                     filter.set(valignProperty, 'top')
@@ -812,16 +678,14 @@ Item {
         }
         RadioButton {
             id: middleRadioButton
-            enabled: bEnableControls
             text: qsTr('Middle')
             exclusiveGroup: valignGroup
             onClicked:
             {
                 if(keyFrame.bKeyFrame)
                 {
-                  //  var nFrame = keyFrame.getCurrentFrame();
-                  //  filter.setKeyFrameParaValue(nFrame, valignProperty, "middle")
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, valignProperty, "middle")
                 }
                 else
                     filter.set(valignProperty, 'middle')
@@ -829,16 +693,14 @@ Item {
         }
         RadioButton {
             id: bottomRadioButton
-
             text: qsTr('Bottom')
             exclusiveGroup: valignGroup
             onClicked:
             {
                 if(keyFrame.bKeyFrame)
                 {
-                   // var nFrame = keyFrame.getCurrentFrame();
-                  //  filter.setKeyFrameParaValue(nFrame, valignProperty, "bottom")
-                    setKeyFrameValue(true)
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, valignProperty, "bottom")
                 }
                 else
                     filter.set(valignProperty, 'bottom')
