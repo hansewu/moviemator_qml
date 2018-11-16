@@ -73,7 +73,7 @@ Rectangle {
         enabled: (metadata && (metadata.keyframes.parameterCount > 0)) ? true : false   //filter
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Add a key frame')
-        customIconSource: 'qrc:///icons/light/32x32/list-add.png'
+        customIconSource: 'qrc:///icons/light/32x32/bg.png'
         customText: qsTr('Add keyframe')
         buttonWidth : 100
         onClicked: {
@@ -102,6 +102,7 @@ Rectangle {
         enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Remove current frame')
+        customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
         customText: qsTr('Remove keyframe')
         buttonWidth : 120
@@ -128,6 +129,7 @@ Rectangle {
         enabled: filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Prev key frame')
+        customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
         customText: qsTr('Pre keyframe')
         buttonWidth : 100
@@ -154,6 +156,7 @@ Rectangle {
         enabled: filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Next key frame')
+        customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
         customText: qsTr('Next keyframe')
         buttonWidth : 100
