@@ -8,68 +8,6 @@ import QtQuick.Controls.Styles 1.4
 Item {
     width: 300
     height: 250
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
-
-    function setKeyFrameValue(bKeyFrame)
-     {
-         console.log("wave ui.qml")
-         console.log("waveSlider.value")
-         console.log(waveSlider.value)
-
-         console.log("speedSlider.value")
-         console.log(speedSlider.value)
-
-         console.log("deformXCheckBox.checked")
-         console.log(deformXCheckBox.checked)
-
-         console.log("deformYCheckBox.checked")
-         console.log(deformYCheckBox.checked)
-
-
-         var nFrame = keyFrame.getCurrentFrame();
-         if(bKeyFrame)
-         {
-
-             var contrastValue = waveSlider.value;
-             filter.setKeyFrameParaValue(nFrame, "wave", contrastValue.toString())
-
-             contrastValue = speedSlider.value;
-             filter.setKeyFrameParaValue(nFrame, "speed", contrastValue.toString())
-
-             contrastValue = deformXCheckBox.checked;
-             if(contrastValue)
-                filter.setKeyFrameParaValue(nFrame, "deformX", "1");
-             else
-                filter.setKeyFrameParaValue(nFrame, "deformX", "0");
-
-             contrastValue = deformYCheckBox.checked;
-             if(contrastValue)
-                filter.setKeyFrameParaValue(nFrame, "deformY", "1");
-             else
-                filter.setKeyFrameParaValue(nFrame, "deformY", "0");
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-             {
-                filter.anim_set("wave","")
-                filter.anim_set("speed","")
-                filter.anim_set("deformX","")
-                filter.anim_set("deformY","")
-                
-             }
-             filter.set("wave", waveSlider.value);
-             filter.set("speed", speedSlider.value);
-             filter.set("deformX", deformXCheckBox.checked);
-             filter.set("deformY",  deformYCheckBox.checked);
-         }
-     }
-
 
     Component.onCompleted: {
         if (filter.isNew) {
@@ -80,23 +18,23 @@ Item {
             filter.savePreset(preset.parameters)
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-wave");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("wave");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-wave");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-wave");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "wave");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "wave");
                 filter.setKeyFrameParaValue(nFrame, "wave", keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-speed");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "speed");
                 filter.setKeyFrameParaValue(nFrame, "speed", keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-deformX");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "deformX");
                 filter.setKeyFrameParaValue(nFrame, "deformX", keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-deformY");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "deformY");
                 filter.setKeyFrameParaValue(nFrame, "deformY", keyValue)
 
             }
@@ -119,49 +57,48 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-       // 	currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-               setKeyFrameValue(bKeyFrame)
-            }
-
             onLoadKeyFrame:
             {
+                
+                console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
                 var waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "wave");
                 if(waveValue != -1.0)
                 {
-
                     waveSlider.value = waveValue;
-
                 }
-
+                console.log("wave: " + waveValue)
+                
                 waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "speed");
                 if(waveValue != -1.0)
                 {
-
                    speedSlider.value = waveValue;
-
                 }
+                console.log("speed: " + waveValue)
 
                 waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "deformX");
                 if(waveValue == 1)
                 {
-
                    deformXCheckBox.checked = true;
-
+                   filter.set("deformX",Number(true))
                 }
-                else
+                else{
                     deformXCheckBox.checked = false;
+                    filter.set("deformX",Number(false))
+                }
+                    
+                console.log("deformX: " + waveValue)
 
                 waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "deformY");
                 if(waveValue == 1)
                 {
-
                    deformYCheckBox.checked = true;
-
+                   filter.set("deformY",Number(true))
                 }
-                else
+                else{
                     deformYCheckBox.checked = false;
+                    filter.set("deformY",Number(false))
+                }
+                console.log("deformY: " + waveValue)
 
             }
         }
@@ -169,11 +106,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color:'#ffffff'
         }
         Preset {
             id: preset
-            enabled: bEnableControls
             Layout.columnSpan: 2
             parameters: ['wave', 'speed', 'deformX', 'deformX']
             onPresetSelected: {
@@ -187,11 +123,10 @@ Item {
         Label {
             text: qsTr('Amplitude')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color:'#ffffff'
         }
         SliderSpinner {
             id: waveSlider
-            enabled: bEnableControls
             minimumValue: 1
             maximumValue: 500
             value: filter.getDouble('wave')
@@ -199,31 +134,25 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "wave", value.toString())
+                    filter.setKeyFrameParaValue(nFrame, "wave", value)
                     filter.combineAllKeyFramePara()
 
                 }
                 else
                     filter.set('wave', value)
-               // setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked:{
-                 waveSlider.value = 10
-                 setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: waveSlider.value = 10
         }
 
         Label {
             text: qsTr('Speed')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color:'#ffffff'
         }
         SliderSpinner {
             id: speedSlider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 1000
             value: filter.getDouble('speed')
@@ -231,27 +160,21 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "speed", value.toString())
+                    filter.setKeyFrameParaValue(nFrame, "speed", value)
                     filter.combineAllKeyFramePara()
 
                 }
                 else
                     filter.set('speed', value)
-              //  setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                speedSlider.value = 5
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: speedSlider.value = 5
         }
 
         Label {}
         CheckBox {
             id: deformXCheckBox
-            enabled: bEnableControls
 //            text: qsTr('Deform horizontally?')
             Layout.columnSpan: 2
             checked: filter.get('deformX') === '1'
@@ -263,22 +186,17 @@ Item {
                     if(keyFrame.bKeyFrame)
                     {
                         var nFrame = keyFrame.getCurrentFrame();
-                        if(checked)
-                            filter.setKeyFrameParaValue(nFrame, "deformX", "1")
-                        else
-                            filter.setKeyFrameParaValue(nFrame, "deformX", "0")
+                        filter.setKeyFrameParaValue(nFrame, "deformX", Number(checked))
                         filter.combineAllKeyFramePara()
-
                     }
                     else
-                        filter.set('deformX', checked)
-                  // setKeyFrameValue(keyFrame.bKeyFrame)
+                        filter.set('deformX', Number(checked))
                 }
             }
 
             style: CheckBoxStyle {
                         label: Text {
-                            color: bEnableControls?'#ffffff': '#828282'
+                            color: "white"
                             text: qsTr('Deform horizontally?')
                         }
             }
@@ -287,7 +205,6 @@ Item {
         Label {}
         CheckBox {
             id: deformYCheckBox
-            enabled: bEnableControls
          //   text: qsTr('Deform vertically?')
             Layout.columnSpan: 2
             checked: filter.get('deformY') === '1'
@@ -299,21 +216,16 @@ Item {
                     if(keyFrame.bKeyFrame)
                     {
                         var nFrame = keyFrame.getCurrentFrame();
-                        if(checked)
-                            filter.setKeyFrameParaValue(nFrame, "deformY", "1")
-                        else
-                            filter.setKeyFrameParaValue(nFrame, "deformY", "0")
+                        filter.setKeyFrameParaValue(nFrame, "deformY", Number(checked))
                         filter.combineAllKeyFramePara()
-
                     }
                     else
-                        filter.set('deformY', checked)
-                   // setKeyFrameValue(keyFrame.bKeyFrame)
+                        filter.set('deformY', Number(checked))
                 }
             }
             style: CheckBoxStyle {
                         label: Text {
-                            color: bEnableControls?'#ffffff': '#828282'
+                            color: "white"
                             text: qsTr('Deform vertically?')
                         }
             }

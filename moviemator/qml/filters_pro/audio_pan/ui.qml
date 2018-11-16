@@ -30,9 +30,7 @@ Item {
             id: combo
             Layout.columnSpan: 2
             model: [qsTr('Left'), qsTr('Right')]
-            onCurrentIndexChanged:{
-                filter.set('channel', currentIndex)
-            } 
+            onCurrentIndexChanged: filter.set('channel', currentIndex)
         }
 
         Label {

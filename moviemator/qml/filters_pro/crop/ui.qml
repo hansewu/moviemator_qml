@@ -7,39 +7,32 @@ import QtQuick.Controls.Styles 1.4
 
 Item {
     property var defaultParameters: ['left', 'right', 'top', 'bottom', 'center', 'center_bias']
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
-    
+
     function setEnabled() {
-        if (centerCheckBox.checked)//filter.get('center') == 1) 
-        {
-            console.log('center == 1')
-            console.log(bEnableControls)
-      //      biasslider.enabled = true
-      //      biasundo.enabled = true 
-       //     topslider.enabled = false 
-       //     topundo.enabled = false
-       //     bottomslider.enabled = false
-        //    bottomundo.enabled = false
-       //     leftslider.enabled = false
-        //    leftundo.enabled = false
-        //    rightslider.enabled = false
-        //    rightundo.enabled = false
+        if (filter.get('center') == 1) {
+            biasslider.enabled = true
+            biasundo.enabled = true
+            topslider.enabled = false
+            topundo.enabled = false
+            bottomslider.enabled = false
+            bottomundo.enabled = false
+            leftslider.enabled = false
+            leftundo.enabled = false
+            rightslider.enabled = false
+            rightundo.enabled = false
         } else {
-       //     console.log('center == 0')
-       //     console.log(bEnableControls)
-        //    biasslider.enabled = false
-        //    biasundo.enabled = false
-        //    topslider.enabled = true 
-        //    topundo.enabled = true 
-        //    bottomslider.enabled = true 
-        //    bottomundo.enabled = true 
-        //    leftslider.enabled = true 
-        //    leftundo.enabled = true 
-         //   rightslider.enabled = true 
-         //   rightundo.enabled = true 
+            biasslider.enabled = false
+            biasundo.enabled = false
+            topslider.enabled = true
+            topundo.enabled = true
+            bottomslider.enabled = true
+            bottomundo.enabled = true
+            leftslider.enabled = true
+            leftundo.enabled = true
+            rightslider.enabled = true
+            rightundo.enabled = true
         }
     }
 
@@ -111,27 +104,21 @@ Item {
             filter.set("right", 0);
             centerCheckBox.checked = false
             filter.savePreset(defaultParameters)
-
-
         }
-
-
-        
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-center");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("center");
         if(keyFrameCount>0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-center");
-              var centerkeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-center");
+              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "center");
+              var centerkeyValue = filter.getKeyValueOnProjectOnIndex(index, "center");
 
-              var centerBiaskeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-center_bias");
-              var topkeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-top");
-              var bottomkeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-bottom");
-              var leftkeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-left");
-              var rightkeyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-right");
+              var centerBiaskeyValue = filter.getKeyValueOnProjectOnIndex(index, "center_bias");
+              var topkeyValue = filter.getKeyValueOnProjectOnIndex(index, "top");
+              var bottomkeyValue = filter.getKeyValueOnProjectOnIndex(index, "bottom");
+              var leftkeyValue = filter.getKeyValueOnProjectOnIndex(index, "left");
+              var rightkeyValue = filter.getKeyValueOnProjectOnIndex(index, "right");
 
               filter.setKeyFrameParaValue(nFrame,"center", centerkeyValue.toString() );
               filter.setKeyFrameParaValue(nFrame,"center_bias", centerBiaskeyValue.toString() )
@@ -144,7 +131,7 @@ Item {
 
             filter.combineAllKeyFramePara();
 
-            centerCheckBox.checked = filter.getKeyFrameOnProjectOnIndex(0, "anim-center") == '1'
+            centerCheckBox.checked = filter.getKeyFrameOnProjectOnIndex(0, "center") == '1'
         }
         else
         {
@@ -155,6 +142,7 @@ Item {
             rightslider.value = +filter.get('right')
             centerCheckBox.checked = filter.get('center') == '1'
         }
+        setEnabled()
     }
 
     GridLayout {
@@ -173,41 +161,51 @@ Item {
 
              onLoadKeyFrame:
              {
+                 
+                 console.log("onLoadKeyFrameonLoadKeyFrame: ")
+
                  var cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "center");
                  if(cropValue != -1.0)
                  {
                      centerCheckBox.checked = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
+                 
 
                  cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "center_bias");
                  if(cropValue != -1.0)
                  {
                      biasslider.value = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
 
                  cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "top");
                  if(cropValue != -1.0)
                  {
                      topslider.value = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
 
                  cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "bottom");
                  if(cropValue != -1.0)
                  {
                      bottomslider.value = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
 
                  cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "left");
                  if(cropValue != -1.0)
                  {
                      leftslider.value = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
 
                  cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "right");
                  if(cropValue != -1.0)
                  {
                      rightslider.value = cropValue
                  }
+                 console.log("cropValue: " + cropValue)
 
              }
          }
@@ -215,11 +213,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             Layout.columnSpan: 2
-            enabled: bEnableControls
             parameters: defaultParameters
             onPresetSelected: {
                 centerCheckBox.checked = filter.get('center') == '1'
@@ -228,32 +225,33 @@ Item {
                 bottomslider.value = +filter.get('bottom')
                 leftslider.value = +filter.get('left')
                 rightslider.value = +filter.get('right')
-                console.log('Preset setEnabled is called')
-                console.log(filter.get('center'))
                 setEnabled()
             }
         }
 
         CheckBox {
             id: centerCheckBox
-            enabled: bEnableControls
 //            text: qsTr('Center')
             checked: filter.get('center') == '1'
             property bool isReady: false
             Component.onCompleted: isReady = true
             onClicked: {
-                console.log('isReady:')
-                console.log(isReady)
                 if (isReady) {
-                    console.log('CheckBox setEnabled is called')
-                    setKeyFrameValue(keyFrame.bKeyFrame)
+                    if(keyFrame.bKeyFrame)
+                    {
+                        var nFrame = keyFrame.getCurrentFrame();
+                        filter.setKeyFrameParaValue(nFrame, "center", Number(checked).toString())
+                        filter.combineAllKeyFramePara()
+                    }
+                    else
+                        filter.set('center', Number(checked).toString())
+                    }
                     setEnabled()
                 }
-            }
 
             style: CheckBoxStyle {
                         label: Text {
-                            color: bEnableControls?'#ffffff': '#828282'
+                            color: "white"
                             text: qsTr('Center')
                         }
             }
@@ -262,143 +260,140 @@ Item {
             Layout.fillWidth: true;
         }
         UndoButton {
-            
             onClicked: {
                 centerCheckBox.checked = false
-
-                setKeyFrameValue(keyFrame.bKeyFrame)
-
+                filter.set('center', false)
             }
         }
 
         Label {
             text: qsTr('Center bias')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
         }
         SliderSpinner {
             id: biasslider
-            enabled: bEnableControls? centerCheckBox.checked: false
             minimumValue: -Math.max(profile.width, profile.height) / 2
             maximumValue: Math.max(profile.width, profile.height) / 2
             suffix: ' px'
             value: +filter.get('center_bias')
             onValueChanged: {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "center_bias", value.toString())
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set('center_bias', value)
             }
         }
         UndoButton {
             id: biasundo
-            enabled: bEnableControls? centerCheckBox.checked: false
-            onClicked: {
-                biasslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: biasslider.value = 0
         }
 
         Label {
             text: qsTr('Top')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
         }
         SliderSpinner {
             id: topslider
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('top')
             onValueChanged: {
-                console.log('.......')
-                console.log(bEnableControls)
-                console.log(filter.get('center') == 0)
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "top", value.toString())
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set('top', value)
             }
         }
         UndoButton {
             id: topundo
-            enabled: bEnableControls? (!centerCheckBox.checked): false
-            onClicked: {
-                topslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: topslider.value = 0
         }
 
         Label {
             text: qsTr('Bottom')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
         }
         SliderSpinner {
             id: bottomslider
-            enabled: bEnableControls? (!centerCheckBox.checked): false
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('bottom')
-            onValueChanged:
-            {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "bottom", value.toString())
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set('bottom', value)
             }
         }
         UndoButton {
             id: bottomundo
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
-            onClicked: {
-                bottomslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: bottomslider.value = 0
         }
 
         Label {
             text: qsTr('Left')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
         }
         SliderSpinner {
             id: leftslider
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('left')
-            onValueChanged:
-            {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "left", value.toString())
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set('left', value)
             }
         }
         UndoButton {
             id: leftundo
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
-            onClicked: {
-                leftslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: leftslider.value = 0
         }
 
         Label {
             text: qsTr('Right')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
         }
         SliderSpinner {
             id: rightslider
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('right')
             onValueChanged: {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame, "right", value.toString())
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set('right', value)
             }
         }
         UndoButton {
             id: rightundo
-            enabled: bEnableControls? (!centerCheckBox.checked): false 
-            onClicked: {
-                rightslider.value = 0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: rightslider.value = 0
         }
         
         Item {

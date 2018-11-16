@@ -79,7 +79,7 @@ Item {
             suffix: ' %'
             value: filter.getDouble('0') * maximumValue
             onValueChanged: {
-              filter.set('0', value / maximumValue)
+                filter.set('0', value / maximumValue)
             }
         }
         UndoButton {

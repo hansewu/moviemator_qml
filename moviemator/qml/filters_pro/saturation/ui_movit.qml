@@ -5,8 +5,6 @@ import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
 
 Item {
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
     property string saturationParameter: 'saturation'
@@ -17,40 +15,18 @@ Item {
             slider.value = 100
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-saturation");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("saturation");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-saturation");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-saturation");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "saturation");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "saturation");
 
                 filter.setKeyFrameParaValue(nFrame, saturationParameter, keyValue )
             }
             filter.combineAllKeyFramePara();
-        }
-    }
-
-    function setKeyFrameValue(bKeyFrame)
-    {
-        var nFrame = keyFrame.getCurrentFrame();
-        if(bKeyFrame)
-        {
-
-            var saturationValue = slider.value;
-            filter.setKeyFrameParaValue(nFrame, saturationParameter, (saturationValue/100).toString() )
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            //Todo, delete the keyframe date of the currentframe
-            filter.removeKeyFrameParaValue(nFrame);
-            if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set(saturationParameter,"")
-            }
-            filter.set(saturationParameter, slider.value/100);
         }
     }
 
@@ -61,12 +37,6 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-       // 	currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-               setKeyFrameValue(bKeyFrame)
-            }
-
             onLoadKeyFrame:
             {
                 var saturationValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, saturationParameter);
@@ -83,26 +53,27 @@ Item {
 
             Label {
                 text: qsTr('Saturation')
-                color: bEnableControls?'#ffffff': '#828282'
+                color: '#ffffff'
             }
             SliderSpinner {
                 id: slider
-                enabled: bEnableControls
                 minimumValue: 0
                 maximumValue: 300
                 suffix: ' %'
                 value: filter.getDouble(saturationParameter) * 100
                 onValueChanged: {
-                   setKeyFrameValue(keyFrame.bKeyFrame)
-
+                    if(keyFrame.bKeyFrame)
+                    {
+                        var nFrame = keyFrame.getCurrentFrame();
+                        filter.setKeyFrameParaValue(nFrame,saturationParameter ,  (value / frei0rMaximum))
+                        filter.combineAllKeyFramePara()
+                    }
+                    else
+                        filter.set(saturationParameter, value / 100)
                 }
             }
             UndoButton {
-                enabled: bEnableControls
-                onClicked: {
-                    slider.value = 100
-                    setKeyFrameValue(keyFrame.bKeyFrame)
-                }
+                onClicked: slider.value = 100
             }
         }
         Item {

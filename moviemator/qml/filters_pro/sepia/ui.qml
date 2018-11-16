@@ -5,56 +5,26 @@ import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
 
 Item {
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
     Component.onCompleted: {
         if (filter.isNew)
             filter.savePreset(preset.parameters)
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-u");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("u");
         if(keyFrameCount > 0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-               var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-u");
-               var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-u");
+               var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "u");
+               var keyValue = filter.getKeyValueOnProjectOnIndex(index, "u");
                filter.setKeyFrameParaValue(nFrame, "u", keyValue)
 
-               keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-v");
+               keyValue = filter.getKeyValueOnProjectOnIndex(index, "v");
                filter.setKeyFrameParaValue(nFrame, "v", keyValue)
             }
             filter.combineAllKeyFramePara();
-        }
-    }
-
-    function setKeyFrameValue(bKeyFrame)
-    {
-        var nFrame = keyFrame.getCurrentFrame();
-        if(bKeyFrame)
-        {
-
-            var sepiaValue = sliderBlue.value;
-            filter.setKeyFrameParaValue(nFrame, "u", sepiaValue.toString())
-
-            sepiaValue = sliderRed.value;
-            filter.setKeyFrameParaValue(nFrame, "v", sepiaValue.toString())
-
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            //Todo, delete the keyframe date of the currentframe
-            filter.removeKeyFrameParaValue(nFrame);
-            if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("u","")
-                filter.anim_set("v","")
-            }
-            filter.set('u', sliderBlue.value)
-            filter.set('v', sliderRed.value)
         }
     }
 
@@ -66,12 +36,6 @@ Item {
         KeyFrame{
              id: keyFrame
              Layout.columnSpan:3
-        // 	currentPosition: filterDock.getCurrentPosition()
-             onSetAsKeyFrame:
-             {
-                setKeyFrameValue(bKeyFrame)
-             }
-
              onLoadKeyFrame:
              {
                  var  sepiaValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "u");
@@ -92,11 +56,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             id: preset
-            enabled: bEnableControls
             Layout.columnSpan: 2
             parameters: ['u', 'v']
             onPresetSelected: {
@@ -108,11 +71,10 @@ Item {
         Label {
             text: qsTr('Yellow-Blue')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: sliderBlue
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 255
             value: filter.getDouble('u')
@@ -120,32 +82,26 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "u", value.toString())
+                    filter.setKeyFrameParaValue(nFrame, "u", value)
                     filter.combineAllKeyFramePara()
 
                 }
                 else
                     filter.set('u', value)
-              //  setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
 
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                sliderBlue.value = 75
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: sliderBlue.value = 75
         }
 
         Label {
             text: qsTr('Cyan-Red')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: sliderRed
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 255
             value: filter.getDouble('v')
@@ -153,21 +109,16 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "v", value.toString())
+                    filter.setKeyFrameParaValue(nFrame, "v", value)
                     filter.combineAllKeyFramePara()
 
                 }
                 else
                     filter.set('v', value)
-              //  setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                sliderRed.value = 150
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: sliderRed.value = 150
         }
 
         Item {

@@ -204,8 +204,8 @@ Rectangle {
         }
     }
 
-    KeyFrameAnimation {
-        id: keyFrameAnimation
+    KeyFrameControl {
+        id: keyFrameControl
         anchors {
             top: attachedContainer.bottom
             left: parent.left
