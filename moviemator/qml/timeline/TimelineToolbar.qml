@@ -6,6 +6,8 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls.Styles 1.4
 import 'Timeline.js' as Logic
 
+import "../views/filter"
+
 ToolBar {
     property alias ripple: rippleButton.checked
     property alias scrub: scrubButton.checked
@@ -310,7 +312,7 @@ ToolBar {
                 implicitWidth: 44
                 implicitHeight: 44
 
-                customText:qsTr('Set Transition')
+                customText:qsTr('Transition Settings')
 
                 customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
@@ -392,6 +394,17 @@ ToolBar {
         z: 2
         onValueChanged: Logic.scrollIfNeeded()
     }
+
+    // Add -滤镜菜单
+    FilterMenu {
+        id: filterMenu
+
+        height: 400
+        onFilterSelected: {
+            attachedfiltersmodel.add(metadatamodel.get(index))
+        }
+    }
+    // Add -end
 
     Action {
         id: menuAction
@@ -572,7 +585,10 @@ ToolBar {
         id: addFilterAction
         tooltip: qsTr("Add filter to video")
         enabled: hasClipOrTrackSelected
-        onTriggered: timeline.emitShowFilterDock()
+        onTriggered: {
+            timeline.emitShowFilterDock();
+            filterMenu.popup(filterButton);
+        }
     }
     // Add -End
 
