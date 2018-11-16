@@ -1,5 +1,4 @@
 
-
 import QtQuick 2.2
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
@@ -35,9 +34,7 @@ Item {
                 minimumValue: 1
                 maximumValue: 5000
                 value: filter.getDouble('out') - filter.getDouble('in') + 1
-                onValueChanged: {
-                    filter.set('out', filter.getDouble('in') + value - 1)
-                }
+                onValueChanged: filter.set('out', filter.getDouble('in') + value - 1)
                 onSetDefaultClicked: {
                     duration = Math.ceil(settings.audioInDuration * profile.fps)
                 }

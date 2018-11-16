@@ -58,7 +58,6 @@ Item {
             value: filter.getDouble('0')
             onValueChanged: {
                 filter.set('0', value)
-
             }
         }
         UndoButton {

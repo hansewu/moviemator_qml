@@ -35,7 +35,7 @@ Item {
                 maximumValue: 5000
                 value: filter.getDouble('out') - filter.getDouble('in') + 1
                 onValueChanged: {
-                   filter.set('in', filter.getDouble('out') - duration + 1)
+                    filter.set('in', filter.getDouble('out') - duration + 1)
                 }
                 onSetDefaultClicked: {
                     duration = Math.ceil(settings.audioOutDuration * profile.fps)

@@ -6,8 +6,6 @@ import MovieMator.Controls 1.0
 
 Item {
     property var defaultParameters: ['radius','blur_mix','highlight_cutoff']
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
 
@@ -59,21 +57,21 @@ Item {
             cutoffslider.value = filter.getDouble("highlight_cutoff")
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-radius");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("radius");
         if(keyFrameCount>0)
         {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-radius");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-radius");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "radius");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "radius");
 
                 filter.setKeyFrameParaValue(nFrame,"radius", keyValue );
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-blur_mix");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "blur_mix");
                 filter.setKeyFrameParaValue(nFrame,"blur_mix", glowValue.toString() )
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-cutoffslider");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "cutoffslider");
                 filter.setKeyFrameParaValue(nFrame,"cutoffslider", glowValue.toString() )
 
 
@@ -92,12 +90,6 @@ Item {
         KeyFrame{
              id: keyFrame
              Layout.columnSpan:3
-        // 	currentPosition: filterDock.getCurrentPosition()
-             onSetAsKeyFrame:
-             {
-                setKeyFrameValue(bKeyFrame)
-             }
-
              onLoadKeyFrame:
              {
                  var glowValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "radius");
@@ -123,11 +115,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             Layout.columnSpan: 2
-            enabled: bEnableControls
             parameters: defaultParameters
             onPresetSelected: {
                 radiusslider.value = filter.getDouble("radius")
@@ -140,78 +131,81 @@ Item {
         Label {
             text: qsTr('Radius')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: radiusslider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 100
             decimals: 1
             value: filter.getDouble("radius")
             onValueChanged: {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame,"radius", value);
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("radius", value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                radiusslider.value = 20
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: radiusslider.value = 20
         }
 
         // Row 2
         Label { 
             text: qsTr('Highlight blurriness')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: blurslider
-            enabled: bEnableControls
             minimumValue: 0.0
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("blur_mix")
-            onValueChanged:
-            {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+            onValueChanged: {
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame,"blur_mix", value);
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("blur_mix", value)
             }
-
         }
         UndoButton {
-            
-            enabled: bEnableControls
-            onClicked: {
-                blurslider.value = 1.0
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: blurslider.value = 1.0
         }
 
         // Row 3
         Label {
             text: qsTr('Highlight cutoff')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: cutoffslider
-            enabled: bEnableControls
             minimumValue: 0.1
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("highlight_cutoff")
             onValueChanged: {
-                setKeyFrameValue(keyFrame.bKeyFrame)
+                if(keyFrame.bKeyFrame)
+                {
+                    var nFrame = keyFrame.getCurrentFrame();
+                    filter.setKeyFrameParaValue(nFrame,"highlight_cutoff", value);
+                    filter.combineAllKeyFramePara()
+                }
+                else
+                    filter.set("highlight_cutoff", value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                cutoffslider.value = 0.2
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: cutoffslider.value = 0.2
         }
 
         Item {

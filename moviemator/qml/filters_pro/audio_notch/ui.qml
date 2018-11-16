@@ -7,8 +7,6 @@ import MovieMator.Controls 1.0
 Item {
     width: 300
     height: 250
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     Component.onCompleted: {
         if (filter.isNew) {
             // Set default parameter values
@@ -36,12 +34,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
-
             id: preset
-            enabled: bEnableControls
             parameters: ['0', '1', '2', 'wetness']
             Layout.columnSpan: 2
             onPresetSelected: setControls()
@@ -50,34 +46,29 @@ Item {
         Label {
             text: qsTr('Center frequency')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: sliderCenter
-            enabled: bEnableControls
             minimumValue: 5
             maximumValue: 21600
             suffix: ' Hz'
             spinnerWidth: 80
             value: filter.getDouble('0')
             onValueChanged: {
-               filter.set('0', value)
+                filter.set('0', value)
             }
         }
         UndoButton {
-            enabled: bEnableControls
             onClicked: sliderCenter.value = 322
         }
 
-        Label { 
-            text: qsTr('Bandwidth')
+        Label { text: qsTr('Bandwidth')
         Layout.alignment: Qt.AlignRight
-        color: bEnableControls?'#ffffff': '#828282'
+        color: '#ffffff'
         }
-
         SliderSpinner {
             id: sliderBandwidth
-            enabled: bEnableControls
             minimumValue: 5
             maximumValue: 21600
             suffix: ' Hz'
@@ -88,17 +79,15 @@ Item {
             }
         }
         UndoButton {
-            enabled: bEnableControls
             onClicked: sliderBandwidth.value = 322
         }
 
         Label { text: qsTr('Rolloff rate')
         Layout.alignment: Qt.AlignRight
-        color: bEnableControls?'#ffffff': '#828282'
+        color: '#ffffff'
         }
         SliderSpinner {
             id: sliderStages
-            enabled: bEnableControls
             minimumValue: 1
             maximumValue: 10
             spinnerWidth: 80
@@ -109,16 +98,14 @@ Item {
         }
         UndoButton {
             onClicked: sliderStages.value = 1
-            enabled: bEnableControls
         }
 
         Label { text: qsTr('Dry')
         Layout.alignment: Qt.AlignRight
-        color: bEnableControls?'#ffffff': '#828282'
+        color: '#ffffff'
         }
         SliderSpinner {
             id: sliderWetness
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 100
             decimals: 1
@@ -131,7 +118,6 @@ Item {
             }
         }
         UndoButton {
-            enabled: bEnableControls
             onClicked: sliderWetness.value = sliderWetness.maximumValue
         }
 

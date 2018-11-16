@@ -8,8 +8,6 @@ Item {
     property string paramAmount: '0'
     property string paramSize: '1'
     property var defaultParameters: [paramAmount, paramSize]
-    property bool bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-
     width: 300
     height: 250
     Component.onCompleted: {
@@ -22,7 +20,7 @@ Item {
             sslider.value = filter.getDouble(paramSize) * 100.0
         }
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("anim-0");
+        var keyFrameCount = filter.getKeyFrameCountOnProject("0");
         console.log("1.....")
         console.log(keyFrameCount)
         if(keyFrameCount > 0)
@@ -30,41 +28,17 @@ Item {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "anim-0");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-0");
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "0");
+                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "0");
                 filter.setKeyFrameParaValue(nFrame, paramAmount, keyValue)
 
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "anim-1");
+                keyValue = filter.getKeyValueOnProjectOnIndex(index, "1");
                 filter.setKeyFrameParaValue(nFrame, paramSize, keyValue)
             }
             filter.combineAllKeyFramePara();
         }
         else
         {
-            filter.set(paramAmount, aslider.value / 100.0);
-            filter.set(paramSize, sslider.value / 100.0);
-        }
-    }
-
-    function setKeyFrameValue(bKeyFrame)
-    {
-        var nFrame = keyFrame.getCurrentFrame();
-        if(bKeyFrame)
-        {
-
-            filter.setKeyFrameParaValue(nFrame, paramAmount, (aslider.value / 100.0).toString())
-            filter.setKeyFrameParaValue(nFrame, paramSize, (sslider.value / 100.0).toString())
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            //Todo, delete the keyframe date of the currentframe
-            filter.removeKeyFrameParaValue(nFrame);
-            if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set(paramAmount,"")
-                filter.anim_set(paramSize,"")
-            }
             filter.set(paramAmount, aslider.value / 100.0);
             filter.set(paramSize, sslider.value / 100.0);
         }
@@ -78,12 +52,6 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-       // 	currentPosition: filterDock.getCurrentPosition()
-            onSetAsKeyFrame:
-            {
-               setKeyFrameValue(bKeyFrame)
-            }
-
             onLoadKeyFrame:
             {
                 var sharpenValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, paramAmount);
@@ -104,11 +72,10 @@ Item {
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         Preset {
             Layout.columnSpan: 2
-            enabled: bEnableControls
             parameters: defaultParameters
             onPresetSelected: {
                 aslider.value = filter.getDouble(paramAmount) * 100.0
@@ -119,11 +86,10 @@ Item {
         Label {
             text: qsTr('Amount')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: aslider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
@@ -133,32 +99,25 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, paramAmount, (value / 100.0).toString())
+                    filter.setKeyFrameParaValue(nFrame, paramAmount, (value / 100.0))
                     filter.combineAllKeyFramePara()
 
                 }
                 else
                     filter.set(paramAmount, value / 100.0)
-
-              //  setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked:{
-                aslider.value = 50
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: aslider.value = 50
         }
 
         Label {
             text: qsTr('Size')
             Layout.alignment: Qt.AlignRight
-            color: bEnableControls?'#ffffff': '#828282'
+            color: '#ffffff'
         }
         SliderSpinner {
             id: sslider
-            enabled: bEnableControls
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
@@ -168,21 +127,15 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, paramSize, (value / 100.0).toString())
+                    filter.setKeyFrameParaValue(nFrame, paramSize, (value / 100.0))
                     filter.combineAllKeyFramePara()
-
                 }
                 else
                     filter.set(paramSize, value / 100.0)
-              //  setKeyFrameValue(keyFrame.bKeyFrame)
             }
         }
         UndoButton {
-            enabled: bEnableControls
-            onClicked: {
-                sslider.value = 50
-                setKeyFrameValue(keyFrame.bKeyFrame)
-            }
+            onClicked: sslider.value = 50
         }
 
         Item {

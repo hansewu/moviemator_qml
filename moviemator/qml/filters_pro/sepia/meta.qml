@@ -6,4 +6,25 @@ Metadata {
     name: qsTr("Sepia Tone")
     mlt_service: "sepia"
     qml: 'ui.qml'
+    isFavorite: true
+    allowMultiple: false
+    keyframes {
+        allowAnimateIn: true
+        allowAnimateOut: true
+        simpleProperties: ['u','v']
+        parameters: [
+            Parameter {
+                name: qsTr('u')
+                property: 'u'
+                isSimple: true
+                isCurve: true
+            },
+            Parameter {
+                name: qsTr('v')
+                property: 'v'
+                isSimple: true
+                isCurve: true
+            }
+        ]
+    }
 }
