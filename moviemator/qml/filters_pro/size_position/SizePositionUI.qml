@@ -124,10 +124,10 @@ Item {
         console.log("filterRect.width: " + filterRect.width)
         console.log("filterRect.height: " + filterRect.height)
         
-        if (x !== filterRect.x ||
-            y !== filterRect.y ||
-            w !== filterRect.width ||
-            h !== filterRect.height) {
+        // if (x !== filterRect.x ||
+        //     y !== filterRect.y ||
+        //     w !== filterRect.width ||
+        //     h !== filterRect.height) {
             filterRect.x = x
             filterRect.y = y
             filterRect.width = w
@@ -174,7 +174,7 @@ Item {
                        .arg(h))
             }
             
-        }
+        // }
     }
 
     ExclusiveGroup { id: sizeGroup }
