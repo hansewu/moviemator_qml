@@ -257,3 +257,4 @@ Item {
         Item { Layout.fillHeight: true }
     }
 }
+}
