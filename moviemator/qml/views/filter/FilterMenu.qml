@@ -15,8 +15,8 @@ Window {
 
     signal filterSelected(int index)
 
-    function popup(triggerItem) {
-        var menuRect = Logic.calcMenuRect(triggerItem, toolBar.height + 2)
+    function popup(triggerItem, pos) {
+        var menuRect = Logic.calcMenuRect(triggerItem, toolBar.height + 2, pos)
         filterWindow.x = menuRect.x
         filterWindow.y = menuRect.y
         filterWindow.height = menuRect.height
