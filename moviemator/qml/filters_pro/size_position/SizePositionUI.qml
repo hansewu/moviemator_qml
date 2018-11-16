@@ -124,14 +124,14 @@ Item {
         console.log("filterRect.width: " + filterRect.width)
         console.log("filterRect.height: " + filterRect.height)
         
-        // if (x !== filterRect.x ||
-        //     y !== filterRect.y ||
-        //     w !== filterRect.width ||
-        //     h !== filterRect.height) {
-        //     filterRect.x = x
-        //     filterRect.y = y
-        //     filterRect.width = w
-        //     filterRect.height = h
+        if (x !== filterRect.x ||
+            y !== filterRect.y ||
+            w !== filterRect.width ||
+            h !== filterRect.height) {
+            filterRect.x = x
+            filterRect.y = y
+            filterRect.width = w
+            filterRect.height = h
             if(keyFrame.bKeyFrame)
             {
                 
@@ -148,10 +148,10 @@ Item {
                            .arg((w / profile.width * 100).toLocaleString(_locale))
                            .arg((h / profile.height * 100).toLocaleString(_locale)))
                 filter.setKeyFrameParaValue(nFrame, "test", '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
+                           .arg(x)
+                           .arg(y)
+                           .arg(w)
+                           .arg(h))
             }
             else
             {
@@ -168,13 +168,13 @@ Item {
                        .arg((w / profile.width * 100).toLocaleString(_locale))
                        .arg((h / profile.height * 100).toLocaleString(_locale)))
                 filter.set("test", '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
+                       .arg(x)
+                       .arg(y)
+                       .arg(w)
+                       .arg(h))
             }
             
-        // }
+        }
     }
 
     ExclusiveGroup { id: sizeGroup }
@@ -409,7 +409,7 @@ Item {
 
     Timer {
         id : textFieldTimer
-        interval: 3000
+        interval: 1000
         repeat: false
         onTriggered: 
         {
