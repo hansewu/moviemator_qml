@@ -205,6 +205,8 @@ ToolBar {
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-crop-p.png'
             }
 
+            // 时间线工具栏去掉淡入淡出按钮
+            /*
             CustomToolbutton {
                 id: fadeInButton
                 action: fadeInAction
@@ -238,6 +240,7 @@ ToolBar {
                 customIconSource: enabled?'qrc:///timeline/timeline-toolbar-fade-out-n.png':'qrc:///timeline/timeline-toolbar-fade-out-p.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-fade-out-p.png'
             }
+            */
 
             CustomToolbutton {
                 id: volumeButton
@@ -269,6 +272,50 @@ ToolBar {
                 customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
             }
+
+            // Add -添加滤镜按钮
+            CustomToolbutton {
+                id: filterButton
+                action: addFilterAction
+                visible: true
+                bEnabled: hasClipOrTrackSelected
+
+                implicitWidth: 44
+                implicitHeight: 44
+
+                customText:qsTr('Add Filter')
+
+                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+            }
+            // Add -End
+
+            Rectangle {
+                implicitWidth: 44
+                implicitHeight: 44
+                color: 'transparent'
+                Image {
+                    anchors.centerIn: parent
+                    source: 'qrc:///timeline/timeline-toolbar-separator.png'
+                }
+            }
+
+            // Add -转场设置按钮（原转场属性）
+            CustomToolbutton {
+                id: transitionButton
+                action: setTransitionAction
+                visible: true
+                bEnabled: hasClipOrTrackSelected && tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition
+
+                implicitWidth: 44
+                implicitHeight: 44
+
+                customText:qsTr('Set Transition')
+
+                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+            }
+            // Add -End
         }
 
         ColorOverlay {
@@ -460,6 +507,7 @@ ToolBar {
         onTriggered: timeline.addCropFilter()
     }
 
+    /*
     Action {
         id: fadeInAction
        // tooltip: qsTr('Change clip\'s position and size')
@@ -485,6 +533,7 @@ ToolBar {
 
         }
     }
+    */
 
     Action {
         id: volumeAction
@@ -517,4 +566,27 @@ ToolBar {
         enabled: hasClipOrTrackSelected
         onTriggered:timeline.addTextFilter()
     }
+
+    // Add -添加滤镜按钮
+    Action {
+        id: addFilterAction
+        tooltip: qsTr("Add filter to video")
+        enabled: hasClipOrTrackSelected
+        onTriggered: timeline.emitShowFilterDock()
+    }
+    // Add -End
+
+    // Add -转场设置按钮
+    Action {
+        id: setTransitionAction
+        tooltip: qsTr("Set the transition property")
+        enabled: hasClipOrTrackSelected
+        onTriggered: {
+            // 只有点击转场才会弹出转场设置（属性）框，普通clip不弹属性框
+            if(tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition){
+                timeline.onShowProperties(currentTrack, timeline.selection[0])
+            }
+        }
+    }
+    // Add -End
 }
