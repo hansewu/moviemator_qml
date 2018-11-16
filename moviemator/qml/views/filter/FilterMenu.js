@@ -12,16 +12,23 @@ function maxMenuHeight(pad) {
     return (Math.min(Math.max(visibleItems, 5), 15) * ITEM_HEIGHT) + pad
 }
 
-function calcMenuRect(triggerItem, pad) {
+function calcMenuRect(triggerItem, pad, pos) {
     var result = Qt.rect(0, 0, 0, 0)
     var itemPos = triggerItem.mapToItem(null,0,0)
-    var triggerPos = Qt.point(itemPos.x + view.pos.x, itemPos.y + view.pos.y)
     var mainWinRect = application.mainWinRect
+    var triggerPos = Qt.point(itemPos.x + mainWinRect.x, itemPos.y + mainWinRect.y)
+
 
     result.height = 300//Math.min(maxMenuHeight(pad), mainWinRect.height)
     
     // Calculate the y position
-    result.y = mainWinRect.y+150//triggerPos.y - result.height / 2 // Ideal position is centered
+    if(pos==null){
+        result.y = triggerPos.y// - result.height / 2 // Ideal position is centered
+    }
+    else{
+        result.y = triggerPos.y + pos.y - result.height - 10 // - result.height / 2 // Ideal position is centered
+    }
+    
 //    if (result.y < mainWinRect.y) {
 //        // Window would be higher than the application window. Move it down
 //        result.y = mainWinRect.y
@@ -31,10 +38,14 @@ function calcMenuRect(triggerItem, pad) {
 //    }
     
     // Calculate the x position
-    result.x = mainWinRect.x+50//triggerPos.x
+    if(pos==null){
+        result.x = triggerPos.x + 50
+    }else {
+        result.x = triggerPos.x - 100
+    }
     
-    result.y = mainWinRect.y + triggerItem.y - 50
-  	result.x = mainWinRect.x + triggerItem.x + 50
+//    result.y = mainWinRect.y + triggerItem.y - 50
+//  	result.x = mainWinRect.x + triggerItem.x + 50
 
     return result
 }

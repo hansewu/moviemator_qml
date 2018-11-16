@@ -587,7 +587,7 @@ ToolBar {
         enabled: hasClipOrTrackSelected
         onTriggered: {
             timeline.emitShowFilterDock();
-            filterMenu.popup(filterButton);
+            filterMenu.popup(filterButton, timeline.dockPosition);
         }
     }
     // Add -End

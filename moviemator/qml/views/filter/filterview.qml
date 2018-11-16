@@ -125,7 +125,7 @@ Rectangle {
 
             customIconSource: 'qrc:///icons/light/32x32/list-add.png'
             onClicked: {
-                filterMenu.popup(addButton)
+                filterMenu.popup(addButton, null)
             }
         }
 
