@@ -287,8 +287,8 @@ ToolBar {
 
                 customText:qsTr('Add Filter')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
-                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-filter-n.png':'qrc:///timeline/timeline-toolbar-filter-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-filter-p.png'
             }
             // Add -End
 
@@ -314,8 +314,8 @@ ToolBar {
 
                 customText:qsTr('Transition Settings')
 
-                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
-                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
             }
             // Add -End
         }
