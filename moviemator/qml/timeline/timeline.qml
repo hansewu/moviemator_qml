@@ -17,15 +17,23 @@ Rectangle {
 
     signal clipClicked()
 
-    function zoomIn() {
+    function zoomIn(wheelx) {
 //        scaleSlider.value += 0.0625
+
+        toolbar.wheelx = wheelx
+        toolbar.scaleValue = multitrack.scaleFactor
+
         toolbar.scaleSliderValue += 0.0625
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
     }
 
-    function zoomOut() {
+    function zoomOut(wheelx) {
 //        scaleSlider.value -= 0.0625
+
+        toolbar.wheelx = wheelx
+        toolbar.scaleValue = multitrack.scaleFactor
+        
         toolbar.scaleSliderValue -= 0.0625
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
@@ -394,11 +402,11 @@ Rectangle {
                                                    {
                                                        if (wheel.angleDelta.y < 0)
                                                        {
-                                                            root.zoomIn()
+                                                            root.zoomIn(tracksArea.mouseX)
                                                        }
                                                        else if(wheel.angleDelta.y > 0)
                                                        {
-                                                           root.zoomOut()
+                                                           root.zoomOut(tracksArea.mouseX)
                                                         }
 
                                                    }

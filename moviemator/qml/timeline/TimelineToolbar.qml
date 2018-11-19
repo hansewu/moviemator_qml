@@ -17,7 +17,12 @@ ToolBar {
 
     property bool hasClipOrTrackSelected:false
 
-
+    // Add -时间线以鼠标为中心缩放，参数传递给 scaleSlider
+    // wheelx：鼠标（滚轮）位置
+    // scaleValue：缩放前的缩放系数，起始是 1.01
+    property real wheelx: 0.0
+    property real scaleValue: 1.01
+    // Add -End
 
     id: root
     SystemPalette { id: activePalette }
@@ -392,7 +397,7 @@ ToolBar {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         z: 2
-        onValueChanged: Logic.scrollIfNeeded()
+        onValueChanged: Logic.scrollIfNeeded(wheelx, scaleValue)   // Logic.scrollIfNeeded()
     }
 
     // Add -滤镜菜单
