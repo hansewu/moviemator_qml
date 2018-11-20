@@ -275,6 +275,8 @@ Item {
             onClicked: verticalSlider.value = 50
         }
 
-/
+        // Item {
+        //     Layout.fillHeight: true
+        // }
     }
 }
