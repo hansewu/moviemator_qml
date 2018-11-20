@@ -1,5 +1,19 @@
 
-function scrollIfNeeded() {
+function scrollIfNeeded(wheelx, scaleValue) {
+    if (!scrollView) return;
+    // scrollView以鼠标为中心向两边缩放，使scrollView的左边界与鼠标位置的长度按比例缩放
+    // wheelx：鼠标（滚轮）位置
+    // scaleValue：缩放前的缩放系数
+    scrollView.flickableItem.contentX = (wheelx+scrollView.flickableItem.contentX)*multitrack.scaleFactor/scaleValue - wheelx;
+
+    if(scrollView.flickableItem.contentX < 0){
+        scrollView.flickableItem.contentX = 0;
+    }
+    if(scrollView.flickableItem.contentX > ruler.width - scrollView.width){
+        scrollView.flickableItem.contentX = ruler.width - scrollView.width;
+    }
+
+    /*
     var x = timeline.position * multitrack.scaleFactor;
     if (!scrollView) return;
     if (x > scrollView.flickableItem.contentX + scrollView.width - 50)
@@ -8,6 +22,7 @@ function scrollIfNeeded() {
         scrollView.flickableItem.contentX = 0;
     else if (x < scrollView.flickableItem.contentX + 50)
         scrollView.flickableItem.contentX = x - 50;
+    */
 }
 
 function dragging(pos, duration) {

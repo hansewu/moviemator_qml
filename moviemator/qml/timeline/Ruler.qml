@@ -77,15 +77,32 @@ Rectangle {
                 height: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % interval)? ((Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % 2) ? 3 : 7) : 14
                 width: 1
                 color: activePalette.windowText//'#707070'//activePalette.windowText
-                x: markStartX + index * stepSize * stepRatio//index * frames * timeScale * factor/interval // index * stepSize
+                // x: markStartX + index * stepSize * stepRatio//index * frames * timeScale * factor/interval // index * stepSize
+                x: markStartX + index * stepSize * stepRatio + convertTimeValue() - Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale)
             }
 
             Label {
                 color: activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio + 2
-                text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
+                // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
+                text: timeline.timecode(convertTimeValue())
                 font.pointSize: 7.5
                 visible: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval) == 0
+            }
+
+            // 特殊处理下帧数显示不为 0的情况：
+            // 差几帧的补上，多几帧的去掉；
+            function convertTimeValue(){
+                if(Math.floor(frames)==frames){
+                    return Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale);
+                }
+                var timeValue = Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale);
+                var str = timeline.timecode(timeValue);
+                var ends = str.substring(str.length-2);
+                if(Number(ends)>frames/2){
+                    return timeValue + Math.ceil(frames) - Number(ends);
+                }
+                return timeValue - Number(ends);
             }
         }
     }
