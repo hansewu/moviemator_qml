@@ -1,19 +1,5 @@
 
-function scrollIfNeeded(wheelx, scaleValue) {
-    if (!scrollView) return;
-    // scrollView以鼠标为中心向两边缩放，使scrollView的左边界与鼠标位置的长度按比例缩放
-    // wheelx：鼠标（滚轮）位置
-    // scaleValue：缩放前的缩放系数
-    scrollView.flickableItem.contentX = (wheelx+scrollView.flickableItem.contentX)*multitrack.scaleFactor/scaleValue - wheelx;
-
-    if(scrollView.flickableItem.contentX < 0){
-        scrollView.flickableItem.contentX = 0;
-    }
-    if(scrollView.flickableItem.contentX > ruler.width - scrollView.width){
-        scrollView.flickableItem.contentX = ruler.width - scrollView.width;
-    }
-
-    /*
+function scrollIfNeeded() {
     var x = timeline.position * multitrack.scaleFactor;
     if (!scrollView) return;
     if (x > scrollView.flickableItem.contentX + scrollView.width - 50)
@@ -21,8 +7,30 @@ function scrollIfNeeded(wheelx, scaleValue) {
     else if (x < 50)
         scrollView.flickableItem.contentX = 0;
     else if (x < scrollView.flickableItem.contentX + 50)
-        scrollView.flickableItem.contentX = x - 50;
-    */
+        scrollView.flickableItem.contentX = x - 50;    
+}
+
+function scrollIfZoomNeeded(wheelx, scaleValue) {
+    // scrollView以鼠标为中心向两边缩放，使scrollView的左边界与鼠标位置的距离按比例缩放
+    // wheelx：鼠标（滚轮）位置
+    // scaleValue：缩放前的缩放系数
+    if (!scrollView) return;
+    scrollView.flickableItem.contentX = (wheelx+scrollView.flickableItem.contentX)*multitrack.scaleFactor/scaleValue - wheelx;
+
+    // 如果轨道超出屏幕范围，就直接定位到屏幕右侧
+    // 以轨道长度中曾经最大的计算
+    toolbar.maxWidth = toolbar.maxWidth > tracksContainer.width ? toolbar.maxWidth : tracksContainer.width;
+    if(scrollView.flickableItem.contentX > toolbar.maxWidth){
+        scrollView.flickableItem.contentX = toolbar.maxWidth - scrollView.width;
+    }
+    // 轨道实际长度小于 scrollView的长度时特殊处理下
+    if((scrollView.width > tracksContainer.width/multitrack.scaleFactor*1.01) && (scrollView.flickableItem.contentX > toolbar.maxWidth-scrollView.width)){
+        scrollView.flickableItem.contentX = toolbar.maxWidth - scrollView.width;
+    }
+    // 不能小于 0
+    if(scrollView.flickableItem.contentX < 0 /*|| multitrack.scaleFactor==0.01*/){
+        scrollView.flickableItem.contentX = 0;
+    }
 }
 
 function dragging(pos, duration) {

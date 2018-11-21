@@ -20,6 +20,7 @@ Rectangle {
     function zoomIn(wheelx) {
 //        scaleSlider.value += 0.0625
 
+        toolbar.flag = 0
         toolbar.wheelx = wheelx
         toolbar.scaleValue = multitrack.scaleFactor
 
@@ -31,6 +32,7 @@ Rectangle {
     function zoomOut(wheelx) {
 //        scaleSlider.value -= 0.0625
 
+        toolbar.flag = 0
         toolbar.wheelx = wheelx
         toolbar.scaleValue = multitrack.scaleFactor
         
@@ -335,7 +337,6 @@ Rectangle {
                     width: root.width - headerWidth - 2
                     height: root.height - ruler.height - toolbar.height - 1 - 1//下留白 与ruler的space
                     //flickableItem.interactive: false  //wzq
-
 
                     style: ScrollViewStyle {
                         handle:
