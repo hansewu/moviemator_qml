@@ -352,33 +352,53 @@ Item {
         RowLayout {
             Layout.columnSpan: 4
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Timecode')
                 onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
             }
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Frame #', 'Frame number')
                 onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
             }
         }
         
         Label {
-               text: qsTr('Insert field')
+               text: qsTr('')
                Layout.alignment: Qt.AlignRight
                color: '#ffffff'
             }
-
         RowLayout{
             Layout.columnSpan: 4
-            
-
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File date')
                 onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
             }
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File name')
                 onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
             }
+        }
+
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
         }
 
         Label {
@@ -386,7 +406,6 @@ Item {
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        
         RowLayout {
             Layout.columnSpan: 4
 
@@ -394,7 +413,7 @@ Item {
                 id: fgColor
                 eyedropper: false
                 alpha: true
-                onValueChanged: 
+                onValueChanged:
                 {
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
@@ -410,6 +429,10 @@ Item {
 
             Button {
                 id: fontButton
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
+                Layout.maximumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 onClicked: {
                     fontDialog.font = Qt.font({ family: filter.get('family'), pointSize: 24, weight: Font.Normal })
                     fontDialog.open()
@@ -444,6 +467,10 @@ Item {
             }
             ComboBox {
                 id: weightCombo
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
                 property var values: [Font.Normal, Font.Bold, Font.Light]
                 function valueToIndex() {
@@ -465,11 +492,11 @@ Item {
                 }
            }
         }
+
         Label {
             text: qsTr('Outline')
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
-          //  Layout.column: 0
         }
         ColorPicker {
             id: outlineColor
@@ -493,7 +520,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 50
+            Layout.minimumWidth: 60
+            Layout.maximumWidth: 60
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -538,7 +566,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 50
+            Layout.minimumWidth: 60
+            Layout.maximumWidth: 60
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
@@ -555,7 +584,15 @@ Item {
                     filter.set('pad', value)
             }
         }
-////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
+        }
+
         Label {
             text: qsTr('Position')
             Layout.alignment: Qt.AlignRight
@@ -566,6 +603,8 @@ Item {
             TextField {
                 id: rectX
                 text: filterRect.x
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -576,6 +615,8 @@ Item {
             TextField {
                 id: rectY
                 text: filterRect.y
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -590,6 +631,8 @@ Item {
             TextField {
                 id: rectW
                 text: filterRect.width
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -600,6 +643,8 @@ Item {
             TextField {
                 id: rectH
                 text: filterRect.height
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
