@@ -25,10 +25,33 @@ Flickable {
     }
 
     Component.onCompleted: {
+
+        //如果有关键帧就获取动画的位置
+        var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
+        if(keyFrameCount > 0)
+        {
+
+            var index=0
+            for(index=0; index<keyFrameCount;index++)
+            {
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, rectProperty);
+                var rect = filter.getAnimRectValue(index, rectProperty)
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rect, 1.0)
+
+            }
+
+            filterRect = filter.getAnimRectValue(0, rectProperty)
+
+            filter.combineAllKeyFramePara();
+       } else {
+           filterRect = filter.getRect(rectProperty)
+           filter.set(rectProperty, filterRect)
+       }
+
         if (filter.isNew) {
             filter.set('size', filterRect.height)
         }
-        rectangle.setHandles(filter.getRect(rectProperty))
+        rectangle.setHandles(filterRect)
     }
 
     MouseArea {
@@ -80,19 +103,40 @@ Flickable {
             aspectRatio: getAspectRatio()
             handleSize: Math.max(Math.round(8 / zoom), 4)
             borderSize: Math.max(Math.round(1.33 / zoom), 1)
-            onWidthScaleChanged: setHandles(filter.getRect(rectProperty))
-            onHeightScaleChanged: setHandles(filter.getRect(rectProperty))
+            onWidthScaleChanged: {
+                var position        = timeline.getPositionInCurrentClip()
+                var bKeyFrame       = filter.bKeyFrame(position)
+                if (bKeyFrame) {
+                    var rect = filter.getAnimRectValue(position, rectProperty)
+                    setHandles(rect)
+                } else {
+                    setHandles(filter.getRect(rectProperty))
+                }
+            }
+            onHeightScaleChanged: {
+                var position        = timeline.getPositionInCurrentClip()
+                var bKeyFrame       = filter.bKeyFrame(position)
+                if (bKeyFrame) {
+                    var rect = filter.getAnimRectValue(position, rectProperty)
+                    setHandles(rect)
+                } else {
+                    setHandles(filter.getRect(rectProperty))
+                }
+            }
             onRectChanged:  {
                 filterRect.x = Math.round(rect.x / rectangle.widthScale)
                 filterRect.y = Math.round(rect.y / rectangle.heightScale)
                 filterRect.width = Math.round(rect.width / rectangle.widthScale)
                 filterRect.height = Math.round(rect.height / rectangle.heightScale)
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((filterRect.x / profile.width * 100).toLocaleString(_locale))
-                           .arg((filterRect.y / profile.height * 100).toLocaleString(_locale))
-                           .arg((filterRect.width / profile.width * 100).toLocaleString(_locale))
-                           .arg((filterRect.height / profile.height * 100).toLocaleString(_locale)))
-//                filter.set(rectProperty, filter.getRect(rectProperty))
+                var position        = timeline.getPositionInCurrentClip()
+                var bKeyFrame       = filter.bKeyFrame(position)
+                if (bKeyFrame)
+                {
+                    filter.setKeyFrameParaRectValue(position, rectProperty, filterRect, 1.0)
+                    filter.combineAllKeyFramePara();
+                } else {
+                    filter.set(rectProperty, filterRect)
+                }
                 filter.set('size', filterRect.height)
             }
         }
@@ -101,7 +145,14 @@ Flickable {
     Connections {
         target: filter
         onChanged: {
-            var newRect = filter.getRect(rectProperty)
+            var position        = timeline.getPositionInCurrentClip()
+            var newRect         = filter.getRect(rectProperty)
+            var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
+            //判断是否有关键帧
+            if(keyFrameCount > 0) {
+                newRect = filter.getAnimRectValue(position, rectProperty)
+            }
+
             if (filterRect !== newRect) {
                 filterRect = newRect
                 rectangle.setHandles(filterRect)
@@ -111,12 +162,16 @@ Flickable {
                 rectangle.aspectRatio = getAspectRatio()
                 rectangle.setHandles(filterRect)
                 var rect = rectangle.rectangle
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((Math.round(rect.x / rectangle.widthScale) / profile.width * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.y / rectangle.heightScale) / profile.height * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.width / rectangle.widthScale) / profile.width * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.height / rectangle.heightScale) / profile.height * 100).toLocaleString(_locale)))
-//                filter.set(rectProperty, filter.getRect(rectProperty))
+
+                var position        = timeline.getPositionInCurrentClip()
+                var bKeyFrame       = filter.bKeyFrame(position)
+                if (bKeyFrame)
+                {
+                    filter.setKeyFrameParaRectValue(position, rectProperty, rect, 1.0)
+                    filter.combineAllKeyFramePara();
+                } else {
+                    filter.set(rectProperty, rect)
+                }
             }
         }
     }

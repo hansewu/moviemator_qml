@@ -70,8 +70,6 @@ Item {
             filter.set(halignProperty, 'center')
             filter.set('size', filterRect.height)
             filter.savePreset(preset.parameters)
-
-            //filter.set(rectProperty, filter.getRect(rectProperty))
         }
 
         var keyFrameCount = filter.getKeyFrameCountOnProject("argument");
@@ -142,6 +140,7 @@ Item {
         }
 
         setControls()
+        filter.set(rectProperty, filter.getRect(rectProperty))
     }
 
     function setControls() {
@@ -182,31 +181,19 @@ Item {
             filterRect.y = y
             filterRect.width = w
             filterRect.height = h
+
+
             if(keyFrame.bKeyFrame)
             {
                 var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
-                
-                console.log("3333333333333333333333333333333331: ")
-                
-                console.log("rectProperty: " + filter.getKeyFrameParaValue(nFrame, rectProperty))
-                
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, filterRect, 1.0)
+                filter.combineAllKeyFramePara();
             }
             else
             {
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-               // filter.set(rectProperty, filter.getRect(rectProperty))
-                console.log("3333333333333333333333333333333332: ")
-                console.log("rectProperty: " + filter.get(rectProperty))
+                filter.set(rectProperty, filterRect)
             }
+            filter.set('size', filterRect.height)
         }
     }
 
@@ -226,52 +213,40 @@ Item {
             Layout.columnSpan:5
             onLoadKeyFrame:
             {
-                
-                // console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                // console.log("rectProperty: " + rectProperty)
-                
-                // var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
-                // var x = textValue.substring(0,textValue.lastIndexOf("\/")-1)
-                // var y = textValue.substring(textValue.lastIndexOf("\/")+1,textValue.lastIndexOf("\:")-1)
-                // var w = textValue.substring(textValue.lastIndexOf("\:")+1,textValue.lastIndexOf("x")-1)
-                // var h = textValue.substring(textValue.lastIndexOf("x")+1,textValue.length)
-                // rectX.text = x
-                // rectY.text = y
-                // rectW.text = w
-                // rectH.text = h
-                
-                // console.log("textValue: " + textValue)
-                // console.log("x: " + x)
-                // console.log("y: " + y)
-                // console.log("w: " + w)
-                // console.log("h: " + h)
-
+                var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "fgcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     fgColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
-                if(textValue != "")
+                if(textValue !== "")
                     textArea.text = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "family");
-                if(textValue != "")
+                if(textValue !== "")
                     fontButton.text = textValue;
 
+                var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
+                rectX.text = rect.x.toFixed()
+                rectY.text = rect.y.toFixed()
+                rectW.text = rect.width.toFixed()
+                rectH.text = rect.height.toFixed()
+                filter.set('size', rect.height)
+
                 textValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "weight");
-                if(textValue != "")
+                if(textValue !== "")
                     weightCombo.currentIndex = weightCombo.valueToIndex();
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "olcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     outlineColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "bgcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     bgColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "pad");
-                if(textValue != "")
+                if(textValue !== "")
                     padSpinner.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
@@ -306,7 +281,7 @@ Item {
             Layout.columnSpan: 4
             onPresetSelected: {
                 setControls()
-               // filter.set(rectProperty, filter.getRect(rectProperty))
+                filter.set(rectProperty, filter.getRect(rectProperty))
             }
         }
 
@@ -759,9 +734,20 @@ Item {
     Connections {
         target: filter
         onChanged: {
-            var newValue = filter.getRect(rectProperty)
-            if (filterRect !== newValue)
-                filterRect = newValue
+            var position        = timeline.getPositionInCurrentClip()
+            var bKeyFrame       = filter.bKeyFrame(position)
+            if (bKeyFrame) {
+                var newRect = filter.getAnimRectValue(position, rectProperty)
+                filterRect = newRect
+                filter.setKeyFrameParaRectValue(position, rectProperty, filterRect, 1.0)
+                filter.combineAllKeyFramePara()
+            } else {
+                var newRect = filter.getRect(rectProperty)
+                if (filterRect !== newRect) {
+                    filterRect = newRect
+                    filter.set(rectProperty, filterRect)
+                }
+            }
         }
     }
 }
