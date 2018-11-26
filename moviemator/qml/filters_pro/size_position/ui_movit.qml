@@ -1,4 +1,3 @@
-
 SizePositionUI {
     fillProperty: 'fill'
     distortProperty: 'distort'

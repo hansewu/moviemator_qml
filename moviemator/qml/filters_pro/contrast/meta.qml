@@ -17,32 +17,62 @@ Metadata {
             Parameter {
                 name: qsTr('Level')
                 property: 'gamma_r'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0','-:1','x:-2']
             },
             Parameter {
                 name: qsTr('Level')
                 property: 'gamma_g'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0','-:1','x:-2']
             },
             Parameter {
                 name: qsTr('Level')
                 property: 'gamma_b'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0','-:1','x:-2']
             },
             Parameter {
                 name: qsTr('Level')
                 property: 'gain_r'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:50.0']
             },
             Parameter {
                 name: qsTr('Level')
                 property: 'gain_g'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:50.0']
             },
             Parameter {
                 name: qsTr('Level')
                 property: 'gain_b'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:50.0']
             }
         ]
     }

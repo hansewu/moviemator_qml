@@ -8,110 +8,31 @@ Item {
     property var defaultParameters: ['radius','blur_mix','highlight_cutoff']
     width: 300
     height: 250
-
-    function setKeyFrameValue(bKeyFrame)
-     {
-         var nFrame = keyFrame.getCurrentFrame();
-         if(bKeyFrame)
-         {
-
-             var glowValue = radiusslider.value;
-             filter.setKeyFrameParaValue(nFrame,"radius", glowValue.toString() );
-
-             glowValue = blurslider.value;
-             filter.setKeyFrameParaValue(nFrame,"blur_mix", glowValue.toString() )
-
-             glowValue = cutoffslider.value;
-             filter.setKeyFrameParaValue(nFrame,"cutoffslider", glowValue.toString() )
-
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("radius","")
-                filter.anim_set("blur_mix","")
-                filter.anim_set("cutoffslider","")
-            }
-             filter.set("radius", radiusslider.value);
-             filter.set("blur_mix", blurslider.value);
-             filter.set("cutoffslider", cutoffslider.value);
-
-         }
-     }
+    property var radiusValue: 20.0
+    property var blurValue: 1.0
+    property var cutoffValue: 0.2
 
     Component.onCompleted: {
-        filter.set('start', 1)
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set('radius', 20.0)
-            filter.set('blur_mix', 1.0)
-            filter.set('highlight_cutoff', 0.2)
-            filter.savePreset(defaultParameters)
-            radiusslider.value = filter.getDouble("radius")
-            blurslider.value = filter.getDouble("blur_mix")
-            cutoffslider.value = filter.getDouble("highlight_cutoff")
-        }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("radius");
-        if(keyFrameCount>0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "radius");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "radius");
-
-                filter.setKeyFrameParaValue(nFrame,"radius", keyValue );
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "blur_mix");
-                filter.setKeyFrameParaValue(nFrame,"blur_mix", glowValue.toString() )
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "cutoffslider");
-                filter.setKeyFrameParaValue(nFrame,"cutoffslider", glowValue.toString() )
-
-
-            }
-            filter.combineAllKeyFramePara();
-        }
-
-
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
         
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                 var glowValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "radius");
-                 if(glowValue != -1.0)
-                 {
-                     radiusslider.value = glowValue;
-                 }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
 
-                 glowValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "blur_mix");
-                 if(glowValue != -1.0)
-                 {
-                     blurslider.value = glowValue;
-                 }
-
-                 glowValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "cutoffslider");
-                 if(glowValue != -1.0)
-                 {
-                     cutoffslider.value = glowValue;
-                 }
-
-             }
-         }
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
@@ -134,20 +55,14 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'radiusslider'
             id: radiusslider
             minimumValue: 0
             maximumValue: 100
             decimals: 1
             value: filter.getDouble("radius")
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"radius", value);
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set("radius", value)
+                keyFrame.controlValueChanged(radiusslider)
             }
         }
         UndoButton {
@@ -161,20 +76,14 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'blurslider'
             id: blurslider
             minimumValue: 0.0
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("blur_mix")
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"blur_mix", value);
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set("blur_mix", value)
+                keyFrame.controlValueChanged(blurslider)
             }
         }
         UndoButton {
@@ -188,20 +97,14 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'cutoffslider'
             id: cutoffslider
             minimumValue: 0.1
             maximumValue: 1.0
             decimals: 2
             value: filter.getDouble("highlight_cutoff")
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"highlight_cutoff", value);
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set("highlight_cutoff", value)
+                keyFrame.controlValueChanged(cutoffslider)
             }
         }
         UndoButton {

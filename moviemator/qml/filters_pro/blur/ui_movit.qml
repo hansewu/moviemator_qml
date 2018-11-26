@@ -7,22 +7,25 @@ import MovieMator.Controls 1.0
 Item {
     width: 300
     height: 250
+    property var radiusValue: 2
+
+    Component.onCompleted: {
+        keyFrame.initFilter(layoutRoot)
+    }
 
     ColumnLayout {
+        id: layoutRoot
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
+        YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onLoadKeyFrame:
-            {
-                 var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "radius");
-                 if(sliderValue != -1.0)
-                 {
-                      slider.value = sliderValue
-                 }
-
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
             }
         }
 
@@ -32,21 +35,15 @@ Item {
                 color: '#ffffff'
             }
             SliderSpinner {
+                objectName: 'slider'
                 id: slider
                 minimumValue: 0
                 maximumValue: 99.99
                 value: filter.getDouble('radius')
                 decimals: 2
                 onValueChanged: {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "radius", value.toString())
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                        filter.set('radius', value)
-                    }
+                    keyFrame.controlValueChanged(slider)
+                }
             }
             UndoButton {
                 onClicked: slider.value = 3.0

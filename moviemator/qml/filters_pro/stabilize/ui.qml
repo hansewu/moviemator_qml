@@ -12,29 +12,7 @@ Item {
     height: 250
     property string settingsSavePath: settings.savePath
     Component.onCompleted: {
-            shakinessSlider.value = filter.getDouble('shakiness')
-            accuracySlider.value = filter.getDouble('accuracy')
-            button.enabled = !hasAnalysisCompleted()
-            setStatus(false)
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("shakiness");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "shakiness");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "shakiness");
-                filter.setKeyFrameParaValue(nFrame, "shakiness", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "accuracy");
-                filter.setKeyFrameParaValue(nFrame, "accuracy", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "Zoom");
-                filter.setKeyFrameParaValue(nFrame, "Zoom", keyValue)
-            }
-            filter.combineAllKeyFramePara();
-        }
+        keyFrame.initFilter(layoutRoot)
     }
 
     function hasAnalysisCompleted() {
@@ -113,38 +91,21 @@ Item {
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                 var stablizeValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "shakiness");
-                 if(stablizeValue != -1.0)
-                 {
-                     shakinessSlider.value = stablizeValue
-                 }
-
-                 stablizeValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "accuracy");
-                 if(stablizeValue != -1.0)
-                 {
-                      accuracySlider.value = stablizeValue
-                 }
-
-                 stablizeValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "zoom");
-                 if(stablizeValue != -1.0)
-                 {
-                      zoomSlider.value = stablizeValue
-                 }
-                 console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                 console.log("zoomzoomzoomzoom: " + stablizeValue)
-                 
-
-             }
-         }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
 
         Label {
             text: qsTr('<b>Analyze Options</b>')
@@ -158,6 +119,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'shakinessSlider'
             id: shakinessSlider
             minimumValue: 1
             maximumValue: 10
@@ -166,14 +128,7 @@ Item {
             value: filter.getDouble('shakiness')
             onValueChanged:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"shakiness", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('shakiness', value)
+                keyFrame.controlValueChanged(shakinessSlider)
             }
         }
         UndoButton {
@@ -186,6 +141,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'accuracySlider'
             id: accuracySlider
             minimumValue: 1
             maximumValue: 15
@@ -193,14 +149,7 @@ Item {
             stepSize: 1
             value: filter.getDouble('accuracy')
             onValueChanged:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"accuracy", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('accuracy', value)
+                keyFrame.controlValueChanged(accuracySlider)
             }
         }
         UndoButton {
@@ -219,6 +168,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'zoomSlider'
             id: zoomSlider
             minimumValue: -50
             maximumValue: 50
@@ -226,17 +176,7 @@ Item {
             suffix: ' %'
             value: filter.getDouble('zoom')
             onValueChanged: {
-                
-                console.log("onValueChanged: zoom :" + value)
-                
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame,"zoom", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('zoom', value)
+                keyFrame.controlValueChanged(zoomSlider)
             }
         }
         UndoButton {

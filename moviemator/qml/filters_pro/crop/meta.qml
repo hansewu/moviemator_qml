@@ -18,38 +18,62 @@ Metadata {
             Parameter {
                 name: qsTr('center')
                 property: 'center'
-                isSimple: true
-                isCurve: true
+                objectName: 'centerCheckBox'
+                controlType: 'CheckBox'
+                paraType: 'int'
+                defaultValue: ''
+                value: ''
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('center_bias')
                 property: 'center_bias'
-                isSimple: true
-                isCurve: true
+                objectName: 'biasslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('top')
                 property: 'top'
-                isSimple: true
-                isCurve: true
+                objectName: 'topslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('bottom')
                 property: 'bottom'
-                isSimple: true
-                isCurve: true
+                objectName: 'bottomslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('left')
                 property: 'left'
-                isSimple: true
-                isCurve: true
+                objectName: 'leftslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('right')
                 property: 'right'
-                isSimple: true
-                isCurve: true
+                objectName: 'rightslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

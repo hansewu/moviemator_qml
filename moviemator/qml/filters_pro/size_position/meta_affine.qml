@@ -13,18 +13,12 @@ Metadata {
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
-        simpleProperties: ['transition.rect','test']
+        simpleProperties: ['transition.rect']
         parameters: [
             Parameter {
                 name: qsTr('Position / Size')
                 property: 'transition.rect'
                 isSimple: true
-            },
-            Parameter {
-                name: qsTr('test')
-                property: 'test'
-                isSimple: true
-                isCurve: true
             }
         ]
     }

@@ -109,61 +109,25 @@ Item {
    }
     
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set("lift_r", 0.0);
-            filter.set("lift_g", 0.0);
-            filter.set("lift_b", 0.0);
-            filter.set("gamma_r", 1.0);
-            filter.set("gamma_g", 1.0);
-            filter.set("gamma_b", 1.0);
-            filter.set("gain_r", 1.0);
-            filter.set("gain_g", 1.0);
-            filter.set("gain_b", 1.0);
-            filter.savePreset(defaultParameters)
-        }
-        loadWheels()
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 6
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:6
-             onLoadKeyFrame:
-             {
-                 console.log("onLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-
-                 var rValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "lift_r");
-                 var gValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "lift_g");
-                 var bValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "lift_b");
-                 if(rValue != -1.0)
-                 {
-                     liftwheel.color = Qt.rgba( rValue * 255.0, gValue * 255.0, bValue * 255.0, 1.0 )
-                 }
-                 
-                 rValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gamma_r");
-                 gValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gamma_g");
-                 bValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gamma_b");
-                 if(rValue != -1.0)
-                 {
-                     gammawheel.color = Qt.rgba( rValue * 255.0/gammaFactor, gValue * 255.0/gammaFactor, bValue * 255.0/gammaFactor, 1.0 )
-                 }
-
-
-                 rValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gain_r");
-                 gValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gain_g");
-                 bValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "gain_b");
-                 if(rValue != -1.0)
-                 {
-                     gainwheel.color = Qt.rgba(rValue * 255.0/gainFactor, gValue * 255.0/gainFactor, bValue * 255.0/gainFactor, 1.0 )
-                 }
-
-             }
-         }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
         // Row 1
         Label {
             text: qsTr('Preset')
@@ -208,6 +172,7 @@ Item {
         
         // Row 3
         ColorWheelItem {
+            objectName: 'liftwheel'
             id: liftwheel
             Layout.columnSpan: 2
             implicitWidth: parent.width / 3 - parent.columnSpacing
@@ -216,25 +181,11 @@ Item {
             Layout.minimumHeight: 75
             Layout.maximumHeight: 300
             onColorChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "lift_r", liftwheel.red / 255.0 )
-                    filter.setKeyFrameParaValue(nFrame, "lift_g", liftwheel.green / 255.0 )
-                    filter.setKeyFrameParaValue(nFrame, "lift_b", liftwheel.blue / 255.0 )
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                {
-                    filter.set("lift_r", liftwheel.red / 255.0 );
-                    filter.set("lift_g", liftwheel.green / 255.0 );
-                    filter.set("lift_b", liftwheel.blue / 255.0 );
-                }
-
-                
+                keyFrame.controlValueChanged(liftwheel)
             }
         }
         ColorWheelItem {
+            objectName: 'gammawheel'
             id: gammawheel
             Layout.columnSpan: 2
             implicitWidth: parent.width / 3 - parent.columnSpacing
@@ -243,24 +194,11 @@ Item {
             Layout.minimumHeight: 75
             Layout.maximumHeight: 300
             onColorChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "gamma_r", (gammawheel.red / 255.0) * gammaFactor)
-                    filter.setKeyFrameParaValue(nFrame, "gamma_g", (gammawheel.green / 255.0) * gammaFactor)
-                    filter.setKeyFrameParaValue(nFrame, "gamma_b", (gammawheel.blue / 255.0) * gammaFactor)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                {
-                    filter.set("gamma_r", (gammawheel.red / 255.0) * gammaFactor);
-                    filter.set("gamma_g", (gammawheel.green / 255.0) * gammaFactor);
-                    filter.set("gamma_b", (gammawheel.blue / 255.0) * gammaFactor);
-                }
-                
+                keyFrame.controlValueChanged(gammawheel)
             }
         }
         ColorWheelItem {
+            objectName: 'gainwheel'
             id: gainwheel
             Layout.columnSpan: 2
             implicitWidth: parent.width / 3 - parent.columnSpacing
@@ -269,23 +207,10 @@ Item {
             Layout.minimumHeight: 75
             Layout.maximumHeight: 300
             onColorChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "gain_r", (gainwheel.red / 255.0) * gainFactor)
-                    filter.setKeyFrameParaValue(nFrame, "gain_g", (gainwheel.green / 255.0) * gainFactor)
-                    filter.setKeyFrameParaValue(nFrame, "gain_b", (gainwheel.blue / 255.0) * gainFactor)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                {
-                    filter.set("gain_r", (gainwheel.red / 255.0) * gainFactor);
-                    filter.set("gain_g", (gainwheel.green / 255.0) * gainFactor);
-                    filter.set("gain_b", (gainwheel.blue / 255.0) * gainFactor);
-                }
-                
+                keyFrame.controlValueChanged(gainwheel)
             }
         }
+
 
         Item { Layout.fillHeight: true }
     }

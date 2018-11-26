@@ -10,96 +10,22 @@ Item {
     height: 250
 
     Component.onCompleted: {
-        if (filter.isNew) {
-            filter.set('wave', 10)
-            filter.set('speed', 5)
-            filter.set('deformX', 1)
-            filter.set('deformY', 1)
-            filter.savePreset(preset.parameters)
-        }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("wave");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "wave");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "wave");
-                filter.setKeyFrameParaValue(nFrame, "wave", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "speed");
-                filter.setKeyFrameParaValue(nFrame, "speed", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "deformX");
-                filter.setKeyFrameParaValue(nFrame, "deformX", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "deformY");
-                filter.setKeyFrameParaValue(nFrame, "deformY", keyValue)
-
-            }
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            filter.set("wave", waveSlider.value);
-            filter.set("speed", speedSlider.value);
-            filter.set("deformX", deformXCheckBox.checked);
-            filter.set("deformY",  deformYCheckBox.checked);
-        }
+        keyFrame.initFilter(layoutRoot)
     }
-
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
+        YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onLoadKeyFrame:
-            {
-                
-                console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                var waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "wave");
-                if(waveValue != -1.0)
-                {
-                    waveSlider.value = waveValue;
-                }
-                console.log("wave: " + waveValue)
-                
-                waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "speed");
-                if(waveValue != -1.0)
-                {
-                   speedSlider.value = waveValue;
-                }
-                console.log("speed: " + waveValue)
-
-                waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "deformX");
-                if(waveValue == 1)
-                {
-                   deformXCheckBox.checked = true;
-                   filter.set("deformX",Number(true))
-                }
-                else{
-                    deformXCheckBox.checked = false;
-                    filter.set("deformX",Number(false))
-                }
-                    
-                console.log("deformX: " + waveValue)
-
-                waveValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "deformY");
-                if(waveValue == 1)
-                {
-                   deformYCheckBox.checked = true;
-                   filter.set("deformY",Number(true))
-                }
-                else{
-                    deformYCheckBox.checked = false;
-                    filter.set("deformY",Number(false))
-                }
-                console.log("deformY: " + waveValue)
-
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
             }
         }
 
@@ -126,20 +52,13 @@ Item {
             color:'#ffffff'
         }
         SliderSpinner {
+            objectName: 'waveSlider'
             id: waveSlider
             minimumValue: 1
             maximumValue: 500
             value: filter.getDouble('wave')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "wave", value)
-                    filter.combineAllKeyFramePara()
-
-                }
-                else
-                    filter.set('wave', value)
+                keyFrame.controlValueChanged(waveSlider)
             }
         }
         UndoButton {
@@ -152,20 +71,13 @@ Item {
             color:'#ffffff'
         }
         SliderSpinner {
+            objectName: 'speedSlider'
             id: speedSlider
             minimumValue: 0
             maximumValue: 1000
             value: filter.getDouble('speed')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "speed", value)
-                    filter.combineAllKeyFramePara()
-
-                }
-                else
-                    filter.set('speed', value)
+                keyFrame.controlValueChanged(speedSlider)
             }
         }
         UndoButton {
@@ -174,6 +86,7 @@ Item {
 
         Label {}
         CheckBox {
+            objectName: 'deformXCheckBox'
             id: deformXCheckBox
 //            text: qsTr('Deform horizontally?')
             Layout.columnSpan: 2
@@ -183,14 +96,7 @@ Item {
             onClicked: {
                 if (isReady)
                 {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "deformX", Number(checked))
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                        filter.set('deformX', Number(checked))
+                    keyFrame.controlValueChanged(deformXCheckBox)
                 }
             }
 
@@ -204,6 +110,7 @@ Item {
 
         Label {}
         CheckBox {
+            objectName: 'deformYCheckBox'
             id: deformYCheckBox
          //   text: qsTr('Deform vertically?')
             Layout.columnSpan: 2
@@ -213,14 +120,7 @@ Item {
             onClicked: {
                 if (isReady)
                 {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "deformY", Number(checked))
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                        filter.set('deformY', Number(checked))
+                    keyFrame.controlValueChanged(deformYCheckBox)
                 }
             }
             style: CheckBoxStyle {

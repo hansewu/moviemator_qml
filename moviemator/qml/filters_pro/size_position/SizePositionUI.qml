@@ -17,7 +17,6 @@ Item {
     height: 180
 
     Component.onCompleted: {
-        // rectProperty = "transition.rect"
         if (filter.isNew) {
             filter.set(fillProperty, 0)
             filter.set(distortProperty, 0)
@@ -46,44 +45,41 @@ Item {
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters)
         }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("halign");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "halign");
-              var keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "halign");
-              filter.setKeyFrameParaValue(nFrame, halignProperty, keyValue)
-
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "valign");
-              filter.setKeyFrameParaValue(nFrame, valignProperty, keyValue)
-
-            }
-
-            filter.combineAllKeyFramePara();
-
-            var align = filter.getStringKeyValueOnProjectOnIndex(0, "halign")
-            if (align === 'left')
-                leftRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                centerRadioButton.checked = true
-            else if (filter.get(halignProperty) === 'right')
-                rightRadioButton.checked = true
-            align = filter.getStringKeyValueOnProjectOnIndex(0, "valign")
-            if (align === 'top')
-                topRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                middleRadioButton.checked = true
-            else if (align === 'bottom')
-                bottomRadioButton.checked = true
-        }
-
-
         setControls()
     }
+
+    function setFilter() {
+        var x = parseFloat(rectX.text)
+        var y = parseFloat(rectY.text)
+        var w = parseFloat(rectW.text)
+        var h = parseFloat(rectH.text)
+        if (x !== filterRect.x ||
+            y !== filterRect.y ||
+            w !== filterRect.width ||
+            h !== filterRect.height) {
+            filterRect.x = x
+            filterRect.y = y
+            filterRect.width = w
+            filterRect.height = h
+            if(keyFrame.bKeyFrame)
+            {
+                var nFrame = keyFrame.getCurrentFrame()
+                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
+                       .arg((x / profile.width * 100).toLocaleString(_locale))
+                       .arg((y / profile.height * 100).toLocaleString(_locale))
+                       .arg((w / profile.width * 100).toLocaleString(_locale))
+                       .arg((h / profile.height * 100).toLocaleString(_locale)))
+            }
+            else{
+                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
+                       .arg((x / profile.width * 100).toLocaleString(_locale))
+                       .arg((y / profile.height * 100).toLocaleString(_locale))
+                       .arg((w / profile.width * 100).toLocaleString(_locale))
+                       .arg((h / profile.height * 100).toLocaleString(_locale)))
+            }
+        }
+    }
+
 
     function setControls() {
         if (filter.get(distortProperty) === '1')
@@ -108,75 +104,6 @@ Item {
             bottomRadioButton.checked = true
     }
 
-     function setFilter() {
-         console.log("5555555555555555555555555555555555-0: ")
-        var x = parseFloat(rectX.text)
-        var y = parseFloat(rectY.text)
-        var w = parseFloat(rectW.text)
-        var h = parseFloat(rectH.text)
-        
-        console.log("x: " + x)
-        console.log("y: " + y)
-        console.log("w: " + w)
-        console.log("h: " + h)
-        console.log("filterRect.x: " + filterRect.x)
-        console.log("filterRect.y: " + filterRect.y)
-        console.log("filterRect.width: " + filterRect.width)
-        console.log("filterRect.height: " + filterRect.height)
-        
-        // if (x !== filterRect.x ||
-        //     y !== filterRect.y ||
-        //     w !== filterRect.width ||
-        //     h !== filterRect.height) {
-            filterRect.x = x
-            filterRect.y = y
-            filterRect.width = w
-            filterRect.height = h
-            if(keyFrame.bKeyFrame)
-            {
-                
-                var nFrame = keyFrame.getCurrentFrame()
-                console.log("5555555555555555555555555555555555-1: "+ nFrame)
-                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
-                filter.setKeyFrameParaValue(nFrame, "transition.rect", '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
-                filter.setKeyFrameParaValue(nFrame, "test", '%1%/%2%:%3%x%4%'
-                           .arg(x)
-                           .arg(y)
-                           .arg(w)
-                           .arg(h))
-            }
-            else
-            {
-                console.log("5555555555555555555555555555555555-2: ")
-
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-                filter.set("transition.rect", '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-                filter.set("test", '%1%/%2%:%3%x%4%'
-                       .arg(x)
-                       .arg(y)
-                       .arg(w)
-                       .arg(h))
-            }
-            
-        // }
-    }
-
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
     ExclusiveGroup { id: valignGroup }
@@ -189,28 +116,29 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
-            onLoadKeyFrame:
-            {
-                console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, "test");
-                console.log("textValue: " + textValue)
-                if((textValue != -1)&&(textValue != "")){
-                    var x = textValue.substring(0,textValue.lastIndexOf("\/")-1)
-                    var y = textValue.substring(textValue.lastIndexOf("\/")+1,textValue.lastIndexOf("\:")-1)
-                    var w = textValue.substring(textValue.lastIndexOf("\:")+1,textValue.lastIndexOf("x")-1)
-                    var h = textValue.substring(textValue.lastIndexOf("x")+1,textValue.length-1)
-                    rectX.text = x
-                    rectY.text = y
-                    rectW.text = w
-                    rectH.text = h
+            onSynchroData:{
+                setFilter()
+             }
+             onLoadKeyFrame:
+             {
+                 console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
+                var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
+                console.log("textValuetextValue: " + textValue)
+
+
+                if(!(keyFrame.bKeyFrame))
+                {
+                    var nFrame = keyFrame.getCurrentFrame()
+                    var v1 = filter.get(rectProperty)
+                    var v2 = filter.getAnimStringValue(nFrame, rectProperty);
+                    var v3 = filter.get(rectProperty)
                     
+                    console.log("v1: " + v1)
+                    console.log("v2: " + v2)
+                    console.log("v3: " + v3)
                     
-                    console.log("x: " + x)
-                    console.log("y: " + y)
-                    console.log("w: " + w)
-                    console.log("h: " + h)
                 }
+
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
                 if(textValue === "left")
@@ -227,7 +155,7 @@ Item {
                     middleRadioButton.checked = true;
                 else if(textValue === "bottom")
                     bottomRadioButton.checked = true;
-            }
+             }
         }
 
         Label {
@@ -413,7 +341,6 @@ Item {
         repeat: false
         onTriggered: 
         {
-            console.log("5555555555555555555555555555555555555555555: ")
             setFilter()
         }
     }

@@ -10,36 +10,48 @@ Metadata {
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
-        simpleProperties: ['radius', 'smooth', 'opacity']
+        simpleProperties: ['radius', 'smooth', 'opacity','mode']
         minimumVersion: '1.0'
         parameters: [
             Parameter {
                 name: qsTr('Radius')
                 property: 'radius'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'radiusSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0']
             },
             Parameter {
                 name: qsTr('Feathering')
                 property: 'smooth'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 5
-            },
-            Parameter {
-                name: qsTr('Opacity')
-                property: 'opacity'
-                isSimple: true
-                isCurve: true
-                minimum: 1
-                maximum: 0
+                objectName: 'smoothSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '80'
+                value: '0'
+                factorFunc:  ['c:100.0']
             },
             Parameter {
                 name: qsTr('mode')
                 property: 'mode'
+                objectName: 'modeCheckBox'
+                controlType: 'CheckBox'
+                paraType: 'Int'
+                defaultValue: ''
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('Opacity')
+                property: 'opacity'
+                objectName: 'opacitySlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '100'
+                value: '0'
+                factorFunc:  ['c:100.0','-:1.0','x:-1.0']
             }
         ]
     }

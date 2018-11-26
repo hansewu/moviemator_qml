@@ -15,10 +15,12 @@ Metadata {
             Parameter {
                 name: qsTr('Blur')
                 property: '0'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'bslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100']
             }
         ]
     }

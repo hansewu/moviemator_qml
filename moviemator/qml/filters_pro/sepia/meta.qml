@@ -16,14 +16,22 @@ Metadata {
             Parameter {
                 name: qsTr('u')
                 property: 'u'
-                isSimple: true
-                isCurve: true
+                objectName: 'sliderBlue'
+                controlType: 'SliderSpinner'
+                paraType: 'int'
+                defaultValue: '80'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('v')
                 property: 'v'
-                isSimple: true
-                isCurve: true
+                objectName: 'sliderRed'
+                controlType: 'SliderSpinner'
+                paraType: 'int'
+                defaultValue: '160'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

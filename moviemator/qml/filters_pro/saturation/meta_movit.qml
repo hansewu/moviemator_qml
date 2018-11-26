@@ -15,10 +15,12 @@ Metadata {
             Parameter {
                 name: qsTr('Level')
                 property: 'saturation'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 3
+                objectName: 'slider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '100'
+                value: '0'
+                factorFunc:  ['c:100.0']
             }
         ]
     }

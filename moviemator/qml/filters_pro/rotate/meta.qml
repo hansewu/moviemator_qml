@@ -17,30 +17,52 @@ Metadata {
             Parameter {
                 name: qsTr('Rotation')
                 property: 'transition.fix_rotate_x'
-                isSimple: true
-                isCurve: true
-                minimum: -360
-                maximum: 360
+                objectName: 'rotationSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Scale')
                 property: 'transition.scale_x'
-              //  gangedProperties: ['transition.scale_y']
-                isSimple: true
+                objectName: 'scaleSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '100'
+                value: '0'
+                factorFunc:  ['b:100.0']
             },
             Parameter {
                 name: qsTr('Scale')
                 property: 'transition.scale_y'
-              //  gangedProperties: ['transition.scale_y']
-                isSimple: true
+                objectName: 'scaleSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '100'
+                value: '0'
+                factorFunc:  ['b:100.0']
             },
             Parameter {
                 name: qsTr('X offset')
                 property: 'transition.ox'
+                objectName: 'xOffsetSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['x:-1.0']
             },
             Parameter {
                 name: qsTr('Y offset')
                 property: 'transition.oy'
+                objectName: 'yOffsetSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['x:-1.0']
             }
         ]
     }

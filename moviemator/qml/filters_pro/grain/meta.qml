@@ -15,14 +15,22 @@ Metadata {
             Parameter {
                 name: qsTr('noise')
                 property: 'noise'
-                isSimple: true
-                isCurve: true
+                objectName: 'noiseSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '40'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('brightness')
                 property: 'brightness'
-                isSimple: true
-                isCurve: true
+                objectName: 'brightnessSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '83'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

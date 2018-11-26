@@ -15,26 +15,32 @@ Metadata {
             Parameter {
                 name: qsTr('Radius')
                 property: 'radius'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 100
+                objectName: 'radiusslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '20'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Highlight blurriness')
                 property: 'blur_mix'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'blurslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '1.0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Highlight cutoff')
                 property: 'highlight_cutoff'
-                isSimple: true
-                isCurve: true
-                minimum: 0.1
-                maximum: 1.0
+                objectName: 'cutoffslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0.2'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

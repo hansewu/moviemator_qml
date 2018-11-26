@@ -8,14 +8,7 @@ Item {
     width: 300
     height: 250
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set('noise', 40)
-            filter.set('contrast', 100)
-            filter.set('brightness', 83)
-            filter.savePreset(preset.parameters)
-        }
-        setControls()
+        keyFrame.initFilter(layoutRoot)
     }
 
     function setControls() {
@@ -53,34 +46,23 @@ Item {
             brightnessSlider.value = filter.get('brightness')
         }
     }
-
     GridLayout {
+        id: 'layoutRoot'
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                 var grainValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "noise");
-                 if(grainValue != -1.0)
-                 {
-                     console.log("5.... grainValue:")
-                     console.log(grainValue)
-                     noiseSlider.value = grainValue
-                 }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
 
-                 grainValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "brightness");
-                 if(grainValue != -1.0)
-                 {
-                      console.log("12....")
-                      console.log(grainValue)
-                      brightnessSlider.value = grainValue
-                 }
-             }
-         }
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
@@ -99,22 +81,14 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'noiseSlider'
             id: noiseSlider
             minimumValue: 1
             maximumValue: 200
             suffix: ' %'
             value: filter.get('noise')
             onValueChanged: {
-                console.log("6... setKeyFrameValue will be called")
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "noise",value.toString())
-                    filter.combineAllKeyFramePara()
-
-                }
-                else
-                    filter.set('noise', value)
+                keyFrame.controlValueChanged(noiseSlider)
             }
         }
         UndoButton {
@@ -127,21 +101,13 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'brightnessSlider'
             id: brightnessSlider
             minimumValue: 0
             maximumValue: 400
             value: filter.get('brightness')
             onValueChanged:{
-                console.log("7... setKeyFrameValue will be called")
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "brightness",value)
-                    filter.combineAllKeyFramePara()
-
-                }
-                else
-                    filter.set('brightness', value)
+                keyFrame.controlValueChanged(brightnessSlider)
             }
         }
         UndoButton {

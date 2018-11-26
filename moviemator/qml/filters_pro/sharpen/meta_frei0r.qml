@@ -15,18 +15,22 @@ Metadata {
             Parameter {
                 name: qsTr('Amount')
                 property: '0'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'aslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0']
             },
             Parameter {
                 name: qsTr('Size')
                 property: '1'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'sslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100.0']
             }
         ]
     }

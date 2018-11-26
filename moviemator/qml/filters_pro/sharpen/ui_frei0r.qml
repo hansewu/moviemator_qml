@@ -11,61 +11,23 @@ Item {
     width: 300
     height: 250
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set(paramAmount, 0.5)
-            filter.set(paramSize, 0.5)
-            filter.savePreset(defaultParameters)
-            aslider.value = filter.getDouble(paramAmount) * 100.0
-            sslider.value = filter.getDouble(paramSize) * 100.0
-        }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("0");
-        console.log("1.....")
-        console.log(keyFrameCount)
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "0");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "0");
-                filter.setKeyFrameParaValue(nFrame, paramAmount, keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "1");
-                filter.setKeyFrameParaValue(nFrame, paramSize, keyValue)
-            }
-            filter.combineAllKeyFramePara();
-        }
-        else
-        {
-            filter.set(paramAmount, aslider.value / 100.0);
-            filter.set(paramSize, sslider.value / 100.0);
-        }
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
-        columns: 3
+        id: layoutRoot
         anchors.fill: parent
         anchors.margins: 8
-        
-        KeyFrame{
+        columns: 3
+
+        YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onLoadKeyFrame:
-            {
-                var sharpenValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, paramAmount);
-                if(sharpenValue != -1.0)
-                {
-                    aslider.value = sharpenValue * 100.0
-                }
-
-                sharpenValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, paramSize);
-                if(sharpenValue != -1.0)
-                {
-                    sslider.value = sharpenValue * 100.0
-                }
-
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
             }
         }
 
@@ -89,6 +51,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'aslider'
             id: aslider
             minimumValue: 0
             maximumValue: 100
@@ -96,15 +59,7 @@ Item {
             decimals: 1
             value: filter.getDouble(paramAmount) * 100.0
             onValueChanged:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, paramAmount, (value / 100.0))
-                    filter.combineAllKeyFramePara()
-
-                }
-                else
-                    filter.set(paramAmount, value / 100.0)
+                keyFrame.controlValueChanged(aslider) 
             }
         }
         UndoButton {
@@ -117,6 +72,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'sslider'
             id: sslider
             minimumValue: 0
             maximumValue: 100
@@ -124,14 +80,7 @@ Item {
             decimals: 1
             value: filter.getDouble(paramSize) * 100.0
             onValueChanged:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, paramSize, (value / 100.0))
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set(paramSize, value / 100.0)
+                keyFrame.controlValueChanged(sslider) 
             }
         }
         UndoButton {

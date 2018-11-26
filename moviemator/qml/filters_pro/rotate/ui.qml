@@ -8,42 +8,7 @@ Item {
     width: 300
     height: 250
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set('transition.fix_rotate_x', 0)
-            filter.set('transition.scale_x', 1)
-            filter.set('transition.ox', 0)
-            filter.set('transition.oy', 0)
-            filter.savePreset(preset.parameters)
-        }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("transition.fix_rotate_x");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "transition.fix_rotate_x");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "transition.fix_rotate_x");
-                filter.setKeyFrameParaValue(nFrame, "transition.fix_rotate_x", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "transition.scale_x")
-                filter.setKeyFrameParaValue(nFrame,"transition.scale_x", keyValue )
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "transition.scale_y")
-                filter.setKeyFrameParaValue(nFrame,"transition.scale_y", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "transition.ox")
-                filter.setKeyFrameParaValue(nFrame, "transition.ox", keyValue)
-
-                keyValue = filter.getKeyValueOnProjectOnIndex(index, "transition.oy")
-                filter.setKeyFrameParaValue(nFrame, "transition.oy", keyValue)
-            }
-            filter.combineAllKeyFramePara();
-
-         }
-         else
-            setControls()
+        keyFrame.initFilter(layoutRoot)
     }
 
     function setControls() {
@@ -55,39 +20,19 @@ Item {
     }
 
     GridLayout {
+        id: layoutRoot
         anchors.fill: parent
         anchors.margins: 8
         columns: 3
 
-        KeyFrame{
+        YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onLoadKeyFrame:
-            {
-                var rotateValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "transition.fix_rotate_x");
-                if(rotateValue != -1.0)
-                {
-                    rotationSlider.value = rotateValue
-                }
-
-                rotateValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "transition.scale_x");
-                if(rotateValue != -1.0)
-                {
-                    scaleSlider.value = 100/rotateValue
-                }
-
-                rotateValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "transition.ox");
-                if(rotateValue != -1.0)
-                {
-                    xOffsetSlider.value = -rotateValue
-                }
-
-                rotateValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "transition.oy");
-                if(rotateValue != -1.0)
-                {
-                    yOffsetSlider.value = -rotateValue
-                }
-
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
             }
         }
 
@@ -108,6 +53,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'rotationSlider'
             id: rotationSlider
             minimumValue: 0
             maximumValue: 360
@@ -115,14 +61,7 @@ Item {
             spinnerWidth: 110
             suffix: qsTr(' degree')
             onValueChanged:{
-               if(keyFrame.bKeyFrame)
-               {
-                   var nFrame = keyFrame.getCurrentFrame();
-                   filter.setKeyFrameParaValue(nFrame, "transition.fix_rotate_x", value)
-                   filter.combineAllKeyFramePara();
-               }
-               else
-                   filter.set('transition.fix_rotate_x', value)
+               keyFrame.controlValueChanged(rotationSlider) 
             }
         }
         UndoButton {
@@ -135,6 +74,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'scaleSlider'
             id: scaleSlider
             minimumValue: 0.1
             maximumValue: 200
@@ -142,20 +82,7 @@ Item {
             spinnerWidth: 110
             suffix: ' %'
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "transition.scale_x", (100 / value))
-                    filter.setKeyFrameParaValue(nFrame, "transition.scale_y", (100 / value))
-                    filter.combineAllKeyFramePara();
-
-                }
-                else
-                {
-
-                    filter.set('transition.scale_x', 100 / value)
-                    filter.set('transition.scale_y', 100 / value)
-                }
+                keyFrame.controlValueChanged(scaleSlider) 
             }
         }
         UndoButton {
@@ -167,19 +94,13 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'xOffsetSlider'
             id: xOffsetSlider
             minimumValue: -1000
             maximumValue: 1000
             spinnerWidth: 110
             onValueChanged:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "transition.ox", (-value))
-                    filter.combineAllKeyFramePara();
-                }
-                else
-                    filter.set('transition.ox', -value)
+                keyFrame.controlValueChanged(xOffsetSlider) 
             }
         }
         UndoButton {
@@ -191,19 +112,13 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'yOffsetSlider'
             id: yOffsetSlider
             minimumValue: -1000
             maximumValue: 1000
             spinnerWidth: 110
             onValueChanged:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "transition.oy", (-value))
-                    filter.combineAllKeyFramePara();
-                }
-                else
-                    filter.set('transition.oy', -value)
+                keyFrame.controlValueChanged(yOffsetSlider) 
             }
         }
         UndoButton {

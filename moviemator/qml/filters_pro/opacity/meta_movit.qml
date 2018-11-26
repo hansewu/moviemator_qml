@@ -16,10 +16,12 @@ Metadata {
             Parameter {
                 name: qsTr('Level')
                 property: 'opacity'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'slider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '100'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

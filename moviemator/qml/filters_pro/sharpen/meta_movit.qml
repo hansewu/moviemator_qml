@@ -15,34 +15,42 @@ Metadata {
             Parameter {
                 name: qsTr('Circle radius')
                 property: 'circle_radius'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 99.99
+                objectName: 'cradiusslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '2'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Gaussian radius')
                 property: 'gaussian_radius'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 99.99
+                objectName: 'gradiusslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Correlation')
                 property: 'correlation'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'corrslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0.95'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Noise')
                 property: 'noise'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'noiseslider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0.01'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

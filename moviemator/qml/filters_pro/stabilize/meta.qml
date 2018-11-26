@@ -19,27 +19,44 @@ Metadata {
             Parameter {
                 name: qsTr('shakiness')
                 property: 'shakiness'
-                isSimple: true
-                isCurve: true
+                objectName: 'shakinessSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '4'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('accuracy')
                 property: 'accuracy'
-                isSimple: true
-                isCurve: true
+                objectName: 'accuracySlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '4'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Zoom')
                 property: 'zoom'
-                isSimple: true
-                isCurve: true
-            },
-            Parameter {
-                name: qsTr('refresh')
-                property: 'refresh'
-                isSimple: true
-                isCurve: true
+                objectName: 'zoomSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  []
             }
+            // ,
+            // Parameter {
+            //     name: qsTr('refresh')
+            //     property: 'refresh'
+            //     objectName: 'sliderBlue'
+            //     controlType: 'SliderSpinner'
+            //     paraType: 'int'
+            //     defaultValue: '80'
+            //     value: '0'
+            //     factorFunc:  []
+            // }
         ]
     }
 }

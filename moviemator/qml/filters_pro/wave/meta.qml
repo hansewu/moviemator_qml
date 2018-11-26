@@ -16,26 +16,42 @@ Metadata {
             Parameter {
                 name: qsTr('wave')
                 property: 'wave'
-                isSimple: true
-                isCurve: true
+                objectName: 'waveSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '10'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('speed')
                 property: 'speed'
-                isSimple: true
-                isCurve: true
+                objectName: 'speedSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '5'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('deformX')
                 property: 'deformX'
-                isSimple: true
-                isCurve: true
+                objectName: 'deformXCheckBox'
+                controlType: 'CheckBox'
+                paraType: 'Int'
+                defaultValue: ''
+                value: ''
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('deformY')
                 property: 'deformY'
-                isSimple: true
-                isCurve: true
+                objectName: 'deformYCheckBox'
+                controlType: 'CheckBox'
+                paraType: 'Int'
+                defaultValue: ''
+                value: ''
+                factorFunc:  []
             }
         ]
     }

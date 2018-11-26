@@ -16,18 +16,22 @@ Metadata {
             Parameter {
                 name: qsTr('Width')
                 property: 'hori'
-                isSimple: true
-                isCurve: true
-                minimum: 1
-                maximum: 99
+                objectName: 'wslider'
+                controlType: 'SliderSpinner'
+                paraType: 'int'
+                defaultValue: '2'
+                value: '0'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('Height')
                 property: 'vert'
-                isSimple: true
-                isCurve: true
-                minimum: 1
-                maximum: 99
+                objectName: 'hslider'
+                controlType: 'SliderSpinner'
+                paraType: 'int'
+                defaultValue: '2'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

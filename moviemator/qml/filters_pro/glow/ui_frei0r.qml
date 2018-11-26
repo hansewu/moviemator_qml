@@ -7,50 +7,29 @@ import MovieMator.Controls 1.0
 Item {
     property string paramBlur: '0'
     property var defaultParameters: [paramBlur]
+    property var oValue: 0.5
     width: 300
     height: 250
     Component.onCompleted: {
-        filter.set('start', 1)
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set(paramBlur, 50.0 / 100.0)
-            filter.savePreset(defaultParameters)
-            bslider.value = filter.getDouble(paramBlur) * 100.0
-        }
-
-        var keyFrameCount = filter.getKeyFrameCountOnProject("0");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "0");
-              var keyValue = filter.getKeyValueOnProjectOnIndex(index, "0");
-              filter.setKeyFrameParaValue(nFrame, "0", keyValue)
-            }
-            filter.combineAllKeyFramePara();
-        }
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                 var glowValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, paramBlur);
-                 if(glowValue != -1.0)
-                 {
-                     bslider.value = glowValue * 100.0
-
-                 }
-
-             }
-         }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
 
         Label {
             text: qsTr('Preset')
@@ -71,25 +50,17 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'bslider'
             id: bslider
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
             value: filter.getDouble(paramBlur) * 100.0
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, paramBlur, (bslider.value/100))
-                    filter.combineAllKeyFramePara();
-                }
-                else
-                    filter.set(paramBlur, value / 100.0)
-
+                keyFrame.controlValueChanged(bslider)
             }
         }
         UndoButton {
-            enabled: bEnableControls
             onClicked: 
             {
                 bslider.value = 50

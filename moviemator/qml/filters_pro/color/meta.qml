@@ -8,44 +8,98 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.lift_gamma_gain"
-    // keyframes {
-    //     parameters: [
-    //         Parameter {
-    //             name: qsTr('Shadows (Lift)')
-    //             property: 'lift_r'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Shadows (Lift)')
-    //             property: 'lift_g'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Shadows (Lift)')
-    //             property: 'lift_b'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Midtones (Gamma)')
-    //             property: 'gamma_r'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Midtones (Gamma)')
-    //             property: 'gamma_g'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Midtones (Gamma)')
-    //             property: 'gamma_b'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Highlights (Gain)')
-    //             property: 'gain_r'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Highlights (Gain)')
-    //             property: 'gain_g'
-    //         },
-    //         Parameter {
-    //             name: qsTr('Highlights (Gain)')
-    //             property: 'gain_b'
-    //         }
-    //     ]
-    // }
+    keyframes {
+        parameters: [
+            Parameter {
+                name: qsTr('Shadows (Lift)')
+                property: 'lift_r'
+                objectName: 'liftwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['c:255.0']
+            },
+            Parameter {
+                name: qsTr('Shadows (Lift)')
+                property: 'lift_g'
+                objectName: 'liftwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['c:255.0']
+            },
+            Parameter {
+                name: qsTr('Shadows (Lift)')
+                property: 'lift_b'
+                objectName: 'liftwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['c:255.0']
+            },
+            Parameter {
+                name: qsTr('Midtones (Gamma)')
+                property: 'gamma_r'
+                objectName: 'gammawheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '127.5'
+                value: '0'
+                factorFunc:  ['c:127.5']
+            },
+            Parameter {
+                name: qsTr('Midtones (Gamma)')
+                property: 'gamma_g'
+                objectName: 'gammawheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '127.5'
+                value: '0'
+                factorFunc:  ['c:127.5']
+            },
+            Parameter {
+                name: qsTr('Midtones (Gamma)')
+                property: 'gamma_b'
+                objectName: 'gammawheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '127.5'
+                value: '0'
+                factorFunc:  ['c:127.5']
+            },
+            Parameter {
+                name: qsTr('Highlights (Gain)')
+                property: 'gain_r'
+                objectName: 'gainwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '63.75'
+                value: '0'
+                factorFunc:  ['c:63.75']
+            },
+            Parameter {
+                name: qsTr('Highlights (Gain)')
+                property: 'gain_g'
+                objectName: 'gainwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '63.75'
+                value: '0'
+                factorFunc:  ['c:63.75']
+            },
+            Parameter {
+                name: qsTr('Highlights (Gain)')
+                property: 'gain_b'
+                objectName: 'gainwheel'
+                controlType: 'ColorWheelItem'
+                paraType: 'double'
+                defaultValue: '63.75'
+                value: '0'
+                factorFunc:  ['c:63.75']
+            }
+        ]
+    }
 }

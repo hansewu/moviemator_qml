@@ -11,7 +11,7 @@ Item {
     height: 250
 
     function setEnabled() {
-        if (filter.get('center') == 1) {
+        if (centerCheckBox.checked == true) {
             biasslider.enabled = true
             biasundo.enabled = true
             topslider.enabled = false
@@ -35,180 +35,29 @@ Item {
             rightundo.enabled = true
         }
     }
-
-    function setKeyFrameValue(bKeyFrame)
-     {
-   //      bEnableControls: keyFrame.bKeyFrame  ||  (!filter.getKeyFrameNumber())
-         var nFrame = keyFrame.getCurrentFrame();
-         console.log("1.....")
-         console.log(nFrame)
-         console.log(bKeyFrame)
-         if(bKeyFrame)
-         {
-
-             var cropValue = centerCheckBox.checked;
-             filter.setKeyFrameParaValue(nFrame,"center", cropValue.toString() );
-
-             cropValue = biasslider.value
-             filter.setKeyFrameParaValue(nFrame,"center_bias", cropValue.toString() )
-
-             cropValue = topslider.value
-             filter.setKeyFrameParaValue(nFrame,"top", cropValue.toString() )
-
-             cropValue = bottomslider.value
-             filter.setKeyFrameParaValue(nFrame,"bottom", cropValue.toString() )
-
-             cropValue = leftslider.value
-             filter.setKeyFrameParaValue(nFrame,"left", cropValue.toString() )
-
-             cropValue = rightslider.value
-             filter.setKeyFrameParaValue(nFrame,"right", cropValue.toString() )
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             console.log("2....")
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-             {
-                filter.anim_set("center","")
-                filter.anim_set("center_bias","")
-                filter.anim_set("top","")
-                filter.anim_set("bottom","")
-                filter.anim_set("left","")
-                filter.anim_set("right","")
-
-             }
-
-             filter.set("center", centerCheckBox.checked);
-             filter.set("center_bias", biasslider.value);
-             filter.set("top", topslider.value);
-
-             filter.set("bottom",  bottomslider.value);
-             filter.set("left",   leftslider.value);
-             filter.set("right",  rightslider.value);
-
-         }
-     }
     
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set("center", 0);
-            filter.set("center_bias", 0);
-            filter.set("top", 0);
-            filter.set("bottom", 0);
-            filter.set("left", 0);
-            filter.set("right", 0);
-            centerCheckBox.checked = false
-            filter.savePreset(defaultParameters)
-        }
-        var keyFrameCount = filter.getKeyFrameCountOnProject("center");
-        if(keyFrameCount>0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "center");
-              var centerkeyValue = filter.getKeyValueOnProjectOnIndex(index, "center");
-
-              var centerBiaskeyValue = filter.getKeyValueOnProjectOnIndex(index, "center_bias");
-              var topkeyValue = filter.getKeyValueOnProjectOnIndex(index, "top");
-              var bottomkeyValue = filter.getKeyValueOnProjectOnIndex(index, "bottom");
-              var leftkeyValue = filter.getKeyValueOnProjectOnIndex(index, "left");
-              var rightkeyValue = filter.getKeyValueOnProjectOnIndex(index, "right");
-
-              filter.setKeyFrameParaValue(nFrame,"center", centerkeyValue.toString() );
-              filter.setKeyFrameParaValue(nFrame,"center_bias", centerBiaskeyValue.toString() )
-              filter.setKeyFrameParaValue(nFrame,"top", topkeyValue.toString() )
-              filter.setKeyFrameParaValue(nFrame,"bottom", bottomkeyValue.toString() )
-              filter.setKeyFrameParaValue(nFrame,"left", leftkeyValue.toString() )
-              filter.setKeyFrameParaValue(nFrame,"right", rightkeyValue.toString() )
-
-            }
-
-            filter.combineAllKeyFramePara();
-
-            centerCheckBox.checked = filter.getKeyFrameOnProjectOnIndex(0, "center") == '1'
-        }
-        else
-        {
-            biasslider.value = +filter.get('center_bias')
-            topslider.value = +filter.get('top')
-            bottomslider.value = +filter.get('bottom')
-            leftslider.value = +filter.get('left')
-            rightslider.value = +filter.get('right')
-            centerCheckBox.checked = filter.get('center') == '1'
-        }
+        keyFrame.initFilter(layoutRoot)
         setEnabled()
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-        // 	currentPosition: filterDock.getCurrentPosition()
-             onSetAsKeyFrame:
-             {
-                setKeyFrameValue(bKeyFrame)
-             }
-
-             onLoadKeyFrame:
-             {
-                 
-                 console.log("onLoadKeyFrameonLoadKeyFrame: ")
-
-                 var cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "center");
-                 if(cropValue != -1.0)
-                 {
-                     centerCheckBox.checked = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-                 
-
-                 cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "center_bias");
-                 if(cropValue != -1.0)
-                 {
-                     biasslider.value = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-
-                 cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "top");
-                 if(cropValue != -1.0)
-                 {
-                     topslider.value = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-
-                 cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "bottom");
-                 if(cropValue != -1.0)
-                 {
-                     bottomslider.value = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-
-                 cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "left");
-                 if(cropValue != -1.0)
-                 {
-                     leftslider.value = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-
-                 cropValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "right");
-                 if(cropValue != -1.0)
-                 {
-                     rightslider.value = cropValue
-                 }
-                 console.log("cropValue: " + cropValue)
-
-             }
-         }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+                setEnabled()
+            }
+        }
 
         Label {
             text: qsTr('Preset')
@@ -230,31 +79,24 @@ Item {
         }
 
         CheckBox {
+            objectName: 'centerCheckBox'
             id: centerCheckBox
-//            text: qsTr('Center')
             checked: filter.get('center') == '1'
             property bool isReady: false
             Component.onCompleted: isReady = true
             onClicked: {
                 if (isReady) {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "center", Number(checked).toString())
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                        filter.set('center', Number(checked).toString())
-                    }
+                    keyFrame.controlValueChanged(centerCheckBox)
                     setEnabled()
                 }
-
+            }
             style: CheckBoxStyle {
                         label: Text {
                             color: "white"
                             text: qsTr('Center')
                         }
-            }
+                }
+            
         }
         Item {
             Layout.fillWidth: true;
@@ -271,20 +113,14 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
+            objectName: 'biasslider'
             id: biasslider
             minimumValue: -Math.max(profile.width, profile.height) / 2
             maximumValue: Math.max(profile.width, profile.height) / 2
             suffix: ' px'
             value: +filter.get('center_bias')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "center_bias", value.toString())
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('center_bias', value)
+                keyFrame.controlValueChanged(biasslider)
             }
         }
         UndoButton {
@@ -297,20 +133,14 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
+            objectName: 'topslider'
             id: topslider
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('top')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "top", value.toString())
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('top', value)
+                keyFrame.controlValueChanged(topslider)
             }
         }
         UndoButton {
@@ -323,20 +153,14 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
+            objectName: 'bottomslider'
             id: bottomslider
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('bottom')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "bottom", value.toString())
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('bottom', value)
+                keyFrame.controlValueChanged(bottomslider)
             }
         }
         UndoButton {
@@ -349,20 +173,14 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
+            objectName: 'leftslider'
             id: leftslider
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('left')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "left", value.toString())
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('left', value)
+                keyFrame.controlValueChanged(leftslider)
             }
         }
         UndoButton {
@@ -375,20 +193,14 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
+            objectName: 'rightslider'
             id: rightslider
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('right')
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "right", value.toString())
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('right', value)
+                keyFrame.controlValueChanged(rightslider)
             }
         }
         UndoButton {
