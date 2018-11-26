@@ -125,7 +125,7 @@ Rectangle {
 
             customIconSource: 'qrc:///icons/light/32x32/list-add.png'
             onClicked: {
-                filterMenu.popup(addButton)
+                filterMenu.popup(addButton, null)
             }
         }
 
@@ -204,15 +204,15 @@ Rectangle {
         }
     }
 
-    KeyFrameControl {
-        id: keyFrameControl
-        anchors {
-            top: attachedContainer.bottom
-            left: parent.left
-            leftMargin: 10
-            topMargin: 0
-        }
-    }
+   KeyFrameControl {
+       id: keyFrameControl
+       anchors {
+           top: attachedContainer.bottom
+           left: parent.left
+           leftMargin: 10
+           topMargin: 0
+       }
+   }
 
 
     states: [

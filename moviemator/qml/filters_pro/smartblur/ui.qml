@@ -64,53 +64,6 @@ Item {
         }
     }
 
-    function setKeyFrameValue(bKeyFrame)
-     {
-        var keyFrameCount = filter.getKeyFrameCountOnProject("av.luma_radius");
-        console.log("2......")
-        console.log(keyFrameCount)
-         var nFrame = keyFrame.getCurrentFrame();
-         if(bKeyFrame)
-         {
-
-             var blurValue = radiusSlider.value;
-             filter.setKeyFrameParaValue(nFrame,"av.luma_radius", blurValue.toString())
-             filter.setKeyFrameParaValue(nFrame,"av.chroma_radius", blurValue.toString())
-
-             blurValue = strengthSlider.value;
-             filter.setKeyFrameParaValue(nFrame, "av.luma_strength", blurValue.toString())
-             filter.setKeyFrameParaValue(nFrame, "av.chroma_strength", blurValue.toString())
-
-             blurValue = thresholdSlider.value;
-             filter.setKeyFrameParaValue(nFrame, "av.luma_threshold",  blurValue.toString())
-             filter.setKeyFrameParaValue(nFrame, "av.chroma_threshold", blurValue.toString())
-
-             filter.combineAllKeyFramePara();
-         }
-         else
-         {
-             //Todo, delete the keyframe date of the currentframe
-             filter.removeKeyFrameParaValue(nFrame);
-             if(!filter.getKeyFrameNumber())
-            {
-                filter.anim_set("av.luma_radius","")
-                filter.anim_set("av.chroma_radius","")
-                filter.anim_set("av.luma_strength","")
-                filter.anim_set("av.chroma_strength","")
-                filter.anim_set("av.luma_threshold","")
-                filter.anim_set("av.chroma_threshold","")
-            }
-             filter.set("av.luma_radius", radiusSlider.value)
-             filter.set("av.chroma_radius", radiusSlider.value)
-
-             filter.set("av.luma_strength", strengthSlider.value)
-             filter.set("av.chroma_strength", strengthSlider.value)
-
-             filter.set("av.luma_threshold", thresholdSlider.value)
-             filter.set("av.chroma_threshold", thresholdSlider.value)
-         }
-     }
-
     function setControls() {
         radiusSlider.value = filter.getDouble("av.luma_radius")
         strengthSlider.value = filter.getDouble("av.luma_strength")
