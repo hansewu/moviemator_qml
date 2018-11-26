@@ -83,9 +83,52 @@ Rectangle {
             Label {
                 color: activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio + 2
-                text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
+                // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
+                // 只有显示出来的才转换
+                text: {
+                    if(visible==true){
+                        convertTimeValue(timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale)))
+                    }
+                }
                 font.pointSize: 7.5
                 visible: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval) == 0
+            }
+
+            // 把帧数不为 0的强制显示成 0
+            function convertTimeValue(str){
+                if(Math.floor(frames)==frames){
+                    return str;
+                }
+                var len = str.length;
+                var sub_frames = str.substr(len-2);
+                if(sub_frames == "00"){
+                    return str;
+                }
+                var num_sub_frames = Number(sub_frames);
+                if(num_sub_frames>0 && num_sub_frames<frames/2){
+                    return str.substring(0, len-2) + "00";
+                }
+                if(/*num_sub_frames<=Math.floor(frames) && */num_sub_frames>=frames/2 && sub_frames!=="00"){
+                    sub_frames = "00";
+                    var sub_second = str.substr(len-5, 2);
+                    sub_second = Number(sub_second) + 1;
+                    sub_second = Number(sub_second<10) ? "0"+sub_second : sub_second;
+                    if(sub_second == "60"){
+                        sub_second = "00";
+                        var sub_minute = str.substr(len-8, 2);
+                        sub_minute = Number(sub_minute) + 1;
+                        sub_minute = Number(sub_minute)<10 ? "0"+sub_minute : sub_minute;
+                        if(sub_minute == "60"){
+                            sub_minute = "00";
+                            var sub_hour = str.substring(0, str.indexOf(":"));
+                            sub_hour = Number(sub_hour) + 1;
+                            sub_hour = Number(sub_hour)<10 ? "0"+sub_hour : sub_hour;
+                            return str.indexOf(";")>0 ? (sub_hour+":"+sub_minute+":"+sub_second+";"+sub_frames) : (sub_hour+":"+sub_minute+":"+sub_second+":"+sub_frames);
+                        }
+                        return str.indexOf(";")>0 ? (str.substring(0, len-8)+sub_minute+":"+sub_second+";"+sub_frames) : (str.substring(0, len-8)+":"+sub_minute+":"+sub_second+":"+sub_frames);
+                    }
+                    return str.indexOf(";")>0 ? (str.substring(0, len-5)+sub_second+";"+sub_frames) : (str.substring(0, len-5)+sub_second+":"+sub_frames);
+                }
             }
         }
     }

@@ -70,8 +70,6 @@ Item {
             filter.set(halignProperty, 'center')
             filter.set('size', filterRect.height)
             filter.savePreset(preset.parameters)
-
-            //filter.set(rectProperty, filter.getRect(rectProperty))
         }
 
         var keyFrameCount = filter.getKeyFrameCountOnProject("argument");
@@ -142,6 +140,7 @@ Item {
         }
 
         setControls()
+        filter.set(rectProperty, filter.getRect(rectProperty))
     }
 
     function setControls() {
@@ -182,31 +181,19 @@ Item {
             filterRect.y = y
             filterRect.width = w
             filterRect.height = h
+
+
             if(keyFrame.bKeyFrame)
             {
                 var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((x / profile.width * 100).toLocaleString(_locale))
-                           .arg((y / profile.height * 100).toLocaleString(_locale))
-                           .arg((w / profile.width * 100).toLocaleString(_locale))
-                           .arg((h / profile.height * 100).toLocaleString(_locale)))
-                
-                console.log("3333333333333333333333333333333331: ")
-                
-                console.log("rectProperty: " + filter.getKeyFrameParaValue(nFrame, rectProperty))
-                
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, filterRect, 1.0)
+                filter.combineAllKeyFramePara();
             }
             else
             {
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-               // filter.set(rectProperty, filter.getRect(rectProperty))
-                console.log("3333333333333333333333333333333332: ")
-                console.log("rectProperty: " + filter.get(rectProperty))
+                filter.set(rectProperty, filterRect)
             }
+            filter.set('size', filterRect.height)
         }
     }
 
@@ -226,52 +213,40 @@ Item {
             Layout.columnSpan:5
             onLoadKeyFrame:
             {
-                
-                // console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                // console.log("rectProperty: " + rectProperty)
-                
-                // var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
-                // var x = textValue.substring(0,textValue.lastIndexOf("\/")-1)
-                // var y = textValue.substring(textValue.lastIndexOf("\/")+1,textValue.lastIndexOf("\:")-1)
-                // var w = textValue.substring(textValue.lastIndexOf("\:")+1,textValue.lastIndexOf("x")-1)
-                // var h = textValue.substring(textValue.lastIndexOf("x")+1,textValue.length)
-                // rectX.text = x
-                // rectY.text = y
-                // rectW.text = w
-                // rectH.text = h
-                
-                // console.log("textValue: " + textValue)
-                // console.log("x: " + x)
-                // console.log("y: " + y)
-                // console.log("w: " + w)
-                // console.log("h: " + h)
-
+                var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "fgcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     fgColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
-                if(textValue != "")
+                if(textValue !== "")
                     textArea.text = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "family");
-                if(textValue != "")
+                if(textValue !== "")
                     fontButton.text = textValue;
 
+                var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
+                rectX.text = rect.x.toFixed()
+                rectY.text = rect.y.toFixed()
+                rectW.text = rect.width.toFixed()
+                rectH.text = rect.height.toFixed()
+                filter.set('size', rect.height)
+
                 textValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "weight");
-                if(textValue != "")
+                if(textValue !== "")
                     weightCombo.currentIndex = weightCombo.valueToIndex();
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "olcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     outlineColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "bgcolour");
-                if(textValue != "")
+                if(textValue !== "")
                     bgColor.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "pad");
-                if(textValue != "")
+                if(textValue !== "")
                     padSpinner.value = textValue;
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
@@ -306,7 +281,7 @@ Item {
             Layout.columnSpan: 4
             onPresetSelected: {
                 setControls()
-               // filter.set(rectProperty, filter.getRect(rectProperty))
+                filter.set(rectProperty, filter.getRect(rectProperty))
             }
         }
 
@@ -352,33 +327,53 @@ Item {
         RowLayout {
             Layout.columnSpan: 4
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Timecode')
                 onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
             }
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Frame #', 'Frame number')
                 onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
             }
         }
         
         Label {
-               text: qsTr('Insert field')
+               text: qsTr('')
                Layout.alignment: Qt.AlignRight
                color: '#ffffff'
             }
-
         RowLayout{
             Layout.columnSpan: 4
-            
-
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File date')
                 onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
             }
             Button {
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File name')
                 onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
             }
+        }
+
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
         }
 
         Label {
@@ -386,7 +381,6 @@ Item {
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        
         RowLayout {
             Layout.columnSpan: 4
 
@@ -394,7 +388,7 @@ Item {
                 id: fgColor
                 eyedropper: false
                 alpha: true
-                onValueChanged: 
+                onValueChanged:
                 {
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
@@ -410,6 +404,10 @@ Item {
 
             Button {
                 id: fontButton
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
+                Layout.maximumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 onClicked: {
                     fontDialog.font = Qt.font({ family: filter.get('family'), pointSize: 24, weight: Font.Normal })
                     fontDialog.open()
@@ -444,6 +442,10 @@ Item {
             }
             ComboBox {
                 id: weightCombo
+                Layout.minimumHeight: preset.height
+                Layout.maximumHeight: preset.height
+                Layout.minimumWidth: (preset.width - 8) / 2
+                Layout.maximumWidth: (preset.width - 8) / 2
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
                 property var values: [Font.Normal, Font.Bold, Font.Light]
                 function valueToIndex() {
@@ -465,11 +467,11 @@ Item {
                 }
            }
         }
+
         Label {
             text: qsTr('Outline')
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
-          //  Layout.column: 0
         }
         ColorPicker {
             id: outlineColor
@@ -493,7 +495,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 50
+            Layout.minimumWidth: 60
+            Layout.maximumWidth: 60
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -538,7 +541,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 50
+            Layout.minimumWidth: 60
+            Layout.maximumWidth: 60
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
@@ -555,7 +559,15 @@ Item {
                     filter.set('pad', value)
             }
         }
-////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
+        }
+
         Label {
             text: qsTr('Position')
             Layout.alignment: Qt.AlignRight
@@ -566,6 +578,8 @@ Item {
             TextField {
                 id: rectX
                 text: filterRect.x
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -576,6 +590,8 @@ Item {
             TextField {
                 id: rectY
                 text: filterRect.y
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -590,6 +606,8 @@ Item {
             TextField {
                 id: rectW
                 text: filterRect.width
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -600,6 +618,8 @@ Item {
             TextField {
                 id: rectH
                 text: filterRect.height
+                Layout.minimumWidth: (preset.width - 8) / 2 - 10
+                Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -714,9 +734,20 @@ Item {
     Connections {
         target: filter
         onChanged: {
-            var newValue = filter.getRect(rectProperty)
-            if (filterRect !== newValue)
-                filterRect = newValue
+            var position        = timeline.getPositionInCurrentClip()
+            var bKeyFrame       = filter.bKeyFrame(position)
+            if (bKeyFrame) {
+                var newRect = filter.getAnimRectValue(position, rectProperty)
+                filterRect = newRect
+                filter.setKeyFrameParaRectValue(position, rectProperty, filterRect, 1.0)
+                filter.combineAllKeyFramePara()
+            } else {
+                var newRect = filter.getRect(rectProperty)
+                if (filterRect !== newRect) {
+                    filterRect = newRect
+                    filter.set(rectProperty, filterRect)
+                }
+            }
         }
     }
 }

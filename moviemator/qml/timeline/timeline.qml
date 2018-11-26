@@ -17,15 +17,25 @@ Rectangle {
 
     signal clipClicked()
 
-    function zoomIn() {
+    function zoomIn(wheelx) {
 //        scaleSlider.value += 0.0625
+
+        toolbar.flag = 0
+        toolbar.wheelx = wheelx
+        toolbar.scaleValue = multitrack.scaleFactor
+
         toolbar.scaleSliderValue += 0.0625
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
     }
 
-    function zoomOut() {
+    function zoomOut(wheelx) {
 //        scaleSlider.value -= 0.0625
+
+        toolbar.flag = 0
+        toolbar.wheelx = wheelx
+        toolbar.scaleValue = multitrack.scaleFactor
+        
         toolbar.scaleSliderValue -= 0.0625
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
@@ -328,7 +338,6 @@ Rectangle {
                     height: root.height - ruler.height - toolbar.height - 1 - 1//下留白 与ruler的space
                     //flickableItem.interactive: false  //wzq
 
-
                     style: ScrollViewStyle {
                         handle:
                             Rectangle {
@@ -394,11 +403,11 @@ Rectangle {
                                                    {
                                                        if (wheel.angleDelta.y < 0)
                                                        {
-                                                            root.zoomIn()
+                                                            root.zoomIn(tracksArea.mouseX)
                                                        }
                                                        else if(wheel.angleDelta.y > 0)
                                                        {
-                                                           root.zoomOut()
+                                                           root.zoomOut(tracksArea.mouseX)
                                                         }
 
                                                    }

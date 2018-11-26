@@ -17,7 +17,16 @@ ToolBar {
 
     property bool hasClipOrTrackSelected:false
 
-
+    // Add -时间线以鼠标为中心缩放，参数传递给 scaleSlider
+    // wheelx：鼠标（滚轮）位置
+    // scaleValue：缩放前的缩放系数，起始是 1.01
+    // maxWidth：用来保存曾经最长的时间线
+    // flag：区分是点击缩放按钮还是鼠标滚轮，默认是鼠标滚轮
+    property real wheelx: 0.0
+    property real scaleValue: 1.01
+    property real maxWidth: 1.0
+    property int flag: 0
+    // Add -End
 
     id: root
     SystemPalette { id: activePalette }
@@ -287,8 +296,8 @@ ToolBar {
 
                 customText:qsTr('Add Filter')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
-                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-filter-n.png':'qrc:///timeline/timeline-toolbar-filter-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-filter-p.png'
             }
             // Add -End
 
@@ -314,8 +323,8 @@ ToolBar {
 
                 customText:qsTr('Transition Settings')
 
-                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
-                pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
             }
             // Add -End
         }
@@ -392,7 +401,14 @@ ToolBar {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         z: 2
-        onValueChanged: Logic.scrollIfNeeded()
+        onValueChanged: {
+            if(flag==0){   // 鼠标滚轮缩放
+                Logic.scrollIfZoomNeeded(wheelx, scaleValue)
+            }
+            else{  // 按钮缩放
+                Logic.scrollIfNeeded()
+            }
+        }
     }
 
     // Add -滤镜菜单
@@ -562,7 +578,10 @@ ToolBar {
         tooltip: qsTr('Zoom out timeline')
         //iconName: 'posAndSize'
 //        iconSource: 'qrc:///timeline/timeline-toolbar-zoomout.png'
-        onTriggered: scaleSlider.value -= 0.1
+        onTriggered: {
+            flag = 1
+            scaleSlider.value -= 0.1
+        }
     }
 
     Action {
@@ -570,7 +589,10 @@ ToolBar {
         tooltip: qsTr('Zoom in timeline')
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-zoomin.png'
-        onTriggered: scaleSlider.value += 0.1
+        onTriggered: {
+            flag = 1
+            scaleSlider.value += 0.1
+        }
     }
 
     Action {
@@ -587,7 +609,7 @@ ToolBar {
         enabled: hasClipOrTrackSelected
         onTriggered: {
             timeline.emitShowFilterDock();
-            filterMenu.popup(filterButton);
+            filterMenu.popup(filterButton, timeline.dockPosition);
         }
     }
     // Add -End

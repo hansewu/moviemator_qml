@@ -844,7 +844,8 @@ Rectangle {
 
         // 时间线工具转场属性改为转场设置
         MenuItem {
-            text: qsTr(!isTransition ? 'Properties' : 'Transition Settings')     // qsTr('Properties')
+//            text: qsTr(!isTransition ? 'Properties' : 'Transition Settings')     // qsTr('Properties')
+            text: !isTransition ? qsTr('Properties') : qsTr('Transition Settings')
             visible: !isText && !isBlank
             onTriggered:
                 timeline.onShowProperties(trackIndex, index)
