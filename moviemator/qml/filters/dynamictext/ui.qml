@@ -35,7 +35,8 @@ Item {
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
-            filter.set('fgcolour', '#ffffffff')
+//            filter.set('fgcolour', '#ffffffff')
+            filter.set("fgcolour", Qt.rect(255, 255, 255, 255))
             filter.set('bgcolour', '#00000000')
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
@@ -100,7 +101,16 @@ Item {
 
     function setControls() {
         textArea.text = filter.get('argument')
-        fgColor.value = filter.get('fgcolour')
+//        fgColor.value = filter.get('fgcolour')
+
+        var colorRect = filter.getRect("fgcolour")
+        var aStr = colorRect.x.toString(16)
+        var rStr = colorRect.y.toString(16)
+        var gStr = colorRect.width.toString(16)
+        var bStr = colorRect.height.toString(16)
+        var colorStr = "#" + aStr + rStr + gStr + bStr
+        fgColor.value = colorStr
+
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
@@ -248,7 +258,25 @@ Item {
                 id: fgColor
                 eyedropper: false
                 alpha: true
-                onValueChanged: filter.set('fgcolour', value)
+                onValueChanged: {
+                    var aStr = value.substring(1, 3)
+                    var rStr = value.substring(3, 5)
+                    var gStr = value.substring(5, 7)
+                    var bStr = value.substring(7)
+                    if (value.length <= 7) {
+                        aStr = "FF"
+                        rStr = value.substring(1, 3)
+                        gStr = value.substring(3, 5)
+                        bStr = value.substring(5)
+                    }
+
+                    var rInt = parseInt(rStr, 16)
+                    var gInt = parseInt(gStr, 16)
+                    var bInt = parseInt(bStr, 16)
+                    var aInt = parseInt(aStr, 16)
+
+                    filter.set('fgcolour', Qt.rect(aInt, rInt, gInt, bInt))
+                }
             }
 
             Button {
