@@ -659,6 +659,10 @@ Rectangle {
             var selectedTrack = timeline.selectedTrack()
             for (var i = 0; i < trackHeaderRepeater.count; i++)
                 trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
+
+            var selectedAClip = timeline.selectedAClip()
+            if (selectedAClip === false)
+                toolbar.hasClipOrTrackSelected = false
         }
     }
 
