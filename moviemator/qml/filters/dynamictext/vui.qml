@@ -14,7 +14,7 @@ Flickable {
     interactive: false
     clip: true
     property real zoom: (video.zoom > 0)? video.zoom : 1.0
-    property rect filterRect: filter.getRect(rectProperty)
+    property rect filterRect
     contentWidth: video.rect.width * zoom
     contentHeight: video.rect.height * zoom
     contentX: video.offset.x
@@ -24,11 +24,25 @@ Flickable {
         return (filter.get(fillProperty) === '1')? filter.producerAspect : 0.0
     }
 
+    function getAbsoluteRect() {
+        var rect = filter.getRectOfTextFilter(rectProperty)
+        return Qt.rect(rect.x * profile.width, rect.y * profile.height, rect.width * profile.width, rect.height * profile.height)
+    }
+
+    function getRelativeRect(rect) {
+        return Qt.rect(rect.x / profile.width, rect.y / profile.height, rect.width / profile.width, rect.height / profile.height)
+    }
+
     Component.onCompleted: {
+        var newRect = getAbsoluteRect()
+        if (newRect !== filterRect) {
+            filterRect = newRect
+            rectangle.setHandles(filterRect)
+        }
+
         if (filter.isNew) {
             filter.set('size', filterRect.height)
         }
-        rectangle.setHandles(filter.getRect(rectProperty))
     }
 
     MouseArea {
@@ -80,19 +94,15 @@ Flickable {
             aspectRatio: getAspectRatio()
             handleSize: Math.max(Math.round(8 / zoom), 4)
             borderSize: Math.max(Math.round(1.33 / zoom), 1)
-            onWidthScaleChanged: setHandles(filter.getRect(rectProperty))
-            onHeightScaleChanged: setHandles(filter.getRect(rectProperty))
+            onWidthScaleChanged: setHandles(getAbsoluteRect())
+            onHeightScaleChanged: setHandles(getAbsoluteRect())
             onRectChanged:  {
                 filterRect.x = Math.round(rect.x / rectangle.widthScale)
                 filterRect.y = Math.round(rect.y / rectangle.heightScale)
                 filterRect.width = Math.round(rect.width / rectangle.widthScale)
                 filterRect.height = Math.round(rect.height / rectangle.heightScale)
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((filterRect.x / profile.width * 100).toLocaleString(_locale))
-                           .arg((filterRect.y / profile.height * 100).toLocaleString(_locale))
-                           .arg((filterRect.width / profile.width * 100).toLocaleString(_locale))
-                           .arg((filterRect.height / profile.height * 100).toLocaleString(_locale)))
-                // filter.set(rectProperty, filter.getRect(rectProperty))
+
+                filter.set(rectProperty, getRelativeRect(filterRect))
                 filter.set('size', filterRect.height)
             }
         }
@@ -101,7 +111,7 @@ Flickable {
     Connections {
         target: filter
         onChanged: {
-            var newRect = filter.getRect(rectProperty)
+            var newRect = getAbsoluteRect()
             if (filterRect !== newRect) {
                 filterRect = newRect
                 rectangle.setHandles(filterRect)
@@ -111,12 +121,8 @@ Flickable {
                 rectangle.aspectRatio = getAspectRatio()
                 rectangle.setHandles(filterRect)
                 var rect = rectangle.rectangle
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                           .arg((Math.round(rect.x / rectangle.widthScale) / profile.width * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.y / rectangle.heightScale) / profile.height * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.width / rectangle.widthScale) / profile.width * 100).toLocaleString(_locale))
-                           .arg((Math.round(rect.height / rectangle.heightScale) / profile.height * 100).toLocaleString(_locale)))
-                // filter.set(rectProperty, filter.getRect(rectProperty))
+                filter.set(rectProperty, getRelativeRect(rect))
+                filter.set('size', filterRect.height)
             }
         }
     }

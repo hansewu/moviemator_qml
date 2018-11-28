@@ -26,7 +26,7 @@ Item {
     property string rectProperty: 'geometry'
     property string valignProperty: 'valign'
     property string halignProperty: 'halign'
-    property rect filterRect: filter.getRect(rectProperty)
+    property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     width: 330
     height: 370
@@ -41,40 +41,58 @@ Item {
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
 
-            filter.set(rectProperty,   '0/50%:50%x50%')
+//            filter.set(rectProperty,   '0/50%:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
 
-            filter.set(rectProperty,   '50%/50%:50%x50%')
+//            filter.set(rectProperty,   '50%/50%:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
 
-            filter.set(rectProperty,   '0/0:50%x50%')
+//            filter.set(rectProperty,   '0/0:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
 
-            filter.set(rectProperty,   '50%/0:50%x50%')
+//            filter.set(rectProperty,   '50%/0:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
 
-            filter.set(rectProperty,   '0/76%:100%x14%')
+//            filter.set(rectProperty,   '0/76%:100%x14%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
-            filter.set(rectProperty, '0/0:100%x100%')
+//            filter.set(rectProperty, '0/0:100%x100%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
-            filter.set('size', filterRect.height)
             filter.savePreset(preset.parameters)
 
-            // filter.set(rectProperty, filter.getRect(rectProperty))
+            //設置默認預設
+            filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
         }
+
         setControls()
+        filterRect = getAbsoluteRect()
+        filter.set('size', filterRect.height)
+    }
+
+    function getAbsoluteRect() {
+        var rect = filter.getRectOfTextFilter(rectProperty)
+        return Qt.rect(rect.x * profile.width, rect.y * profile.height, rect.width * profile.width, rect.height * profile.height)
+    }
+
+    function getRelativeRect(absoluteRect) {
+        return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
     function setFilter() {
@@ -90,12 +108,7 @@ Item {
             filterRect.y = y
             filterRect.width = w
             filterRect.height = h
-            filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-            // filter.set(rectProperty, filter.getRect(rectProperty))
+            filter.set(rectProperty, getRelativeRect(filterRect))
         }
     }
 
@@ -103,7 +116,7 @@ Item {
         textArea.text = filter.get('argument')
 //        fgColor.value = filter.get('fgcolour')
 
-        var colorRect = filter.getRect("fgcolour")
+        var colorRect = filter.getRectOfTextFilter("fgcolour")
         var aStr = colorRect.x.toString(16)
         var rStr = colorRect.y.toString(16)
         var gStr = colorRect.width.toString(16)
@@ -155,7 +168,11 @@ Item {
             Layout.columnSpan: 4
             onPresetSelected: {
                 setControls()
-                // filter.set(rectProperty, filter.getRect(rectProperty))
+                var newRect = getAbsoluteRect()
+                if (newRect !== filterRect) {
+                    filterRect = getAbsoluteRect()
+                    filter.set('size', filterRect.height)
+                }
             }
         }
 
@@ -389,7 +406,7 @@ Item {
                 id: rectX
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10                
-                text: filterRect.x
+                text: filterRect.x.toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -401,7 +418,7 @@ Item {
                 id: rectY
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10                
-                text: filterRect.y
+                text: filterRect.y.toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -417,7 +434,7 @@ Item {
                 id: rectW
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10                
-                text: filterRect.width
+                text: filterRect.width.toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
             }
@@ -427,7 +444,7 @@ Item {
             }
             TextField {
                 id: rectH
-                text: filterRect.height
+                text: filterRect.height.toFixed()
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10                
                 horizontalAlignment: Qt.AlignRight
@@ -491,9 +508,11 @@ Item {
     Connections {
         target: filter
         onChanged: {
-            var newValue = filter.getRect(rectProperty)
-            if (filterRect !== newValue)
-                filterRect = newValue
+            var newRect = getAbsoluteRect()
+            if (filterRect !== newRect) {
+                filterRect = newRect
+                filter.set('size', filterRect.height)
+            }
         }
     }
 }
