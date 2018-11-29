@@ -456,7 +456,7 @@ Rectangle {
             Rectangle {
                 id: cursor
                 visible: x >= 0 ? true : false     // timeline.position > -1
-                color: activePalette.text
+                color: "#d1d1d1"    // activePalette.text
                 width: 1
                 height: root.height - scrollView.__horizontalScrollBar.height - toolbar.height
                 x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX
