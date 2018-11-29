@@ -145,7 +145,10 @@ Flickable {
                     filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
                     filter.combineAllKeyFramePara();
                 } else {
-                    filter.set(rectProperty, getRelativeRect(filterRect))
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(rectProperty, getRelativeRect(filterRect))
+                    }
                 }
                 filter.set('size', filterRect.height)
             }

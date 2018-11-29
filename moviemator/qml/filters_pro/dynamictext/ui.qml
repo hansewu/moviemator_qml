@@ -239,8 +239,11 @@ Item {
             }
             else
             {
-                filter.set(rectProperty, getRelativeRect(filterRect))
-                filter.set('size', filterRect.height)
+                var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
+                if (keyFrameCount <= 0) {
+                    filter.set(rectProperty, getRelativeRect(filterRect))
+                    filter.set('size', filterRect.height)
+                }
             }
         }
     }
@@ -453,8 +456,10 @@ Item {
                         filter.setKeyFrameParaRectValue(nFrame, "fgcolour", getRectColor(value), 1.0)
                         filter.combineAllKeyFramePara()
                     } else {
-                        console.log("sll------rectColor----9999----", getRectColor(value))
-                        filter.set('fgcolour', getRectColor(value))
+                        var keyFrameCount = filter.getKeyFrameCountOnProject("fgcolour");
+                        if (keyFrameCount <= 0) {
+                            filter.set('fgcolour', getRectColor(value))
+                        }
                     }
                 }
             }
