@@ -30,29 +30,32 @@ Item {
         }
     }
 
+    Component.onCompleted: {
+        keyFrame.initFilter(layoutRoot)
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                  var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "program");
-                  if(sliderValue != -1.0)
-                  {
-                      programSlider.value = sliderValue
-                  }
-
-             }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
         }
         RowLayout {
+            id: layoutRoot
             Label {
                 text: qsTr('Target Loudness')
                 color: '#ffffff'
             }
             SliderSpinner {
+                objectName: 'programSlider'
                 id: programSlider
                 minimumValue: -50.0
                 maximumValue: -10.0
@@ -61,14 +64,7 @@ Item {
                 spinnerWidth: 100
                 value: filter.getDouble('program')
                 onValueChanged: {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "program", value)
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                    filter.set('program', value)
+                    keyFrame.controlValueChanged(programSlider)
                 }
             }
             UndoButton {

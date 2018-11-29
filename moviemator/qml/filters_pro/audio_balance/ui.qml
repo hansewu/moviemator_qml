@@ -8,71 +8,41 @@ Item {
     width: 300
     height: 250
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set('start', 0.5)
-            slider.value = filter.getDouble('start') * 1000
-        }
-        var keyFrameCount = filter.getKeyFrameCountOnProject("start");
-        if(keyFrameCount>0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "start");
-                var keyValue = filter.getKeyValueOnProjectOnIndex(index, "start");
-                var sliderValue = keyValue * 1000.0;
-                filter.setKeyFrameParaValue(nFrame,"start", sliderValue.toString() );
-
-            }
-            filter.combineAllKeyFramePara();
-
-            slider.value = filter.getKeyValueOnProjectOnIndex(0,"start" ) * 1000.0
-        }
-        
+        keyFrame.initFilter(layoutRoot)
     }
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                   var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "start");
-                   if(sliderValue != -1.0)
-                   {
-                        slider.value = sliderValue * 1000
-                   }
-
-             }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
         }
 
         RowLayout {
+            id: layoutRoot
             Label {
                 text: qsTr('Left')
                 color: '#ffffff'
             }
             SliderSpinner {
+                objectName: 'slider'
                 id: slider
                 minimumValue: 0
                 maximumValue: 1000
                 ratio: 1000
                 decimals: 2
                 label: qsTr('Right')
-//color: '#ffffff'
                 value: filter.getDouble('start') * maximumValue
                 onValueChanged: {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "start", value / maximumValue)
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                    filter.set('start', value / maximumValue)
+                    keyFrame.controlValueChanged(slider)
                 }
                 
             }

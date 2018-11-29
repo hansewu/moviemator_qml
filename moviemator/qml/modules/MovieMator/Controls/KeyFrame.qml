@@ -12,7 +12,7 @@ RowLayout{
     property bool bKeyFrame: false
     
     signal synchroData()
-    signal setAsKeyFrame(bool bKeyFrame)
+    signal setAsKeyFrame()
     signal loadKeyFrame(double keyFrameNum)
 
     function getCurrentFrame(){
@@ -78,9 +78,12 @@ RowLayout{
    Connections {
             target: keyFrameControl
             onAddFrameChanged: {
+                if(bKeyFrame)
+                    return
                 bKeyFrame = true
                 synchroData()
-                addKeyFrameValue()
+                setAsKeyFrame()
+                // addKeyFrameValue()
             }
    }
    Connections {

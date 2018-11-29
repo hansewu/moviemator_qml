@@ -15,10 +15,12 @@ Metadata {
             Parameter {
                 name: qsTr('Radius')
                 property: 'radius'
-                isSimple: true
-                isCurve: true
-                minimum: 0
-                maximum: 1
+                objectName: 'slider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '50'
+                value: '0'
+                factorFunc:  ['c:100']
             }
         ]
     }

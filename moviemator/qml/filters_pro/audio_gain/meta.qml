@@ -16,10 +16,12 @@ Metadata {
             Parameter {
                 name: qsTr('gain')
                 property: 'gain'
-                isSimple: true
-                isCurve: true
-                minimum: -50
-                maximum: 24
+                objectName: 'slider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: '0'
+                factorFunc:  ['c:20','pow:10']
             }
         ]
     }

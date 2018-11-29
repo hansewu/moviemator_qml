@@ -9,9 +9,9 @@ Item {
     property var defaultParameters: ['left', 'right', 'top', 'bottom', 'center', 'center_bias']
     width: 300
     height: 250
-
+    
     function setEnabled() {
-        if (centerCheckBox.checked == true) {
+        if (centerCheckBox.checked) {
             biasslider.enabled = true
             biasundo.enabled = true
             topslider.enabled = false
@@ -37,27 +37,31 @@ Item {
     }
     
     Component.onCompleted: {
-        keyFrame.initFilter(layoutRoot)
+        if (filter.isNew) {
+            // Set default parameter values
+            filter.set("center", 0);
+            filter.set("center_bias", 0);
+            filter.set("top", 0);
+            filter.set("bottom", 0);
+            filter.set("left", 0);
+            filter.set("right", 0);
+            centerCheckBox.checked = false
+            filter.savePreset(defaultParameters)
+
+            biasslider.value = +filter.get('center_bias')
+            topslider.value = +filter.get('top')
+            bottomslider.value = +filter.get('bottom')
+            leftslider.value = +filter.get('left')
+            rightslider.value = +filter.get('right')
+        }
+        centerCheckBox.checked = filter.get('center') == '1'
         setEnabled()
     }
 
     GridLayout {
-        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
-
-        YFKeyFrame{
-            id: keyFrame
-            Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
-            }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
-                setEnabled()
-            }
-        }
 
         Label {
             text: qsTr('Preset')
@@ -79,24 +83,24 @@ Item {
         }
 
         CheckBox {
-            objectName: 'centerCheckBox'
             id: centerCheckBox
+//            text: qsTr('Center')
             checked: filter.get('center') == '1'
             property bool isReady: false
             Component.onCompleted: isReady = true
             onClicked: {
                 if (isReady) {
-                    keyFrame.controlValueChanged(centerCheckBox)
+                    filter.set('center', checked)
                     setEnabled()
                 }
             }
+
             style: CheckBoxStyle {
                         label: Text {
                             color: "white"
                             text: qsTr('Center')
                         }
-                }
-            
+            }
         }
         Item {
             Layout.fillWidth: true;
@@ -113,15 +117,12 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
-            objectName: 'biasslider'
             id: biasslider
             minimumValue: -Math.max(profile.width, profile.height) / 2
             maximumValue: Math.max(profile.width, profile.height) / 2
             suffix: ' px'
             value: +filter.get('center_bias')
-            onValueChanged: {
-                keyFrame.controlValueChanged(biasslider)
-            }
+            onValueChanged: filter.set('center_bias', value)
         }
         UndoButton {
             id: biasundo
@@ -133,15 +134,12 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
-            objectName: 'topslider'
             id: topslider
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('top')
-            onValueChanged: {
-                keyFrame.controlValueChanged(topslider)
-            }
+            onValueChanged: filter.set('top', value)
         }
         UndoButton {
             id: topundo
@@ -153,15 +151,12 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
-            objectName: 'bottomslider'
             id: bottomslider
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
             value: +filter.get('bottom')
-            onValueChanged: {
-                keyFrame.controlValueChanged(bottomslider)
-            }
+            onValueChanged: filter.set('bottom', value)
         }
         UndoButton {
             id: bottomundo
@@ -173,15 +168,12 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
-            objectName: 'leftslider'
             id: leftslider
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('left')
-            onValueChanged: {
-                keyFrame.controlValueChanged(leftslider)
-            }
+            onValueChanged: filter.set('left', value)
         }
         UndoButton {
             id: leftundo
@@ -193,15 +185,12 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         SliderSpinner {
-            objectName: 'rightslider'
             id: rightslider
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
             value: +filter.get('right')
-            onValueChanged: {
-                keyFrame.controlValueChanged(rightslider)
-            }
+            onValueChanged: filter.set('right', value)
         }
         UndoButton {
             id: rightundo

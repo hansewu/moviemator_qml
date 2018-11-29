@@ -18,12 +18,25 @@ Rectangle {
             filter.set('radius', 0.5)
             slider.value = filter.getDouble('radius') * slider.maximumValue
         }
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
+
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
 
         Label {
             text: qsTr('Radius')
@@ -31,12 +44,13 @@ Rectangle {
             color: '#ffffff'
         }
         SliderSpinner {
+            objectName: 'slider'
             id: slider
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
             value: filter.getDouble('radius') * slider.maximumValue
-            onValueChanged: filter.set('radius', value / maximumValue)
+            onValueChanged: keyFrame.controlValueChanged(slider)
         }
         UndoButton {
             onClicked: slider.value = 50

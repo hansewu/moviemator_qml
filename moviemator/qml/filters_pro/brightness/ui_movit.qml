@@ -9,19 +9,25 @@ Item {
     height: 250
 
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set('alpha', 1.0)
-            filter.set('opacity', 1.0);
-        }
-        brightnessSlider.value = filter.getDouble('opacity') * 100.0
+        keyFrame.initFilter(layoutRoot)
     }
 
     GridLayout {
+        id: layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 8
 
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
+        }
         Label {
             text: qsTr('Brightness')
             Layout.alignment: Qt.AlignRight
@@ -34,7 +40,7 @@ Item {
             decimals: 1
             spinnerWidth: 80
             suffix: ' %'
-            onValueChanged: filter.set("opacity", value / 100.0)
+            onValueChanged: keyFrame.controlValueChanged(brightnessSlider)
         }
         UndoButton {
             onClicked: brightnessSlider.value = 100

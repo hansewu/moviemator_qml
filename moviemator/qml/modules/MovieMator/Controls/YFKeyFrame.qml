@@ -15,6 +15,7 @@ RowLayout{
     signal synchroData()
     signal loadKeyFrame()
 
+    // 滤镜初始化
     function initFilter(layoutRoot){
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
@@ -83,18 +84,25 @@ RowLayout{
             }
         }
     }
+    // 控件发生修改时反应
     function controlValueChanged(id){
+        // 可能一个控件对应几个配置项
         var parameterList = findParameter(id)
         for(var paramIndex=0;paramIndex<parameterList.length;paramIndex++){
             var parameter = parameterList[paramIndex]
             switch(parameter.controlType)
             {
             case "SliderSpinner":
+            
+                console.log("id.valueid.valueid.valueid.value: " + id.value)
+                console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+            
                 if(filter.bKeyFrame(currentFrame))
                 {
                     filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(id.value,parameter.factorFunc).toString())
                     filter.combineAllKeyFramePara()
-                }else if(Math.abs(id.value - parameter.value) < 1){
+                //如果这次的改变是程序往里面写值，则不做处理，下同
+                }else if((Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
 
                 }else{
                     filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
@@ -165,6 +173,7 @@ RowLayout{
         }
         
     }
+    // 添加为关键帧
     function addKeyFrameValue(){
         
         console.log("11111111111111111111111111111111111: ")
@@ -188,7 +197,7 @@ RowLayout{
             }
         }
 
-        //删除当前的帧
+        //重复点击不生效
         var bKeyFrame = filter.bKeyFrame(position)
         if (bKeyFrame)
             return
@@ -214,6 +223,7 @@ RowLayout{
         
 
     }
+    //帧位置改变时加载控件参数
     function loadFrameValue(layoutRoot){
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
@@ -242,11 +252,12 @@ RowLayout{
                 control.value = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property)
                 break;
             }
-            // 一个控件对应几个参数的，取一次就可以了
+            // 一个控件对应几个参数的，取一次就可以反算出来了
             var paramList = findParameter(control)
             paramIndex = paramIndex + paramList.length -1
         }
     }
+    // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
@@ -281,13 +292,18 @@ RowLayout{
 
         }
     }
-    //加减乘除 分别用 + - x c 被除b
+    //加减乘除 分别用 + - x c 被除b，对数log，指数pow
+    // 控件到程序的写入保存计算
     function saveValueCalc(value,factorFunc){
+        
+        console.log("saveValueCalcsaveValueCalc: " + value +" : " + factorFunc)
+        
         var rt = value
         for(var i=0;i<factorFunc.length;i++){
             var calc = factorFunc[i]
             var calcSymbol = calc.substring(0,calc.lastIndexOf(":"))
             var calcValue = parseFloat(calc.substring(calc.lastIndexOf(":")+1,calc.length))
+            console.log(rt + ":saveValueCalcsaveValueCalc-1: " + calcSymbol +" : " + calcValue)
             switch(calcSymbol)
             {
             case '+':
@@ -309,16 +325,29 @@ RowLayout{
             case 'b':
                 rt = calcValue / rt
                 break;
+
+            case 'log':
+            //非线性插值，有可能超出规定范围
+                rt = Math.log(Math.abs(rt)) / Math.log(Math.abs(calcValue))
+                break;
+
+            case 'pow':
+                rt = Math.pow(calcValue, rt);
+                break;
             }
         }
+        console.log("saveValueCalcsaveValueCalc2: " + rt)
         return rt;
     }
+    // 程序到控件参数的加载计算，刚好与写入保存相反
     function loadValueCalc(value,factorFunc){
+        console.log("loadValueCalcloadValueCalc: " + value +" : " + factorFunc)
         var rt = value
         for(var i=factorFunc.length-1;i>=0;i--){
             var calc = factorFunc[i]
             var calcSymbol = calc.substring(0,calc.lastIndexOf(":"))
             var calcValue = parseFloat(calc.substring(calc.lastIndexOf(":")+1,calc.length))
+            console.log(rt + ":loadValueCalcloadValueCalc-1: " + calcSymbol +" : " + calcValue)
             switch(calcSymbol)
             {
             case '+':
@@ -340,10 +369,20 @@ RowLayout{
             case 'b':
                 rt = calcValue / rt
                 break;
+
+            case 'log':
+                rt = Math.pow(calcValue, rt);
+                break;
+
+            case 'pow':
+                rt = Math.log(Math.abs(rt)) / Math.log(Math.abs(calcValue))
+                break;
             }
         }
+        console.log("loadValueCalcloadValueCalc: " + rt)
         return rt;
     }
+    // 根据objectName和root节点查找子节点
     function findControl(objectName,root){
         var controlList = root.children
         for(var i=0;i<controlList.length;i++){
@@ -353,6 +392,7 @@ RowLayout{
         }
         return null;
     }
+    // 根据控件id查找配置项
     function findParameter(id){
         var rt = [];
         for(var i=0;i<metadata.keyframes.parameters.length;i++){
@@ -361,19 +401,33 @@ RowLayout{
         }
         return  rt;
     }
+    // 加载单条滑条数据
     function loadControlSlider(control,parameter){
+        console.log("loadControlSliderloadControlSliderloadControlSlider: ")
         if(filter.bKeyFrame(currentFrame)){
             var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
             if(tempValue != -1.0)
             {
                 control.value = loadValueCalc(tempValue,parameter.factorFunc)
+                
+                console.log("loadControlSliderloadControlSlider-1: " + control.value)
+                
             }
         }else{
             filter.get(parameter.property)
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            if(tempValue >= 0)
-                control.value = parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
+            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+            parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
+            //非线性插值，有可能超出规定范围
+            if(parameter.value > control.maximumValue)
+                parameter.value = control.maximumValue
+            if(parameter.value < control.minimumValue)
+                parameter.value = control.minimumValue
+            // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
+            control.value = parameter.value
+            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
+            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
         }
     }
     function loadControlCheckbox(control,parameter){
@@ -411,6 +465,7 @@ RowLayout{
         var tempRed = loadValueCalc(rValue,parameter1.factorFunc)
         var tempGreen = loadValueCalc(gValue,parameter2.factorFunc)
         var tempBlue = loadValueCalc(bValue,parameter3.factorFunc)
+        // 一定要先改参数值，再改control值
         if(!bKeyFrame){
             parameter1.value = parameter2.value = parameter3.value = Qt.rgba( tempRed / 255.0, tempGreen / 255.0, tempBlue / 255.0, 1.0 )
             control.color = parameter1.value
@@ -431,7 +486,7 @@ RowLayout{
     {
         currentFrame = timeline.getPositionInCurrentClip()
     }
-
+    // 添加关键帧信号
     Connections {
              target: keyFrameControl
              onAddFrameChanged: {
@@ -440,6 +495,7 @@ RowLayout{
                  addKeyFrameValue()
              }
     }
+    // 帧位置改变信号
     Connections {
              target: keyFrameControl
              onFrameChanged: {
@@ -448,6 +504,7 @@ RowLayout{
                  loadKeyFrame()
              }
     }
+    // 移除关键帧信号
     Connections {
              target: keyFrameControl
              onRemoveKeyFrame: {
@@ -455,6 +512,7 @@ RowLayout{
                 var nFrame = keyFrame.getCurrentFrame();
                 synchroData()
                 filter.removeKeyFrameParaValue(nFrame);
+                filter.combineAllKeyFramePara();
              }
     }
 

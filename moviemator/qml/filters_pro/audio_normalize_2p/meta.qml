@@ -16,8 +16,12 @@ Metadata {
             Parameter {
                 name: qsTr('program')
                 property: 'program'
-                isSimple: true
-                isCurve: true
+                objectName: 'programSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '-23.0'
+                value: '0'
+                factorFunc:  []
             }
         ]
     }

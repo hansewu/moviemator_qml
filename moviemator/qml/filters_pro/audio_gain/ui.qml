@@ -26,60 +26,33 @@ Item {
     height: 250
     property string gainParameter: 'gain'
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set(gainParameter, 1.0)
-            slider.value = toDb(filter.getDouble(gainParameter))
-        }
-        var keyFrameCount = filter.getKeyFrameCountOnProject("gain");
-        if(keyFrameCount > 0)
-        {
-            var index=0;
-            for(index=0; index<keyFrameCount;index++)
-            {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "gain");
-              var keyValue = filter.getKeyValueOnProjectOnIndex(index, "gain");
-              var sliderValue = toDb(keyValue);
-              filter.setKeyFrameParaValue(nFrame, gainParameter, sliderValue.toString() );
-            }
-
-            filter.combineAllKeyFramePara();
-
-            slider.value = toDb(filter.getKeyValueOnProjectOnIndex(0, "gain"));
-        }
-    }
-
-    function toDb(value) {
-        return 20 * Math.log(value) / Math.LN10
-    }
-
-    function fromDb(value) {
-        return Math.pow(10, value / 20);
+        keyFrame.initFilter(layoutRoot)
     }
 
     ColumnLayout {
+        
         anchors.fill: parent
         anchors.margins: 8
 
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:8
-             onLoadKeyFrame:
-             {
-                  var sliderValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, gainParameter);
-                  if(sliderValue != -1.0)
-                  {
-                       slider.value = toDb(sliderValue)
-                  }
-             }
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSynchroData:{
+                keyFrame.setDatas(layoutRoot)
+            }
+            onLoadKeyFrame:{
+                keyFrame.loadFrameValue(layoutRoot)
+            }
         }
 
         RowLayout {
+            id: layoutRoot
             Label {
                 text: qsTr('Gain')
                 color: '#ffffff'
             }
             SliderSpinner {
+                objectName: 'slider'
                 id: slider
                 minimumValue: -50
                 maximumValue: 24
@@ -88,14 +61,7 @@ Item {
                 spinnerWidth: 80
                 value: toDb(filter.getDouble(gainParameter))
                 onValueChanged: {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, gainParameter, fromDb(value))
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                    filter.set(gainParameter, fromDb(value))
+                    keyFrame.controlValueChanged(slider)
                 }
                 
             }
