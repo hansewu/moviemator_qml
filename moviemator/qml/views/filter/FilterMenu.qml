@@ -20,6 +20,30 @@ Window {
         filterWindow.x = menuRect.x
         filterWindow.y = menuRect.y
         filterWindow.height = menuRect.height
+
+        // 时间线工具栏添加滤镜按钮和滤镜界面的添加按钮会互相影响，
+        // 会导致激活的滤镜类型与列表对应不上；
+        // 判断是哪种滤镜，把对应按钮的选中状态和图片切换一下。
+        if (metadatamodel.filter == MovieMator.MetadataModel.FavoritesFilter) {
+            favButton.checked = true
+            favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks-highlight.png'
+            vidButton.iconSource = 'qrc:///icons/light/32x32/video-television.png'
+            audButton.iconSource = 'qrc:///icons/light/32x32/speaker.png'
+        }        
+        else if(metadatamodel.filter == MovieMator.MetadataModel.VideoFilter) {
+            vidButton.checked = true
+            vidButton.iconSource = 'qrc:///icons/light/32x32/video-television-highlight.png'
+            favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks.png'
+            audButton.iconSource = 'qrc:///icons/light/32x32/speaker.png'
+        }
+        else if(metadatamodel.filter == MovieMator.MetadataModel.AudioFilter) {
+            audButton.checked = true
+            audButton.iconSource = 'qrc:///icons/light/32x32/speaker-highlight.png'
+            vidButton.iconSource = 'qrc:///icons/light/32x32/video-television.png'
+            favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks.png'
+        }
+        // End
+
         filterWindow.show()
         filterWindow.requestActivate()
     }
