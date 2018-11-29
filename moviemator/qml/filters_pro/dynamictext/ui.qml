@@ -26,51 +26,98 @@ Item {
     property string rectProperty: 'geometry'
     property string valignProperty: 'valign'
     property string halignProperty: 'halign'
-    property rect filterRect: filter.getRect(rectProperty)
+    property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     width: 330
     height: 370
+
+    function getHexStrColor(position) {
+        var colorRect = filter.getRectOfTextFilter("fgcolour")
+        if (position >= 0) {
+            colorRect = filter.getAnimRectValue(position, "fgcolour")
+        }
+        var aStr = parseInt(colorRect.x).toString(16)
+        var rStr = parseInt(colorRect.y).toString(16)
+        var gStr = parseInt(colorRect.width).toString(16)
+        var bStr = parseInt(colorRect.height).toString(16)
+        return "#" + aStr + rStr + gStr + bStr
+    }
+
+    function getRectColor(hexStrColor) {
+        var aStr = hexStrColor.substring(1, 3)
+        var rStr = hexStrColor.substring(3, 5)
+        var gStr = hexStrColor.substring(5, 7)
+        var bStr = hexStrColor.substring(7)
+        if (hexStrColor.length <= 7) {
+            aStr = "FF"
+            rStr = hexStrColor.substring(1, 3)
+            gStr = hexStrColor.substring(3, 5)
+            bStr = hexStrColor.substring(5)
+        }
+
+        return Qt.rect(parseInt(aStr, 16), parseInt(rStr, 16), parseInt(gStr, 16), parseInt(bStr, 16))
+    }
+
+    function getAbsoluteRect(position) {
+        var rect = filter.getRectOfTextFilter(rectProperty)
+        if (position >= 0) {
+            rect = filter.getAnimRectValue(position, rectProperty)
+        }
+        return Qt.rect(rect.x * profile.width, rect.y * profile.height, rect.width * profile.width, rect.height * profile.height)
+    }
+
+    function getRelativeRect(absoluteRect) {
+        return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
+    }
 
     Component.onCompleted: {
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
-            filter.set('fgcolour', '#ffffffff')
+//            filter.set('fgcolour', '#ffffffff')
+            filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
             filter.set('bgcolour', '#00000000')
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
 
-            filter.set(rectProperty,   '0/50%:50%x50%')
+//            filter.set(rectProperty,   '0/50%:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
 
-            filter.set(rectProperty,   '50%/50%:50%x50%')
+//            filter.set(rectProperty,   '50%/50%:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
 
-            filter.set(rectProperty,   '0/0:50%x50%')
+//            filter.set(rectProperty,   '0/0:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
 
-            filter.set(rectProperty,   '50%/0:50%x50%')
+//            filter.set(rectProperty,   '50%/0:50%x50%')
+            filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
 
-            filter.set(rectProperty,   '0/76%:100%x14%')
+//            filter.set(rectProperty,   '0/76%:100%x14%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
-            filter.set(rectProperty, '0/0:100%x100%')
+//            filter.set(rectProperty, '0/0:100%x100%')
+            filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
-            filter.set('size', filterRect.height)
             filter.savePreset(preset.parameters)
         }
+
+        setControls()
 
         var keyFrameCount = filter.getKeyFrameCountOnProject("argument");
         if(keyFrameCount > 0)
@@ -82,9 +129,10 @@ Item {
               var keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "argument");
               filter.setKeyFrameParaValue(nFrame, "argument", keyValue)
 
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "fgcolour");
-              filter.setKeyFrameParaValue(nFrame, "fgcolour", keyValue)
-
+                console.log("sll------2222----")
+              var rectColor = filter.getAnimRectValue(index, "fgcolour")
+              console.log("sll------rectColor----1----", rectColor)
+              filter.setKeyFrameParaRectValue(index, "fgcolour", rectColor, 1.0)
 
               keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "family");
               filter.setKeyFrameParaValue(nFrame, "family", keyValue)
@@ -107,7 +155,6 @@ Item {
               keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "halign");
               filter.setKeyFrameParaValue(nFrame, halignProperty, keyValue)
 
-
               keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "valign");
               filter.setKeyFrameParaValue(nFrame, valignProperty, keyValue)
 
@@ -116,7 +163,7 @@ Item {
             filter.combineAllKeyFramePara();
 
             textArea.text = filter.getStringKeyValueOnProjectOnIndex(0, "argument")
-            fgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "fgcolour")
+            fgColor.value = getHexStrColor(0)
             fontButton.text = filter.getStringKeyValueOnProjectOnIndex(0, "family")
             weightCombo.currentIndex = weightCombo.valueToIndex()
             outlineColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "olcolour")
@@ -139,13 +186,14 @@ Item {
                 bottomRadioButton.checked = true
         }
 
-        setControls()
-        filter.set(rectProperty, filter.getRect(rectProperty))
+//        setControls()
+        filterRect = getAbsoluteRect(-1)
+        filter.set('size', filterRect.height)
     }
 
     function setControls() {
         textArea.text = filter.get('argument')
-        fgColor.value = filter.get('fgcolour')
+        fgColor.value = getHexStrColor(-1)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
@@ -186,14 +234,14 @@ Item {
             if(keyFrame.bKeyFrame)
             {
                 var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, filterRect, 1.0)
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, getRelativeRect(filterRect), 1.0)
                 filter.combineAllKeyFramePara();
             }
             else
             {
-                filter.set(rectProperty, filterRect)
+                filter.set(rectProperty, getRelativeRect(filterRect))
+                filter.set('size', filterRect.height)
             }
-            filter.set('size', filterRect.height)
         }
     }
 
@@ -214,9 +262,12 @@ Item {
             onLoadKeyFrame:
             {
                 var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "fgcolour");
-                if(textValue !== "")
-                    fgColor.value = textValue;
+
+                var hexStrColor = getHexStrColor(keyFrameNum)
+                console.log("sll-----hexStrColor---", hexStrColor)
+                if (hexStrColor !== "") {
+                    fgColor.value = hexStrColor
+                }
 
                 textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
                 if(textValue !== "")
@@ -226,7 +277,7 @@ Item {
                 if(textValue !== "")
                     fontButton.text = textValue;
 
-                var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
+                var rect = getAbsoluteRect(keyFrameNum)
                 rectX.text = rect.x.toFixed()
                 rectY.text = rect.y.toFixed()
                 rectW.text = rect.width.toFixed()
@@ -281,7 +332,11 @@ Item {
             Layout.columnSpan: 4
             onPresetSelected: {
                 setControls()
-                filter.set(rectProperty, filter.getRect(rectProperty))
+                var newRect = getAbsoluteRect(-1)
+                if (newRect !== filterRect) {
+                    filterRect = newRect
+                    filter.set('size', filterRect.height)
+                }
             }
         }
 
@@ -390,15 +445,17 @@ Item {
                 alpha: true
                 onValueChanged:
                 {
+                    console.log("sll------1111---value-", value)
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
                     {
-                        filter.setKeyFrameParaValue(nFrame, "fgcolour",value)
+                        console.log("sll------rectColor----3----", getRectColor(value))
+                        filter.setKeyFrameParaRectValue(nFrame, "fgcolour", getRectColor(value), 1.0)
                         filter.combineAllKeyFramePara()
+                    } else {
+                        console.log("sll------rectColor----9999----", getRectColor(value))
+                        filter.set('fgcolour', getRectColor(value))
                     }
-                    else
-                        filter.set("fgcolour", value);
-
                 }
             }
 
@@ -577,7 +634,7 @@ Item {
             Layout.columnSpan: 4
             TextField {
                 id: rectX
-                text: filterRect.x
+                text: filterRect.x.toFixed()
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
@@ -589,7 +646,7 @@ Item {
             }
             TextField {
                 id: rectY
-                text: filterRect.y
+                text: filterRect.y.toFixed()
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
@@ -605,7 +662,7 @@ Item {
             Layout.columnSpan: 4
             TextField {
                 id: rectW
-                text: filterRect.width
+                text: filterRect.width.toFixed()
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
@@ -617,7 +674,7 @@ Item {
             }
             TextField {
                 id: rectH
-                text: filterRect.height
+                text: filterRect.height.toFixed()
                 Layout.minimumWidth: (preset.width - 8) / 2 - 10
                 Layout.maximumWidth: (preset.width - 8) / 2 - 10
                 horizontalAlignment: Qt.AlignRight
@@ -737,15 +794,15 @@ Item {
             var position        = timeline.getPositionInCurrentClip()
             var bKeyFrame       = filter.bKeyFrame(position)
             if (bKeyFrame) {
-                var newRect = filter.getAnimRectValue(position, rectProperty)
+                var newRect = getAbsoluteRect(position)
                 filterRect = newRect
-                filter.setKeyFrameParaRectValue(position, rectProperty, filterRect, 1.0)
+                filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
                 filter.combineAllKeyFramePara()
             } else {
-                var newRect = filter.getRect(rectProperty)
+                var newRect = getAbsoluteRect(-1)
                 if (filterRect !== newRect) {
                     filterRect = newRect
-                    filter.set(rectProperty, filterRect)
+                    filter.set('size', filterRect.height)
                 }
             }
         }
