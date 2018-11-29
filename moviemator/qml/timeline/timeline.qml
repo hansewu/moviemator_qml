@@ -455,8 +455,8 @@ Rectangle {
 
             Rectangle {
                 id: cursor
-                visible: timeline.position > -1
-                color: activePalette.text
+                visible: x >= 0 ? true : false     // timeline.position > -1
+                color: "#d1d1d1"    // activePalette.text
                 width: 1
                 height: root.height - scrollView.__horizontalScrollBar.height - toolbar.height
                 x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX
@@ -464,7 +464,7 @@ Rectangle {
             }
             TimelinePlayhead {
                 id: playhead
-                visible: timeline.position > -1
+                visible: x >= -5 ? true : false        // timeline.position > -1
                 x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX - 5
                 y: 0
                 width: 11
@@ -659,6 +659,10 @@ Rectangle {
             var selectedTrack = timeline.selectedTrack()
             for (var i = 0; i < trackHeaderRepeater.count; i++)
                 trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
+
+            var selectedAClip = timeline.selectedAClip()
+            if (selectedAClip === false)
+                toolbar.hasClipOrTrackSelected = false
         }
     }
 

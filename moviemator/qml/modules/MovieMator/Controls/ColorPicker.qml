@@ -10,11 +10,11 @@ RowLayout {
     property string value: "white"
     property bool alpha: false
     property alias eyedropper: pickerButton.visible
-    
+
     signal pickStarted
-    
+
     SystemPalette { id: activePalette; colorGroup: SystemPalette.Active }
-    
+
     ColorPickerItem {
         id: pickerItem
         onColorPicked: {
@@ -22,7 +22,7 @@ RowLayout {
             pickerButton.checked = false
         }
     }
-    
+
     Button {
         id: colorButton
         implicitWidth: 20
@@ -38,28 +38,32 @@ RowLayout {
         onClicked: colorDialog.visible = true
         tooltip: qsTr('Click to open color dialog')
     }
-    
+
     ColorDialog {
         id: colorDialog
         title: qsTr("Please choose a color")
         showAlphaChannel: alpha
         color: value
         onAccepted: {
-            if (alpha) {
-                var alphaHex = Math.round(255 * currentColor.a).toString(16)
-                if (alphaHex.length === 1)
-                    alphaHex = '0' + alphaHex
-                value = '#' + alphaHex + currentColor.toString().substr(1)
-            } else {
-                value = currentColor
-            }
+            // Make a copy of the current value.
+            var myColor = Qt.darker(value, 1.0)
+            // Ignore alpha when comparing.
+            myColor.a = currentColor.a
+            // If the user changed color but left alpha at 0,
+            // they probably want to reset alpha to opaque.
+            if (currentColor.a === 0 && !Qt.colorEqual(currentColor, myColor))
+                currentColor.a = 255
+            // Assign the new color value. Unlike docs say, using currentColor
+            // is actually more cross-platform compatible.
+            value = currentColor
         }
+        modality: Qt.ApplicationModal
     }
-    
+
     Button {
         id: pickerButton
-     //   iconName: 'color-picker'
-        iconSource: 'qrc:///icons/light/32x32/color-picker.png'
+        iconName: 'color-picker'
+        iconSource: 'qrc:///icons/oxygen/32x32/actions/color-picker.png'
         tooltip: '<p>' + qsTr("Pick a color on the screen. By pressing the mouse button and then moving your mouse you can select a section of the screen from which to get an average color.") + '</p>'
         implicitWidth: 20
         implicitHeight: 20

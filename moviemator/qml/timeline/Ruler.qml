@@ -9,7 +9,7 @@ Rectangle {
 
     property real frames: profile.fps
 
-    property real minimalStepSize: 50 // 太小了刷新比较卡
+    property real minimalStepSize: 25   //50 // 太小了刷新比较卡
     property real stepSize: frames * timeScale
     property real ratio: stepSize / minimalStepSize
     //刻度分割和合并因子：缩放时刻度宽度会变化，刻度太窄合并，刻度太宽分割刻度。。。1/8、1/4、1/2、1、2、4、8。。。
@@ -74,14 +74,16 @@ Rectangle {
             //anchors.bottom: parent.bottom
             Rectangle {
                 anchors.bottom: parent.bottom
-                height: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % interval)? ((Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % 2) ? 3 : 7) : 14
+                height: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval)? ((Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % 2) ? 3 : 7) : 14
                 width: 1
-                color: activePalette.windowText//'#707070'//activePalette.windowText
+                color: "#515151"    // activePalette.windowText//'#707070'//activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio//index * frames * timeScale * factor/interval // index * stepSize
             }
 
             Label {
-                color: activePalette.windowText
+                anchors.top: parent.top
+                anchors.topMargin: 5
+                color: "#d1d1d1"    // activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio + 2
                 // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
                 // 只有显示出来的才转换
@@ -154,6 +156,6 @@ Rectangle {
         width: parent.width
         height: 1
         anchors.bottom: parent.bottom
-        color: activePalette.windowText//'#707070'//activePalette.windowText
+        color: "#515151"    // activePalette.windowText//'#707070'//activePalette.windowText
     }
 }

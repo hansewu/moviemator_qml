@@ -20,6 +20,12 @@ Metadata {
                  property: 'geometry'
                  isSimple: true
                  paraType: "rect"
+             },
+             Parameter {
+                 name: qsTr('Color')
+                 property: 'fgcolour'
+                 isSimple: true
+                 paraType: "rect"
              }
              // Parameter {
              //     name: qsTr('Position / Size')

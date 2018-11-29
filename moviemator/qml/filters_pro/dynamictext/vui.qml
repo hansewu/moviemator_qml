@@ -14,7 +14,7 @@ Flickable {
     interactive: false
     clip: true
     property real zoom: (video.zoom > 0)? video.zoom : 1.0
-    property rect filterRect: filter.getRect(rectProperty)
+    property rect filterRect
     contentWidth: video.rect.width * zoom
     contentHeight: video.rect.height * zoom
     contentX: video.offset.x
@@ -22,6 +22,18 @@ Flickable {
 
     function getAspectRatio() {
         return (filter.get(fillProperty) === '1')? filter.producerAspect : 0.0
+    }
+
+    function getAbsoluteRect(position) {
+        var rect = filter.getRectOfTextFilter(rectProperty)
+        if (position >= 0) {
+            rect = filter.getAnimRectValue(position, rectProperty)
+        }
+        return Qt.rect(rect.x * profile.width, rect.y * profile.height, rect.width * profile.width, rect.height * profile.height)
+    }
+
+    function getRelativeRect(absoluteRect) {
+        return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
     Component.onCompleted: {
@@ -40,12 +52,12 @@ Flickable {
 
             }
 
-            filterRect = filter.getAnimRectValue(0, rectProperty)
+            filterRect = getAbsoluteRect(0)
 
             filter.combineAllKeyFramePara();
        } else {
-           filterRect = filter.getRect(rectProperty)
-           filter.set(rectProperty, filterRect)
+
+            filterRect = getAbsoluteRect(-1)
        }
 
         if (filter.isNew) {
@@ -107,20 +119,18 @@ Flickable {
                 var position        = timeline.getPositionInCurrentClip()
                 var bKeyFrame       = filter.bKeyFrame(position)
                 if (bKeyFrame) {
-                    var rect = filter.getAnimRectValue(position, rectProperty)
-                    setHandles(rect)
+                    setHandles(getAbsoluteRect(position))
                 } else {
-                    setHandles(filter.getRect(rectProperty))
+                    setHandles(getAbsoluteRect(-1))
                 }
             }
             onHeightScaleChanged: {
                 var position        = timeline.getPositionInCurrentClip()
                 var bKeyFrame       = filter.bKeyFrame(position)
                 if (bKeyFrame) {
-                    var rect = filter.getAnimRectValue(position, rectProperty)
-                    setHandles(rect)
+                    setHandles(getAbsoluteRect(position))
                 } else {
-                    setHandles(filter.getRect(rectProperty))
+                    setHandles(getAbsoluteRect(-1))
                 }
             }
             onRectChanged:  {
@@ -132,10 +142,10 @@ Flickable {
                 var bKeyFrame       = filter.bKeyFrame(position)
                 if (bKeyFrame)
                 {
-                    filter.setKeyFrameParaRectValue(position, rectProperty, filterRect, 1.0)
+                    filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
                     filter.combineAllKeyFramePara();
                 } else {
-                    filter.set(rectProperty, filterRect)
+                    filter.set(rectProperty, getRelativeRect(filterRect))
                 }
                 filter.set('size', filterRect.height)
             }
@@ -146,11 +156,11 @@ Flickable {
         target: filter
         onChanged: {
             var position        = timeline.getPositionInCurrentClip()
-            var newRect         = filter.getRect(rectProperty)
+            var newRect         = getAbsoluteRect(-1)
             var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
             //判断是否有关键帧
             if(keyFrameCount > 0) {
-                newRect = filter.getAnimRectValue(position, rectProperty)
+                newRect = getAbsoluteRect(position)
             }
 
             if (filterRect !== newRect) {
@@ -167,10 +177,10 @@ Flickable {
                 var bKeyFrame       = filter.bKeyFrame(position)
                 if (bKeyFrame)
                 {
-                    filter.setKeyFrameParaRectValue(position, rectProperty, rect, 1.0)
+                    filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(rect), 1.0)
                     filter.combineAllKeyFramePara();
                 } else {
-                    filter.set(rectProperty, rect)
+                    filter.set(rectProperty, getRelativeRect(rect))
                 }
             }
         }

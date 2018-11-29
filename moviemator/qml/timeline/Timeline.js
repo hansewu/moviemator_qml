@@ -3,7 +3,9 @@ function scrollIfNeeded() {
     var x = timeline.position * multitrack.scaleFactor;
     if (!scrollView) return;
     if (x > scrollView.flickableItem.contentX + scrollView.width - 50)
-        scrollView.flickableItem.contentX = x - scrollView.width + 50;
+        // scrollView.flickableItem.contentX = x - scrollView.width + 50;
+        // 刻度多的话播放时刷新不会卡
+        scrollView.flickableItem.contentX = x - scrollView.width + 500;
     else if (x < 50)
         scrollView.flickableItem.contentX = 0;
     else if (x < scrollView.flickableItem.contentX + 50)
@@ -28,7 +30,7 @@ function scrollIfZoomNeeded(wheelx, scaleValue) {
         scrollView.flickableItem.contentX = toolbar.maxWidth - scrollView.width;
     }
     // 不能小于 0
-    if(scrollView.flickableItem.contentX < 0 /*|| multitrack.scaleFactor==0.01*/){
+    if(scrollView.flickableItem.contentX < 0){
         scrollView.flickableItem.contentX = 0;
     }
 }

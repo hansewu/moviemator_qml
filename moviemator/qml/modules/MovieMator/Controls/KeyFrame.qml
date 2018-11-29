@@ -46,16 +46,21 @@ RowLayout{
         //插入关键帧
         var paramCount = metadata.keyframes.parameterCount
         for(var i = 0; i < paramCount; i++)
-        {
+        {            
             var key = metadata.keyframes.parameters[i].property
-            var value = filter.get(key)
-            
-            console.log("key: "+key)
-            console.log("value: "+value)
-            console.log("values: "+value.toString())
-        
-            filter.setKeyFrameParaValue(position, key, value.toString() );
-            
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (paraType === "rect") {
+                var rect = filter.getAnimRectValue(position, key)
+                filter.setKeyFrameParaRectValue(position, key, rect, 1.0)
+            } else {
+                var value = filter.get(key)
+
+                console.log("key: "+key)
+                console.log("value: "+value)
+                console.log("values: "+value.toString())
+
+                filter.setKeyFrameParaValue(position, key, value.toString() );
+            }
         }
         filter.combineAllKeyFramePara();
         console.log("2222222222222222222222222222222222222222: ")
