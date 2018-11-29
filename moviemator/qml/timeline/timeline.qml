@@ -455,7 +455,7 @@ Rectangle {
 
             Rectangle {
                 id: cursor
-                visible: x >= 0 ? true : false     // timeline.position > -1
+                visible: x >= 0     // timeline.position > -1
                 color: "#d1d1d1"    // activePalette.text
                 width: 1
                 height: root.height - scrollView.__horizontalScrollBar.height - toolbar.height
@@ -464,7 +464,7 @@ Rectangle {
             }
             TimelinePlayhead {
                 id: playhead
-                visible: x >= -5 ? true : false        // timeline.position > -1
+                visible: x >= -5        // timeline.position > -1
                 x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX - 5
                 y: 0
                 width: 11

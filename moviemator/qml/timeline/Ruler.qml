@@ -88,7 +88,7 @@ Rectangle {
                 // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
                 // 只有显示出来的才转换
                 text: {
-                    if(visible==true){
+                    if(visible){
                         convertTimeValue(timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale)))
                     }
                 }
