@@ -11,7 +11,6 @@ RowLayout{
     property double currentFrame: 0
     property bool bKeyFrame: false
 
-    
     signal synchroData()
     signal loadKeyFrame()
 
@@ -86,6 +85,7 @@ RowLayout{
     }
     // 控件发生修改时反应
     function controlValueChanged(id){
+        var  userChange = true
         // 可能一个控件对应几个配置项
         var parameterList = findParameter(id)
         for(var paramIndex=0;paramIndex<parameterList.length;paramIndex++){
@@ -103,7 +103,7 @@ RowLayout{
                     filter.combineAllKeyFramePara()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
-
+                    userChange = false
                 }else{
                     filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
                 }
@@ -115,7 +115,7 @@ RowLayout{
                     filter.setKeyFrameParaValue(currentFrame, parameter.property, Number(id.checked).toString())
                     filter.combineAllKeyFramePara()
                 }else if(Math.abs(id.checked - parameter.checked) < 1){
-
+                    userChange = false
                 }else{
                     filter.set(parameter.property, Number(id.checked))
                 }
@@ -155,12 +155,12 @@ RowLayout{
                     filter.setKeyFrameParaValue(currentFrame, parameter3.property, saveValueCalc(id.blue,parameter3.factorFunc).toString())
                     filter.combineAllKeyFramePara()
                 }else if((value10 - value20 <= 1)&&(value11 - value21 <= 1)&&(value12 - value22 <= 1)){
-                    console.log("9999999999999999999999999999-1: " )
+                    userChange = false
                 }else{
                     filter.set(parameter.property,saveValueCalc(id.red,parameter.factorFunc))
                     filter.set(parameter2.property,saveValueCalc(id.green,parameter2.factorFunc))
                     filter.set(parameter3.property,saveValueCalc(id.blue,parameter3.factorFunc))
-                    console.log("9999999999999999999999999999-2: " )
+                    
                 }
                 paramIndex = paramIndex+2
                 break;
@@ -171,7 +171,13 @@ RowLayout{
                 break;
             }
         }
-        
+        // 添加关键帧
+        if ((filter.getKeyFrameNumber() > 0)&&userChange)
+        {
+            bKeyFrame = true
+            synchroData()
+            addKeyFrameValue()
+        }
     }
     // 添加为关键帧
     function addKeyFrameValue(){

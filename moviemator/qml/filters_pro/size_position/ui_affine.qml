@@ -5,7 +5,7 @@ SizePositionUI {
     fillProperty: 'transition.fill'
     distortProperty: 'transition.distort'
     // legacyRectProperty: 'transition.geometry'
-    rectProperty: 'transition.rect'
+    rectProperty: 'transition.rect_anim_relative'
     valignProperty: 'transition.valign'
     halignProperty: 'transition.halign'
     Component.onCompleted: {

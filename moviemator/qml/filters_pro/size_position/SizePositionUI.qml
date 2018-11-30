@@ -11,97 +11,132 @@ Item {
     property string valignProperty
     property string halignProperty
     property var _locale: Qt.locale(application.numericLocale)
-    property rect filterRect: filter.getRect(rectProperty)
+    property rect filterRect : filter.getRect(rectProperty)
+    property rect rectTmp
 
     width: 350
     height: 180
 
     Component.onCompleted: {
+        //导入上次工程保存的关键帧
+        var metaParamList = metadata.keyframes.parameters
+        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+        for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+        {
+            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+            for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+                var prop = metaParamList[paramIndex].property
+                var keyValue = filter.getAnimRectValue(nFrame, prop)
+                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+            }
+        }
+        filter.combineAllKeyFramePara();
+
         if (filter.isNew) {
             filter.set(fillProperty, 0)
             filter.set(distortProperty, 0)
-            filter.set(rectProperty,   '0/50%:50%x50%')
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'left')
-            filter.savePreset(preset.parameters, qsTr('Bottom Left'))
 
-            filter.set(rectProperty,   '50%/50%:50%x50%')
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'right')
-            filter.savePreset(preset.parameters, qsTr('Bottom Right'))
-
-            filter.set(rectProperty,   '0/0:50%x50%')
-            filter.set(valignProperty, 'top')
-            filter.set(halignProperty, 'left')
-            filter.savePreset(preset.parameters, qsTr('Top Left'))
-
-            filter.set(rectProperty,   '50%/0:50%x50%')
-            filter.set(valignProperty, 'top')
-            filter.set(halignProperty, 'right')
-            filter.savePreset(preset.parameters, qsTr('Top Right'))
-
-            filter.set(rectProperty,   '0/0:100%x100%')
+            rectTmp.x = 0.0
+            rectTmp.y = 0.0
+            rectTmp.width = 1.0
+            rectTmp.height = 1.0
+            
+            console.log("Component.onCompletedComponent.onCompleted-1: rectTmp" + rectTmp)
+            
+            filter.set(rectProperty, rectTmp)
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters)
         }
         setControls()
+
+        // metadata.keyframes.parameters[0].value = rectTmp
     }
 
     function setFilter() {
+        console.log("setFiltersetFiltersetFilter-1: ")
+        
         var x = parseFloat(rectX.text)
         var y = parseFloat(rectY.text)
         var w = parseFloat(rectW.text)
         var h = parseFloat(rectH.text)
-        if (x !== filterRect.x ||
-            y !== filterRect.y ||
-            w !== filterRect.width ||
-            h !== filterRect.height) {
-            filterRect.x = x
-            filterRect.y = y
-            filterRect.width = w
-            filterRect.height = h
-            if(keyFrame.bKeyFrame)
-            {
-                var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaValue(nFrame, rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-            }
-            else{
-                filter.set(rectProperty, '%1%/%2%:%3%x%4%'
-                       .arg((x / profile.width * 100).toLocaleString(_locale))
-                       .arg((y / profile.height * 100).toLocaleString(_locale))
-                       .arg((w / profile.width * 100).toLocaleString(_locale))
-                       .arg((h / profile.height * 100).toLocaleString(_locale)))
-            }
-        }
+        filterRect.x = x / profile.width
+        filterRect.y = y / profile.height
+        filterRect.width = w / profile.width
+        filterRect.height = h / profile.height
+        rectTmp.x = x / profile.width
+        rectTmp.y = y / profile.height
+        rectTmp.width = w / profile.width
+        rectTmp.height = h / profile.height
+        filter.set(rectProperty, rectTmp)
+        console.log("setFiltersetFiltersetFilter-3: rectProperty："+rectProperty)
+        console.log("setFiltersetFiltersetFilter-3: rectTmp"+rectTmp)
+        // if(keyFrame.bKeyFrame)
+        // {
+            var nFrame = keyFrame.getCurrentFrame()
+            
+            var rectValue = filter.getRect(rectProperty)
+            filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
+            filter.combineAllKeyFramePara();
+            console.log("setFiltersetFiltersetFilter-2: "+rectValue)
+        // }
+    }
+
+    function saveValues() {
+        console.log("saveValuessaveValuessaveValues-0: ")
+        
+        var x = parseFloat(rectX.text)
+        var y = parseFloat(rectY.text)
+        var w = parseFloat(rectW.text)
+        var h = parseFloat(rectH.text)
+        filterRect.x = x / profile.width
+        filterRect.y = y / profile.height
+        filterRect.width = w / profile.width
+        filterRect.height = h / profile.height
+
+        rectTmp.x = x / profile.width
+        rectTmp.y = y / profile.height
+        rectTmp.width = w / profile.width
+        rectTmp.height = h / profile.height
+        filter.set(rectProperty, rectTmp)
+        console.log("saveValuessaveValuessaveValues-2: "+rectTmp)
+        
     }
 
 
     function setControls() {
-        if (filter.get(distortProperty) === '1')
-            distortRadioButton.checked = true
-        else if (filter.get(fillProperty) === '1')
-            fillRadioButton.checked = true
-        else
-            fitRadioButton.checked = true
-        var align = filter.get(halignProperty)
-        if (align === 'left')
-            leftRadioButton.checked = true
-        else if (align === 'center' || align === 'middle')
-            centerRadioButton.checked = true
-        else if (filter.get(halignProperty) === 'right')
-            rightRadioButton.checked = true
-        align = filter.get(valignProperty)
-        if (align === 'top')
-            topRadioButton.checked = true
-        else if (align === 'center' || align === 'middle')
-            middleRadioButton.checked = true
-        else if (align === 'bottom')
-            bottomRadioButton.checked = true
+        if((filter.getKeyFrameNumber() > 0)){
+            fitRadioButton.checked = false //这样后面6个都enabled == false
+            fitRadioButton.enabled = false
+            fillRadioButton.enabled = false
+            distortRadioButton.enabled = false
+        }else{
+            fitRadioButton.enabled = true
+            fillRadioButton.enabled = true
+            distortRadioButton.enabled = true
+
+            if (filter.get(distortProperty) === '1')
+                distortRadioButton.checked = true
+            else if (filter.get(fillProperty) === '1')
+                fillRadioButton.checked = true
+            else
+                fitRadioButton.checked = true
+            var align = filter.get(halignProperty)
+            if (align === 'left')
+                leftRadioButton.checked = true
+            else if (align === 'center' || align === 'middle')
+                centerRadioButton.checked = true
+            else if (filter.get(halignProperty) === 'right')
+                rightRadioButton.checked = true
+            align = filter.get(valignProperty)
+            if (align === 'top')
+                topRadioButton.checked = true
+            else if (align === 'center' || align === 'middle')
+                middleRadioButton.checked = true
+            else if (align === 'bottom')
+                bottomRadioButton.checked = true
+        }
+        
     }
 
     ExclusiveGroup { id: sizeGroup }
@@ -116,31 +151,45 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
-            onSynchroData:{
-                setFilter()
-             }
-             onLoadKeyFrame:
-             {
-                 console.log("onLoadKeyFrameonLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
-                console.log("textValuetextValue: " + textValue)
-
-
-                if(!(keyFrame.bKeyFrame))
+            onSetAsKeyFrame:{
+                var nFrame = keyFrame.getCurrentFrame()
+                console.log("111111111111111111111111111111111111111111111111-0: "+ nFrame)
+                console.log("111111111111111111111111111111111111111111111111-0: "+ rectProperty)
+                saveValues()
+            
+                var rectValue = filter.getRect(rectProperty)
+                console.log("rectValuerectValuerectValuerectValue: " + rectValue)
+                if (filter.getKeyFrameNumber() <= 0)
                 {
-                    var nFrame = keyFrame.getCurrentFrame()
-                    var v1 = filter.get(rectProperty)
-                    var v2 = filter.getAnimStringValue(nFrame, rectProperty);
-                    var v3 = filter.get(rectProperty)
-                    
-                    console.log("v1: " + v1)
-                    console.log("v2: " + v2)
-                    console.log("v3: " + v3)
-                    
+                    var position2 = filter.producerOut - filter.producerIn + 1 - 5
+                    filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
+                    filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
+                    filter.combineAllKeyFramePara();
                 }
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
+                filter.combineAllKeyFramePara();
+                console.log("111111111111111111111111111111111111111111111111-1: ")
+                setControls()
+            }
+            onLoadKeyFrame:
+            {
+                filter.getKeyFrameParaValue(keyFrameNum, rectProperty)
+                console.log("22222222222222222222222222222222222222222222222-0: " + keyFrameNum)
+                console.log("22222222222222222222222222222222222222222222222-0: " + rectProperty)
 
+                filter.get(rectProperty)
+                var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
+                var rect3 = filter.get(rectProperty)
+                console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue2: rect: " + rect)
+                console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue3: rect3: " + rect3)
 
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
+                filterRect.x = rect.x
+                filterRect.y = rect.y
+                filterRect.width = rect.width
+                filterRect.height = rect.height       
+                metadata.keyframes.parameters[0].value = 'X'+ rect.x +'Y'+rect.y+'W'+rect.width+'H'+rect.height 
+
+                var textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
                 if(textValue === "left")
                     leftRadioButton.checked = true;
                 else if(textValue === "center")
@@ -155,7 +204,12 @@ Item {
                     middleRadioButton.checked = true;
                 else if(textValue === "bottom")
                     bottomRadioButton.checked = true;
-             }
+                
+                filter.getAnimRectValue(keyFrameNum, rectProperty)
+
+                console.log("22222222222222222222222222222222222222222222222-1: ")
+                setControls()
+            }
         }
 
         Label {
@@ -179,12 +233,9 @@ Item {
             Layout.columnSpan: 4
             TextField {
                 id: rectX
-                text: filterRect.x
+                text: (filterRect.x * profile.width).toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
-                onTextChanged:{
-                    textFieldTimer.restart()
-                }
             }
             Label { 
                 text: ',' 
@@ -192,12 +243,9 @@ Item {
             }
             TextField {
                 id: rectY
-                text: filterRect.y
+                text: (filterRect.y * profile.height).toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
-                onTextChanged:{
-                    textFieldTimer.restart()
-                }
             }
         }
         Label {
@@ -209,12 +257,9 @@ Item {
             Layout.columnSpan: 4
             TextField {
                 id: rectW
-                text: filterRect.width
+                text: (filterRect.width * profile.width).toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
-                onTextChanged:{
-                    textFieldTimer.restart()
-                }
             }
             Label { 
                 text: 'x' 
@@ -222,13 +267,11 @@ Item {
             }
             TextField {
                 id: rectH
-                text: filterRect.height
+                text: (filterRect.height * profile.height).toFixed()
                 horizontalAlignment: Qt.AlignRight
                 onEditingFinished: setFilter()
-                onTextChanged:{
-                    textFieldTimer.restart()
-                }
             }
+            
         }
 
         Label {
@@ -329,19 +372,10 @@ Item {
     Connections {
         target: filter
         onChanged: {
+            var keyFrameNum = timeline.getPositionInCurrentClip()
             var newValue = filter.getRect(rectProperty)
             if (filterRect !== newValue)
                 filterRect = newValue
-        }
-    }
-
-    Timer {
-        id : textFieldTimer
-        interval: 1000
-        repeat: false
-        onTriggered: 
-        {
-            setFilter()
         }
     }
 }

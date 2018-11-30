@@ -13,12 +13,13 @@ Metadata {
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
-        simpleProperties: ['transition.rect']
+        simpleProperties: ['transition.rect_anim_relative']
         parameters: [
             Parameter {
                 name: qsTr('Position / Size')
-                property: 'transition.rect'
-                isSimple: true
+                property: 'transition.rect_anim_relative'
+                paraType:'rect'
+                value: 'X0.0Y0.0W1.0H1.0'
             }
         ]
     }

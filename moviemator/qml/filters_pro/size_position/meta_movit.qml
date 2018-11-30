@@ -20,7 +20,8 @@ Metadata {
             Parameter {
                 name: qsTr('Position / Size')
                 property: 'rect'
-                isSimple: true
+                paraType: 'rect'
+                value: 'X0.0Y0.0W1.0H1.0'
             }
         ]
     }
