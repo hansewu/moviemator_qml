@@ -38,7 +38,7 @@ Metadata {
                 property: 'deformX'
                 objectName: 'deformXCheckBox'
                 controlType: 'CheckBox'
-                paraType: 'Int'
+                paraType: 'int'
                 defaultValue: ''
                 value: ''
                 factorFunc:  []
@@ -48,7 +48,7 @@ Metadata {
                 property: 'deformY'
                 objectName: 'deformYCheckBox'
                 controlType: 'CheckBox'
-                paraType: 'Int'
+                paraType: 'int'
                 defaultValue: ''
                 value: ''
                 factorFunc:  []

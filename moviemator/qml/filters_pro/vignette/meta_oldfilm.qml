@@ -38,7 +38,7 @@ Metadata {
                 property: 'mode'
                 objectName: 'modeCheckBox'
                 controlType: 'CheckBox'
-                paraType: 'Int'
+                paraType: 'int'
                 defaultValue: ''
                 value: ''
                 factorFunc:  []
