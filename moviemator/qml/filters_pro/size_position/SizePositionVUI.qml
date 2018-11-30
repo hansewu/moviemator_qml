@@ -89,9 +89,7 @@ Flickable {
                 console.log("onRectChangedonRectChangedonRectChanged-1: rectCtr: "+rectCtr)
                 var position = timeline.getPositionInCurrentClip()
                 var bKeyFrame = filter.bKeyFrame(position)
-                // if (bKeyFrame) {
-                    vuiTimer1.restart()
-                // }
+                vuiTimer1.restart()
             }
         
         }
@@ -163,11 +161,14 @@ Flickable {
         repeat: false
         onTriggered: 
         {
+            if (filter.getKeyFrameNumber() > 0)
+            {
+                var position = timeline.getPositionInCurrentClip()
+                var rectValue = filter.getRect(rectProperty)
+                filter.setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
+                filter.combineAllKeyFramePara();
+            }
             
-            var position = timeline.getPositionInCurrentClip()
-            var rectValue = filter.getRect(rectProperty)
-            filter.setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
-            filter.combineAllKeyFramePara();
             
             console.log("onRectChangedonRectChangedonRectChanged-1: rectProperty: "+rectProperty)
             console.log("onRectChangedonRectChangedonRectChanged-1: rectValueTemp: "+rectValue)
