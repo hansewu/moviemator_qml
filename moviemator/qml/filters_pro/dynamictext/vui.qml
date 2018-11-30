@@ -37,26 +37,10 @@ Flickable {
     }
 
     Component.onCompleted: {
-
-        //如果有关键帧就获取动画的位置
         var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
-        if(keyFrameCount > 0)
-        {
-
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, rectProperty);
-                var rect = filter.getAnimRectValue(index, rectProperty)
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rect, 1.0)
-
-            }
-
+        if (keyFrameCount > 0) {
             filterRect = getAbsoluteRect(0)
-
-            filter.combineAllKeyFramePara();
        } else {
-
             filterRect = getAbsoluteRect(-1)
        }
 

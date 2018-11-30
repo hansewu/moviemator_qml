@@ -130,11 +130,13 @@ Item {
         setControls()
         setKeyframedControls()
 
-        filterRect = getAbsoluteRect(-1)
-        filter.set('size', filterRect.height)
+        if (filter.isNew) {
+            filter.set('size', filterRect.height)
+        }
     }
 
     function setControls() {
+        filterRect = getAbsoluteRect(-1)
         textArea.text = filter.get('argument')
         fgColor.value = getHexStrColor(-1)
         fontButton.text = filter.get('family')
@@ -196,10 +198,16 @@ Item {
         if (keyFrameCount > 0) {
             for (var index = 0; index < keyFrameCount; index++) {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "fgcolour")
+
                 var rectColor = filter.getAnimRectValue(nFrame, "fgcolour")
                 filter.setKeyFrameParaRectValue(nFrame, "fgcolour", rectColor, 1.0)
+
+                var rect = filter.getAnimRectValue(nFrame, rectProperty)
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rect, 1.0)
             }
             filter.combineAllKeyFramePara();
+
+            filterRect = getAbsoluteRect(0)
 
             fgColor.value = getHexStrColor(0)
         }
@@ -235,12 +243,9 @@ Item {
                 if(textValue !== "")
                     fontButton.text = textValue;
 
-                var rect = getAbsoluteRect(keyFrameNum)
-                rectX.text = rect.x.toFixed()
-                rectY.text = rect.y.toFixed()
-                rectW.text = rect.width.toFixed()
-                rectH.text = rect.height.toFixed()
-                filter.set('size', rect.height)
+                filterRect = getAbsoluteRect(keyFrameNum)
+                filter.set('size', filterRect.height)
+                filterRect = getAbsoluteRect(keyFrameNum)
 
                 textValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "weight");
                 if(textValue !== "")
