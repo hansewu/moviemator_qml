@@ -8,6 +8,7 @@ RowLayout {
     property var parameters: []
 
     // Tell the parent QML page to update its controls.
+    signal beforePresetLoaded()
     signal presetSelected()
 
     Component.onCompleted: {
@@ -21,6 +22,7 @@ RowLayout {
         Layout.maximumWidth: 200
         model: filter.presets
         onCurrentTextChanged: {
+            beforePresetLoaded()
             filter.preset(currentText)
             presetSelected()
         }

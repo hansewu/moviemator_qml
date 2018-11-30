@@ -293,11 +293,15 @@ Item {
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             Layout.columnSpan: 4
+            onBeforePresetLoaded: {
+                filter.removeAllKeyFrame("fgcolour")
+                filter.removeAllKeyFrame(rectProperty)
+            }
             onPresetSelected: {
                 setControls()
-                var newRect = getAbsoluteRect(-1)
-                if (newRect !== filterRect) {
-                    filterRect = newRect
+                setKeyframedControls()
+
+                if (filter.isNew) {
                     filter.set('size', filterRect.height)
                 }
             }
