@@ -71,15 +71,15 @@ Item {
         filter.set(rectProperty, rectTmp)
         console.log("setFiltersetFiltersetFilter-3: rectProperty："+rectProperty)
         console.log("setFiltersetFiltersetFilter-3: rectTmp"+rectTmp)
-        // if(keyFrame.bKeyFrame)
-        // {
+        if (filter.getKeyFrameNumber() > 0)
+        {
             var nFrame = keyFrame.getCurrentFrame()
             
             var rectValue = filter.getRect(rectProperty)
             filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
             filter.combineAllKeyFramePara();
             console.log("setFiltersetFiltersetFilter-2: "+rectValue)
-        // }
+        }
     }
 
     function saveValues() {
