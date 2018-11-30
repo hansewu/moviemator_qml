@@ -149,8 +149,8 @@ RowLayout{
                 console.log("value22: " + value22)
 
                 
-                var parameter2 = parameterList[paramIndex+1]
-                var parameter3 = parameterList[paramIndex+2]
+                var parameter2 = metadata.keyframes.parameters[parameterList[paramIndex+1]]
+                var parameter3 = metadata.keyframes.parameters[parameterList[paramIndex+2]]
 
                 if(filter.bKeyFrame(currentFrame))
                 {
@@ -173,6 +173,9 @@ RowLayout{
                 break;
             }
         }
+        
+        console.log("userChangeuserChangeuserChangeuserChange: " + userChange)
+        
         // 添加关键帧
         if ((filter.getKeyFrameNumber() > 0)&&userChange)
         {

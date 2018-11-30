@@ -78,6 +78,7 @@ Rectangle {
         buttonWidth : 100
         onClicked: {
             addFrameChanged()
+            removeKeyFrameButton.enabled = true
         }
         property bool change1;
         onEnabledChanged: {
