@@ -28,18 +28,35 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
-    width: 330
-    height: 370
+    width: 500
+    height: 500
 
     function getHexStrColor(position) {
         var colorRect = filter.getRectOfTextFilter("fgcolour")
         if (position >= 0) {
             colorRect = filter.getAnimRectValue(position, "fgcolour")
         }
+
         var aStr = parseInt(colorRect.x).toString(16)
+        if (parseInt(colorRect.x) < 16) {
+            aStr = "0" + aStr
+        }
+
         var rStr = parseInt(colorRect.y).toString(16)
+        if (parseInt(colorRect.y) < 16) {
+            rStr = "0" + rStr
+        }
+
         var gStr = parseInt(colorRect.width).toString(16)
+        if (parseInt(colorRect.width) < 16) {
+            gStr = "0" + gStr
+        }
+
         var bStr = parseInt(colorRect.height).toString(16)
+        if (parseInt(colorRect.height) < 16) {
+            bStr = "0" + bStr
+        }
+
         return "#" + aStr + rStr + gStr + bStr
     }
 
@@ -74,43 +91,36 @@ Item {
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
-//            filter.set('fgcolour', '#ffffffff')
             filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
             filter.set('bgcolour', '#00000000')
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
 
-//            filter.set(rectProperty,   '0/50%:50%x50%')
             filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
 
-//            filter.set(rectProperty,   '50%/50%:50%x50%')
             filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
 
-//            filter.set(rectProperty,   '0/0:50%x50%')
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
 
-//            filter.set(rectProperty,   '50%/0:50%x50%')
             filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
 
-//            filter.set(rectProperty,   '0/76%:100%x14%')
             filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
-//            filter.set(rectProperty, '0/0:100%x100%')
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
@@ -118,75 +128,8 @@ Item {
         }
 
         setControls()
+        setKeyframedControls()
 
-        var keyFrameCount = filter.getKeyFrameCountOnProject("argument");
-        if(keyFrameCount > 0)
-        {
-            var index=0
-            for(index=0; index<keyFrameCount;index++)
-            {
-              var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "argument");
-              var keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "argument");
-              filter.setKeyFrameParaValue(nFrame, "argument", keyValue)
-
-                console.log("sll------2222----")
-              var rectColor = filter.getAnimRectValue(index, "fgcolour")
-              console.log("sll------rectColor----1----", rectColor)
-              filter.setKeyFrameParaRectValue(index, "fgcolour", rectColor, 1.0)
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "family");
-              filter.setKeyFrameParaValue(nFrame, "family", keyValue)
-
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "weight");
-              filter.setKeyFrameParaValue(nFrame, "weight", keyValue)
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "olcolour");
-              filter.setKeyFrameParaValue(nFrame, "olcolour", keyValue)
-
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "outline");
-              filter.setKeyFrameParaValue(nFrame, "outline", keyValue)
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "bgcolour");
-              filter.setKeyFrameParaValue(nFrame, "bgcolour", keyValue)
-
-              keyValue = filter.getKeyValueOnProjectOnIndex(index, "pad");
-              filter.setKeyFrameParaValue(nFrame, "pad", keyValue)
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "halign");
-              filter.setKeyFrameParaValue(nFrame, halignProperty, keyValue)
-
-              keyValue = filter.getStringKeyValueOnProjectOnIndex(index, "valign");
-              filter.setKeyFrameParaValue(nFrame, valignProperty, keyValue)
-
-            }
-
-            filter.combineAllKeyFramePara();
-
-            textArea.text = filter.getStringKeyValueOnProjectOnIndex(0, "argument")
-            fgColor.value = getHexStrColor(0)
-            fontButton.text = filter.getStringKeyValueOnProjectOnIndex(0, "family")
-            weightCombo.currentIndex = weightCombo.valueToIndex()
-            outlineColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "olcolour")
-            outlineSpinner.value = filter.getKeyValueOnProjectOnIndex(0, "outline")
-            bgColor.value = filter.getStringKeyValueOnProjectOnIndex(0, "bgcolour")
-            padSpinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, "pad"))
-            var align = filter.getStringKeyValueOnProjectOnIndex(0, "halign")
-            if (align === 'left')
-                leftRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                centerRadioButton.checked = true
-            else if (filter.get(halignProperty) === 'right')
-                rightRadioButton.checked = true
-            align = filter.getStringKeyValueOnProjectOnIndex(0, "valign")
-            if (align === 'top')
-                topRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                middleRadioButton.checked = true
-            else if (align === 'bottom')
-                bottomRadioButton.checked = true
-        }
-
-//        setControls()
         filterRect = getAbsoluteRect(-1)
         filter.set('size', filterRect.height)
     }
@@ -248,6 +191,21 @@ Item {
         }
     }
 
+    function setKeyframedControls() {
+        var keyFrameCount = filter.getKeyFrameCountOnProject("fgcolour");
+        if (keyFrameCount > 0) {
+            for (var index = 0; index < keyFrameCount; index++) {
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "fgcolour")
+                var rectColor = filter.getAnimRectValue(nFrame, "fgcolour")
+                filter.setKeyFrameParaRectValue(nFrame, "fgcolour", rectColor, 1.0)
+            }
+            filter.combineAllKeyFramePara();
+
+            fgColor.value = getHexStrColor(0)
+        }
+    }
+
+
 
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
@@ -264,15 +222,12 @@ Item {
             Layout.columnSpan:5
             onLoadKeyFrame:
             {
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, rectProperty);
-
                 var hexStrColor = getHexStrColor(keyFrameNum)
-                console.log("sll-----hexStrColor---", hexStrColor)
                 if (hexStrColor !== "") {
                     fgColor.value = hexStrColor
                 }
 
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
+                var textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
                 if(textValue !== "")
                     textArea.text = textValue;
 
@@ -448,11 +403,9 @@ Item {
                 alpha: true
                 onValueChanged:
                 {
-                    console.log("sll------1111---value-", value)
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
                     {
-                        console.log("sll------rectColor----3----", getRectColor(value))
                         filter.setKeyFrameParaRectValue(nFrame, "fgcolour", getRectColor(value), 1.0)
                         filter.combineAllKeyFramePara()
                     } else {
