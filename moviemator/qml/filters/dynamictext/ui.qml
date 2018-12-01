@@ -28,8 +28,8 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
-    width: 330
-    height: 370
+    width: 500
+    height: 500
 
     Component.onCompleted: {
         if (filter.isNew) {
@@ -95,6 +95,50 @@ Item {
         return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
+    function getHexStrColor(position) {
+        var colorRect = filter.getRectOfTextFilter("fgcolour")
+        if (position >= 0) {
+            colorRect = filter.getAnimRectValue(position, "fgcolour")
+        }
+
+        var aStr = parseInt(colorRect.x).toString(16)
+        if (parseInt(colorRect.x) < 16) {
+            aStr = "0" + aStr
+        }
+
+        var rStr = parseInt(colorRect.y).toString(16)
+        if (parseInt(colorRect.y) < 16) {
+            rStr = "0" + rStr
+        }
+
+        var gStr = parseInt(colorRect.width).toString(16)
+        if (parseInt(colorRect.width) < 16) {
+            gStr = "0" + gStr
+        }
+
+        var bStr = parseInt(colorRect.height).toString(16)
+        if (parseInt(colorRect.height) < 16) {
+            bStr = "0" + bStr
+        }
+
+        return "#" + aStr + rStr + gStr + bStr
+    }
+
+    function getRectColor(hexStrColor) {
+        var aStr = hexStrColor.substring(1, 3)
+        var rStr = hexStrColor.substring(3, 5)
+        var gStr = hexStrColor.substring(5, 7)
+        var bStr = hexStrColor.substring(7)
+        if (hexStrColor.length <= 7) {
+            aStr = "FF"
+            rStr = hexStrColor.substring(1, 3)
+            gStr = hexStrColor.substring(3, 5)
+            bStr = hexStrColor.substring(5)
+        }
+
+        return Qt.rect(parseInt(aStr, 16), parseInt(rStr, 16), parseInt(gStr, 16), parseInt(bStr, 16))
+    }
+
     function setFilter() {
         var x = parseFloat(rectX.text)
         var y = parseFloat(rectY.text)
@@ -116,13 +160,7 @@ Item {
         textArea.text = filter.get('argument')
 //        fgColor.value = filter.get('fgcolour')
 
-        var colorRect = filter.getRectOfTextFilter("fgcolour")
-        var aStr = colorRect.x.toString(16)
-        var rStr = colorRect.y.toString(16)
-        var gStr = colorRect.width.toString(16)
-        var bStr = colorRect.height.toString(16)
-        var colorStr = "#" + aStr + rStr + gStr + bStr
-        fgColor.value = colorStr
+        fgColor.value = getHexStrColor(-1)
 
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
@@ -276,23 +314,7 @@ Item {
                 eyedropper: false
                 alpha: true
                 onValueChanged: {
-                    var aStr = value.substring(1, 3)
-                    var rStr = value.substring(3, 5)
-                    var gStr = value.substring(5, 7)
-                    var bStr = value.substring(7)
-                    if (value.length <= 7) {
-                        aStr = "FF"
-                        rStr = value.substring(1, 3)
-                        gStr = value.substring(3, 5)
-                        bStr = value.substring(5)
-                    }
-
-                    var rInt = parseInt(rStr, 16)
-                    var gInt = parseInt(gStr, 16)
-                    var bInt = parseInt(bStr, 16)
-                    var aInt = parseInt(aStr, 16)
-
-                    filter.set('fgcolour', Qt.rect(aInt, rInt, gInt, bInt))
+                    filter.set('fgcolour', getRectColor(value))
                 }
             }
 
