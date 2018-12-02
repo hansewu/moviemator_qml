@@ -121,6 +121,60 @@ Item {
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
+            filter.set(rectProperty,   '0=-1 0 1 1; :1.0=0 0 1 1')
+            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
+
+            filter.set(rectProperty,   '0=1 0 1 1; :1.0=0 0 1 1')
+            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+
+            filter.set(rectProperty,   '0=0 -1 1 1; :1.0=0 0 1 1')
+            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+
+            filter.set(rectProperty,   '0=0 1 1 1; :1.0=0 0 1 1')
+            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+
+//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=-1 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
+
+//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=1 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
+
+//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 -1 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+
+//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 1 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
+
+//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.05 -0.05 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
+
+//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
+
+//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.1 -0.05 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
+
+//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0 -0.05 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
+
+//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 -0.1 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
+
+//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 0 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
+
+//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.1 -0.1 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
+
+//            filter.set(rectProperty,   '0=0 0 1 1; -1=0 0 1.1 1.1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
+
+//            filter.set(rectProperty,   '0=-0.1 0 1.1 1.1; -1=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
+
+//            filter.set(rectProperty,   '0=0 -0.1 1.1 1.1; -1=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')

@@ -22,9 +22,11 @@ RowLayout {
         Layout.maximumWidth: 200
         model: filter.presets
         onCurrentTextChanged: {
-            beforePresetLoaded()
-            filter.preset(currentText)
-            presetSelected()
+            if (currentText.length > 1) {//一个空格
+                beforePresetLoaded()
+                filter.preset(currentText)
+                presetSelected()
+            }
         }
     }
 /*    Button {
