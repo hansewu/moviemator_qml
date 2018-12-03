@@ -53,7 +53,7 @@ Rectangle {
         onPositionChanged: {
              preKeyFrameButton.enabled      = filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
              nextKeyFrameButton.enabled     = filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
-             removeKeyFrameButton.enabled   = filter.bKeyFrame(timeline.getPositionInCurrentClip())
+            //  removeKeyFrameButton.enabled   = filter.bKeyFrame(timeline.getPositionInCurrentClip())
              var position = timeline.getPositionInCurrentClip()
              frameChanged(position)
         }
@@ -84,7 +84,7 @@ Rectangle {
             var position = timeline.getPositionInCurrentClip()
             preKeyFrameButton.enabled      = metadata && (metadata.keyframes.parameterCount > 0)
             nextKeyFrameButton.enabled     = metadata && (metadata.keyframes.parameterCount > 0)
-            removeKeyFrameButton.enabled   = metadata && (metadata.keyframes.parameterCount > 0)
+            // removeKeyFrameButton.enabled   = metadata && (metadata.keyframes.parameterCount > 0)
         }
     }
 
