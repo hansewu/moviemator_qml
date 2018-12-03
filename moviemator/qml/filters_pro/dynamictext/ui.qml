@@ -88,6 +88,20 @@ Item {
     }
 
     Component.onCompleted: {
+        //导入上次工程保存的关键帧
+        var metaParamList = metadata.keyframes.parameters
+        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+        for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+        {
+            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+            for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+                var prop = metaParamList[paramIndex].property
+                var keyValue = filter.getAnimRectValue(nFrame, prop)
+                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+            }
+        }
+        filter.combineAllKeyFramePara();
+
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
@@ -121,17 +135,17 @@ Item {
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
-            filter.set(rectProperty,   '0=-1 0 1 1; :1.0=0 0 1 1')
-            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
+//            filter.set(rectProperty,   '0=-1 0 1 1; :1.0=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
 
-            filter.set(rectProperty,   '0=1 0 1 1; :1.0=0 0 1 1')
-            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+//            filter.set(rectProperty,   '0=1 0 1 1; :1.0=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
 
-            filter.set(rectProperty,   '0=0 -1 1 1; :1.0=0 0 1 1')
-            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+//            filter.set(rectProperty,   '0=0 -1 1 1; :1.0=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
 
-            filter.set(rectProperty,   '0=0 1 1 1; :1.0=0 0 1 1')
-            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+//            filter.set(rectProperty,   '0=0 1 1 1; :1.0=0 0 1 1')
+//            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
 
 //            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=-1 0 1 1')
 //            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
@@ -282,6 +296,27 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
+            onSetAsKeyFrame:{
+                var nFrame = keyFrame.getCurrentFrame()
+                var rectValue = filter.getRectOfTextFilter(rectProperty)
+                var colorRect = filter.getRectOfTextFilter("fgcolour")
+                if (filter.getKeyFrameNumber() <= 0) {
+                    var position2 = filter.producerOut - filter.producerIn + 1 - 5
+                    filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue, 1.0)
+                    filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
+
+                    filter.setKeyFrameParaRectValue(position2, "fgcolour", colorRect, 1.0)
+                    filter.setKeyFrameParaRectValue(0, "fgcolour", colorRect)
+
+                    filter.combineAllKeyFramePara();
+                }
+
+                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue, 1.0)
+                filter.setKeyFrameParaRectValue(nFrame, "fgcolour", colorRect, 1.0)
+                filter.combineAllKeyFramePara();
+
+                setKeyframedControls()
+            }
             onLoadKeyFrame:
             {
                 var hexStrColor = getHexStrColor(keyFrameNum)
