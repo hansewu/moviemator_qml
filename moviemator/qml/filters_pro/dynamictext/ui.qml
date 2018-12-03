@@ -297,22 +297,41 @@ Item {
             id: keyFrame
             Layout.columnSpan:5
             onSetAsKeyFrame:{
-                var nFrame = keyFrame.getCurrentFrame()
-                var rectValue = filter.getRectOfTextFilter(rectProperty)
-                var colorRect = filter.getRectOfTextFilter("fgcolour")
+                //如果没有关键帧，先创建头尾两个关键帧
                 if (filter.getKeyFrameNumber() <= 0) {
-                    var position2 = filter.producerOut - filter.producerIn + 1 - 5
-                    filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue, 1.0)
-                    filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
-
-                    filter.setKeyFrameParaRectValue(position2, "fgcolour", colorRect, 1.0)
-                    filter.setKeyFrameParaRectValue(0, "fgcolour", colorRect)
-
+                    var paramCount = metadata.keyframes.parameterCount
+                    for(var i = 0; i < paramCount; i++) {
+                        var property = metadata.keyframes.parameters[i].property
+                        var paraType = metadata.keyframes.parameters[i].paraType
+                        var positionStart = 0
+                        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
+                        if (paraType === "rect") {
+                            var rectValue = filter.getRectOfTextFilter(property)
+                            filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
+                            filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
+                        } else {
+                            var valueStr = filter.get(property)
+                            filter.setKeyFrameParaValue(positionStart, property, valueStr);
+                            filter.setKeyFrameParaValue(positionEnd, property, valueStr);
+                        }
+                    }
                     filter.combineAllKeyFramePara();
                 }
 
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue, 1.0)
-                filter.setKeyFrameParaRectValue(nFrame, "fgcolour", colorRect, 1.0)
+                //插入新的关键帧
+                var paramCount = metadata.keyframes.parameterCount
+                for(var i = 0; i < paramCount; i++) {
+                    var nFrame = keyFrame.getCurrentFrame()
+                    var property = metadata.keyframes.parameters[i].property
+                    var paraType = metadata.keyframes.parameters[i].paraType
+                    if (paraType === "rect") {
+                        var rectValue = filter.getAnimRectValue(nFrame, property)
+                        filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                    } else {
+                        var valueStr = filter.get(property)
+                        filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                    }
+                }
                 filter.combineAllKeyFramePara();
 
                 setKeyframedControls()
