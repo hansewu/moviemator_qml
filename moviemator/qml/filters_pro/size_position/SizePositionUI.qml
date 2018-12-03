@@ -139,6 +139,23 @@ Item {
         
     }
 
+    function setPerset(){
+        var position = timeline.getPositionInCurrentClip()
+        filter.get(rectProperty)
+        var rect = filter.getAnimRectValue(position, rectProperty)
+        var rect3 = filter.get(rectProperty)
+        console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue2: rect: " + rect)
+        console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue3: rect3: " + rect3)
+
+        filterRect.x = rect.x
+        filterRect.y = rect.y
+        filterRect.width = rect.width
+        filterRect.height = rect.height
+
+        setFilter()
+        setControls()
+    }
+
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
     ExclusiveGroup { id: valignGroup }
@@ -171,8 +188,7 @@ Item {
                 console.log("111111111111111111111111111111111111111111111111-1: ")
                 setControls()
             }
-            onLoadKeyFrame:
-            {
+            onLoadKeyFrame:{
                 filter.getKeyFrameParaValue(keyFrameNum, rectProperty)
                 console.log("22222222222222222222222222222222222222222222222-0: " + keyFrameNum)
                 console.log("22222222222222222222222222222222222222222222222-0: " + rectProperty)
@@ -221,7 +237,7 @@ Item {
             id: preset
             parameters: [fillProperty, distortProperty, rectProperty, halignProperty, valignProperty]
             Layout.columnSpan: 4
-            onPresetSelected: setControls()
+            onPresetSelected: setPerset()
         }
 
         Label {

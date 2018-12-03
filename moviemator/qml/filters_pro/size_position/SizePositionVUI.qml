@@ -98,37 +98,39 @@ Flickable {
     Connections {
         target: filter
         onChanged: {
-            var rectTmp = filter.getRect(rectProperty)
-            var newRect = rectTmp
-            var position = timeline.getPositionInCurrentClip()
-            var bKeyFrame = filter.bKeyFrame(position)
-            if (bKeyFrame) {
-                filter.get(rectProperty)
-                rectTmp = filter.getAnimRectValue(position, rectProperty)
-                filter.get(rectProperty)
-            }
-            console.log("onChangedonChangedonChanged-2: filterRect: "+filterRect)
-            console.log("onChangedonChangedonChanged-2: newRect: "+newRect)
-            // if (filterRect !== newRect) {
-                newRect.x = rectTmp.x * profile.width 
-                newRect.y = rectTmp.y * profile.height
-                newRect.width = rectTmp.width * profile.width
-                newRect.height = rectTmp.height * profile.height
-                console.log("RectangleControlRectangleControlRectangleControl-2-1:newRect: "+newRect)
-                rectangle.setHandles(newRect)
-            // }
-            if (rectangle.aspectRatio !== getAspectRatio()) {
-                rectangle.aspectRatio = getAspectRatio()
-                rectangle.setHandles(filterRect)
-                var rect = rectangle.rectangle
-                rectCtr.x = rect.x / profile.width / rectangle.widthScale
-                rectCtr.y = rect.y / profile.height / rectangle.heightScale
-                rectCtr.width = rect.width / profile.width / rectangle.widthScale
-                rectCtr.height = rect.height / profile.height / rectangle.heightScale
-                filter.set(rectProperty, rectCtr)
-                console.log("onChangedonChangedonChanged-2-2:rect: "+rect)
-                console.log("onChangedonChangedonChanged-2-2:rectCtr: "+rectCtr)
-            }
+            vuiTimer3.restart()
+        }
+    }
+    function onFilterChanged(){
+        var rectTmp = filter.getRect(rectProperty)
+        var newRect = rectTmp
+        var position = timeline.getPositionInCurrentClip()
+        var bKeyFrame = filter.bKeyFrame(position)
+        if (bKeyFrame) {
+            filter.get(rectProperty)
+            rectTmp = filter.getAnimRectValue(position, rectProperty)
+            filter.get(rectProperty)
+        }
+        console.log("onChangedonChangedonChanged-2: newRect: "+newRect)
+        
+        newRect.x = rectTmp.x * profile.width 
+        newRect.y = rectTmp.y * profile.height
+        newRect.width = rectTmp.width * profile.width
+        newRect.height = rectTmp.height * profile.height
+        console.log("RectangleControlRectangleControlRectangleControl-2-1:newRect: "+newRect)
+        rectangle.setHandles(newRect)
+        
+        if (rectangle.aspectRatio !== getAspectRatio()) {
+            rectangle.aspectRatio = getAspectRatio()
+            rectangle.setHandles(newRect)
+            var rect = rectangle.rectangle
+            rectCtr.x = rect.x / profile.width / rectangle.widthScale
+            rectCtr.y = rect.y / profile.height / rectangle.heightScale
+            rectCtr.width = rect.width / profile.width / rectangle.widthScale
+            rectCtr.height = rect.height / profile.height / rectangle.heightScale
+            filter.set(rectProperty, rectCtr)
+            console.log("onChangedonChangedonChanged-2-2:rect: "+rect)
+            console.log("onChangedonChangedonChanged-2-2:rectCtr: "+rectCtr)
         }
     }
 
@@ -181,6 +183,16 @@ Flickable {
         onTriggered: 
         {
             filter.set(rectProperty, rectCtr)
+        }
+    }
+
+    Timer {
+        id : vuiTimer3
+        interval: 5
+        repeat: false
+        onTriggered: 
+        {
+            onFilterChanged()
         }
     }
     

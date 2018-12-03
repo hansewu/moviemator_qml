@@ -78,7 +78,6 @@ Rectangle {
         buttonWidth : 100
         onClicked: {
             addFrameChanged()
-            removeKeyFrameButton.enabled = true
         }
         property bool change1;
         onEnabledChanged: {
@@ -100,7 +99,8 @@ Rectangle {
         implicitWidth: 32
         implicitHeight: 32
 
-        enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
+        // enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
+        enabled: true
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Remove current frame')
         customIconSource: 'qrc:///icons/light/32x32/bg.png'

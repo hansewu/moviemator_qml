@@ -88,7 +88,7 @@ RowLayout{
                 bKeyFrame = true
                 synchroData()
                 setAsKeyFrame()
-                addKeyFrameValue()
+                // addKeyFrameValue()
             }
    }
    Connections {
