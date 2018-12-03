@@ -324,49 +324,9 @@ Item {
                     fgColor.value = hexStrColor
                 }
 
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, "argument");
-                if(textValue !== "")
-                    textArea.text = textValue;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "family");
-                if(textValue !== "")
-                    fontButton.text = textValue;
-
                 filterRect = getAbsoluteRect(keyFrameNum)
                 filter.set('size', filterRect.height)
                 filterRect = getAbsoluteRect(keyFrameNum)
-
-                textValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "weight");
-                if(textValue !== "")
-                    weightCombo.currentIndex = weightCombo.valueToIndex();
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "olcolour");
-                if(textValue !== "")
-                    outlineColor.value = textValue;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "bgcolour");
-                if(textValue !== "")
-                    bgColor.value = textValue;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, "pad");
-                if(textValue !== "")
-                    padSpinner.value = textValue;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
-                if(textValue === "left")
-                    leftRadioButton.checked = true;
-                else if(textValue === "center")
-                    centerRadioButton.checked = true;
-                else if(textValue === "right")
-                    rightRadioButton.checked = true;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, valignProperty);
-                if(textValue === "top")
-                    topRadioButton.checked = true;
-                else if(textValue === "middle")
-                    middleRadioButton.checked = true;
-                else if(textValue === "bottom")
-                    bottomRadioButton.checked = true;
             }
         }
 
@@ -419,14 +379,7 @@ Item {
                     cursorPosition = maxLength
                 }
 
-                var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame)
-                {
-                    filter.setKeyFrameParaValue(nFrame, "argument", text)
-                    filter.combineAllKeyFramePara();
-                }
-                else
-                    filter.set('argument', text)
+                filter.set('argument', text)
             }
         }
 
@@ -529,27 +482,11 @@ Item {
                     id: fontDialog
                     title: "Please choose a font"
                     onFontChanged: {
-                        if(keyFrame.bKeyFrame)
-                        {
-                            fontButton.fontFamily = font.family
-                            filter.setKeyFrameParaValue(nFrame, "family",font.family)
-                            filter.combineAllKeyFramePara()
-                        }
-                        else
-                        {
-                            filter.set('family', font.family)
-                        }
+                         filter.set('family', font.family)
                     }
                     onAccepted: fontButton.text = font.family
                     onRejected: {
-                        if(keyFrame.bKeyFrame)
-                        {
-                            fontButton.fontFamily = fontButton.text
-                            filter.setKeyFrameParaValue(nFrame, "family",fontButton.text)
-                            filter.combineAllKeyFramePara()
-                        }
-                        else
-                            filter.set('family', fontButton.text)
+                         filter.set('family', fontButton.text)
                     }
                 }
             }
@@ -569,14 +506,7 @@ Item {
                     return i;
                 }
                 onActivated: {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame, "weight", 10 * values[index])
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                        filter.set('weight', 10 * values[index])
+                    filter.set('weight', 10 * values[index])
                 }
            }
         }
@@ -591,14 +521,7 @@ Item {
             eyedropper: false
             alpha: true
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "olcolour", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('olcolour', value)
+                filter.set('olcolour', value)
             }
         }
         Label {
@@ -615,14 +538,7 @@ Item {
             maximumValue: 30
             decimals: 0
             onValueChanged: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "outline", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('outline', value)
+                filter.set('outline', value)
             }
         }
 
@@ -637,14 +553,7 @@ Item {
             alpha: true
             onValueChanged:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "bgcolour",value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('bgcolour', value)
+                filter.set('bgcolour', value)
             }
         }
         Label {
@@ -662,17 +571,9 @@ Item {
             decimals: 0
             onValueChanged:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "pad", value)
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set('pad', value)
+                filter.set('pad', value)
             }
         }
-//////////////////////////////////////////////////////////////////
 
         SeparatorLine {
             Layout.columnSpan: 5
@@ -749,14 +650,7 @@ Item {
             exclusiveGroup: halignGroup
             onClicked:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, halignProperty, "left")
-                    filter.combineAllKeyFramePara()
-                }
-                else
-                    filter.set(halignProperty, 'left')
+                filter.set(halignProperty, 'left')
             }
         }
         RadioButton {
@@ -764,13 +658,7 @@ Item {
             text: qsTr('Center')
             exclusiveGroup: halignGroup
             onClicked: {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, halignProperty, "center")
-                }
-                else
-                     filter.set(halignProperty, 'center')
+                filter.set(halignProperty, 'center')
             }
         }
         RadioButton {
@@ -778,13 +666,7 @@ Item {
             text: qsTr('Right')
             exclusiveGroup: halignGroup
             onClicked:{
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, halignProperty, "right")
-                }
-                else
-                    filter.set(halignProperty, 'right')
+                filter.set(halignProperty, 'right')
             }
         }
         Item { Layout.fillWidth: true }
@@ -800,13 +682,7 @@ Item {
             exclusiveGroup: valignGroup
             onClicked:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, valignProperty, "top")
-                }
-                else
-                    filter.set(valignProperty, 'top')
+                filter.set(valignProperty, 'top')
             }
         }
         RadioButton {
@@ -815,13 +691,7 @@ Item {
             exclusiveGroup: valignGroup
             onClicked:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, valignProperty, "middle")
-                }
-                else
-                    filter.set(valignProperty, 'middle')
+                filter.set(valignProperty, 'middle')
             }
         }
         RadioButton {
@@ -830,13 +700,7 @@ Item {
             exclusiveGroup: valignGroup
             onClicked:
             {
-                if(keyFrame.bKeyFrame)
-                {
-                    var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, valignProperty, "bottom")
-                }
-                else
-                    filter.set(valignProperty, 'bottom')
+                filter.set(valignProperty, 'bottom')
             }
         }
         Item { Layout.fillWidth: true }
