@@ -110,6 +110,7 @@ Item {
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
 
+            //静态预设
             filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
@@ -135,29 +136,61 @@ Item {
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
 
-//            filter.set(rectProperty,   '0=-1 0 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
+            //动画预设
+            var totalFrame = filter.producerOut - filter.producerIn + 1 - 5
+            var oneSeconds2Frame = parseInt(profile.fps)
+            var startFrame = 0.0
+            var middleFrame = oneSeconds2Frame
+            var endFrame = totalFrame
+            var startValue = "-1.0 0.0 1.0 1.0 1.0"
+            var middleValue = "0.0 0.0 1.0 1.0 1.0"
+            var endValue = "0.0 0.0 1.0 1.0 1.0"
 
-//            filter.set(rectProperty,   '0=1 0 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
 
-//            filter.set(rectProperty,   '0=0 -1 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+            startValue = "1.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
 
-//            filter.set(rectProperty,   '0=0 1 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+            startValue = "0.0 -1.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=-1 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
+            startValue = "0.0 1.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=1 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
+            middleFrame = totalFrame - oneSeconds2Frame
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-1.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 -1 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "1.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 1 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 -1.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 1.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
 
 //            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.05 -0.05 1.1 1.1')
 //            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
@@ -188,6 +221,8 @@ Item {
 
 //            filter.set(rectProperty,   '0=0 -0.1 1.1 1.1; -1=0 0 1 1')
 //            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+
+            filter.removeAllKeyFrame(rectProperty)
 
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
@@ -366,6 +401,20 @@ Item {
                 filter.removeAllKeyFrame(rectProperty)
             }
             onPresetSelected: {
+                //加載關鍵幀
+                var metaParamList = metadata.keyframes.parameters
+                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+                {
+                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+                        var prop = metaParamList[paramIndex].property
+                        var keyValue = filter.getAnimRectValue(nFrame, prop)
+                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+                    }
+                }
+                filter.combineAllKeyFramePara();
+
                 setControls()
                 setKeyframedControls()
 
