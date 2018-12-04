@@ -192,35 +192,55 @@ Item {
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.05 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-0.05 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.1 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.1 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "0.0 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 -0.1 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.05 -0.1 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 0 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.05 0.0 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.1 -0.1 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-0.1 -0.1 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=0 0 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
 
-//            filter.set(rectProperty,   '0=-0.1 0 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
+            startValue = "-0.1 0.0 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
 
-//            filter.set(rectProperty,   '0=0 -0.1 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+            startValue = "0.0 -0.1 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
 
             filter.removeAllKeyFrame(rectProperty)
 
