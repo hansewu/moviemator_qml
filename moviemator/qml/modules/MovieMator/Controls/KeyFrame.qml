@@ -110,6 +110,7 @@ RowLayout{
                 if (filter.getKeyFrameNumber() <= 0) {
                     removedAllKeyFrame()
                 }
+                synchroData()
             }
    }
 

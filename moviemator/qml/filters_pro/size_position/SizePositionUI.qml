@@ -168,6 +168,25 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
+            onSynchroData:{
+                if((!keyFrame.bKeyFrame)&&(filter.getKeyFrameNumber() <= 0)){
+                    var x = parseFloat(rectX.text) / profile.width
+                    var y = parseFloat(rectY.text) / profile.height
+                    var w = parseFloat(rectW.text) / profile.width
+                    var h = parseFloat(rectH.text) / profile.height
+
+                    rectTmp.x = 0
+                    rectTmp.y = 0
+                    rectTmp.width = 0
+                    rectTmp.height = 0
+                    filter.set(rectProperty, rectTmp)
+                    rectTmp.x = x
+                    rectTmp.y = y
+                    rectTmp.width = w
+                    rectTmp.height = h
+                    filter.set(rectProperty, rectTmp)
+                }
+            }
             onSetAsKeyFrame:{
                 var nFrame = keyFrame.getCurrentFrame()
                 console.log("111111111111111111111111111111111111111111111111-0: "+ nFrame)
