@@ -392,20 +392,22 @@ Item {
                 setKeyframedControls()
             }
             onRemovedAllKeyFrame: {
-                var tempFilterRect = getAbsoluteRect(-1)
-                var tempFgcolourHexStr = getHexStrColor(-1)
-                console.log("sll-----tempFilterRect-------", tempFilterRect)
-                console.log("sll-----tempFgcolourHexStr------", tempFgcolourHexStr)
-//                filter.removeAllKeyFrame("fgcolour")
-//                filter.removeAllKeyFrame(rectProperty)
-//                filter.combineAllKeyFramePara();
+                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame(rectProperty)
+                    keyFrameCount = -1
+                }
+                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame("fgcolour")
+                    keyFrameCount = -1
+                }
                 filter.resetProperty("fgcolour")
                 filter.resetProperty(rectProperty)
-                console.log("sll-----getAbsoluteRect(-1)-------", getAbsoluteRect(-1))
-                console.log("sll-----getHexStrColor(-1)-------", getHexStrColor(-1))
 
-                filter.set(rectProperty, getRelativeRect(tempFilterRect))
-                filter.set("fgcolour", getRectColor(tempFgcolourHexStr))
+                //重置带有动画的属性的属性值
+                filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
+                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             }
             onLoadKeyFrame:
             {
@@ -444,8 +446,19 @@ Item {
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             Layout.columnSpan: 4
             onBeforePresetLoaded: {
-                filter.removeAllKeyFrame("fgcolour")
-                filter.removeAllKeyFrame(rectProperty)
+                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame(rectProperty)
+                    keyFrameCount = -1
+                }
+                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame("fgcolour")
+                    keyFrameCount = -1
+                }
+
+                filter.resetProperty("fgcolour")
+                filter.resetProperty(rectProperty)
             }
             onPresetSelected: {
                 //加載關鍵幀
@@ -838,30 +851,6 @@ Item {
                 filterRect = newRect
                 filter.set('size', filterRect.height)
             }
-
-
-//            var position        = timeline.getPositionInCurrentClip()
-//            var bKeyFrame       = filter.bKeyFrame(position)
-//            if (bKeyFrame) {
-//                var newRect = getAbsoluteRect(position)
-//                console.log("sll-bbb-onChanged---newRect-------", newRect)
-//                console.log("sll-bbb-onChanged---filterRect-------", filterRect)
-//                console.log("sll-bbb-onChanged---rectX.text---11----", rectX.text)
-//                filterRect = newRect
-//                console.log("sll-bbb-onChanged---rectX.text---22----", rectX.text)
-//                filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
-//                filter.combineAllKeyFramePara()
-//            } else {
-//                var newRect = getAbsoluteRect(-1)
-//                if (filterRect !== newRect) {
-//                    console.log("sll--onChanged---newRect-------", newRect)
-//                    console.log("sll--onChanged---filterRect-------", filterRect)
-//                    console.log("sll--onChanged---rectX.text---11----", rectX.text)
-//                    filterRect = newRect
-//                    console.log("sll--onChanged---rectX.text---22----", rectX.text)
-//                    filter.set('size', filterRect.height)
-//                }
-//            }
         }
     }
 }
