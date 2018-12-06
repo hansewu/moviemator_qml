@@ -357,12 +357,18 @@ RowLayout{
     }
     // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
+        resetAnim2No(layoutRoot)
+
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
             var control = findControl(parameter.objectName,layoutRoot)
             if(control == null)
                 continue;
+            
+            console.log("setDatassetDatassetDatassetDatassetDatas: " + paramIndex)
+            console.log("setDatassetDatassetDatassetDatassetDatas: parameter.property:" + parameter.property)
+            console.log("setDatassetDatassetDatassetDatassetDatas: control.value:" + control.value)
             switch(parameter.controlType)
             {
             case "SliderSpinner":
@@ -396,6 +402,43 @@ RowLayout{
                 break;
             }
 
+        }
+    }
+    function resetAnim2No(layoutRoot){
+        //最后一个关键帧移除之后触发用的
+        var metaParamList1 = metadata.keyframes.parameters
+        var parameter = metaParamList1[0]
+        var control = findControl(parameter.objectName,layoutRoot)
+        if(filter.getKeyFrameNumber() <= 0){
+            switch(parameter.controlType)
+            {
+            case "SliderSpinner":
+                var tmp = control.value
+                control.value = parseFloat(parameter.defaultValue) / 2
+                control.value = parseFloat(parameter.defaultValue) * 2
+                control.value = tmp
+            break;
+
+            case "CheckBox":
+                var tmp = control.value
+                control.value = Number(parameter.defaultValue) / 2
+                control.value = Number(parameter.defaultValue) * 2
+                control.value = tmp
+                break;
+
+            case "ColorWheelItem":
+                var tmp2 = Qt.rgba(control.red / 255, control.green / 255, control.blue / 255, 1.0 )
+                control.color = Qt.rgba( 0, 0, 0, 1.0 )
+                control.color = Qt.rgba( 0.5, 0.5, 0.5, 1.0 )
+                control.color = tmp2
+                break;
+
+            case "ColorPicker":
+            case "Slider":
+            default :
+                break;
+            
+            }
         }
     }
     //加减乘除 分别用 + - x c 被除b，对数log，指数pow
@@ -734,9 +777,11 @@ RowLayout{
              onRemoveKeyFrame: {
                 bKeyFrame = false
                 var nFrame = keyFrame.getCurrentFrame();
-                synchroData()
+                
                 filter.removeKeyFrameParaValue(nFrame);
                 filter.combineAllKeyFramePara();
+                synchroData()
+                
              }
     }
     // 移除所有关键帧信号
