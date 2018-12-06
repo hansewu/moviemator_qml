@@ -14,6 +14,7 @@ RowLayout{
     signal synchroData()
     signal setAsKeyFrame()
     signal loadKeyFrame(double keyFrameNum)
+    signal removedAllKeyFrame()
 
     function getCurrentFrame(){
         return currentFrame;
@@ -106,6 +107,9 @@ RowLayout{
                 var nFrame = keyFrame.getCurrentFrame();
                 synchroData()
                 filter.removeKeyFrameParaValue(nFrame);
+                if (filter.getKeyFrameNumber() <= 0) {
+                    removedAllKeyFrame()
+                }
             }
    }
 

@@ -391,16 +391,43 @@ Item {
 
                 setKeyframedControls()
             }
+            onRemovedAllKeyFrame: {
+                var tempFilterRect = getAbsoluteRect(-1)
+                var tempFgcolourHexStr = getHexStrColor(-1)
+                console.log("sll-----tempFilterRect-------", tempFilterRect)
+                console.log("sll-----tempFgcolourHexStr------", tempFgcolourHexStr)
+//                filter.removeAllKeyFrame("fgcolour")
+//                filter.removeAllKeyFrame(rectProperty)
+//                filter.combineAllKeyFramePara();
+                filter.resetProperty("fgcolour")
+                filter.resetProperty(rectProperty)
+                console.log("sll-----getAbsoluteRect(-1)-------", getAbsoluteRect(-1))
+                console.log("sll-----getHexStrColor(-1)-------", getHexStrColor(-1))
+
+                filter.set(rectProperty, getRelativeRect(tempFilterRect))
+                filter.set("fgcolour", getRectColor(tempFgcolourHexStr))
+            }
             onLoadKeyFrame:
             {
-                var hexStrColor = getHexStrColor(keyFrameNum)
-                if (hexStrColor !== "") {
-                    fgColor.value = hexStrColor
-                }
+                if (filter.getKeyFrameNumber() > 0) {
+                    var hexStrColor = getHexStrColor(keyFrameNum)
+                    if (hexStrColor !== "") {
+                        fgColor.value = hexStrColor
+                    }
 
-                filterRect = getAbsoluteRect(keyFrameNum)
-                filter.set('size', filterRect.height)
-                filterRect = getAbsoluteRect(keyFrameNum)
+                    filterRect = getAbsoluteRect(keyFrameNum)
+                    filter.set('size', filterRect.height)
+                    filterRect = getAbsoluteRect(keyFrameNum)
+                } else {
+                    var hexStrColor = getHexStrColor(-1)
+                    if (hexStrColor !== "") {
+                        fgColor.value = hexStrColor
+                    }
+
+                    filterRect = getAbsoluteRect(-1)
+                    filter.set('size', filterRect.height)
+                    filterRect = getAbsoluteRect(-1)
+                }
             }
         }
 
@@ -800,19 +827,41 @@ Item {
         target: filter
         onChanged: {
             var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.bKeyFrame(position)
-            if (bKeyFrame) {
-                var newRect = getAbsoluteRect(position)
-                filterRect = newRect
-                filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
-                filter.combineAllKeyFramePara()
-            } else {
-                var newRect = getAbsoluteRect(-1)
-                if (filterRect !== newRect) {
-                    filterRect = newRect
-                    filter.set('size', filterRect.height)
-                }
+            var newRect         = getAbsoluteRect(-1)
+            var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
+            //判断是否有关键帧
+            if(keyFrameCount > 0) {
+                newRect = getAbsoluteRect(position)
             }
+
+            if (filterRect !== newRect) {
+                filterRect = newRect
+                filter.set('size', filterRect.height)
+            }
+
+
+//            var position        = timeline.getPositionInCurrentClip()
+//            var bKeyFrame       = filter.bKeyFrame(position)
+//            if (bKeyFrame) {
+//                var newRect = getAbsoluteRect(position)
+//                console.log("sll-bbb-onChanged---newRect-------", newRect)
+//                console.log("sll-bbb-onChanged---filterRect-------", filterRect)
+//                console.log("sll-bbb-onChanged---rectX.text---11----", rectX.text)
+//                filterRect = newRect
+//                console.log("sll-bbb-onChanged---rectX.text---22----", rectX.text)
+//                filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
+//                filter.combineAllKeyFramePara()
+//            } else {
+//                var newRect = getAbsoluteRect(-1)
+//                if (filterRect !== newRect) {
+//                    console.log("sll--onChanged---newRect-------", newRect)
+//                    console.log("sll--onChanged---filterRect-------", filterRect)
+//                    console.log("sll--onChanged---rectX.text---11----", rectX.text)
+//                    filterRect = newRect
+//                    console.log("sll--onChanged---rectX.text---22----", rectX.text)
+//                    filter.set('size', filterRect.height)
+//                }
+//            }
         }
     }
 }
