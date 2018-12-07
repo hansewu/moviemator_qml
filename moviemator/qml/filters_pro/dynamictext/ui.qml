@@ -116,31 +116,31 @@ Item {
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
-            presetsModle.append({"name": qsTr('Bottom Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Bottom Left'), "portrait": "qrc:///icons/filters/text/bottom-left.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
-            presetsModle.append({"name": qsTr('Bottom Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Bottom Right'), "portrait": "qrc:///icons/filters/text/bottom-right.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
-            presetsModle.append({"name": qsTr('Top Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Top Left'), "portrait": "qrc:///icons/filters/text/top-left.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
-            presetsModle.append({"name": qsTr('Top Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Top Right'), "portrait": "qrc:///icons/filters/text/top-right.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
-            presetsModle.append({"name": qsTr('Lower Third'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Lower Third'), "portrait": "qrc:///icons/filters/text/lower-third.gif"})
 
 
             //动画预设
@@ -155,28 +155,28 @@ Item {
 
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
-            presetsModle.append({"name": qsTr('Slide In From Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide In From Left'), "portrait": "qrc:///icons/filters/text/slide-in-from-left.gif"})
 
             startValue = "1.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
-            presetsModle.append({"name": qsTr('Slide In From Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide In From Right'), "portrait": "qrc:///icons/filters/text/slide-in-from-right.gif"})
 
             startValue = "0.0 -1.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
-            presetsModle.append({"name": qsTr('Slide In From Top'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide In From Top'), "portrait": "qrc:///icons/filters/text/slide-in-from-top.gif"})
 
             startValue = "0.0 1.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
-            presetsModle.append({"name": qsTr('Slide In From Bottom'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide In From Bottom'), "portrait": "qrc:///icons/filters/text/slide-in-from-bottom.gif"})
 
             middleFrame = totalFrame - oneSeconds2Frame
             startValue = "0.0 0.0 1.0 1.0 1.0"
@@ -184,28 +184,28 @@ Item {
             endValue = "-1.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
-            presetsModle.append({"name": qsTr('Slide Out Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide Out Left'), "portrait": "qrc:///icons/filters/text/slide-out-left.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "1.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
-            presetsModle.append({"name": qsTr('Slide Out Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide Out Right'), "portrait": "qrc:///icons/filters/text/slide-out-right.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 -1.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
-            presetsModle.append({"name": qsTr('Slide Out Top'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide Out Top'), "portrait": "qrc:///icons/filters/text/slide-out-top.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 1.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
-            presetsModle.append({"name": qsTr('Slide Out Bottom'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+            presetsModle.append({"name": qsTr('Slide Out Bottom'), "portrait": "qrc:///icons/filters/text/slide-out-bottom.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "-0.05 -0.05 1.1 1.1 1.0"
@@ -273,7 +273,7 @@ Item {
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters)
-            presetsModle.insert(0, {"name": filter.presets[1], "portrait": "qrc:///icons/filters/text/shapes.gif"})//默认
+            presetsModle.insert(0, {"name": filter.presets[1], "portrait": "qrc:///icons/filters/text/default.gif"})//默认
         }
 
         setControls()
