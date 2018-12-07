@@ -13,3 +13,5 @@ KeyFrameControl 1.0 KeyFrameControl.qml
 CustomFilterButton 1.0 CustomFilterButton.qml
 YFKeyFrame 1.0 YFKeyFrame.qml
 SeparatorLine 1.0 SeparatorLine.qml
+GridMenu 1.0 GridMenu.qml
+NewPreset 1.0 NewPreset.qml

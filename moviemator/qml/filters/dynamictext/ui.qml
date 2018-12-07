@@ -28,6 +28,7 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
+    property ListModel presetsModle: ListModel {}
     width: 500
     height: 500
 
@@ -46,36 +47,42 @@ Item {
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
+            presetsModle.append({"name": qsTr('Bottom Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
 //            filter.set(rectProperty,   '50%/50%:50%x50%')
             filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
+            presetsModle.append({"name": qsTr('Bottom Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
 //            filter.set(rectProperty,   '0/0:50%x50%')
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
+            presetsModle.append({"name": qsTr('Top Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
 //            filter.set(rectProperty,   '50%/0:50%x50%')
             filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
+            presetsModle.append({"name": qsTr('Top Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
 //            filter.set(rectProperty,   '0/76%:100%x14%')
             filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
+            presetsModle.append({"name": qsTr('Lower Third'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
 //            filter.set(rectProperty, '0/0:100%x100%')
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters)
+            presetsModle.insert(0, {"name": filter.presets[1], "portrait": "qrc:///icons/filters/text/shapes.gif"})//默认
 
             //設置默認預設
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
@@ -204,6 +211,27 @@ Item {
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             Layout.columnSpan: 4
+            onPresetSelected: {
+                setControls()
+                var newRect = getAbsoluteRect()
+                if (newRect !== filterRect) {
+                    filterRect = getAbsoluteRect()
+                    filter.set('size', filterRect.height)
+                }
+            }
+        }
+
+        Label {
+            text: qsTr('Preset')
+            Layout.alignment: Qt.AlignRight
+            color: '#ffffff'
+        }
+        NewPreset {
+            id: newPreset
+            presets: presetsModle
+            Layout.columnSpan: 4
+            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
+            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             onPresetSelected: {
                 setControls()
                 var newRect = getAbsoluteRect()
