@@ -93,6 +93,7 @@ FocusScope {
                     AnimatedImage {
                         source: portrait
                         anchors.fill: parent
+                        anchors.bottomMargin: 35
                         anchors.margins: 10
                     }
                     Text { text: name; anchors.bottom: parent.bottom; anchors.bottomMargin: 8; anchors.horizontalCenter: parent.horizontalCenter}
@@ -112,7 +113,7 @@ FocusScope {
 
                 states: State {
                     name: "active"; when: container.activeFocus
-                    PropertyChanges { target: content; color: "#FCFFF5"; scale: 1.1 }
+                    PropertyChanges { target: content; color: "#0C84DD"; scale: 1.2 }
                 }
 
                 transitions: Transition {
