@@ -28,8 +28,9 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
+    property ListModel presetsModle: ListModel {}
     width: 500
-    height: 500
+    height: 800
 
     function getHexStrColor(position) {
         var colorRect = filter.getRectOfTextFilter("fgcolour")
@@ -115,26 +116,32 @@ Item {
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
+            presetsModle.append({"name": qsTr('Bottom Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
+            presetsModle.append({"name": qsTr('Bottom Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
+            presetsModle.append({"name": qsTr('Top Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
+            presetsModle.append({"name": qsTr('Top Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
+            presetsModle.append({"name": qsTr('Lower Third'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+
 
             //动画预设
             var totalFrame = filter.producerOut - filter.producerIn + 1 - 5
@@ -148,24 +155,28 @@ Item {
 
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
+            presetsModle.append({"name": qsTr('Slide In From Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "1.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+            presetsModle.append({"name": qsTr('Slide In From Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 -1.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+            presetsModle.append({"name": qsTr('Slide In From Top'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 1.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+            presetsModle.append({"name": qsTr('Slide In From Bottom'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             middleFrame = totalFrame - oneSeconds2Frame
             startValue = "0.0 0.0 1.0 1.0 1.0"
@@ -173,74 +184,88 @@ Item {
             endValue = "-1.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
+            presetsModle.append({"name": qsTr('Slide Out Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "1.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
+            presetsModle.append({"name": qsTr('Slide Out Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 -1.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+            presetsModle.append({"name": qsTr('Slide Out Top'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 1.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
+            presetsModle.append({"name": qsTr('Slide Out Bottom'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "-0.05 -0.05 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
+            presetsModle.append({"name": qsTr('Slow Zoom In'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.05 -0.05 1.1 1.1 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
+            presetsModle.append({"name":  qsTr('Slow Zoom Out'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.05 -0.05 1.1 1.1 1.0"
             endValue = "-0.1 -0.05 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
+            presetsModle.append({"name":  qsTr('Slow Pan Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.05 -0.05 1.1 1.1 1.0"
             endValue = "0.0 -0.05 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
+            presetsModle.append({"name":  qsTr('Slow Pan Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.05 -0.05 1.1 1.1 1.0"
             endValue = "-0.05 -0.1 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
+            presetsModle.append({"name":  qsTr('Slow Pan Up'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.05 -0.05 1.1 1.1 1.0"
             endValue = "-0.05 0.0 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
+            presetsModle.append({"name":  qsTr('Slow Pan Down'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "-0.1 -0.1 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
+            presetsModle.append({"name": qsTr('Slow Zoom In, Pan Up Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "0.0 0.0 1.1 1.1 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
+            presetsModle.append({"name": qsTr('Slow Zoom In, Pan Down Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "-0.1 0.0 1.1 1.1 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
+            presetsModle.append({"name": qsTr('Slow Zoom Out, Pan Up Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             startValue = "0.0 -0.1 1.1 1.1 1.0"
             endValue = "0.0 0.0 1.0 1.0 1.0"
             filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
             filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+            presetsModle.append({"name": qsTr('Slow Zoom Out, Pan Down Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
             filter.removeAllKeyFrame(rectProperty)
 
@@ -248,6 +273,7 @@ Item {
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters)
+            presetsModle.insert(0, {"name": filter.presets[1], "portrait": "qrc:///icons/filters/text/shapes.gif"})//默认
         }
 
         setControls()
@@ -434,17 +460,67 @@ Item {
         }
 
 
+//        Label {
+//            text: qsTr('Preset')
+//            Layout.alignment: Qt.AlignRight
+//            color: '#ffffff'
+//        }
+//        Preset {
+//            id: preset
+
+//            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
+//            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
+//            Layout.columnSpan: 4
+//            onBeforePresetLoaded: {
+//                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame(rectProperty)
+//                    keyFrameCount = -1
+//                }
+//                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame("fgcolour")
+//                    keyFrameCount = -1
+//                }
+
+//                filter.resetProperty("fgcolour")
+//                filter.resetProperty(rectProperty)
+//            }
+//            onPresetSelected: {
+//                //加載關鍵幀
+//                var metaParamList = metadata.keyframes.parameters
+//                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+//                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+//                {
+//                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+//                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+//                        var prop = metaParamList[paramIndex].property
+//                        var keyValue = filter.getAnimRectValue(nFrame, prop)
+//                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+//                    }
+//                }
+//                filter.combineAllKeyFramePara();
+
+//                setControls()
+//                setKeyframedControls()
+
+//                if (filter.isNew) {
+//                    filter.set('size', filterRect.height)
+//                }
+//            }
+//        }
+
         Label {
             text: qsTr('Preset')
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        Preset {
+        NewPreset {
             id: preset
-
+            presets: presetsModle
+            Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
-            Layout.columnSpan: 4
             onBeforePresetLoaded: {
                 var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
                 if (keyFrameCount > 0) {
@@ -519,16 +595,16 @@ Item {
         RowLayout {
             Layout.columnSpan: 4
             Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Timecode')
                 onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
             }
             Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('Frame #', 'Frame number')
@@ -544,16 +620,16 @@ Item {
         RowLayout{
             Layout.columnSpan: 4
             Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File date')
                 onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
             }
             Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 text: qsTr('File name')
@@ -598,8 +674,8 @@ Item {
 
             Button {
                 id: fontButton
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 Layout.maximumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 onClicked: {
@@ -620,8 +696,8 @@ Item {
             }
             ComboBox {
                 id: weightCombo
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
@@ -659,8 +735,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -691,8 +767,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
