@@ -179,6 +179,9 @@ Item {
             presetsModle.append({"name": qsTr('Slide In From Bottom'), "portrait": "qrc:///icons/filters/text/slide-in-from-bottom.gif"})
 
             middleFrame = totalFrame - oneSeconds2Frame
+            if (middleFrame <= 24) {
+                middleFrame = totalFrame / 2
+            }
             startValue = "0.0 0.0 1.0 1.0 1.0"
             middleValue = "0.0 0.0 1.0 1.0 1.0"
             endValue = "-1.0 0.0 1.0 1.0 1.0"
