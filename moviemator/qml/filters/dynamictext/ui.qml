@@ -30,7 +30,7 @@ Item {
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
     width: 500
-    height: 500
+    height: 800
 
     Component.onCompleted: {
         if (filter.isNew) {
@@ -205,29 +205,8 @@ Item {
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        Preset {
-            id: preset
-
-            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
-            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
-            Layout.columnSpan: 4
-            onPresetSelected: {
-                setControls()
-                var newRect = getAbsoluteRect()
-                if (newRect !== filterRect) {
-                    filterRect = getAbsoluteRect()
-                    filter.set('size', filterRect.height)
-                }
-            }
-        }
-
-        Label {
-            text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
-            color: '#ffffff'
-        }
         NewPreset {
-            id: newPreset
+            id: preset
             presets: presetsModle
             Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
@@ -277,16 +256,16 @@ Item {
             Layout.columnSpan: 4
             Button {
                 text: qsTr('Timecode')
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2                
                 onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
             }
             Button {
                 text: qsTr('Frame #', 'Frame number')
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2                
                 onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
@@ -305,16 +284,16 @@ Item {
 
             Button {
                 text: qsTr('File date')
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2                
                 onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
             }
             Button {
                 text: qsTr('File name')
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2                
                 onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
@@ -348,8 +327,8 @@ Item {
 
             Button {
                 id: fontButton
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 Layout.maximumWidth: (preset.width - 8) / 2 - 8 - fgColor.width                
                 onClicked: {
@@ -366,8 +345,8 @@ Item {
             }
             ComboBox {
                 id: weightCombo
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2                
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
@@ -402,8 +381,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -429,8 +408,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
