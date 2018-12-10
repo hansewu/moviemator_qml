@@ -1,6 +1,7 @@
 
 import QtQuick 2.0
 import QtQuick.Controls 1.1
+import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.1
 import MovieMator.Controls 1.0
 
@@ -13,6 +14,7 @@ Item {
     property var _locale: Qt.locale(application.numericLocale)
     property rect filterRect : filter.getRect(rectProperty)
     property rect rectTmp
+    property var clickedButton
 
     width: 350
     height: 180
@@ -105,15 +107,15 @@ Item {
 
 
     function setControls() {
-        if((filter.getKeyFrameNumber() > 0)){
-            fitRadioButton.checked = false //这样后面6个都enabled == false
-            fitRadioButton.enabled = false
-            fillRadioButton.enabled = false
-            distortRadioButton.enabled = false
-        }else{
-            fitRadioButton.enabled = true
-            fillRadioButton.enabled = true
-            distortRadioButton.enabled = true
+        // if((filter.getKeyFrameNumber() > 0)){
+        //     fitRadioButton.checked = false //这样后面6个都enabled == false
+        //     fitRadioButton.enabled = false
+        //     fillRadioButton.enabled = false
+        //     distortRadioButton.enabled = false
+        // }else{
+        //     fitRadioButton.enabled = true
+        //     fillRadioButton.enabled = true
+        //     distortRadioButton.enabled = true
 
             if (filter.get(distortProperty) === '1')
                 distortRadioButton.checked = true
@@ -135,8 +137,24 @@ Item {
                 middleRadioButton.checked = true
             else if (align === 'bottom')
                 bottomRadioButton.checked = true
-        }
+        // }
         
+    }
+
+    function changeMode(){
+        if(fitRadioButton.checked == true){
+            filter.set(fillProperty, 1)
+            filter.set(distortProperty, 1)
+            
+            filter.set(fillProperty, 0)
+            filter.set(distortProperty, 0)
+        }else if(fillRadioButton.checked == true){
+            filter.set(fillProperty, 1)
+            filter.set(distortProperty, 0)
+        }else if(distortRadioButton.checked = true){
+            filter.set(fillProperty, 1)
+            filter.set(distortProperty, 1)
+        }
     }
 
     function setPerset(){
@@ -321,8 +339,17 @@ Item {
                 text: qsTr('Fit')
                 exclusiveGroup: sizeGroup
                 onClicked: {
-                    filter.set(fillProperty, 0)
-                    filter.set(distortProperty, 0)
+                    if(filter.getKeyFrameNumber() > 0){
+                        sizeKeyFrameWarning.visible = true
+                    }
+                    else{
+                        filter.set(fillProperty, 1)
+                        filter.set(distortProperty, 1)
+
+                        filter.set(fillProperty, 0)
+                        filter.set(distortProperty, 0)
+                    }
+                    
                 }
             }
             RadioButton {
@@ -330,8 +357,13 @@ Item {
                 text: qsTr('Fill')
                 exclusiveGroup: sizeGroup
                 onClicked: {
-                    filter.set(fillProperty, 1)
-                    filter.set(distortProperty, 0)
+                    if(filter.getKeyFrameNumber() > 0){
+                        sizeKeyFrameWarning.visible = true
+                    }
+                    else{
+                        filter.set(fillProperty, 1)
+                        filter.set(distortProperty, 0)
+                    }
                 }
             }
             RadioButton {
@@ -339,8 +371,14 @@ Item {
                 text: qsTr('Distort')
                 exclusiveGroup: sizeGroup
                 onClicked: {
-                    filter.set(fillProperty, 1)
-                    filter.set(distortProperty, 1)
+                    if(filter.getKeyFrameNumber() > 0){
+                        sizeKeyFrameWarning.visible = true
+                    }
+                    else{
+                        filter.set(fillProperty, 1)
+                        filter.set(distortProperty, 1)
+                    }
+                    
                 }
             }
         }
@@ -412,5 +450,25 @@ Item {
             if (filterRect !== newValue)
                 filterRect = newValue
         }
+    }
+
+    MessageDialog {
+        id: sizeKeyFrameWarning
+        title: qsTr("May I have your attention please")
+        text: qsTr("Change mode will remove all of the key frames, are you sure to do?")
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            var keyFrameNum = timeline.getPositionInCurrentClip()
+            filter.get(rectProperty)
+            var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
+            var rect3 = filter.get(rectProperty)
+            keyFrame.removeAllKeyFrame()
+            filter.set(rectProperty,rect)
+            changeMode()
+        }
+        onNo: {
+            setControls()
+        }
+        Component.onCompleted: visible = false
     }
 }
