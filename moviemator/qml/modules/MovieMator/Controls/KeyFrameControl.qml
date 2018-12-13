@@ -61,12 +61,24 @@ Rectangle {
         }
     }
 
+    Label {
+        text: qsTr('Key Frame :')
+        Layout.alignment: Qt.AlignRight
+        color: '#ffffff'
+        anchors {
+            left: parent.left
+            leftMargin: 5
+            bottom :addKeyFrameButton.bottom
+            bottomMargin: 9
+        }
+    }
+
     CustomFilterButton {
         id:addKeyFrameButton
         anchors {
             top: parent.bottom - addKeyFrameButton.height
             left: parent.left
-            leftMargin: 30
+            leftMargin: 100
             topMargin: 0
         }
         implicitWidth: 32
@@ -74,10 +86,10 @@ Rectangle {
 
         enabled: (metadata && (metadata.keyframes.parameterCount > 0)) ? true : false   //filter
         opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Set as key frame')
+        tooltip: qsTr('Add key frame')
         customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        customText: qsTr('Add keyframe')
-        buttonWidth : 100
+        customText: qsTr('Add')
+        buttonWidth : 85
         onClicked: {
             addFrameChanged()
         }
@@ -105,11 +117,11 @@ Rectangle {
         // enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
         enabled: true
         opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Remove current frame')
+        tooltip: qsTr('Remove key frame')
         customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        customText: qsTr('Remove keyframe')
-        buttonWidth : 120
+        customText: qsTr('Remove')
+        buttonWidth : 85
         onClicked: {
             var position        = timeline.getPositionInCurrentClip()
             var bKeyFrame       = filter.bKeyFrame(position)
@@ -135,8 +147,8 @@ Rectangle {
         tooltip: qsTr('Prev key frame')
         customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
-        customText: qsTr('Pre keyframe')
-        buttonWidth : 100
+        customText: qsTr('<<')
+        buttonWidth : 85
         onClicked: {
             var nFrame = filter.getPreKeyFrameNum(timeline.getPositionInCurrentClip())
             if(nFrame != -1)
@@ -162,8 +174,8 @@ Rectangle {
         tooltip: qsTr('Next key frame')
         customIconSource: 'qrc:///icons/light/32x32/bg.png'
         //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        customText: qsTr('Next keyframe')
-        buttonWidth : 100
+        customText: qsTr('>>')
+        buttonWidth : 85
         onClicked: {
             var nFrame = filter.getNextKeyFrameNum(timeline.getPositionInCurrentClip())
             if(nFrame != -1)
@@ -185,6 +197,7 @@ Rectangle {
         implicitWidth: 32
         implicitHeight: 32
 
+        visible: false
         enabled: filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip()) || filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
         opacity: enabled ? 1.0 : 0.5
         tooltip: qsTr('Remove all key frame')
