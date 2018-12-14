@@ -30,7 +30,7 @@ Item {
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
     width: 500
-    height: 800
+    height: 1000
 
     function getHexStrColor(position) {
         var colorRect = filter.getRectOfTextFilter("fgcolour")
@@ -375,6 +375,7 @@ Item {
         columns: 5
         anchors.fill: parent
         anchors.margins: 8
+        rowSpacing : 25
 
 
         KeyFrame{
@@ -864,6 +865,7 @@ Item {
             id: centerRadioButton
             text: qsTr('Center')
             exclusiveGroup: halignGroup
+            Layout.leftMargin: 30
             onClicked: {
                 filter.set(halignProperty, 'center')
             }
@@ -872,6 +874,7 @@ Item {
             id: rightRadioButton
             text: qsTr('Right')
             exclusiveGroup: halignGroup
+            Layout.leftMargin: 60
             onClicked:{
                 filter.set(halignProperty, 'right')
             }
@@ -896,6 +899,7 @@ Item {
             id: middleRadioButton
             text: qsTr('Middle')
             exclusiveGroup: valignGroup
+            Layout.leftMargin: 30
             onClicked:
             {
                 filter.set(valignProperty, 'middle')
@@ -905,6 +909,7 @@ Item {
             id: bottomRadioButton
             text: qsTr('Bottom')
             exclusiveGroup: valignGroup
+            Layout.leftMargin: 60
             onClicked:
             {
                 filter.set(valignProperty, 'bottom')
