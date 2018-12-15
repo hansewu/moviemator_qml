@@ -110,6 +110,7 @@ Item {
             filter.set('bgcolour', '#00000000')
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
+            filter.set('argument', 'welcome!')
 
             //静态预设
             filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
@@ -293,6 +294,7 @@ Item {
         fgColor.value = getHexStrColor(-1)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
+        insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
         outlineSpinner.value = filter.getDouble('outline')
         bgColor.value = filter.get('bgcolour')
@@ -575,7 +577,7 @@ Item {
             textFormat: TextEdit.PlainText
             wrapMode: TextEdit.NoWrap
             Layout.minimumHeight: 40
-            Layout.maximumHeight: 80
+            Layout.maximumHeight: 100
             Layout.minimumWidth: preset.width
             Layout.maximumWidth: preset.width
             text: '__empty__' // workaround initialization problem
@@ -596,48 +598,24 @@ Item {
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        RowLayout {
+        ComboBox {
+            id: insertFieldCombo
             Layout.columnSpan: 4
-            Button {
-                Layout.minimumHeight: 32
-                Layout.maximumHeight: 32
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('Timecode')
-                onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
+            Layout.minimumHeight: 32
+            Layout.maximumHeight: 32
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
+            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
+            function valueToIndex() {
+                var textStr = filter.get('argument')
+                for (var i = 0; i < values.length; ++i)
+                    if (values[i] === textStr) break;
+                if (i === values.length) i = 0;
+                return i;
             }
-            Button {
-                Layout.minimumHeight: 32
-                Layout.maximumHeight: 32
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('Frame #', 'Frame number')
-                onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
-            }
-        }
-        
-        Label {
-               text: qsTr('')
-               Layout.alignment: Qt.AlignLeft
-               color: '#ffffff'
-            }
-        RowLayout{
-            Layout.columnSpan: 4
-            Button {
-                Layout.minimumHeight: 32
-                Layout.maximumHeight: 32
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('File date')
-                onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
-            }
-            Button {
-                Layout.minimumHeight: 32
-                Layout.maximumHeight: 32
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('File name')
-                onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
+            onActivated: {
+                textArea.insert(textArea.cursorPosition, values[index])
             }
         }
 
