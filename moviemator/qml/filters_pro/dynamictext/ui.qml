@@ -516,7 +516,7 @@ Item {
 
         Label {
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         NewPreset {
@@ -566,7 +566,7 @@ Item {
 
         Label {
             text: qsTr('Text')
-            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             color: '#ffffff'
         }
         TextArea {
@@ -593,7 +593,7 @@ Item {
 
         Label {
             text: qsTr('Insert field')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -618,7 +618,7 @@ Item {
         
         Label {
                text: qsTr('')
-               Layout.alignment: Qt.AlignRight
+               Layout.alignment: Qt.AlignLeft
                color: '#ffffff'
             }
         RowLayout{
@@ -650,7 +650,7 @@ Item {
 
         Label {
             text: qsTr('Font')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -721,7 +721,7 @@ Item {
 
         Label {
             text: qsTr('Outline')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         ColorPicker {
@@ -752,7 +752,7 @@ Item {
 
         Label {
             text: qsTr('Background')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         ColorPicker {
@@ -792,7 +792,7 @@ Item {
 
         Label {
             text: qsTr('Position')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -820,7 +820,7 @@ Item {
         }
         Label {
             text: qsTr('Size')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -849,7 +849,7 @@ Item {
 
         Label {
             text: qsTr('X fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
@@ -883,7 +883,7 @@ Item {
 
         Label {
             text: qsTr('Vertical fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
