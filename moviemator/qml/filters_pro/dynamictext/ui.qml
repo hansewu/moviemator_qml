@@ -296,8 +296,10 @@ Item {
         weightCombo.currentIndex = weightCombo.valueToIndex()
         insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
+        outlineColor.temporaryColor = filter.get('olcolour')
         outlineSpinner.value = filter.getDouble('outline')
         bgColor.value = filter.get('bgcolour')
+        bgColor.temporaryColor = filter.get('bgcolour')
         padSpinner.value = filter.getDouble('pad')
         var align = filter.get(halignProperty)
         if (align === 'left')
@@ -706,6 +708,9 @@ Item {
             id: outlineColor
             eyedropper: false
             alpha: true
+            onTemporaryColorChanged: {
+                filter.set('olcolour', temporaryColor)
+            }
             onValueChanged: {
                 filter.set('olcolour', value)
             }
@@ -737,6 +742,9 @@ Item {
             id: bgColor
             eyedropper: false
             alpha: true
+            onTemporaryColorChanged: {
+                filter.set('bgcolour', temporaryColor)
+            }
             onValueChanged:
             {
                 filter.set('bgcolour', value)
