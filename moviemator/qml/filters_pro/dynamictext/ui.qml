@@ -298,6 +298,7 @@ Item {
         outlineColor.value = filter.get('olcolour')
         outlineColor.temporaryColor = filter.get('olcolour')
         outlineSpinner.value = filter.getDouble('outline')
+        letterSpaceing.value = filter.getDouble("letter_spaceing")
         bgColor.value = filter.get('bgcolour')
         bgColor.temporaryColor = filter.get('bgcolour')
         padSpinner.value = filter.getDouble('pad')
@@ -697,6 +698,24 @@ Item {
                     filter.set('weight', 10 * values[index])
                 }
            }
+        }
+
+        Label {
+            text: qsTr('Letter Spaceing')
+            Layout.alignment: Qt.AlignRight
+            color: '#ffffff'
+        }
+        SpinBox {
+            id: letterSpaceing
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            Layout.columnSpan: 4
+            minimumValue: 0
+            maximumValue: 500
+            decimals: 0
+            onValueChanged: {
+                filter.set('letter_spaceing', value)
+            }
         }
 
         Label {
