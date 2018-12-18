@@ -26,16 +26,19 @@ Item {
     property string rectProperty: 'geometry'
     property string valignProperty: 'valign'
     property string halignProperty: 'halign'
+    property string fgcolourProperty: "fgcolour"
+    property string olcolourProperty: "olcolour"
+    property string outlineProperty: "outline"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
     width: 500
     height: 1000
 
-    function getHexStrColor(position) {
-        var colorRect = filter.getRectOfTextFilter("fgcolour")
+    function getHexStrColor(position, propertyName) {
+        var colorRect = filter.getRectOfTextFilter(propertyName)
         if (position >= 0) {
-            colorRect = filter.getAnimRectValue(position, "fgcolour")
+            colorRect = filter.getAnimRectValue(position, propertyName)
         }
 
         var aStr = parseInt(colorRect.x).toString(16)
@@ -106,9 +109,9 @@ Item {
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
-            filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
+            filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
             filter.set('bgcolour', '#00000000')
-            filter.set('olcolour', '#ff000000')
+            filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
             filter.set('weight', 500)
             filter.set('argument', 'welcome!')
 
@@ -291,13 +294,13 @@ Item {
     function setControls() {
         filterRect = getAbsoluteRect(-1)
         textArea.text = filter.get('argument')
-        fgColor.value = getHexStrColor(-1)
+        fgColor.value = getHexStrColor(-1, fgcolourProperty)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
         insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
-        outlineColor.value = filter.get('olcolour')
-        outlineColor.temporaryColor = filter.get('olcolour')
-        outlineSpinner.value = filter.getDouble('outline')
+        outlineColor.value = getHexStrColor(-1, olcolourProperty)
+//        outlineColor.temporaryColor = filter.get(olcolourProperty)
+        outlineSpinner.value = filter.getDouble(outlineProperty)
         letterSpaceing.value = filter.getDouble("letter_spaceing")
         bgColor.value = filter.get('bgcolour')
         bgColor.temporaryColor = filter.get('bgcolour')
@@ -351,13 +354,13 @@ Item {
     }
 
     function setKeyframedControls() {
-        var keyFrameCount = filter.getKeyFrameCountOnProject("fgcolour");
+        var keyFrameCount = filter.getKeyFrameCountOnProject(fgcolourProperty);
         if (keyFrameCount > 0) {
             for (var index = 0; index < keyFrameCount; index++) {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "fgcolour")
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, fgcolourProperty)
 
-                var rectColor = filter.getAnimRectValue(nFrame, "fgcolour")
-                filter.setKeyFrameParaRectValue(nFrame, "fgcolour", rectColor, 1.0)
+                var rectColor = filter.getAnimRectValue(nFrame, fgcolourProperty)
+                filter.setKeyFrameParaRectValue(nFrame, fgcolourProperty, rectColor, 1.0)
 
                 var rect = filter.getAnimRectValue(nFrame, rectProperty)
                 filter.setKeyFrameParaRectValue(nFrame, rectProperty, rect, 1.0)
@@ -366,7 +369,7 @@ Item {
 
             filterRect = getAbsoluteRect(0)
 
-            fgColor.value = getHexStrColor(0)
+            fgColor.value = getHexStrColor(0, fgcolourProperty)
         }
     }
 
@@ -432,34 +435,49 @@ Item {
                     filter.removeAllKeyFrame(rectProperty)
                     keyFrameCount = -1
                 }
-                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
                 if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame("fgcolour")
+                    filter.removeAllKeyFrame(fgcolourProperty)
                     keyFrameCount = -1
                 }
-                filter.resetProperty("fgcolour")
+                filter.resetProperty(fgcolourProperty)
                 filter.resetProperty(rectProperty)
 
                 //重置带有动画的属性的属性值
-                filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
+                filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
                 filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             }
             onLoadKeyFrame:
             {
                 if (filter.getKeyFrameNumber() > 0) {
-                    var hexStrColor = getHexStrColor(keyFrameNum)
+                    var hexStrColor = getHexStrColor(keyFrameNum, fgcolourProperty)
                     if (hexStrColor !== "") {
                         fgColor.value = hexStrColor
                     }
+
+                    hexStrColor = getHexStrColor(keyFrameNum, olcolourProperty)
+                    if (hexStrColor !== "") {
+                        outlineColor.value = hexStrColor
+                    }
+
+                    console.log("sll------------", filter.getAnimIntValue(keyFrameNum, outlineProperty))
+                    outlineSpinner.value = filter.getAnimIntValue(keyFrameNum, outlineProperty)
 
                     filterRect = getAbsoluteRect(keyFrameNum)
                     filter.set('size', filterRect.height)
                     filterRect = getAbsoluteRect(keyFrameNum)
                 } else {
-                    var hexStrColor = getHexStrColor(-1)
+                    var hexStrColor = getHexStrColor(-1, fgcolourProperty)
                     if (hexStrColor !== "") {
                         fgColor.value = hexStrColor
                     }
+
+                    hexStrColor = getHexStrColor(-1, olcolourProperty)
+                    if (hexStrColor !== "") {
+                        outlineColor.value = hexStrColor
+                    }
+
+                    outlineSpinner.value = filter.getDouble(outlineProperty)
 
                     filterRect = getAbsoluteRect(-1)
                     filter.set('size', filterRect.height)
@@ -529,20 +547,20 @@ Item {
             presets: presetsModle
             Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
-            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
+            fgcolourProperty, 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
             onBeforePresetLoaded: {
                 var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
                 if (keyFrameCount > 0) {
                     filter.removeAllKeyFrame(rectProperty)
                     keyFrameCount = -1
                 }
-                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
                 if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame("fgcolour")
+                    filter.removeAllKeyFrame(fgcolourProperty)
                     keyFrameCount = -1
                 }
 
-                filter.resetProperty("fgcolour")
+                filter.resetProperty(fgcolourProperty)
                 filter.resetProperty(rectProperty)
             }
             onPresetSelected: {
@@ -646,12 +664,12 @@ Item {
                     var nFrame = keyFrame.getCurrentFrame();
                     if(keyFrame.bKeyFrame)
                     {
-                        filter.setKeyFrameParaRectValue(nFrame, "fgcolour", getRectColor(value), 1.0)
+                        filter.setKeyFrameParaRectValue(nFrame, fgcolourProperty, getRectColor(value), 1.0)
                         filter.combineAllKeyFramePara()
                     } else {
-                        var keyFrameCount = filter.getKeyFrameCountOnProject("fgcolour");
+                        var keyFrameCount = filter.getKeyFrameCountOnProject(fgcolourProperty);
                         if (keyFrameCount <= 0) {
-                            filter.set('fgcolour', getRectColor(value))
+                            filter.set(fgcolourProperty, getRectColor(value))
                         }
                     }
                 }
@@ -727,11 +745,20 @@ Item {
             id: outlineColor
             eyedropper: false
             alpha: true
-            onTemporaryColorChanged: {
-                filter.set('olcolour', temporaryColor)
-            }
+//            onTemporaryColorChanged: {
+//                filter.set('olcolour', temporaryColor)
+//            }
             onValueChanged: {
-                filter.set('olcolour', value)
+                var nFrame = keyFrame.getCurrentFrame();
+                if(keyFrame.bKeyFrame) {
+                    filter.setKeyFrameParaRectValue(nFrame, olcolourProperty, getRectColor(value), 1.0)
+                    filter.combineAllKeyFramePara()
+                } else {
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(olcolourProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(olcolourProperty, getRectColor(value))
+                    }
+                }
             }
         }
         Label {
@@ -747,8 +774,20 @@ Item {
             minimumValue: 0
             maximumValue: 30
             decimals: 0
+//            onValueChanged: {
+//                filter.set('outline', value)
+//            }
             onValueChanged: {
-                filter.set('outline', value)
+                var nFrame = keyFrame.getCurrentFrame();
+                if(keyFrame.bKeyFrame) {
+                    filter.setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
+                    filter.combineAllKeyFramePara()
+                } else {
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(outlineProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(outlineProperty, value)
+                    }
+                }
             }
         }
 
