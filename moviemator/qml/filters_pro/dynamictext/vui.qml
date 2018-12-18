@@ -172,4 +172,21 @@ Flickable {
             }
         }
     }
+
+    Connections {
+        target: filterDock
+        onPositionChanged: {
+            var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
+            if (keyFrameCount > 0) {
+                var position = timeline.getPositionInCurrentClip()
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(position, rectProperty)
+                var newRect = filter.getAnimRectValue(nFrame, rectProperty)
+                if (filterRect !== newRect) {
+                    filterRect = newRect
+                    rectangle.setHandles(filterRect)
+                    filter.set('size', filterRect.height)
+                }
+            }
+        }
+    }
 }

@@ -30,7 +30,7 @@ RowLayout{
         }
         filter.combineAllKeyFramePara();
 
-        //初始化关键帧控件
+        // 初始化关键帧控件
         if (filter.isNew){
             
             console.log("initFilterinitFilterinitFilterinitFilterinitFilter: ")
@@ -71,12 +71,23 @@ RowLayout{
                     console.log("parameter3.property: " + parameter3.property)
                     console.log("saveValueCalc(parameter3.defaultValue,parameter3.factorFunc): " + saveValueCalc(parameter3.defaultValue,parameter3.factorFunc))
 
-                    
+                    break;
+                
+                case "ColorPicker":
+                    control.value = parameter.defaultValue
+                    console.log("parameter.defaultValueparameter.defaultValue: " + parameter.defaultValue)
+                    console.log("control.valuecontrol.valuecontrol.value: " + control.value)
+                    filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
+                    break;
+
+                case "Slider":
+                    control.value = parseFloat(parameter.defaultValue)
+                    console.log("parameter.defaultValueparameter.defaultValue: " + parameter.defaultValue)
+                    console.log("control.valuecontrol.valuecontrol.value: " + control.value)
+                    filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
                     break;
                 
                 default :
-                    control.value = parameter.defaultValue
-                    filter.set(parameter.property,control.value)
                     break;
                 }
 
@@ -86,7 +97,8 @@ RowLayout{
     // 控件发生修改时反应
     function controlValueChanged(id){
         console.log("controlValueChangedcontrolValueChanged:")
-        var  userChange = false
+        var userChange = false
+        var valueChange = false
         // 可能一个控件对应几个配置项
         var parameterList = findParameter(id)
         for(var paramIndex=0;paramIndex<parameterList.length;paramIndex++){
@@ -106,6 +118,10 @@ RowLayout{
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
                     
+                }else if((parameter.value > id.value)&&(id.value == id.maximumValue)){
+                    console.log("333333333333333333: ")
+                    valueChange = true
+
                 }else{
                     filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
                     userChange = true
@@ -117,7 +133,7 @@ RowLayout{
                 {
                     filter.setKeyFrameParaValue(currentFrame, parameter.property, Number(id.checked).toString())
                     filter.combineAllKeyFramePara()
-                }else if(Math.abs(id.checked - parameter.checked) < 1){
+                }else if((id.value == parameter.value)||(Math.abs(id.checked - parameter.value) < 1)){
                     
                 }else{
                     filter.set(parameter.property, Number(id.checked))
@@ -168,7 +184,44 @@ RowLayout{
                 }
                 paramIndex = paramIndex+2
                 break;
+
+            case "ColorPicker":
+                console.log("id.valueid.valueid.valueid.value: " + id.objectName)
+                console.log("id.valueid.valueid.valueid.value: " + id.value)
+                console.log("parameter.propertyparameter.property: " + parameter.property)
+                console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
             
+                if(filter.bKeyFrame(currentFrame))
+                {
+                    filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(id.value,parameter.factorFunc).toString())
+                    filter.combineAllKeyFramePara()
+                //如果这次的改变是程序往里面写值，则不做处理，下同
+                }else if((id.value == parameter.value)||(Math.abs(id.value - parameter.value) < 1)){
+
+                }else{
+                    filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
+                    userChange = true
+                }
+                break;
+
+            case "Slider":
+                console.log("id.valueid.valueid.valueid.value: " + id.objectName)
+                console.log("id.valueid.valueid.valueid.value: " + id.value)
+                console.log("parameter.propertyparameter.property: " + parameter.property)
+                console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+                if(filter.bKeyFrame(currentFrame))
+                {
+                    filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(id.value,parameter.factorFunc).toString())
+                    filter.combineAllKeyFramePara()
+                //如果这次的改变是程序往里面写值，则不做处理，下同
+                }else if((id.value == parameter.value)||(Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
+
+                }else{
+                    filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
+                    userChange = true
+                }
+                break;
+
             default :
                 break;
             }
@@ -177,7 +230,7 @@ RowLayout{
         console.log("userChangeuserChangeuserChangeuserChange: " + userChange)
         
         // 添加关键帧
-        if ((filter.getKeyFrameNumber() > 0)&&userChange)
+        if ((filter.getKeyFrameNumber() > 0)&&(userChange))
         {
             bKeyFrame = true
             synchroData()
@@ -249,6 +302,9 @@ RowLayout{
                 console.log("values: "+value.toString())
                 filter.setKeyFrameParaRectValue(position, key, value);
                 break;
+            default:
+                console.log("addKeyFrameValueERROR: " + position + ' ' + key)
+                break;
             }
         }
         filter.combineAllKeyFramePara();
@@ -282,6 +338,13 @@ RowLayout{
                 loadControlColorWheel(control,paramIndex,paramIndex+1,paramIndex+2)
                 // paramIndex = paramIndex+2
                 break;
+
+            case "ColorPicker":
+                loadColorPicker(control, paramIndex)
+                break;
+
+            case "Slider":
+                loadSlider(control,paramIndex)
             
             default :
                 control.value = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property)
@@ -294,12 +357,18 @@ RowLayout{
     }
     // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
+        resetAnim2No(layoutRoot)
+
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
             var control = findControl(parameter.objectName,layoutRoot)
             if(control == null)
                 continue;
+            
+            console.log("setDatassetDatassetDatassetDatassetDatas: " + paramIndex)
+            console.log("setDatassetDatassetDatassetDatassetDatas: parameter.property:" + parameter.property)
+            console.log("setDatassetDatassetDatassetDatassetDatas: control.value:" + control.value)
             switch(parameter.controlType)
             {
             case "SliderSpinner":
@@ -318,6 +387,14 @@ RowLayout{
                 filter.set(parameter3.property,saveValueCalc(control.blue,parameter3.factorFunc))
                 paramIndex = paramIndex+2
                 break;
+
+            case "ColorPicker":
+                filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
+                break;
+
+            case "Slider":
+                filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
+                break;
             
             default :
                 control.value = parameter.defaultValue
@@ -325,6 +402,43 @@ RowLayout{
                 break;
             }
 
+        }
+    }
+    function resetAnim2No(layoutRoot){
+        //最后一个关键帧移除之后触发用的
+        var metaParamList1 = metadata.keyframes.parameters
+        var parameter = metaParamList1[0]
+        var control = findControl(parameter.objectName,layoutRoot)
+        if(filter.getKeyFrameNumber() <= 0){
+            switch(parameter.controlType)
+            {
+            case "SliderSpinner":
+                var tmp = control.value
+                control.value = parseFloat(parameter.defaultValue) / 2
+                control.value = parseFloat(parameter.defaultValue) * 2
+                control.value = tmp
+            break;
+
+            case "CheckBox":
+                var tmp = control.value
+                control.value = Number(parameter.defaultValue) / 2
+                control.value = Number(parameter.defaultValue) * 2
+                control.value = tmp
+                break;
+
+            case "ColorWheelItem":
+                var tmp2 = Qt.rgba(control.red / 255, control.green / 255, control.blue / 255, 1.0 )
+                control.color = Qt.rgba( 0, 0, 0, 1.0 )
+                control.color = Qt.rgba( 0.5, 0.5, 0.5, 1.0 )
+                control.color = tmp2
+                break;
+
+            case "ColorPicker":
+            case "Slider":
+            default :
+                break;
+            
+            }
         }
     }
     //加减乘除 分别用 + - x c 被除b，对数log，指数pow
@@ -414,7 +528,7 @@ RowLayout{
                 break;
             }
         }
-        console.log("loadValueCalcloadValueCalc: " + rt)
+        console.log("loadValueCalcloadValueCalc2: " + rt)
         return rt;
     }
     // 根据objectName和root节点查找子节点
@@ -425,7 +539,23 @@ RowLayout{
                 return controlList[i]
             }
         }
+        for(var i=0;i<controlList.length;i++){
+            if(!isEmptyObject(controlList[i].children)){
+                var controlList1 = controlList[i].children
+                for(var j=0;j<controlList1.length;j++){
+                    if(objectName === controlList1[j].objectName){
+                        return controlList1[j]
+                    }
+                }
+            }
+        }
         return null;
+    }
+    function isEmptyObject(obj) {
+      for (var key in obj) {
+        return false;
+      }
+      return true;
     }
     // 根据控件id查找配置项
     function findParameter(id){
@@ -457,19 +587,35 @@ RowLayout{
             parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
             console.log("parameter.propertyparameter.property: " + parameter.property)
             console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
-            //非线性插值，有可能超出规定范围
-            if(parameter.value > control.maximumValue)
-                parameter.value = control.maximumValue
-            if(parameter.value < control.minimumValue)
-                parameter.value = control.minimumValue
+            
             // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
             var parameterList = findParameter(control)
             for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
                 metadata.keyframes.parameters[parameterList[i]].value = parameter.value
             }
-            control.value = parameter.value
+            //非线性插值，有可能超出规定范围
+            var changeValue = false
+            if(parameter.value > control.maximumValue){
+                control.value = control.maximumValue
+                changeValue = true
+            }else if(parameter.value < control.minimumValue){
+                control.value = control.minimumValue
+                changeValue = true
+            }else{
+                control.value = parameter.value
+            }
             console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
             console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+            if(changeValue){
+                for(var i=0;i< parameterList.length;i++){
+                    parameter = metadata.keyframes.parameters[parameterList[i]]
+                    filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
+                    // filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(control.value,parameter.factorFunc).toString());
+                }
+                // filter.combineAllKeyFramePara();
+                // filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(control.value,parameter.factorFunc).toString());
+                // filter.combineAllKeyFramePara();
+            }
         }
     }
     function loadControlCheckbox(control,paramIndex){
@@ -482,12 +628,12 @@ RowLayout{
                 control.checked = Boolean(tempValue)
             }
         }
-        // else{
-        //     filter.get(parameter.property)
-        //     var tempValue = filter.getAnimIntValue(currentFrame, parameter.property)
-        //     filter.get(parameter.property)
-        //     control.checked = parameter.value = Boolean(tempValue)
-        // }
+        else{
+            filter.get(parameter.property)
+            var tempValue = filter.getAnimIntValue(currentFrame, parameter.property)
+            filter.get(parameter.property)
+            control.checked = parameter.value = Boolean(tempValue)
+        }
     }
     function loadControlColorWheel(control,paramIndex1,paramIndex2,paramIndex3){
         var parameter1 = metadata.keyframes.parameters[paramIndex1]
@@ -524,8 +670,83 @@ RowLayout{
         console.log("control.color: " + control.color)
         
     }
+    function loadColorPicker(control,paramIndex){
+        var parameter = metadata.keyframes.parameters[paramIndex]
+        console.log("loadControlSliderloadControlSliderloadControlSlider: ")
+        if(filter.bKeyFrame(currentFrame)){
+            var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
+            if(tempValue != -1.0)
+            {
+                control.value = loadValueCalc(tempValue,parameter.factorFunc)
+                console.log("loadControlSliderloadControlSlider-1: " + control.value)
+            }
+        }else{
+            filter.get(parameter.property)
+            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
+            filter.get(parameter.property)
+            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+            parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
+            console.log("parameter.propertyparameter.property: " + parameter.property)
+            console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+            // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
+            var parameterList = findParameter(control)
+            for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
+                metadata.keyframes.parameters[parameterList[i]].value = parameter.value
+            }
+            control.value = parameter.value
+            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
+            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+        }
+    }
+    function loadSlider(control,paramIndex){
+        var parameter = metadata.keyframes.parameters[paramIndex]
+        console.log("loadControlSliderloadControlSliderloadControlSlider: ")
+        if(filter.bKeyFrame(currentFrame)){
+            var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
+            if(tempValue != -1.0)
+            {
+                control.value = loadValueCalc(tempValue,parameter.factorFunc)
+                console.log("loadControlSliderloadControlSlider-1: " + control.value)
+            }
+        }else{
+            filter.get(parameter.property)
+            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
+            filter.get(parameter.property)
+            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+            parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
+            console.log("parameter.propertyparameter.property: " + parameter.property)
+            console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+            // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
+            var parameterList = findParameter(control)
+            for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
+                metadata.keyframes.parameters[parameterList[i]].value = parameter.value
+            }
+            control.value = parameter.value
+            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
+            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+        }
+    }
     function getCurrentFrame(){
         return currentFrame;
+    }
+    function removeAllKeyFrame(){
+        console.log("removeAllKeyFrameremoveAllKeyFrameremoveAllKeyFrame: ")
+        var i=0
+        while(true){
+            var keyFrameCount = filter.getKeyFrameCountOnProject(metadata.keyframes.parameters[0].property);
+            console.log("keyFrameCountkeyFrameCount: " + keyFrameCount)
+            for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+            {
+                console.log("keyIndexkeyIndexkeyIndex: " + keyIndex)
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metadata.keyframes.parameters[0].property);
+                filter.removeKeyFrameParaValue(nFrame);
+                filter.combineAllKeyFramePara();
+                console.log("nFramenFramenFramenFrame: " + nFrame)
+            }
+            i++;
+            if((keyFrameCount <= 0)||(i>=10))
+                break;
+        }
     }
 
     Component.onCompleted:
@@ -556,9 +777,19 @@ RowLayout{
              onRemoveKeyFrame: {
                 bKeyFrame = false
                 var nFrame = keyFrame.getCurrentFrame();
-                synchroData()
+                
                 filter.removeKeyFrameParaValue(nFrame);
                 filter.combineAllKeyFramePara();
+                synchroData()
+                
+             }
+    }
+    // 移除所有关键帧信号
+    Connections {
+             target: keyFrameControl
+             onRemoveAllKeyFrame: {
+                bKeyFrame = false
+                removeAllKeyFrame()
              }
     }
 

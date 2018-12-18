@@ -28,8 +28,9 @@ Item {
     property string halignProperty: 'halign'
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
+    property ListModel presetsModle: ListModel {}
     width: 500
-    height: 500
+    height: 1000
 
     function getHexStrColor(position) {
         var colorRect = filter.getRectOfTextFilter("fgcolour")
@@ -109,90 +110,174 @@ Item {
             filter.set('bgcolour', '#00000000')
             filter.set('olcolour', '#ff000000')
             filter.set('weight', 500)
+            filter.set('argument', 'welcome!')
 
+            //静态预设
             filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Bottom Left'))
+            presetsModle.append({"name": qsTr('Bottom Left'), "portrait": "qrc:///icons/filters/text/bottom-left.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Bottom Right'))
+            presetsModle.append({"name": qsTr('Bottom Right'), "portrait": "qrc:///icons/filters/text/bottom-right.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
             filter.savePreset(preset.parameters, qsTr('Top Left'))
+            presetsModle.append({"name": qsTr('Top Left'), "portrait": "qrc:///icons/filters/text/top-left.gif"})
 
             filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'right')
             filter.savePreset(preset.parameters, qsTr('Top Right'))
+            presetsModle.append({"name": qsTr('Top Right'), "portrait": "qrc:///icons/filters/text/top-right.gif"})
 
             filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters, qsTr('Lower Third'))
+            presetsModle.append({"name": qsTr('Lower Third'), "portrait": "qrc:///icons/filters/text/lower-third.gif"})
 
-//            filter.set(rectProperty,   '0=-1 0 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
 
-//            filter.set(rectProperty,   '0=1 0 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+            //动画预设
+            var totalFrame = filter.producerOut - filter.producerIn + 1 - 5
+            var oneSeconds2Frame = parseInt(profile.fps)
+            var startFrame = 0.0
+            var middleFrame = oneSeconds2Frame
+            var endFrame = totalFrame
+            var startValue = "-1.0 0.0 1.0 1.0 1.0"
+            var middleValue = "0.0 0.0 1.0 1.0 1.0"
+            var endValue = "0.0 0.0 1.0 1.0 1.0"
 
-//            filter.set(rectProperty,   '0=0 -1 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
+            presetsModle.append({"name": qsTr('Slide In From Left'), "portrait": "qrc:///icons/filters/text/slide-in-from-left.gif"})
 
-//            filter.set(rectProperty,   '0=0 1 1 1; :1.0=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+            startValue = "1.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
+            presetsModle.append({"name": qsTr('Slide In From Right'), "portrait": "qrc:///icons/filters/text/slide-in-from-right.gif"})
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=-1 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
+            startValue = "0.0 -1.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
+            presetsModle.append({"name": qsTr('Slide In From Top'), "portrait": "qrc:///icons/filters/text/slide-in-from-top.gif"})
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=1 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
+            startValue = "0.0 1.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
+            presetsModle.append({"name": qsTr('Slide In From Bottom'), "portrait": "qrc:///icons/filters/text/slide-in-from-bottom.gif"})
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 -1 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+            middleFrame = totalFrame - oneSeconds2Frame
+            if (middleFrame <= 24) {
+                middleFrame = totalFrame / 2
+            }
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-1.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
+            presetsModle.append({"name": qsTr('Slide Out Left'), "portrait": "qrc:///icons/filters/text/slide-out-left.gif"})
 
-//            filter.set(rectProperty,   ':-1.0=0 0 1 1; -1=0 1 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "1.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
+            presetsModle.append({"name": qsTr('Slide Out Right'), "portrait": "qrc:///icons/filters/text/slide-out-right.gif"})
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.05 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 -1.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
+            presetsModle.append({"name": qsTr('Slide Out Top'), "portrait": "qrc:///icons/filters/text/slide-out-top.gif"})
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            middleValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 1.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
+            presetsModle.append({"name": qsTr('Slide Out Bottom'), "portrait": "qrc:///icons/filters/text/slide-out-bottom.gif"})
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.1 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-0.05 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
+            presetsModle.append({"name": qsTr('Slow Zoom In'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0 -0.05 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
+            presetsModle.append({"name":  qsTr('Slow Zoom Out'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 -0.1 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.1 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
+            presetsModle.append({"name":  qsTr('Slow Pan Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=-0.05 -0.05 1.1 1.1; -1=-0.05 0 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "0.0 -0.05 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
+            presetsModle.append({"name":  qsTr('Slow Pan Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=-0.1 -0.1 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.05 -0.1 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
+            presetsModle.append({"name":  qsTr('Slow Pan Up'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=0 0 1 1; -1=0 0 1.1 1.1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
+            startValue = "-0.05 -0.05 1.1 1.1 1.0"
+            endValue = "-0.05 0.0 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
+            presetsModle.append({"name":  qsTr('Slow Pan Down'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=-0.1 0 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "-0.1 -0.1 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
+            presetsModle.append({"name": qsTr('Slow Zoom In, Pan Up Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
 
-//            filter.set(rectProperty,   '0=0 -0.1 1.1 1.1; -1=0 0 1 1')
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+            startValue = "0.0 0.0 1.0 1.0 1.0"
+            endValue = "0.0 0.0 1.1 1.1 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
+            presetsModle.append({"name": qsTr('Slow Zoom In, Pan Down Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+
+            startValue = "-0.1 0.0 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
+            presetsModle.append({"name": qsTr('Slow Zoom Out, Pan Up Right'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+
+            startValue = "0.0 -0.1 1.1 1.1 1.0"
+            endValue = "0.0 0.0 1.0 1.0 1.0"
+            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
+            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
+            presetsModle.append({"name": qsTr('Slow Zoom Out, Pan Down Left'), "portrait": "qrc:///icons/filters/text/shapes.gif"})
+
+            filter.removeAllKeyFrame(rectProperty)
 
             filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             filter.set(valignProperty, 'bottom')
             filter.set(halignProperty, 'center')
             filter.savePreset(preset.parameters)
+            presetsModle.insert(0, {"name": filter.presets[1], "portrait": "qrc:///icons/filters/text/default.gif"})//默认
         }
 
         setControls()
@@ -209,9 +294,13 @@ Item {
         fgColor.value = getHexStrColor(-1)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
+        insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
         outlineColor.value = filter.get('olcolour')
+        outlineColor.temporaryColor = filter.get('olcolour')
         outlineSpinner.value = filter.getDouble('outline')
+        letterSpaceing.value = filter.getDouble("letter_spaceing")
         bgColor.value = filter.get('bgcolour')
+        bgColor.temporaryColor = filter.get('bgcolour')
         padSpinner.value = filter.getDouble('pad')
         var align = filter.get(halignProperty)
         if (align === 'left')
@@ -291,62 +380,186 @@ Item {
         columns: 5
         anchors.fill: parent
         anchors.margins: 8
+        rowSpacing : 25
 
 
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
             onSetAsKeyFrame:{
-                var nFrame = keyFrame.getCurrentFrame()
-                var rectValue = filter.getRectOfTextFilter(rectProperty)
-                var colorRect = filter.getRectOfTextFilter("fgcolour")
+                //如果没有关键帧，先创建头尾两个关键帧
                 if (filter.getKeyFrameNumber() <= 0) {
-                    var position2 = filter.producerOut - filter.producerIn + 1 - 5
-                    filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue, 1.0)
-                    filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
-
-                    filter.setKeyFrameParaRectValue(position2, "fgcolour", colorRect, 1.0)
-                    filter.setKeyFrameParaRectValue(0, "fgcolour", colorRect)
-
+                    var paramCount = metadata.keyframes.parameterCount
+                    for(var i = 0; i < paramCount; i++) {
+                        var property = metadata.keyframes.parameters[i].property
+                        var paraType = metadata.keyframes.parameters[i].paraType
+                        var positionStart = 0
+                        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
+                        if (paraType === "rect") {
+                            var rectValue = filter.getRectOfTextFilter(property)
+                            filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
+                            filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
+                        } else {
+                            var valueStr = filter.get(property)
+                            filter.setKeyFrameParaValue(positionStart, property, valueStr);
+                            filter.setKeyFrameParaValue(positionEnd, property, valueStr);
+                        }
+                    }
                     filter.combineAllKeyFramePara();
                 }
 
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue, 1.0)
-                filter.setKeyFrameParaRectValue(nFrame, "fgcolour", colorRect, 1.0)
+                //插入新的关键帧
+                var paramCount = metadata.keyframes.parameterCount
+                for(var i = 0; i < paramCount; i++) {
+                    var nFrame = keyFrame.getCurrentFrame()
+                    var property = metadata.keyframes.parameters[i].property
+                    var paraType = metadata.keyframes.parameters[i].paraType
+                    if (paraType === "rect") {
+                        var rectValue = filter.getAnimRectValue(nFrame, property)
+                        filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                    } else {
+                        var valueStr = filter.get(property)
+                        filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                    }
+                }
                 filter.combineAllKeyFramePara();
 
                 setKeyframedControls()
             }
+            onRemovedAllKeyFrame: {
+                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame(rectProperty)
+                    keyFrameCount = -1
+                }
+                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame("fgcolour")
+                    keyFrameCount = -1
+                }
+                filter.resetProperty("fgcolour")
+                filter.resetProperty(rectProperty)
+
+                //重置带有动画的属性的属性值
+                filter.set("fgcolour", Qt.rect(255.0, 255.0, 255.0, 255.0))
+                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
+            }
             onLoadKeyFrame:
             {
-                var hexStrColor = getHexStrColor(keyFrameNum)
-                if (hexStrColor !== "") {
-                    fgColor.value = hexStrColor
-                }
+                if (filter.getKeyFrameNumber() > 0) {
+                    var hexStrColor = getHexStrColor(keyFrameNum)
+                    if (hexStrColor !== "") {
+                        fgColor.value = hexStrColor
+                    }
 
-                filterRect = getAbsoluteRect(keyFrameNum)
-                filter.set('size', filterRect.height)
-                filterRect = getAbsoluteRect(keyFrameNum)
+                    filterRect = getAbsoluteRect(keyFrameNum)
+                    filter.set('size', filterRect.height)
+                    filterRect = getAbsoluteRect(keyFrameNum)
+                } else {
+                    var hexStrColor = getHexStrColor(-1)
+                    if (hexStrColor !== "") {
+                        fgColor.value = hexStrColor
+                    }
+
+                    filterRect = getAbsoluteRect(-1)
+                    filter.set('size', filterRect.height)
+                    filterRect = getAbsoluteRect(-1)
+                }
             }
         }
 
+
+//        Label {
+//            text: qsTr('Preset')
+//            Layout.alignment: Qt.AlignRight
+//            color: '#ffffff'
+//        }
+//        Preset {
+//            id: preset
+
+//            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
+//            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
+//            Layout.columnSpan: 4
+//            onBeforePresetLoaded: {
+//                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame(rectProperty)
+//                    keyFrameCount = -1
+//                }
+//                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame("fgcolour")
+//                    keyFrameCount = -1
+//                }
+
+//                filter.resetProperty("fgcolour")
+//                filter.resetProperty(rectProperty)
+//            }
+//            onPresetSelected: {
+//                //加載關鍵幀
+//                var metaParamList = metadata.keyframes.parameters
+//                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+//                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+//                {
+//                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+//                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+//                        var prop = metaParamList[paramIndex].property
+//                        var keyValue = filter.getAnimRectValue(nFrame, prop)
+//                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+//                    }
+//                }
+//                filter.combineAllKeyFramePara();
+
+//                setControls()
+//                setKeyframedControls()
+
+//                if (filter.isNew) {
+//                    filter.set('size', filterRect.height)
+//                }
+//            }
+//        }
 
         Label {
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        Preset {
+        NewPreset {
             id: preset
-
+            presets: presetsModle
+            Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
-            Layout.columnSpan: 4
             onBeforePresetLoaded: {
-                filter.removeAllKeyFrame("fgcolour")
-                filter.removeAllKeyFrame(rectProperty)
+                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame(rectProperty)
+                    keyFrameCount = -1
+                }
+                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
+                if (keyFrameCount > 0) {
+                    filter.removeAllKeyFrame("fgcolour")
+                    keyFrameCount = -1
+                }
+
+                filter.resetProperty("fgcolour")
+                filter.resetProperty(rectProperty)
             }
             onPresetSelected: {
+                //加載關鍵幀
+                var metaParamList = metadata.keyframes.parameters
+                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+                {
+                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+                        var prop = metaParamList[paramIndex].property
+                        var keyValue = filter.getAnimRectValue(nFrame, prop)
+                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+                    }
+                }
+                filter.combineAllKeyFramePara();
+
                 setControls()
                 setKeyframedControls()
 
@@ -358,7 +571,7 @@ Item {
 
         Label {
             text: qsTr('Text')
-            Layout.alignment: Qt.AlignRight | Qt.AlignTop
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             color: '#ffffff'
         }
         TextArea {
@@ -367,7 +580,7 @@ Item {
             textFormat: TextEdit.PlainText
             wrapMode: TextEdit.NoWrap
             Layout.minimumHeight: 40
-            Layout.maximumHeight: 80
+            Layout.maximumHeight: 100
             Layout.minimumWidth: preset.width
             Layout.maximumWidth: preset.width
             text: '__empty__' // workaround initialization problem
@@ -385,51 +598,27 @@ Item {
 
         Label {
             text: qsTr('Insert field')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        RowLayout {
+        ComboBox {
+            id: insertFieldCombo
             Layout.columnSpan: 4
-            Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('Timecode')
-                onClicked: textArea.insert(textArea.cursorPosition, '#timecode#')
+            Layout.minimumHeight: 32
+            Layout.maximumHeight: 32
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
+            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
+            function valueToIndex() {
+                var textStr = filter.get('argument')
+                for (var i = 0; i < values.length; ++i)
+                    if (values[i] === textStr) break;
+                if (i === values.length) i = 0;
+                return i;
             }
-            Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('Frame #', 'Frame number')
-                onClicked: textArea.insert(textArea.cursorPosition, '#frame#')
-            }
-        }
-        
-        Label {
-               text: qsTr('')
-               Layout.alignment: Qt.AlignRight
-               color: '#ffffff'
-            }
-        RowLayout{
-            Layout.columnSpan: 4
-            Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('File date')
-                onClicked: textArea.insert(textArea.cursorPosition, '#localfiledate#')
-            }
-            Button {
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
-                Layout.minimumWidth: (preset.width - 8) / 2
-                Layout.maximumWidth: (preset.width - 8) / 2
-                text: qsTr('File name')
-                onClicked: textArea.insert(textArea.cursorPosition, '#resource#')
+            onActivated: {
+                textArea.insert(textArea.cursorPosition, values[index])
             }
         }
 
@@ -442,7 +631,7 @@ Item {
 
         Label {
             text: qsTr('Font')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -470,8 +659,8 @@ Item {
 
             Button {
                 id: fontButton
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 Layout.maximumWidth: (preset.width - 8) / 2 - 8 - fgColor.width
                 onClicked: {
@@ -492,8 +681,8 @@ Item {
             }
             ComboBox {
                 id: weightCombo
-                Layout.minimumHeight: preset.height
-                Layout.maximumHeight: preset.height
+                Layout.minimumHeight: 32
+                Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
                 model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
@@ -512,14 +701,35 @@ Item {
         }
 
         Label {
-            text: qsTr('Outline')
+            text: qsTr('Letter Spaceing')
             Layout.alignment: Qt.AlignRight
+            color: '#ffffff'
+        }
+        SpinBox {
+            id: letterSpaceing
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            Layout.columnSpan: 4
+            minimumValue: 0
+            maximumValue: 500
+            decimals: 0
+            onValueChanged: {
+                filter.set('letter_spaceing', value)
+            }
+        }
+
+        Label {
+            text: qsTr('Outline')
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         ColorPicker {
             id: outlineColor
             eyedropper: false
             alpha: true
+            onTemporaryColorChanged: {
+                filter.set('olcolour', temporaryColor)
+            }
             onValueChanged: {
                 filter.set('olcolour', value)
             }
@@ -531,8 +741,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -544,13 +754,16 @@ Item {
 
         Label {
             text: qsTr('Background')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         ColorPicker {
             id: bgColor
             eyedropper: false
             alpha: true
+            onTemporaryColorChanged: {
+                filter.set('bgcolour', temporaryColor)
+            }
             onValueChanged:
             {
                 filter.set('bgcolour', value)
@@ -563,8 +776,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 60
-            Layout.maximumWidth: 60
+            Layout.minimumWidth: 120
+            Layout.maximumWidth: 120
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
@@ -584,7 +797,7 @@ Item {
 
         Label {
             text: qsTr('Position')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -612,7 +825,7 @@ Item {
         }
         Label {
             text: qsTr('Size')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
@@ -641,7 +854,7 @@ Item {
 
         Label {
             text: qsTr('X fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
@@ -657,6 +870,7 @@ Item {
             id: centerRadioButton
             text: qsTr('Center')
             exclusiveGroup: halignGroup
+            Layout.leftMargin: 30
             onClicked: {
                 filter.set(halignProperty, 'center')
             }
@@ -665,6 +879,7 @@ Item {
             id: rightRadioButton
             text: qsTr('Right')
             exclusiveGroup: halignGroup
+            Layout.leftMargin: 60
             onClicked:{
                 filter.set(halignProperty, 'right')
             }
@@ -673,7 +888,7 @@ Item {
 
         Label {
             text: qsTr('Vertical fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
@@ -689,6 +904,7 @@ Item {
             id: middleRadioButton
             text: qsTr('Middle')
             exclusiveGroup: valignGroup
+            Layout.leftMargin: 30
             onClicked:
             {
                 filter.set(valignProperty, 'middle')
@@ -698,6 +914,7 @@ Item {
             id: bottomRadioButton
             text: qsTr('Bottom')
             exclusiveGroup: valignGroup
+            Layout.leftMargin: 60
             onClicked:
             {
                 filter.set(valignProperty, 'bottom')
@@ -712,18 +929,16 @@ Item {
         target: filter
         onChanged: {
             var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.bKeyFrame(position)
-            if (bKeyFrame) {
-                var newRect = getAbsoluteRect(position)
+            var newRect         = getAbsoluteRect(-1)
+            var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
+            //判断是否有关键帧
+            if(keyFrameCount > 0) {
+                newRect = getAbsoluteRect(position)
+            }
+
+            if (filterRect !== newRect) {
                 filterRect = newRect
-                filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
-                filter.combineAllKeyFramePara()
-            } else {
-                var newRect = getAbsoluteRect(-1)
-                if (filterRect !== newRect) {
-                    filterRect = newRect
-                    filter.set('size', filterRect.height)
-                }
+                filter.set('size', filterRect.height)
             }
         }
     }

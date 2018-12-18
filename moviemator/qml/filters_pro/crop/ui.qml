@@ -8,7 +8,7 @@ import QtQuick.Controls.Styles 1.4
 Item {
     property var defaultParameters: ['left', 'right', 'top', 'bottom', 'center', 'center_bias']
     width: 300
-    height: 250
+    height: 280
     
     function setEnabled() {
         if (centerCheckBox.checked) {
@@ -61,11 +61,12 @@ Item {
     GridLayout {
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
+        rowSpacing:12
 
         Label {
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -82,8 +83,17 @@ Item {
             }
         }
 
+        SeparatorLine {
+            Layout.columnSpan: 3
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+        }
+
+        Label {}
+
         CheckBox {
             id: centerCheckBox
+            Layout.columnSpan: 1
 //            text: qsTr('Center')
             checked: filter.get('center') == '1'
             property bool isReady: false
@@ -98,13 +108,11 @@ Item {
             style: CheckBoxStyle {
                         label: Text {
                             color: "white"
-                            text: qsTr('Center')
+                            text: qsTr('Center ')
                         }
             }
         }
-        Item {
-            Layout.fillWidth: true;
-        }
+
         UndoButton {
             onClicked: {
                 centerCheckBox.checked = false
@@ -114,7 +122,7 @@ Item {
 
         Label {
             text: qsTr('Center bias')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
         }
         SliderSpinner {
             id: biasslider
@@ -129,9 +137,15 @@ Item {
             onClicked: biasslider.value = 0
         }
 
+        SeparatorLine {
+            Layout.columnSpan: 3
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+        }
+
         Label {
             text: qsTr('Top')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
         }
         SliderSpinner {
             id: topslider
@@ -148,7 +162,7 @@ Item {
 
         Label {
             text: qsTr('Bottom')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
         }
         SliderSpinner {
             id: bottomslider
@@ -165,7 +179,7 @@ Item {
 
         Label {
             text: qsTr('Left')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
         }
         SliderSpinner {
             id: leftslider
@@ -182,7 +196,7 @@ Item {
 
         Label {
             text: qsTr('Right')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
         }
         SliderSpinner {
             id: rightslider

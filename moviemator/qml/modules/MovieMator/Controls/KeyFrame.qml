@@ -14,6 +14,7 @@ RowLayout{
     signal synchroData()
     signal setAsKeyFrame()
     signal loadKeyFrame(double keyFrameNum)
+    signal removedAllKeyFrame()
 
     function getCurrentFrame(){
         return currentFrame;
@@ -68,6 +69,26 @@ RowLayout{
 
     }
 
+    function removeAllKeyFrame(){
+        console.log("removeAllKeyFrameremoveAllKeyFrameremoveAllKeyFrame: ")
+        var i=0
+        while(true){
+            var keyFrameCount = filter.getKeyFrameCountOnProject(metadata.keyframes.parameters[0].property);
+            console.log("keyFrameCountkeyFrameCount: " + keyFrameCount)
+            for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+            {
+                console.log("keyIndexkeyIndexkeyIndex: " + keyIndex)
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metadata.keyframes.parameters[0].property);
+                filter.removeKeyFrameParaValue(nFrame);
+                filter.combineAllKeyFramePara();
+                console.log("nFramenFramenFramenFrame: " + nFrame)
+            }
+            i++;
+            if((keyFrameCount <= 0)||(i>=10))
+                break;
+        }
+    }
+
     Connections {
         target: filterDock
         onPositionChanged: {
@@ -106,6 +127,10 @@ RowLayout{
                 var nFrame = keyFrame.getCurrentFrame();
                 synchroData()
                 filter.removeKeyFrameParaValue(nFrame);
+                if (filter.getKeyFrameNumber() <= 0) {
+                    removedAllKeyFrame()
+                }
+                synchroData()
             }
    }
 

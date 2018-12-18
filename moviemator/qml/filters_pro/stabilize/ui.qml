@@ -94,7 +94,8 @@ Item {
         id: layoutRoot
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 18
+        rowSpacing: 13
 
         YFKeyFrame{
             id: keyFrame
@@ -111,6 +112,7 @@ Item {
             text: qsTr('<b>Analyze Options</b>')
             Layout.columnSpan: 3
             color: '#ffffff'
+            font.pixelSize: 15
         }
 
         Label {
@@ -156,10 +158,16 @@ Item {
             onClicked: accuracySlider.value = 4
         }
 
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+
         Label {
             text: qsTr('<b>Filter Options</b>')
             Layout.columnSpan: 3
             color: '#ffffff'
+            font.pixelSize: 15
         }
 
         Label {
@@ -181,6 +189,11 @@ Item {
         }
         UndoButton {
             onClicked: zoomSlider.value = 0
+        }
+
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
         }
 
         Button {

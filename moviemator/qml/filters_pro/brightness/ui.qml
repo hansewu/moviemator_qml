@@ -17,7 +17,7 @@ Item {
         id: layoutRoot
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
 
         YFKeyFrame{
             id: keyFrame
@@ -31,7 +31,7 @@ Item {
         }
 
         Label {
-            text: qsTr('Brightness')
+            text: qsTr('Brightness') + "    "
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
