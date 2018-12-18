@@ -41,7 +41,7 @@ function calcMenuRect(triggerItem, pad, pos) {
     if(pos==null){
         result.x = triggerPos.x + 50
     }else {
-        result.x = triggerPos.x - 100
+        result.x = triggerPos.x + pos.x - 100
     }
     
 //    result.y = mainWinRect.y + triggerItem.y - 50
