@@ -22,8 +22,9 @@ Item {
     GridLayout {
         id: layoutRoot
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
         columns: 3
+        rowSpacing:15
 
         YFKeyFrame{
             id: keyFrame
@@ -37,8 +38,8 @@ Item {
         }
 
         Label {
-            text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            text: qsTr('Preset') + "        "
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -47,7 +48,23 @@ Item {
             Layout.columnSpan: 2
             onPresetSelected: setControls()
         }
-
+/*
+        Item { 
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+*/
+        SeparatorLine {
+            Layout.columnSpan: 3
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+        }
+/*
+        Item { 
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+*/
         Label {
             text: qsTr('Rotation')
             color: '#ffffff'
@@ -70,7 +87,7 @@ Item {
 
         Label {
             text: qsTr('Scale')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {
@@ -87,6 +104,12 @@ Item {
         }
         UndoButton {
             onClicked: scaleSlider.value = 100
+        }
+
+        SeparatorLine {
+            Layout.columnSpan: 3
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
         }
 
         Label {

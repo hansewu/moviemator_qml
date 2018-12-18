@@ -51,7 +51,9 @@ Item {
         id: layoutRoot
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
+        rowSpacing:15
+
 
         YFKeyFrame{
             id: keyFrame
@@ -65,8 +67,8 @@ Item {
         }
 
         Label {
-            text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            text: qsTr('Preset') + "   "
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -77,9 +79,15 @@ Item {
             }
         }
 
+        SeparatorLine {
+            Layout.columnSpan: 3
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+        }
+
         Label {
             text: qsTr('Contrast')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {

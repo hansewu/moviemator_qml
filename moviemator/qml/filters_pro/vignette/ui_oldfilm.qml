@@ -16,7 +16,8 @@ Item {
         id: layoutRoot
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 18
+        rowSpacing: 13
 
         YFKeyFrame{
             id: keyFrame
@@ -30,7 +31,7 @@ Item {
         }
         Label{
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -45,9 +46,14 @@ Item {
             }
         }
 
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+
         Label {
             text: qsTr('Radius')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {
@@ -67,7 +73,7 @@ Item {
 
         Label {
             text: qsTr('Feathering')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {
@@ -110,7 +116,7 @@ Item {
 
         Label {
             text: qsTr('Opacity')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {
