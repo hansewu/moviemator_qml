@@ -15,8 +15,8 @@ function maxMenuHeight(pad) {
 function calcMenuRect(triggerItem, pad, pos) {
     var result = Qt.rect(0, 0, 0, 0)
     var itemPos = triggerItem.mapToItem(null,0,0)
-    // var mainWinRect = mainwindow.geometry
-    var mainWinRect = application.mainWinRect
+    var mainWinRect = mainwindow.geometry
+    // var mainWinRect = application.mainWinRect
     var triggerPos = Qt.point(itemPos.x + mainWinRect.x, itemPos.y + mainWinRect.y)
 
 

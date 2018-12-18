@@ -16,6 +16,8 @@ Item {
     property rect rectTmp
     property var clickedButton
     property bool bTile: false
+    property bool bFit: false
+    property bool bFitCrop: false
 
     width: 350
     height: 250
@@ -73,7 +75,6 @@ Item {
         rectTmp.height = h / profile.height
         filter.set(rectProperty, rectTmp)
         console.log("setFiltersetFiltersetFilter-3: rectProperty："+rectProperty)
-        console.log("setFiltersetFiltersetFilter-3: rectTmp"+rectTmp)
         if (filter.getKeyFrameNumber() > 0)
         {
             var nFrame = keyFrame.getCurrentFrame()
@@ -199,13 +200,70 @@ Item {
         setControls()
     }
 
+    function fit()
+    {
+        bFit = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 0)
+
+
+        if(profile.width > profile.height) 
+        {
+            filterRect.height   = profile.height/profile.width
+            filterRect.width    = 1
+        }
+        else
+        {
+            filterRect.width    = profile.width/profile.height
+            filterRect.height   = 1
+        }
+        filterRect.x        = (1.0 - filterRect.width)/2.0
+        filterRect.y        = (1.0 - filterRect.height)/2.0
+
+        setFilter()
+        setControls()
+    }
+
+    function fitCrop()
+    {
+        bFitCrop = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 0)
+
+
+        if(profile.width > profile.height) 
+        {
+            filterRect.height   = 1
+            filterRect.width    = profile.width/profile.height
+        }
+        else
+        {
+            filterRect.width    = 1
+            filterRect.height   = profile.height/profile.width
+        }
+        filterRect.x        = (1.0 - filterRect.width)/2.0
+        filterRect.y        = (1.0 - filterRect.height)/2.0
+
+        setFilter()
+        setControls()
+    }
+
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
     ExclusiveGroup { id: valignGroup }
 
     GridLayout {
         columns: 5
-        rowSpacing:13
+        rowSpacing: 13
+        columnSpacing: 5
         anchors.fill: parent
         anchors.margins: 18
 
@@ -487,7 +545,53 @@ Item {
         }
 
         Button {
-            id: button
+            id: fitButton
+            text: qsTr('Fit')
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bFit = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(fillRadioButton.checked)   //填配模式
+                    {
+                        fit()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    fit()
+                }
+            }
+        }
+
+        Button {
+            id: fitCropButton
+            text: qsTr('FitCrop')
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bFitCrop = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(fillRadioButton.checked)   //填配模式
+                    {
+                        fitCrop()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    fitCrop()
+                }
+            }
+        }
+
+        Button {
+            id: tileButton
             text: qsTr('Tile')
             Layout.alignment: Qt.AlignRight
             onClicked: {
@@ -508,6 +612,8 @@ Item {
                 }
             }
         }
+
+        
     }
 
     Connections {
@@ -535,9 +641,13 @@ Item {
             changeMode()
             
             if (bTile) tile()
+            if (bFit) fit()
+            if (bFitCrop) fitCrop()
         }
         onNo: {
             if (bTile) bTile = false
+            if (bFit) bFit = false
+            if (bFitCrop) bFitCrop = false
 
             setControls()  
         }
