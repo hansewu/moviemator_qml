@@ -15,9 +15,12 @@ Item {
     property rect filterRect : filter.getRect(rectProperty)
     property rect rectTmp
     property var clickedButton
+    property bool bTile: false
+    property bool bFit: false
+    property bool bFitCrop: false
 
     width: 350
-    height: 180
+    height: 250
 
     Component.onCompleted: {
         //导入上次工程保存的关键帧
@@ -35,7 +38,7 @@ Item {
         filter.combineAllKeyFramePara();
 
         if (filter.isNew) {
-            filter.set(fillProperty, 0)
+            filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
 
             rectTmp.x = 0.0
@@ -72,7 +75,6 @@ Item {
         rectTmp.height = h / profile.height
         filter.set(rectProperty, rectTmp)
         console.log("setFiltersetFiltersetFilter-3: rectProperty："+rectProperty)
-        console.log("setFiltersetFiltersetFilter-3: rectTmp"+rectTmp)
         if (filter.getKeyFrameNumber() > 0)
         {
             var nFrame = keyFrame.getCurrentFrame()
@@ -104,7 +106,6 @@ Item {
         console.log("saveValuessaveValuessaveValues-2: "+rectTmp)
         
     }
-
 
     function setControls() {
         // if((filter.getKeyFrameNumber() > 0)){
@@ -149,9 +150,15 @@ Item {
             filter.set(fillProperty, 0)
             filter.set(distortProperty, 0)
         }else if(fillRadioButton.checked == true){
+            filter.resetProperty(fillProperty)
+            filter.resetProperty(distortProperty)
+
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
         }else if(distortRadioButton.checked = true){
+            filter.resetProperty(fillProperty)
+            filter.resetProperty(distortProperty)
+
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 1)
         }
@@ -174,14 +181,91 @@ Item {
         setControls()
     }
 
+    function tile()
+    {
+        bTile = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 1)
+
+        filterRect.x = 0
+        filterRect.y = 0
+        filterRect.width = 1
+        filterRect.height = 1
+
+        setFilter()
+        setControls()
+    }
+
+    function fit()
+    {
+        bFit = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 0)
+
+        if(filter.producerAspect > profile.width/profile.height) 
+        {
+            filterRect.height   = 1.0/filter.producerAspect * profile.width/profile.height
+            filterRect.width    = 1
+        }
+        else
+        {
+            filterRect.width    = filter.producerAspect * profile.height/profile.width
+            filterRect.height   = 1
+        }
+        filterRect.x        = (1.0 - filterRect.width)/2.0
+        filterRect.y        = (1.0 - filterRect.height)/2.0
+
+
+        setFilter()
+        setControls()
+    }
+
+    function fitCrop()
+    {
+        bFitCrop = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 0)
+
+
+        if(filter.producerAspect > profile.width/profile.height) 
+        {
+            filterRect.height   = 1.0 
+            filterRect.width    = 1.0/(1.0/filter.producerAspect * profile.width/profile.height)
+        }
+        else
+        {
+            filterRect.width    = 1.0
+            filterRect.height   = 1/(filter.producerAspect * profile.height/profile.width)
+        }
+        filterRect.x        = (1.0 - filterRect.width)/2.0
+        filterRect.y        = (1.0 - filterRect.height)/2.0
+
+        setFilter()
+        setControls()
+    }
+
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
     ExclusiveGroup { id: valignGroup }
 
     GridLayout {
         columns: 5
+        rowSpacing: 13
+        columnSpacing: 5
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 18
 
         KeyFrame{
             id: keyFrame
@@ -267,7 +351,7 @@ Item {
 
         Label {
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -277,115 +361,72 @@ Item {
             onPresetSelected: setPerset()
         }
 
-        Label {
-            text: qsTr('Position')
-            Layout.alignment: Qt.AlignRight
-            color: '#ffffff'
-        }
-        RowLayout {
-            Layout.columnSpan: 4
-            TextField {
-                id: rectX
-                text: (filterRect.x * profile.width).toFixed()
-                horizontalAlignment: Qt.AlignRight
-                onEditingFinished: setFilter()
-            }
-            Label { 
-                text: ',' 
-                color: '#ffffff'
-            }
-            TextField {
-                id: rectY
-                text: (filterRect.y * profile.height).toFixed()
-                horizontalAlignment: Qt.AlignRight
-                onEditingFinished: setFilter()
-            }
-        }
-        Label {
-            text: qsTr('Size')
-            Layout.alignment: Qt.AlignRight
-            color: '#ffffff'
-        }
-        RowLayout {
-            Layout.columnSpan: 4
-            TextField {
-                id: rectW
-                text: (filterRect.width * profile.width).toFixed()
-                horizontalAlignment: Qt.AlignRight
-                onEditingFinished: setFilter()
-            }
-            Label { 
-                text: 'x' 
-                color: '#ffffff'
-            }
-            TextField {
-                id: rectH
-                text: (filterRect.height * profile.height).toFixed()
-                horizontalAlignment: Qt.AlignRight
-                onEditingFinished: setFilter()
-            }
-            
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
         }
 
         Label {
             text: qsTr('Size mode')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        RowLayout {
-            Layout.columnSpan: 4
-            RadioButton {
-                id: fitRadioButton
-                text: qsTr('Fit')
-                exclusiveGroup: sizeGroup
-                onClicked: {
-                    if(filter.getKeyFrameNumber() > 0){
-                        sizeKeyFrameWarning.visible = true
-                    }
-                    else{
-                        filter.set(fillProperty, 1)
-                        filter.set(distortProperty, 1)
+       
+        RadioButton {
+            id: fitRadioButton
+            text: qsTr('Fit')
+            visible:false
+            exclusiveGroup: sizeGroup
+            onClicked: {
+                if(filter.getKeyFrameNumber() > 0){
+                    sizeKeyFrameWarning.visible = true
+                }
+                else{
+                    filter.set(fillProperty, 1)
+                    filter.set(distortProperty, 1)
 
-                        filter.set(fillProperty, 0)
-                        filter.set(distortProperty, 0)
-                    }
-                    
+                    filter.set(fillProperty, 0)
+                    filter.set(distortProperty, 0)
                 }
+                
             }
-            RadioButton {
-                id: fillRadioButton
-                text: qsTr('Fill')
-                exclusiveGroup: sizeGroup
-                onClicked: {
-                    if(filter.getKeyFrameNumber() > 0){
-                        sizeKeyFrameWarning.visible = true
-                    }
-                    else{
-                        filter.set(fillProperty, 1)
-                        filter.set(distortProperty, 0)
-                    }
+        }
+        RadioButton {
+            id: fillRadioButton
+            text: qsTr('Fill')
+            exclusiveGroup: sizeGroup
+            onClicked: {
+                if(filter.getKeyFrameNumber() > 0){
+                    sizeKeyFrameWarning.visible = true
                 }
-            }
-            RadioButton {
-                id: distortRadioButton
-                text: qsTr('Distort')
-                exclusiveGroup: sizeGroup
-                onClicked: {
-                    if(filter.getKeyFrameNumber() > 0){
-                        sizeKeyFrameWarning.visible = true
-                    }
-                    else{
-                        filter.set(fillProperty, 1)
-                        filter.set(distortProperty, 1)
-                    }
-                    
+                else{
+                    filter.set(fillProperty, 1)
+                    filter.set(distortProperty, 0)
                 }
             }
         }
+        RadioButton {
+            id: distortRadioButton
+            text: qsTr('Distort')
+            exclusiveGroup: sizeGroup
+            onClicked: {
+                if(filter.getKeyFrameNumber() > 0){
+                    sizeKeyFrameWarning.visible = true
+                }
+                else{
+                    filter.set(fillProperty, 1)
+                    filter.set(distortProperty, 1)
+                }
+                
+            }
+        }
 
+        Item { Layout.fillWidth: true }
+/*
         Label {
             text: qsTr('Horizontal fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
@@ -413,7 +454,7 @@ Item {
 
         Label {
             text: qsTr('Vertical fit')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RadioButton {
@@ -437,9 +478,149 @@ Item {
             enabled: fitRadioButton.checked
             onClicked: filter.set(valignProperty, 'bottom')
         }
-        Item { Layout.fillWidth: true }
+        //Item { Layout.fillWidth: true }
+*/
 
-        Item { Layout.fillHeight: true }
+        Label {
+            text: qsTr('Position')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+            visible: false
+        }
+        RowLayout {
+            Layout.columnSpan: 4
+            visible: false
+            TextField {
+                id: rectX
+                text: (filterRect.x * profile.width).toFixed()
+                horizontalAlignment: Qt.AlignRight
+                onEditingFinished: setFilter()
+            }
+            Label { 
+                text: ',' 
+                color: '#ffffff'
+            }
+            TextField {
+                id: rectY
+                text: (filterRect.y * profile.height).toFixed()
+                horizontalAlignment: Qt.AlignRight
+                onEditingFinished: setFilter()
+            }
+        }
+        Label {
+            text: qsTr('Size')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+            visible: false
+        }
+        RowLayout {
+            visible: false
+            Layout.columnSpan: 4
+            //minimumHeight:4
+            TextField {
+                id: rectW
+                text: (filterRect.width * profile.width).toFixed()
+                horizontalAlignment: Qt.AlignRight
+                onEditingFinished: setFilter()
+            }
+            Label { 
+                text: 'x' 
+                color: '#ffffff'
+            }
+            TextField {
+                id: rectH
+                text: (filterRect.height * profile.height).toFixed()
+                horizontalAlignment: Qt.AlignRight
+                onEditingFinished: setFilter()
+            }
+            
+        }
+        
+        //Item { Layout.fillHeight: true }
+
+        SeparatorLine {
+            Layout.columnSpan: 5
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+        }
+
+        Button {
+            id: fitButton
+            text: qsTr('Fit')
+            tooltip: qsTr('Fit')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bFit = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(fillRadioButton.checked)   //填配模式
+                    {
+                        fit()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    fit()
+                }
+            }
+        }
+
+        Button {
+            id: fitCropButton
+            text: qsTr('FitCrop')
+            tooltip: qsTr('FitCrop')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bFitCrop = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(fillRadioButton.checked)   //填配模式
+                    {
+                        fitCrop()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    fitCrop()
+                }
+            }
+        }
+
+        Button {
+            id: tileButton
+            text: qsTr('Tile')
+            tooltip: qsTr('Tile')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            //width:100
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bTile = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(distortRadioButton.checked)   //变形模式
+                    {
+                        tile()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    tile()
+                }
+            }
+        }
+
+        
     }
 
     Connections {
@@ -465,9 +646,17 @@ Item {
             keyFrame.removeAllKeyFrame()
             filter.set(rectProperty,rect)
             changeMode()
+            
+            if (bTile) tile()
+            if (bFit) fit()
+            if (bFitCrop) fitCrop()
         }
         onNo: {
-            setControls()
+            if (bTile) bTile = false
+            if (bFit) bFit = false
+            if (bFitCrop) bFitCrop = false
+
+            setControls()  
         }
         Component.onCompleted: visible = false
     }

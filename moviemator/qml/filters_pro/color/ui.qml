@@ -116,7 +116,8 @@ Item {
         id: layoutRoot
         columns: 6
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
+        rowSpacing:15
 
         YFKeyFrame{
             id: keyFrame
@@ -140,6 +141,11 @@ Item {
             onPresetSelected: {
                 loadWheels()
             }
+        }
+
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 6
         }
 
         // Row 2

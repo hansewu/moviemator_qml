@@ -17,8 +17,9 @@ Item {
     GridLayout {
         id: layoutRoot
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 18
         columns: 3
+        rowSpacing: 13
 
         YFKeyFrame{
             id: keyFrame
@@ -33,7 +34,7 @@ Item {
 
         Label {
             text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -45,9 +46,14 @@ Item {
             }
         }
 
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+
         Label {
             text: qsTr('Amount')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {
@@ -68,7 +74,7 @@ Item {
 
         Label {
             text: qsTr('Size')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SliderSpinner {

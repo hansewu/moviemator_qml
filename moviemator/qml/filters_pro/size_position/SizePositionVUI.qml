@@ -34,6 +34,20 @@ Flickable {
         return (filter.get(fillProperty) === '1' && filter.get(distortProperty) === '0')? filter.producerAspect : 0.0
     }
 
+    function updateRectangleUI()
+    {
+        var rect = filter.getRect(rectProperty)
+
+        if (filter.getKeyFrameNumber() > 0)
+        {   
+            var position        = timeline.getPositionInCurrentClip()
+            rect = filter.getAnimRectValue(position, rectProperty)
+        } 
+        
+        var rectHandles = Qt.rect(rect.x * profile.width, rect.y * profile.height, rect.width * profile.width, rect.height * profile.height)
+        rectangle.setHandles(rectHandles)
+    }
+
     Component.onCompleted: {
         var rectT = filter.getRect(rectProperty)
         console.log("Component.onCompletedComponent.onCompleted-2: rectT: " + rectT)
@@ -64,12 +78,12 @@ Flickable {
             handleSize: Math.max(Math.round(8 / zoom), 4)
             borderSize: Math.max(Math.round(1.33 / zoom), 1)
             onWidthScaleChanged: {
-                setHandles(filter.getRect(rectProperty))
+                updateRectangleUI()
+
                 console.log("onWidthScaleChangedonWidthScaleChangedonWidthScaleChanged")
             }
             onHeightScaleChanged: {
-                setHandles(filter.getRect(rectProperty))
-                console.log("onHeightScaleChangedonHeightScaleChangedonHeightScaleChanged")
+                updateRectangleUI()
             }
             onRectChanged:  {
                 console.log("onRectChangedonRectChangedonRectChanged-1: rectangle.widthScale: "+rectangle.widthScale)
@@ -150,14 +164,23 @@ Flickable {
         if (rectangle.aspectRatio !== getAspectRatio()) {
             rectangle.aspectRatio = getAspectRatio()
             rectangle.setHandles(newRect)
-            // var rect = rectangle.rectangle
-            // rectCtr.x = rect.x / profile.width / rectangle.widthScale
-            // rectCtr.y = rect.y / profile.height / rectangle.heightScale
-            // rectCtr.width = rect.width / profile.width / rectangle.widthScale
-            // rectCtr.height = rect.height / profile.height / rectangle.heightScale
-            // filter.set(rectProperty, rectCtr)
-            // console.log("onChangedonChangedonChanged-2-2:rect: "+rect)
-            // console.log("onChangedonChangedonChanged-2-2:rectCtr: "+rectCtr)
+             var rect = rectangle.rectangle
+             rectCtr.x = rect.x / profile.width / rectangle.widthScale
+             rectCtr.y = rect.y / profile.height / rectangle.heightScale
+             rectCtr.width = rect.width / profile.width / rectangle.widthScale
+             rectCtr.height = rect.height / profile.height / rectangle.heightScale
+            //filter.set(rectProperty, rectCtr)
+
+            var position        = timeline.getPositionInCurrentClip()
+            var bKeyFrame       = filter.bKeyFrame(position)
+            if (bKeyFrame)
+            {
+                filter.setKeyFrameParaRectValue(position, rectProperty, rectCtr, 1.0)
+                filter.combineAllKeyFramePara();
+            } else {
+                filter.resetProperty(rectProperty)
+                filter.set(rectProperty, rectCtr)
+            }
         }
     }
 

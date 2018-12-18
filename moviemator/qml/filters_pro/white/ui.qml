@@ -81,7 +81,8 @@ Item {
     GridLayout {
         columns: 3
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: 20
+        rowSpacing: 15
         
         KeyFrame{
              id: keyFrame
@@ -108,8 +109,8 @@ Item {
         }
 
         Label {
-            text: qsTr('Preset')
-            Layout.alignment: Qt.AlignRight
+            text: qsTr('Preset') + "      "
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         Preset {
@@ -121,10 +122,15 @@ Item {
             }
         }
         
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+
         // Row 1
         Label {
             text: qsTr('Neutral color')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         ColorPicker {
@@ -157,7 +163,7 @@ Item {
         // Row 2
         Label {
             text: qsTr('Color temperature')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         RowLayout {
