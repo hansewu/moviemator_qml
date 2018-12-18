@@ -210,19 +210,19 @@ Item {
         filter.set(fillProperty, 1)
         filter.set(distortProperty, 0)
 
-
-        if(profile.width > profile.height) 
+        if(filter.producerAspect > profile.width/profile.height) 
         {
-            filterRect.height   = profile.height/profile.width
+            filterRect.height   = 1.0/filter.producerAspect * profile.width/profile.height
             filterRect.width    = 1
         }
         else
         {
-            filterRect.width    = profile.width/profile.height
+            filterRect.width    = filter.producerAspect * profile.height/profile.width
             filterRect.height   = 1
         }
         filterRect.x        = (1.0 - filterRect.width)/2.0
         filterRect.y        = (1.0 - filterRect.height)/2.0
+
 
         setFilter()
         setControls()
@@ -239,15 +239,15 @@ Item {
         filter.set(distortProperty, 0)
 
 
-        if(profile.width > profile.height) 
+        if(filter.producerAspect > profile.width/profile.height) 
         {
-            filterRect.height   = 1
-            filterRect.width    = profile.width/profile.height
+            filterRect.height   = 1.0 
+            filterRect.width    = 1.0/(1.0/filter.producerAspect * profile.width/profile.height)
         }
         else
         {
-            filterRect.width    = 1
-            filterRect.height   = profile.height/profile.width
+            filterRect.width    = 1.0
+            filterRect.height   = 1/(filter.producerAspect * profile.height/profile.width)
         }
         filterRect.x        = (1.0 - filterRect.width)/2.0
         filterRect.y        = (1.0 - filterRect.height)/2.0
@@ -547,6 +547,8 @@ Item {
         Button {
             id: fitButton
             text: qsTr('Fit')
+            tooltip: qsTr('Fit')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFit = true
@@ -570,6 +572,8 @@ Item {
         Button {
             id: fitCropButton
             text: qsTr('FitCrop')
+            tooltip: qsTr('FitCrop')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFitCrop = true
@@ -593,6 +597,9 @@ Item {
         Button {
             id: tileButton
             text: qsTr('Tile')
+            tooltip: qsTr('Tile')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            //width:100
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bTile = true
