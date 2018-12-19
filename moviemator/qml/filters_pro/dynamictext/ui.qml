@@ -29,6 +29,7 @@ Item {
     property string fgcolourProperty: "fgcolour"
     property string olcolourProperty: "olcolour"
     property string outlineProperty: "outline"
+    property string bgcolourProperty: "bgcolour"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
@@ -110,7 +111,7 @@ Item {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
             filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
-            filter.set('bgcolour', '#00000000')
+            filter.set(bgcolourProperty, Qt.rect(0.0, 0.0, 0.0, 0.0))
             filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
             filter.set('weight', 500)
             filter.set('argument', 'welcome!')
@@ -302,8 +303,9 @@ Item {
 //        outlineColor.temporaryColor = filter.get(olcolourProperty)
         outlineSpinner.value = filter.getDouble(outlineProperty)
         letterSpaceing.value = filter.getDouble("letter_spaceing")
-        bgColor.value = filter.get('bgcolour')
-        bgColor.temporaryColor = filter.get('bgcolour')
+        console.log("sll------------", getHexStrColor(-1, bgcolourProperty))
+        bgColor.value = getHexStrColor(-1, bgcolourProperty)
+//        bgColor.temporaryColor = filter.get(bgcolourProperty)
         padSpinner.value = filter.getDouble('pad')
         var align = filter.get(halignProperty)
         if (align === 'left')
@@ -547,7 +549,7 @@ Item {
             presets: presetsModle
             Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
-            fgcolourProperty, 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
+            fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, 'pad']
             onBeforePresetLoaded: {
                 var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
                 if (keyFrameCount > 0) {
@@ -800,12 +802,20 @@ Item {
             id: bgColor
             eyedropper: false
             alpha: true
-            onTemporaryColorChanged: {
-                filter.set('bgcolour', temporaryColor)
-            }
-            onValueChanged:
-            {
-                filter.set('bgcolour', value)
+//            onTemporaryColorChanged: {
+//                filter.set(bgcolourProperty, temporaryColor)
+//            }
+            onValueChanged: {
+                var nFrame = keyFrame.getCurrentFrame();
+                if(keyFrame.bKeyFrame) {
+                    filter.setKeyFrameParaRectValue(nFrame, bgcolourProperty, getRectColor(value), 1.0)
+                    filter.combineAllKeyFramePara()
+                } else {
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(bgcolourProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(bgcolourProperty, getRectColor(value))
+                    }
+                }
             }
         }
         Label {
