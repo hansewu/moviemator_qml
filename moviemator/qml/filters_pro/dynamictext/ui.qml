@@ -94,6 +94,29 @@ Item {
         return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
+    function setKeyFrameOfFrame (nFrame) {
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++) {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (paraType === "rect") {
+                var rectValue = filter.getAnimRectValue(nFrame, property)
+                filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+            } else {
+                var valueStr = filter.get(property)
+                filter.setKeyFrameParaValue(nFrame, property, valueStr);
+            }
+        }
+        filter.combineAllKeyFramePara();
+    }
+
+    function setInAndOutKeyFrame () {
+        var positionStart = 0
+        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
+        setKeyFrameOfFrame(positionStart)
+        setKeyFrameOfFrame(positionEnd)
+    }
+
     Component.onCompleted: {
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
@@ -389,48 +412,20 @@ Item {
         anchors.margins: 8
         rowSpacing : 25
 
-
-        KeyFrame{
+        KeyFrame {
             id: keyFrame
             Layout.columnSpan:5
-            onSetAsKeyFrame:{
+            onSetAsKeyFrame: {
                 //如果没有关键帧，先创建头尾两个关键帧
                 if (filter.getKeyFrameNumber() <= 0) {
-                    var paramCount = metadata.keyframes.parameterCount
-                    for(var i = 0; i < paramCount; i++) {
-                        var property = metadata.keyframes.parameters[i].property
-                        var paraType = metadata.keyframes.parameters[i].paraType
-                        var positionStart = 0
-                        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
-                        if (paraType === "rect") {
-                            var rectValue = filter.getRectOfTextFilter(property)
-                            filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
-                            filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
-                        } else {
-                            var valueStr = filter.get(property)
-                            filter.setKeyFrameParaValue(positionStart, property, valueStr);
-                            filter.setKeyFrameParaValue(positionEnd, property, valueStr);
-                        }
-                    }
-                    filter.combineAllKeyFramePara();
+                    setInAndOutKeyFrame()
                 }
 
                 //插入新的关键帧
-                var paramCount = metadata.keyframes.parameterCount
-                for(var i = 0; i < paramCount; i++) {
-                    var nFrame = keyFrame.getCurrentFrame()
-                    var property = metadata.keyframes.parameters[i].property
-                    var paraType = metadata.keyframes.parameters[i].paraType
-                    if (paraType === "rect") {
-                        var rectValue = filter.getAnimRectValue(nFrame, property)
-                        filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
-                    } else {
-                        var valueStr = filter.get(property)
-                        filter.setKeyFrameParaValue(nFrame, property, valueStr);
-                    }
-                }
-                filter.combineAllKeyFramePara();
+                var nFrame = keyFrame.getCurrentFrame()
+                setKeyFrameOfFrame(nFrame)
 
+                //更新控件
                 setKeyframedControls()
             }
             onRemovedAllKeyFrame: {

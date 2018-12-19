@@ -12,7 +12,7 @@ Metadata {
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true
-         simpleProperties: ['geometry','fgcolour', 'olcolour', 'outline']
+         simpleProperties: ['geometry','fgcolour', 'olcolour', 'outline', 'Pad', 'letter_spaceing']
          parameters: [
              Parameter {
                  name: qsTr('Position / Size')
@@ -37,6 +37,12 @@ Metadata {
                  property: 'outline'
                  isSimple: true
                  paraType: "int"
+             },
+             Parameter {
+                 name: qsTr('Background Color')
+                 property: 'bgcolour'
+                 isSimple: true
+                 paraType: "rect"
              },
              Parameter {
                  name: qsTr('Pad')
