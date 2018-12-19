@@ -12,7 +12,7 @@ Metadata {
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true
-         simpleProperties: ['geometry','fgcolour', 'olcolour', 'outline', 'Pad', 'letter_spaceing']
+         simpleProperties: ['geometry', 'fgcolour', 'olcolour', 'outline', 'bgcolour', 'pad', 'letter_spaceing']
          parameters: [
              Parameter {
                  name: qsTr('Position / Size')
