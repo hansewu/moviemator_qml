@@ -30,6 +30,7 @@ Item {
     property string olcolourProperty: "olcolour"
     property string outlineProperty: "outline"
     property string bgcolourProperty: "bgcolour"
+    property string padProperty: "pad"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
@@ -306,7 +307,7 @@ Item {
         console.log("sll------------", getHexStrColor(-1, bgcolourProperty))
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
 //        bgColor.temporaryColor = filter.get(bgcolourProperty)
-        padSpinner.value = filter.getDouble('pad')
+        padSpinner.value = filter.getDouble(padProperty)
         var align = filter.get(halignProperty)
         if (align === 'left')
             leftRadioButton.checked = true
@@ -549,7 +550,7 @@ Item {
             presets: presetsModle
             Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
-            fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, 'pad']
+            fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty]
             onBeforePresetLoaded: {
                 var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
                 if (keyFrameCount > 0) {
@@ -831,9 +832,20 @@ Item {
             minimumValue: 0
             maximumValue: 100
             decimals: 0
-            onValueChanged:
-            {
-                filter.set('pad', value)
+            onValueChanged: {
+                var nFrame = keyFrame.getCurrentFrame();
+                if(keyFrame.bKeyFrame) {
+                    console.log("sll-----nFrame----------", nFrame)
+                    console.log("sll-----padProperty----------", padProperty)
+                    console.log("sll-----value.toString()----------", value.toString())
+                    filter.setKeyFrameParaValue(nFrame, padProperty, value.toString())
+                    filter.combineAllKeyFramePara()
+                } else {
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(padProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(padProperty, value)
+                    }
+                }
             }
         }
 

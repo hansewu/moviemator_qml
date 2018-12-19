@@ -37,6 +37,12 @@ Metadata {
                  property: 'outline'
                  isSimple: true
                  paraType: "int"
+             },
+             Parameter {
+                 name: qsTr('Pad')
+                 property: 'pad'
+                 isSimple: true
+                 paraType: "int"
              }
          ]
      }
