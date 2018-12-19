@@ -31,6 +31,7 @@ Item {
     property string outlineProperty: "outline"
     property string bgcolourProperty: "bgcolour"
     property string padProperty: "pad"
+    property string letterSpaceingProperty: "letter_spaceing"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property ListModel presetsModle: ListModel {}
@@ -303,7 +304,7 @@ Item {
         outlineColor.value = getHexStrColor(-1, olcolourProperty)
 //        outlineColor.temporaryColor = filter.get(olcolourProperty)
         outlineSpinner.value = filter.getDouble(outlineProperty)
-        letterSpaceing.value = filter.getDouble("letter_spaceing")
+        letterSpaceing.value = filter.getDouble(letterSpaceingProperty)
         console.log("sll------------", getHexStrColor(-1, bgcolourProperty))
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
 //        bgColor.temporaryColor = filter.get(bgcolourProperty)
@@ -735,7 +736,16 @@ Item {
             maximumValue: 500
             decimals: 0
             onValueChanged: {
-                filter.set('letter_spaceing', value)
+                var nFrame = keyFrame.getCurrentFrame();
+                if(keyFrame.bKeyFrame) {
+                    filter.setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
+                    filter.combineAllKeyFramePara()
+                } else {
+                    var keyFrameCount = filter.getKeyFrameCountOnProject(letterSpaceingProperty);
+                    if (keyFrameCount <= 0) {
+                        filter.set(letterSpaceingProperty, value)
+                    }
+                }
             }
         }
 
