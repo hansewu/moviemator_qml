@@ -5,7 +5,7 @@ import QtQuick.Window 2.1
 
 GridLayout {
     property var parameters: []
-    property ListModel presets
+    property ListModel presets: ListModel {}
     property int selectedIndex: 0
 
     // Tell the parent QML page to update its controls.
@@ -57,7 +57,6 @@ GridLayout {
 
         function acceptName() {
             filter.savePreset(parameters, nameField.text)
-            presets.append({"name": qsTr(nameField.text), "portrait": "qrc:///icons/filters/text/bottom-left.gif"})
             deleteButton.enabled = true
             nameDialog.close()
         }
@@ -115,7 +114,7 @@ GridLayout {
             anchors.margins: 10
 
             Label {
-                text: qsTr('Are you sure you want to delete %1?').arg(presetCombo.currentText)
+                text: qsTr('Are you sure you want to delete %1?').arg(presets.get(selectedIndex).name)
                 wrapMode: Text.Wrap
             }
 
@@ -127,8 +126,7 @@ GridLayout {
                     text: qsTr('OK')
                     isDefault: true
                     onClicked: {
-                        filter.deletePreset(presets.get(selectedIndex))
-                        presets.remove(selectedIndex)
+                        filter.deletePreset(presets.get(selectedIndex).name)
                         if (presets.count > 0) {
                             gridMenu.selectedOfIndex(0)
                         } else {
@@ -141,6 +139,19 @@ GridLayout {
                     text: qsTr('Cancel')
                     onClicked: confirmDialog.close()
                 }
+            }
+        }
+    }
+
+    Connections {
+        target: filter
+        onPresetsChanged: {
+            presets.clear()
+
+            var presetsCount = filter.getPresetsCount()
+            for (var i = 0; i < presetsCount; i++) {
+                var preset = filter.getPresetOfIndex(i)
+                presets.append({"name": preset, "portrait": "qrc:///icons/filters/text/slide-in-from-left.gif"})
             }
         }
     }

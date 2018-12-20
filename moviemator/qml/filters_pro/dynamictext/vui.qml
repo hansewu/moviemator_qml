@@ -86,7 +86,7 @@ Flickable {
             text: filter.get('argument')
             font.family: filter.get('family')
             font.pixelSize: 24 //0.85 * height / text.split("\n").length
-            textMargin: filter.get('pad')
+            textMargin: filter.getDouble('pad')
             opacity: activeFocus
             onActiveFocusChanged: filter.set('disable', activeFocus)
             onTextChanged: filter.set('argument', text)
