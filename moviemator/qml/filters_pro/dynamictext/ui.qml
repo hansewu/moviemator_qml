@@ -94,20 +94,59 @@ Item {
         return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
-    Component.onCompleted: {
-        //导入上次工程保存的关键帧
+    function setKeyFrameOfFrame (nFrame) {
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++) {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (paraType === "rect") {
+                var rectValue = filter.getAnimRectValue(nFrame, property)
+                filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+            } else {
+                var valueStr = filter.get(property)
+                filter.setKeyFrameParaValue(nFrame, property, valueStr);
+            }
+        }
+        filter.combineAllKeyFramePara();
+    }
+
+    function setInAndOutKeyFrame () {
+        var positionStart = 0
+        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
+        setKeyFrameOfFrame(positionStart)
+        setKeyFrameOfFrame(positionEnd)
+    }
+
+    function loadSavedKeyFrame () {
         var metaParamList = metadata.keyframes.parameters
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
-        for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+        for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
         {
             var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
-            for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+            for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
                 var prop = metaParamList[paramIndex].property
                 var keyValue = filter.getAnimRectValue(nFrame, prop)
                 filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
             }
         }
         filter.combineAllKeyFramePara();
+    }
+
+    function removeAllKeyFrame () {
+        if (filter.getKeyFrameNumber() > 0) {
+            var metaParamList = metadata.keyframes.parameters
+            for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
+                var prop = metaParamList[paramIndex].property
+                filter.removeAllKeyFrame(prop)
+                filter.combineAllKeyFramePara();
+                filter.resetProperty(prop)
+            }
+        }
+    }
+
+    Component.onCompleted: {
+        //导入上次工程保存的关键帧
+        loadSavedKeyFrame()
 
         if (filter.isNew) {
             if (application.OS === 'Windows')
@@ -305,7 +344,6 @@ Item {
 //        outlineColor.temporaryColor = filter.get(olcolourProperty)
         outlineSpinner.value = filter.getDouble(outlineProperty)
         letterSpaceing.value = filter.getDouble(letterSpaceingProperty)
-        console.log("sll------------", getHexStrColor(-1, bgcolourProperty))
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
 //        bgColor.temporaryColor = filter.get(bgcolourProperty)
         padSpinner.value = filter.getDouble(padProperty)
@@ -323,6 +361,20 @@ Item {
             middleRadioButton.checked = true
         else if (align === 'bottom')
             bottomRadioButton.checked = true
+    }
+
+    function setKeyframedControls() {
+        if (filter.getKeyFrameNumber() > 0) {
+            var nFrame = keyFrame.getCurrentFrame()
+
+            filterRect = getAbsoluteRect(nFrame)
+            fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
+            outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
+            outlineSpinner.value = filter.getAnimDoubleValue(nFrame, outlineProperty)
+            letterSpaceing.value = filter.getAnimDoubleValue(nFrame, letterSpaceingProperty)
+            bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
+            padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
+        }
     }
 
     function setFilter() {
@@ -357,28 +409,6 @@ Item {
         }
     }
 
-    function setKeyframedControls() {
-        var keyFrameCount = filter.getKeyFrameCountOnProject(fgcolourProperty);
-        if (keyFrameCount > 0) {
-            for (var index = 0; index < keyFrameCount; index++) {
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(index, fgcolourProperty)
-
-                var rectColor = filter.getAnimRectValue(nFrame, fgcolourProperty)
-                filter.setKeyFrameParaRectValue(nFrame, fgcolourProperty, rectColor, 1.0)
-
-                var rect = filter.getAnimRectValue(nFrame, rectProperty)
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rect, 1.0)
-            }
-            filter.combineAllKeyFramePara();
-
-            filterRect = getAbsoluteRect(0)
-
-            fgColor.value = getHexStrColor(0, fgcolourProperty)
-        }
-    }
-
-
-
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
     ExclusiveGroup { id: valignGroup }
@@ -389,48 +419,20 @@ Item {
         anchors.margins: 8
         rowSpacing : 25
 
-
-        KeyFrame{
+        KeyFrame {
             id: keyFrame
             Layout.columnSpan:5
-            onSetAsKeyFrame:{
+            onSetAsKeyFrame: {
                 //如果没有关键帧，先创建头尾两个关键帧
                 if (filter.getKeyFrameNumber() <= 0) {
-                    var paramCount = metadata.keyframes.parameterCount
-                    for(var i = 0; i < paramCount; i++) {
-                        var property = metadata.keyframes.parameters[i].property
-                        var paraType = metadata.keyframes.parameters[i].paraType
-                        var positionStart = 0
-                        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
-                        if (paraType === "rect") {
-                            var rectValue = filter.getRectOfTextFilter(property)
-                            filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
-                            filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
-                        } else {
-                            var valueStr = filter.get(property)
-                            filter.setKeyFrameParaValue(positionStart, property, valueStr);
-                            filter.setKeyFrameParaValue(positionEnd, property, valueStr);
-                        }
-                    }
-                    filter.combineAllKeyFramePara();
+                    setInAndOutKeyFrame()
                 }
 
                 //插入新的关键帧
-                var paramCount = metadata.keyframes.parameterCount
-                for(var i = 0; i < paramCount; i++) {
-                    var nFrame = keyFrame.getCurrentFrame()
-                    var property = metadata.keyframes.parameters[i].property
-                    var paraType = metadata.keyframes.parameters[i].paraType
-                    if (paraType === "rect") {
-                        var rectValue = filter.getAnimRectValue(nFrame, property)
-                        filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
-                    } else {
-                        var valueStr = filter.get(property)
-                        filter.setKeyFrameParaValue(nFrame, property, valueStr);
-                    }
-                }
-                filter.combineAllKeyFramePara();
+                var nFrame = keyFrame.getCurrentFrame()
+                setKeyFrameOfFrame(nFrame)
 
+                //更新关键帧相关控件
                 setKeyframedControls()
             }
             onRemovedAllKeyFrame: {
@@ -451,42 +453,8 @@ Item {
                 filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
                 filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             }
-            onLoadKeyFrame:
-            {
-                if (filter.getKeyFrameNumber() > 0) {
-                    var hexStrColor = getHexStrColor(keyFrameNum, fgcolourProperty)
-                    if (hexStrColor !== "") {
-                        fgColor.value = hexStrColor
-                    }
-
-                    hexStrColor = getHexStrColor(keyFrameNum, olcolourProperty)
-                    if (hexStrColor !== "") {
-                        outlineColor.value = hexStrColor
-                    }
-
-                    console.log("sll------------", filter.getAnimIntValue(keyFrameNum, outlineProperty))
-                    outlineSpinner.value = filter.getAnimIntValue(keyFrameNum, outlineProperty)
-
-                    filterRect = getAbsoluteRect(keyFrameNum)
-                    filter.set('size', filterRect.height)
-                    filterRect = getAbsoluteRect(keyFrameNum)
-                } else {
-                    var hexStrColor = getHexStrColor(-1, fgcolourProperty)
-                    if (hexStrColor !== "") {
-                        fgColor.value = hexStrColor
-                    }
-
-                    hexStrColor = getHexStrColor(-1, olcolourProperty)
-                    if (hexStrColor !== "") {
-                        outlineColor.value = hexStrColor
-                    }
-
-                    outlineSpinner.value = filter.getDouble(outlineProperty)
-
-                    filterRect = getAbsoluteRect(-1)
-                    filter.set('size', filterRect.height)
-                    filterRect = getAbsoluteRect(-1)
-                }
+            onLoadKeyFrame: {
+                setKeyframedControls()
             }
         }
 
@@ -553,35 +521,13 @@ Item {
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty]
             onBeforePresetLoaded: {
-                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
-                if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame(rectProperty)
-                    keyFrameCount = -1
-                }
-                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
-                if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame(fgcolourProperty)
-                    keyFrameCount = -1
-                }
-
-                filter.resetProperty(fgcolourProperty)
-                filter.resetProperty(rectProperty)
+                removeAllKeyFrame()
             }
             onPresetSelected: {
                 //加載關鍵幀
-                var metaParamList = metadata.keyframes.parameters
-                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
-                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
-                {
-                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
-                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
-                        var prop = metaParamList[paramIndex].property
-                        var keyValue = filter.getAnimRectValue(nFrame, prop)
-                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
-                    }
-                }
-                filter.combineAllKeyFramePara();
+                loadSavedKeyFrame()
 
+                //更新界面
                 setControls()
                 setKeyframedControls()
 
