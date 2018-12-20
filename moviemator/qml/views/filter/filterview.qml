@@ -207,14 +207,16 @@ Rectangle {
     }
 
     KeyFrameControl {
-       id: keyFrameControl
-       anchors {
-           bottom: parent.bottom
-           left: parent.left
-           right: parent.right
-           leftMargin: 10
-           rightMargin: 10
-       }
+        id: keyFrameControl
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+            leftMargin: 10
+            rightMargin: 10
+        }
+        
+        visible: metadata && (metadata.keyframes.parameterCount > 0)
     }
 
 
