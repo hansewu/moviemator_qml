@@ -20,19 +20,20 @@ Rectangle {
     {
         var position = timeline.getPositionInCurrentClip()
 
-        addKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && !autoAddKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0)
+        addKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && !autoAddKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) 
+
         preKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasPreKeyFrame(position)
+
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
+
         removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position)
     }
 
     Connections {
         target: filterDock
         onPositionChanged: {
-             preKeyFrameButton.enabled      = enableKeyFrameCheckBox.checked && filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
-             nextKeyFrameButton.enabled     = enableKeyFrameCheckBox.checked && filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
-             removeKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && filter.bKeyFrame(timeline.getPositionInCurrentClip())
-            
+             refreshFrameButtonsEnable()
+
              var position = timeline.getPositionInCurrentClip()
              frameChanged(position)
         }
@@ -102,8 +103,7 @@ Rectangle {
                             text: qsTr('Auto Add Key Frames')
                         }
                     }
-                    onCheckedChanged: refreshFrameButtonsEnable()
-                    
+                    onCheckedChanged: refreshFrameButtonsEnable()     
                 }
 
                 CustomFilterButton {
@@ -117,7 +117,7 @@ Rectangle {
                     implicitWidth: 32
                     implicitHeight: 32
 
-                    //enabled: (enableKeyFrameCheckBox.checked && !autoAddKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0)) ? true : false   
+                    enabled: refreshFrameButtonsEnable() 
                     opacity: enabled ? 1.0 : 0.5
                     tooltip: qsTr('Add key frame')
                     customIconSource: 'qrc:///icons/light/32x32/list-add.png'
@@ -125,12 +125,7 @@ Rectangle {
                     buttonWidth : 85
                     onClicked: {
                         addFrameChanged()
-                    }
-                    onEnabledChanged: {
-                        var position = timeline.getPositionInCurrentClip()
-                        preKeyFrameButton.enabled      = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0)
-                        nextKeyFrameButton.enabled     = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0)
-                        removeKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0)
+                        refreshFrameButtonsEnable() 
                     }
                 }
 
@@ -145,8 +140,6 @@ Rectangle {
                     implicitWidth: 32
                     implicitHeight: 32
 
-                    // enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
-                    //enabled: (enableKeyFrameCheckBox.checked)? true : false 
                     opacity: enabled ? 1.0 : 0.5
                     tooltip: qsTr('Remove key frame')
                     customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
@@ -158,6 +151,8 @@ Rectangle {
                         if (bKeyFrame)
                             filter.removeKeyFrameParaValue(position)
                             removeKeyFrame()
+
+                        refreshFrameButtonsEnable() 
                     }
                 }
 
@@ -172,7 +167,6 @@ Rectangle {
                     implicitWidth: 32
                     implicitHeight: 32
 
-                    //enabled: enableKeyFrameCheckBox.checked && filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
                     opacity: enabled ? 1.0 : 0.5
                     tooltip: qsTr('Prev key frame')
                     customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
@@ -198,7 +192,6 @@ Rectangle {
                     implicitWidth: 32
                     implicitHeight: 32
 
-                    //enabled: enableKeyFrameCheckBox.checked && filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
                     opacity: enabled ? 1.0 : 0.5
                     tooltip: qsTr('Next key frame')
                     //customIconSource: 'qrc:///icons/light/32x32/bg.png'
