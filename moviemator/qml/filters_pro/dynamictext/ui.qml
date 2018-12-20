@@ -489,7 +489,7 @@ Item {
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        NewPreset {
+        Preset {
             id: preset
             Layout.columnSpan: 4
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
