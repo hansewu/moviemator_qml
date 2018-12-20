@@ -160,7 +160,7 @@ Item {
             text: qsTr('180°')
             tooltip: qsTr('Rotate 180°')
             iconSource: "qrc:///icons/light/32x32/bg.png"
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignCenter
             onClicked: {
                 rotationSlider.value = 170
                 rotationSlider.value = 180
