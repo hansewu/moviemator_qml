@@ -35,6 +35,8 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: true
+    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
+    property bool bAutoSetAsKeyFrame: false
     width: 500
     height: 1000
 
@@ -149,9 +151,27 @@ Item {
         {
             var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
-                var prop = metaParamList[paramIndex].property
-                var keyValue = filter.getAnimRectValue(nFrame, prop)
-                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+//                var prop = metaParamList[paramIndex].property
+//                var keyValue = filter.getAnimRectValue(nFrame, prop)
+//                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+
+                var property = metadata.keyframes.parameters[paramIndex].property
+                var paraType = metadata.keyframes.parameters[paramIndex].paraType
+                if (paraType === "rect") {
+                    filter.resetProperty(property)
+//                    var rectValue = filter.getAnimRectValue(nFrame, property)
+                    var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
+                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                } else {
+                    filter.resetProperty(property)
+//                    var valueStr = filter.getAnimIntValue(nFrame, property)
+                    var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
+                    console.log("sll---------property---------", property)
+                    console.log("sll---------paraType---------", paraType)
+//                    console.log("sll---------valueStr---------", valueStr)
+                    console.log("sll---------tempValue---------", valueStr)
+                    filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                }
             }
         }
         filter.combineAllKeyFramePara();
@@ -166,6 +186,26 @@ Item {
                 filter.combineAllKeyFramePara();
                 filter.resetProperty(prop)
             }
+        }
+    }
+
+    function updateFilter(currentProperty, value) {
+        if (blockUpdate === true) {
+            return
+        }
+        if (bEnableKeyFrame) {
+            var nFrame = keyFrame.getCurrentFrame()
+            if (bAutoSetAsKeyFrame) {
+                setKeyFrameParaValue(nFrame, currentProperty, value)
+            } else {
+                if (filter.bKeyFrame(nFrame)) {
+                    setKeyFrameParaValue(nFrame, currentProperty, value)
+                } else {
+                    filter.set(currentProperty, value)
+                }
+            }
+        } else {
+            filter.set(currentProperty, value)
         }
     }
 
@@ -397,13 +437,32 @@ Item {
             filterRect.width = w
             filterRect.height = h
 
-            var nFrame = keyFrame.getCurrentFrame();
-            if (filter.getKeyFrameNumber() > 0) {
-                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect), 1.0)
-            } else {
-                filter.set(rectProperty, getRelativeRect(filterRect))
-            }
+            updateFilter(rectProperty, getRelativeRect(filterRect))
+//            var nFrame = keyFrame.getCurrentFrame();
+//            if (filter.getKeyFrameNumber() > 0) {
+//                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
+//            } else {
+//                filter.set(rectProperty, getRelativeRect(filterRect))
+//            }
         }
+
+//        if (blockUpdate === true) {
+//            return
+//        }
+//        if (bEnableKeyFrame) {
+//            var nFrame = keyFrame.getCurrentFrame()
+//            if (bAutoSetAsKeyFrame) {
+//                setKeyFrameParaValue(nFrame, currentProperty, value)
+//            } else {
+//                if (filter.bKeyFrame(nFrame)) {
+//                    setKeyFrameParaValue(nFrame, currentProperty, value)
+//                } else {
+//                    filter.set(currentProperty, value)
+//                }
+//            }
+//        } else {
+//            filter.set(currentProperty, value)
+//        }
     }
 
     ExclusiveGroup { id: sizeGroup }
@@ -420,6 +479,7 @@ Item {
             id: keyFrame
             Layout.columnSpan:5
             onSetAsKeyFrame: {
+                console.log("sll---------onSetAsKeyFrame---------")
                 //如果没有关键帧，先创建头尾两个关键帧
                 if (filter.getKeyFrameNumber() <= 0) {
                     setInAndOutKeyFrame()
@@ -451,6 +511,39 @@ Item {
                 filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
             }
             onLoadKeyFrame: {
+//                console.log("sll-------onLoadKeyFrame----")
+//                console.log("sll------111111111111111111111111111111111111-------")
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                console.log("sll------222222222222222222222222222222222222-------")
+                if (bEnableKeyFrame) {
+                    console.log("sll------3333333333333333333333333333333333-------")
+                    var nFrame = keyFrame.getCurrentFrame()
+                    if (bAutoSetAsKeyFrame === false) {
+                        if (filter.bKeyFrame(nFrame)) {
+                            console.log("sll------4444444444444444444444444444-------")
+                            loadSavedKeyFrame()
+                        }
+//                        else {
+//                            filter.set(letterSpaceingProperty, value)
+//                        }
+//                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
+                    }
+//                    else {
+//                        if (filter.bKeyFrame(nFrame)) {
+//                            console.log("sll------4444444444444444444444444444-------")
+//                            loadSavedKeyFrame()
+//                        } else {
+//                            filter.set(letterSpaceingProperty, value)
+//                        }
+//                    }
+                }
+//                else {
+//                    filter.set(letterSpaceingProperty, value)
+//                }
+
+
                 setKeyframedControls()
             }
         }
@@ -556,15 +649,16 @@ Item {
                 alpha: true
                 onValueChanged:
                 {
-                    if (blockUpdate === true) {
-                        return
-                    }
-                    var nFrame = keyFrame.getCurrentFrame();
-                    if (filter.getKeyFrameNumber() > 0) {
-                        setKeyFrameParaValue(nFrame, fgcolourProperty, getRectColor(value))
-                    } else {
-                       filter.set(fgcolourProperty, getRectColor(value))
-                    }
+                    updateFilter(fgcolourProperty, getRectColor(value))
+//                    if (blockUpdate === true) {
+//                        return
+//                    }
+//                    var nFrame = keyFrame.getCurrentFrame();
+//                    if (filter.getKeyFrameNumber() > 0) {
+//                        setKeyFrameParaValue(nFrame, fgcolourProperty, getRectColor(value))
+//                    } else {
+//                       filter.set(fgcolourProperty, getRectColor(value))
+//                    }
                 }
             }
 
@@ -625,15 +719,35 @@ Item {
             maximumValue: 500
             decimals: 0
             onValueChanged: {
-                if (blockUpdate === true) {
-                    return
-                }
-                var nFrame = keyFrame.getCurrentFrame();
-                if (filter.getKeyFrameNumber() > 0) {
-                    setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-                } else {
-                    filter.set(letterSpaceingProperty, value)
-                }
+                updateFilter(letterSpaceingProperty, value.toString())
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                if (bEnableKeyFrame) {
+//                    var nFrame = keyFrame.getCurrentFrame()
+//                    if (bAutoSetAsKeyFrame) {
+//                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
+//                    } else {
+//                        if (filter.bKeyFrame(nFrame)) {
+//                            setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
+//                        } else {
+//                            filter.set(letterSpaceingProperty, value)
+//                        }
+//                    }
+//                } else {
+//                    filter.set(letterSpaceingProperty, value)
+//                }
+
+
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                var nFrame = keyFrame.getCurrentFrame();
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
+//                } else {
+//                    filter.set(letterSpaceingProperty, value)
+//                }
             }
         }
 
@@ -650,15 +764,16 @@ Item {
 //                filter.set('olcolour', temporaryColor)
 //            }
             onValueChanged: {
-                if (blockUpdate === true) {
-                    return
-                }
-                var nFrame = keyFrame.getCurrentFrame();
-                if (filter.getKeyFrameNumber() > 0) {
-                    setKeyFrameParaValue(nFrame, olcolourProperty, getRectColor(value))
-                } else {
-                   filter.set(olcolourProperty, getRectColor(value))
-                }
+                updateFilter(olcolourProperty, getRectColor(value))
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                var nFrame = keyFrame.getCurrentFrame();
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    setKeyFrameParaValue(nFrame, olcolourProperty, getRectColor(value))
+//                } else {
+//                   filter.set(olcolourProperty, getRectColor(value))
+//                }
             }
         }
         Label {
@@ -675,15 +790,16 @@ Item {
             maximumValue: 30
             decimals: 0
             onValueChanged: {
-                if (blockUpdate === true) {
-                    return
-                }
-                var nFrame = keyFrame.getCurrentFrame();
-                if (filter.getKeyFrameNumber() > 0) {
-                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
-                } else {
-                    filter.set(outlineProperty, value)
-                }
+                updateFilter(outlineProperty, value.toString())
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                var nFrame = keyFrame.getCurrentFrame();
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
+//                } else {
+//                    filter.set(outlineProperty, value)
+//                }
             }
         }
 
@@ -700,15 +816,16 @@ Item {
 //                filter.set(bgcolourProperty, temporaryColor)
 //            }
             onValueChanged: {
-                if (blockUpdate === true) {
-                    return
-                }
-                var nFrame = keyFrame.getCurrentFrame();
-                if (filter.getKeyFrameNumber() > 0) {
-                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
-                } else {
-                   filter.set(bgcolourProperty, getRectColor(value))
-                }
+                updateFilter(bgcolourProperty, getRectColor(value))
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                var nFrame = keyFrame.getCurrentFrame();
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
+//                } else {
+//                   filter.set(bgcolourProperty, getRectColor(value))
+//                }
             }
         }
         Label {
@@ -725,15 +842,16 @@ Item {
             maximumValue: 100
             decimals: 0
             onValueChanged: {
-                if (blockUpdate === true) {
-                    return
-                }
-                var nFrame = keyFrame.getCurrentFrame();
-                if (filter.getKeyFrameNumber() > 0) {
-                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
-                } else {
-                    filter.set(padProperty, value)
-                }
+                updateFilter(padProperty, value.toString())
+//                if (blockUpdate === true) {
+//                    return
+//                }
+//                var nFrame = keyFrame.getCurrentFrame();
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
+//                } else {
+//                    filter.set(padProperty, value)
+//                }
             }
         }
 
@@ -891,5 +1009,61 @@ Item {
             }
         }
     }
+
+    // 开启关键帧
+    Connections {
+        target: keyFrameControl
+        onEnableKeyFrameChanged: {
+            bEnableKeyFrame = bEnable
+        }
+    }
+
+    // 自动添加关键帧信号，当参数改变时
+    Connections {
+        target: keyFrameControl
+        onAutoAddKeyFrameChanged: {
+            bAutoSetAsKeyFrame = bEnable
+        }
+    }
+
+    // 添加关键帧信号
+//    Connections {
+//             target: keyFrameControl
+//             onAddFrameChanged: {
+//                 bKeyFrame = true
+//                 synchroData()
+//                 addKeyFrameValue()
+//             }
+//    }
+    // 帧位置改变信号
+//    Connections {
+//             target: keyFrameControl
+//             onFrameChanged: {
+//                 currentFrame = keyFrameNum
+//                 bKeyFrame = filter.bKeyFrame(currentFrame)
+//                 loadKeyFrame()
+//             }
+//    }
+    // 移除关键帧信号
+//    Connections {
+//             target: keyFrameControl
+//             onRemoveKeyFrame: {
+//                bKeyFrame = false
+//                var nFrame = keyFrame.getCurrentFrame();
+
+//                filter.removeKeyFrameParaValue(nFrame);
+//                filter.combineAllKeyFramePara();
+//                synchroData()
+
+//             }
+//    }
+    // 移除所有关键帧信号
+//    Connections {
+//             target: keyFrameControl
+//             onRemoveAllKeyFrame: {
+//                bKeyFrame = false
+//                removeAllKeyFrame()
+//             }
+//    }
 }
 
