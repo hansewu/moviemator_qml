@@ -144,6 +144,43 @@ Item {
         setKeyFrameOfFrame(positionEnd)
     }
 
+
+    function loadSavedKeyFrameNew () {
+        console.log("sll---------loadSavedKeyFrameNew---------")
+        var metaParamList = metadata.keyframes.parameters
+        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+        for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
+        {
+            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+            for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
+//                var prop = metaParamList[paramIndex].property
+//                var keyValue = filter.getAnimRectValue(nFrame, prop)
+//                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+
+                var property = metadata.keyframes.parameters[paramIndex].property
+                var paraType = metadata.keyframes.parameters[paramIndex].paraType
+                if (paraType === "rect") {
+//                    filter.resetProperty(property)
+                    var rectValue = filter.getAnimRectValue(nFrame, property)
+//                    var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
+                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                } else {
+//                    filter.resetProperty(property)
+                    var valueStr = filter.getAnimIntValue(nFrame, property)
+//                    var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
+                    console.log("sll---------property---------", property)
+                    console.log("sll---------paraType---------", paraType)
+//                    console.log("sll---------valueStr---------", valueStr)
+                    console.log("sll---------tempValue---------", valueStr)
+                    filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                }
+            }
+        }
+
+        console.log("sll---------filter.combineAllKeyFramePara();---------")
+        filter.combineAllKeyFramePara();
+    }
+
     function loadSavedKeyFrame () {
         var metaParamList = metadata.keyframes.parameters
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
@@ -211,7 +248,7 @@ Item {
 
     Component.onCompleted: {
         //导入上次工程保存的关键帧
-        loadSavedKeyFrame()
+        loadSavedKeyFrameNew()
 
         if (filter.isNew) {
             if (application.OS === 'Windows')
@@ -563,7 +600,7 @@ Item {
             }
             onPresetSelected: {
                 //加載關鍵幀
-                loadSavedKeyFrame()
+                loadSavedKeyFrameNew()
 
                 //更新界面
                 setControls()
