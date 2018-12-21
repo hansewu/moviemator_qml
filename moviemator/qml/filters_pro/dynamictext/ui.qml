@@ -34,6 +34,7 @@ Item {
     property string letterSpaceingProperty: "letter_spaceing"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
+    property bool blockUpdate: true
     width: 500
     height: 1000
 
@@ -104,6 +105,31 @@ Item {
             } else {
                 var valueStr = filter.get(property)
                 filter.setKeyFrameParaValue(nFrame, property, valueStr);
+            }
+        }
+        filter.combineAllKeyFramePara();
+    }
+
+    function setKeyFrameParaValue (nFrame, currentPropert, value) {
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++) {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (property === currentPropert) {
+                if (paraType === "rect") {
+                    filter.setKeyFrameParaRectValue(nFrame, property, value, 1.0)
+                } else {
+                    filter.setKeyFrameParaValue(nFrame, property, value);
+                }
+            } else {
+                if (paraType === "rect") {
+                    var rectValue = filter.getAnimRectValue(nFrame, property)
+                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                } else {
+                    var valueStr = filter.get(property)
+                    filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                }
+
             }
         }
         filter.combineAllKeyFramePara();
@@ -311,17 +337,25 @@ Item {
     function setControls() {
         filterRect = getAbsoluteRect(-1)
         textArea.text = filter.get('argument')
-        fgColor.value = getHexStrColor(-1, fgcolourProperty)
+//        fgColor.value = getHexStrColor(-1, fgcolourProperty)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
         insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
-        outlineColor.value = getHexStrColor(-1, olcolourProperty)
+//        outlineColor.value = getHexStrColor(-1, olcolourProperty)
 //        outlineColor.temporaryColor = filter.get(olcolourProperty)
+//        outlineSpinner.value = filter.getDouble(outlineProperty)
+        console.log("sll------setControls---------")
+        blockUpdate = true
+        fgColor.value = getHexStrColor(-1, fgcolourProperty)
+        outlineColor.value = getHexStrColor(-1, olcolourProperty)
         outlineSpinner.value = filter.getDouble(outlineProperty)
         letterSpaceing.value = filter.getDouble(letterSpaceingProperty)
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
-//        bgColor.temporaryColor = filter.get(bgcolourProperty)
         padSpinner.value = filter.getDouble(padProperty)
+        blockUpdate = false
+//        bgColor.value = getHexStrColor(-1, bgcolourProperty)
+//        bgColor.temporaryColor = filter.get(bgcolourProperty)
+//        padSpinner.value = filter.getDouble(padProperty)
         var align = filter.get(halignProperty)
         if (align === 'left')
             leftRadioButton.checked = true
@@ -343,12 +377,21 @@ Item {
             var nFrame = keyFrame.getCurrentFrame()
 
             filterRect = getAbsoluteRect(nFrame)
+//            fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
+//            outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
+//            outlineSpinner.value = filter.getAnimDoubleValue(nFrame, outlineProperty)
+            console.log("sll------setKeyframedControls---------")
+            blockUpdate = true
             fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
             outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
             outlineSpinner.value = filter.getAnimDoubleValue(nFrame, outlineProperty)
             letterSpaceing.value = filter.getAnimDoubleValue(nFrame, letterSpaceingProperty)
             bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
             padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
+            blockUpdate = false
+//            letterSpaceing.value = filter.getAnimDoubleValue(nFrame, letterSpaceingProperty)
+//            bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
+//            padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
         }
     }
 
@@ -585,16 +628,14 @@ Item {
                 alpha: true
                 onValueChanged:
                 {
+                    if (blockUpdate === true) {
+                        return
+                    }
                     var nFrame = keyFrame.getCurrentFrame();
-                    if(keyFrame.bKeyFrame)
-                    {
-                        filter.setKeyFrameParaRectValue(nFrame, fgcolourProperty, getRectColor(value), 1.0)
-                        filter.combineAllKeyFramePara()
+                    if (filter.getKeyFrameNumber() > 0) {
+                        setKeyFrameParaValue(nFrame, fgcolourProperty, getRectColor(value))
                     } else {
-                        var keyFrameCount = filter.getKeyFrameCountOnProject(fgcolourProperty);
-                        if (keyFrameCount <= 0) {
-                            filter.set(fgcolourProperty, getRectColor(value))
-                        }
+                       filter.set(fgcolourProperty, getRectColor(value))
                     }
                 }
             }
@@ -656,15 +697,14 @@ Item {
             maximumValue: 500
             decimals: 0
             onValueChanged: {
+                if (blockUpdate === true) {
+                    return
+                }
                 var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame) {
-                    filter.setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-                    filter.combineAllKeyFramePara()
+                if (filter.getKeyFrameNumber() > 0) {
+                    setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(letterSpaceingProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(letterSpaceingProperty, value)
-                    }
+                    filter.set(letterSpaceingProperty, value)
                 }
             }
         }
@@ -682,15 +722,14 @@ Item {
 //                filter.set('olcolour', temporaryColor)
 //            }
             onValueChanged: {
+                if (blockUpdate === true) {
+                    return
+                }
                 var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame) {
-                    filter.setKeyFrameParaRectValue(nFrame, olcolourProperty, getRectColor(value), 1.0)
-                    filter.combineAllKeyFramePara()
+                if (filter.getKeyFrameNumber() > 0) {
+                    setKeyFrameParaValue(nFrame, olcolourProperty, getRectColor(value))
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(olcolourProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(olcolourProperty, getRectColor(value))
-                    }
+                   filter.set(olcolourProperty, getRectColor(value))
                 }
             }
         }
@@ -707,19 +746,15 @@ Item {
             minimumValue: 0
             maximumValue: 30
             decimals: 0
-//            onValueChanged: {
-//                filter.set('outline', value)
-//            }
             onValueChanged: {
+                if (blockUpdate === true) {
+                    return
+                }
                 var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame) {
-                    filter.setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
-                    filter.combineAllKeyFramePara()
+                if (filter.getKeyFrameNumber() > 0) {
+                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(outlineProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(outlineProperty, value)
-                    }
+                    filter.set(outlineProperty, value)
                 }
             }
         }
@@ -737,15 +772,14 @@ Item {
 //                filter.set(bgcolourProperty, temporaryColor)
 //            }
             onValueChanged: {
+                if (blockUpdate === true) {
+                    return
+                }
                 var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame) {
-                    filter.setKeyFrameParaRectValue(nFrame, bgcolourProperty, getRectColor(value), 1.0)
-                    filter.combineAllKeyFramePara()
+                if (filter.getKeyFrameNumber() > 0) {
+                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(bgcolourProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(bgcolourProperty, getRectColor(value))
-                    }
+                   filter.set(bgcolourProperty, getRectColor(value))
                 }
             }
         }
@@ -763,18 +797,14 @@ Item {
             maximumValue: 100
             decimals: 0
             onValueChanged: {
+                if (blockUpdate === true) {
+                    return
+                }
                 var nFrame = keyFrame.getCurrentFrame();
-                if(keyFrame.bKeyFrame) {
-                    console.log("sll-----nFrame----------", nFrame)
-                    console.log("sll-----padProperty----------", padProperty)
-                    console.log("sll-----value.toString()----------", value.toString())
-                    filter.setKeyFrameParaValue(nFrame, padProperty, value.toString())
-                    filter.combineAllKeyFramePara()
+                if (filter.getKeyFrameNumber() > 0) {
+                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(padProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(padProperty, value)
-                    }
+                    filter.set(padProperty, value)
                 }
             }
         }
