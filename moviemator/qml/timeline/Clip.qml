@@ -743,44 +743,68 @@ Rectangle {
         }
     }
 
-    Repeater {
-        id: keyFrameRepeater
-        model: currentFilter?currentFilter.getKeyFrameNumber() : 0
 
-        KeyframeIndicator{
-             visible: !isBlank && selected &&currentFilter && (currentFilter.getKeyFrame(index) != -1)
-             x: (clipRoot.border.width+ (currentFilter?currentFilter.getKeyFrame(index):0))*multitrack.scaleFactor
-             frameNumber: currentFilter ? currentFilter.getKeyFrame(index) : -1
+    Rectangle {
+        visible: !isBlank && selected && currentFilter && currentFilter.keyframeNumber > 0
+        height: parent.height / 2
+        width: parent.width
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.margins: parent.border.width
+        opacity: 0.7
+        color: 'grey'
+
+
+        //MouseArea {
+        //    anchors.fill: parent
+        //    acceptedButtons: Qt.LeftButton
+        //}
+
+        Repeater {
+            id: keyFrameRepeater
+            model: currentFilter ? currentFilter.keyframeNumber : 0
+            anchors.verticalCenter: parent.verticalCenter
+
+
+            KeyframeIndicator{
+                height: parent.height / 2
+                width: height
+                anchors.verticalCenter: parent.verticalCenter
+                visible: !isBlank && selected &&currentFilter && (currentFilter.getKeyFrame(index) != -1)
+                x: (currentFilter?currentFilter.getKeyFrame(index):0) *multitrack.scaleFactor - width/2
+                frameNumber: currentFilter ? currentFilter.getKeyFrame(index) : -1
+                rotation: 45
+            }
         }
     }
 
-    Connections{
-        target: currentFilter
-        onKeyFrameChanged:{
-//            var  frameNumber = currentFilter.getKeyFrameNumber()
-//            firstKeyFrameRect.visible = !isBlank && frameNumber
-//            if(frameNumber)
-//            {
-//                console.log("Clip.qml onKeyFrameChanged is called, keyframe=")
-//              //  firstKeyFrameRect.visible = !isBlank && frameNumber// This is available in all editors.
-//                var frame = currentFilter.getFristKeyFrame()
+//    Connections{
+//        target: currentFilter
+//        onKeyFrameChanged:{
+////            var  frameNumber = currentFilter.getKeyFrameNumber()
+////            firstKeyFrameRect.visible = !isBlank && frameNumber
+////            if(frameNumber)
+////            {
+////                console.log("Clip.qml onKeyFrameChanged is called, keyframe=")
+////              //  firstKeyFrameRect.visible = !isBlank && frameNumber// This is available in all editors.
+////                var frame = currentFilter.getFristKeyFrame()
 
-//                firstKeyFrameRect.anchors.leftMargin = clipRoot.border.width+frame
-//                console.log(firstKeyFrameRect.anchors.leftMargin);
-//            }
+////                firstKeyFrameRect.anchors.leftMargin = clipRoot.border.width+frame
+////                console.log(firstKeyFrameRect.anchors.leftMargin);
+////            }
 
-        }
-        onAddKeyFrame:{
-            var keyNumber = currentFilter.getKeyFrameNumber()
-            keyFrameRepeater.model = keyNumber
-        }
+//        }
+//        onAddKeyFrame:{
+//            var keyNumber = currentFilter.getKeyFrameNumber()
+//            keyFrameRepeater.model = keyNumber
+//        }
 
-        onRemoveKeyFrame:{
-            var keyNumber = currentFilter.getKeyFrameNumber()
-            keyFrameRepeater.model = keyNumber
-        }
+//        onRemoveKeyFrame:{
+//            var keyNumber = currentFilter.getKeyFrameNumber()
+//            keyFrameRepeater.model = keyNumber
+//        }
 
-    }
+//    }
 
     Menu {
         id: menu
