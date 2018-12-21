@@ -2,11 +2,15 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.0
+import QtQuick.Dialogs 1.1
 
 RowLayout{
 
     id: keyFrame
     visible: false
+    
+    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
+    property bool bAutoSetAsKeyFrame: false
     
     property double currentFrame: 0
     property bool bKeyFrame: false
@@ -232,11 +236,40 @@ RowLayout{
         // 添加关键帧
         if ((filter.getKeyFrameNumber() > 0)&&(userChange))
         {
+            if (!bAutoSetAsKeyFrame) 
+            {
+                return
+            }
+
             bKeyFrame = true
             synchroData()
             addKeyFrameValue()
         }
     }
+
+    ToolTip { 
+        id: tooltip; 
+        text: qsTr('Use Keyframes for this parameter') 
+    }
+
+    MessageDialog {
+        id: addFrameInfo
+        visible: false
+        title: qsTr("Confirm Removing Keyframes")
+        text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
+        property int position: 0
+    }
+
+    function showAddFrameInfo(position)
+    {
+        if (bAutoSetAsKeyFrame == false) return
+
+        //addFrameInfo.position = position
+        //addFrameInfo.visible = true
+
+        //tooltip.visible = true
+    }
+
     // 添加为关键帧
     function addKeyFrameValue(){
         
@@ -311,9 +344,10 @@ RowLayout{
         bKeyFrame = true
 
         console.log("2222222222222222222222222222222222222222: ")
-        
 
+        showAddFrameInfo(position)
     }
+
     //帧位置改变时加载控件参数
     function loadFrameValue(layoutRoot){
         var metaParamList = metadata.keyframes.parameters
@@ -581,6 +615,7 @@ RowLayout{
             }
         }else{
             filter.get(parameter.property)
+            filter.combineAllKeyFramePara();
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
             console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
@@ -744,15 +779,34 @@ RowLayout{
                 console.log("nFramenFramenFramenFrame: " + nFrame)
             }
             i++;
-            if((keyFrameCount <= 0)||(i>=10))
+            if((keyFrameCount <= 0)||(i>=40))
                 break;
         }
+
+        synchroData()
     }
 
     Component.onCompleted:
     {
         currentFrame = timeline.getPositionInCurrentClip()
     }
+
+    // 开启关键帧
+    Connections {
+        target: keyFrameControl
+        onEnableKeyFrameChanged: {
+            bEnableKeyFrame = bEnable
+        }
+    }
+
+    // 自动添加关键帧信号，当参数改变时
+    Connections {
+        target: keyFrameControl
+        onAutoAddKeyFrameChanged: {
+            bAutoSetAsKeyFrame = bEnable
+        }
+    }
+
     // 添加关键帧信号
     Connections {
              target: keyFrameControl
