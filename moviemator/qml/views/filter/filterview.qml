@@ -92,15 +92,16 @@ Rectangle {
             leftMargin: 10
             rightMargin: 10
             topMargin: 6
-            bottomMargin: 4
+            bottom: parent.bottom
+            bottomMargin: 130
         }
-
 
         AttachedFilters {
             id: attachedFilters
             Layout.columnSpan: 3
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+            anchors.fill: parent
+            //Layout.fillWidth: true
+            //Layout.fillHeight: true
             onFilterClicked: {
                 root.currentFilterRequested(index)
             }
@@ -114,7 +115,7 @@ Rectangle {
 
         CustomFilterButton {
             id:addButton
-
+            anchors.top: attachedFilters.bottom
 
             enabled: attachedfiltersmodel.ready
             opacity: enabled ? 1.0 : 0.5
@@ -131,6 +132,7 @@ Rectangle {
 
         CustomFilterButton {
             id:removeButton
+            anchors.top: addButton.top
             property int selectedIndex: -1
             enabled: selectedIndex > -1 ? true : false
             opacity: enabled ? 1.0 : 0.5
@@ -144,10 +146,10 @@ Rectangle {
                 attachedfiltersmodel.remove(selectedIndex)
             }
         }
-
+/*
         Item {
             Layout.fillWidth: true
-        }
+        }*/
     }
 
     ScrollView {
@@ -204,15 +206,18 @@ Rectangle {
         }
     }
 
-   KeyFrameControl {
-       id: keyFrameControl
-       anchors {
-           top: attachedContainer.bottom
-           left: parent.left
-           leftMargin: 10
-           topMargin: 0
-       }
-   }
+    KeyFrameControl {
+        id: keyFrameControl
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+            leftMargin: 10
+            rightMargin: 10
+        }
+        
+        visible: metadata && (metadata.keyframes.parameterCount > 0)
+    }
 
 
     states: [

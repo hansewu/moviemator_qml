@@ -6,7 +6,7 @@ import MovieMator.Controls 1.0
 
 Item {
     width: 300
-    height: 250
+    height: 280
     Component.onCompleted: {
         keyFrame.initFilter(layoutRoot)
     }
@@ -48,23 +48,13 @@ Item {
             Layout.columnSpan: 2
             onPresetSelected: setControls()
         }
-/*
-        Item { 
-            Layout.fillWidth: true 
-            Layout.columnSpan: 3
-        }
-*/
+
         SeparatorLine {
             Layout.columnSpan: 3
             Layout.minimumWidth: parent.width
             Layout.maximumWidth: parent.width
         }
-/*
-        Item { 
-            Layout.fillWidth: true 
-            Layout.columnSpan: 3
-        }
-*/
+
         Label {
             text: qsTr('Rotation')
             color: '#ffffff'
@@ -146,6 +136,47 @@ Item {
         }
         UndoButton {
             onClicked: yOffsetSlider.value = 0
+        }
+
+        SeparatorLine {
+            Layout.fillWidth: true 
+            Layout.columnSpan: 3
+        }
+
+        Button {
+            id: rotateButton
+            text: qsTr('90°')
+            tooltip: qsTr('Rotate 90°')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                rotationSlider.value = 80
+                rotationSlider.value = 90
+            }
+        }
+
+        Button {
+            id: rotateButton2
+            text: qsTr('180°')
+            tooltip: qsTr('Rotate 180°')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            Layout.alignment: Qt.AlignCenter
+            onClicked: {
+                rotationSlider.value = 170
+                rotationSlider.value = 180
+            }
+        }
+
+        Button {
+            id: rotateButton3
+            text: qsTr('270°')
+            tooltip: qsTr('Rotate 270°')
+            iconSource: "qrc:///icons/light/32x32/bg.png"
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                rotationSlider.value = 260
+                rotationSlider.value = 270
+            }
         }
 
         Item {
