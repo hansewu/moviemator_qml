@@ -3,64 +3,246 @@ import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.4
 import MovieMator.Controls 1.0
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     id:keyFrame
 
     color: '#353535'//activePalette.window
-    width: 400
-    height: 32
+    width: parent.width
+    height: 100
+
+    signal enableKeyFrameChanged(bool bEnable)
+    signal autoAddKeyFrameChanged(bool bEnable)
 
     signal addFrameChanged()
     signal frameChanged(double keyFrameNum)
     signal removeKeyFrame()
     signal removeAllKeyFrame()
 
-    // function setKeyFrameValue()
-    // {
-    //     var position = timeline.getPositionInCurrentClip()
-    //     if (position < 0) return
+    function refreshFrameButtonsEnable()
+    {
+        var position = timeline.getPositionInCurrentClip()
 
-    //     var paramCount = metadata.keyframes.parameterCount
-    //     for(var i = 0; i < paramCount; i++)
-    //     {
-    //         var key = metadata.keyframes.parameters[i].property
-    //         var value = filter.get(key)
-            
-    //         console.log("key: ")
-    //         console.log(key)
-    //         console.log("value: ")
-    //         console.log(value)
-            
-            
+        addKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && !autoAddKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) 
 
-    //         if (filter.getKeyFrameNumber() <= 0)
-    //         {
-    //             var position2 = filter.producerOut - filter.producerIn + 1 - 5
-    //             filter.setKeyFrameParaValue(position2, key, value.toString() );
+        preKeyFrameButton.enabled   = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasPreKeyFrame(position)
 
-    //             filter.setKeyFrameParaValue(0, key, value.toString() );
-    //         }
+        nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-    //         filter.setKeyFrameParaValue(position, key, value.toString() );
-
-    //         filter.combineAllKeyFramePara();
-    //     }
-
-    //  }
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position)
+    }
 
     Connections {
         target: filterDock
         onPositionChanged: {
-             preKeyFrameButton.enabled      = filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
-             nextKeyFrameButton.enabled     = filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
-            //  removeKeyFrameButton.enabled   = filter.bKeyFrame(timeline.getPositionInCurrentClip())
-            removeAllKeyFrameButton.enabled = filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip()) || filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
+             refreshFrameButtonsEnable()
+
              var position = timeline.getPositionInCurrentClip()
              frameChanged(position)
         }
     }
 
+    GroupBox{
+        width: parent.width
+        height: parent.height
+        title: " " + qsTr('Key Frame') + " "
+        //font.pixelSize: 15
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            topMargin: 0
+            leftMargin: 10
+            rightMargin: 10
+            bottomMargin: 8
+        }
+        
+        GridLayout {
+            columns: 4
+    
+
+            CheckBox {
+                id: enableKeyFrameCheckBox
+                Layout.columnSpan: 4
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                checked: (filter.getKeyFrameNumber() > 0)
+                onClicked: {
+                    if(checked)
+                    {   
+                        if(metadata.keyframes.parameterCount > 0)
+                        {   
+                            addFrameChanged()
+                            refreshFrameButtonsEnable()
+                        }  
+                    }
+                    else
+                    {  
+                        if(filter.getKeyFrameNumber() > 0)
+                            removeKeyFrameWarning.visible = true
+                    }
+                }
+
+                style: CheckBoxStyle {
+                    label: Text {
+                        color: "white"
+                        text: qsTr('Enable Key Frames')
+                    }
+                }
+
+                onCheckedChanged: {
+                    refreshFrameButtonsEnable()
+
+                    enableKeyFrameChanged(checked)
+                }
+            }
+
+            CheckBox {
+                id: autoAddKeyFrameCheckBox
+                Layout.columnSpan: 4
+                anchors.left: parent.left
+                anchors.leftMargin: 20
+                checked: false
+                onClicked: {
+                    autoAddKeyFrameChanged(checked)
+                }
+
+                style: CheckBoxStyle {
+                    label: Text {
+                        color: "white"
+                        text: qsTr('Auto Add Key Frames')
+                    }
+                }
+                onCheckedChanged: refreshFrameButtonsEnable()     
+            }
+
+            CustomFilterButton {
+                id:addKeyFrameButton
+                anchors {
+                    top: parent.bottom
+                    left: parent.left
+                    leftMargin: 10
+                    topMargin: -37
+                }
+                implicitWidth: 32
+                implicitHeight: 32
+
+                enabled: refreshFrameButtonsEnable() 
+                opacity: enabled ? 1.0 : 0.5
+                tooltip: qsTr('Add key frame')
+                customIconSource: 'qrc:///icons/light/32x32/list-add.png'
+                //customText: qsTr('Add')
+                buttonWidth : 85
+                onClicked: {
+                    addFrameChanged()
+                    refreshFrameButtonsEnable() 
+                }
+            }
+
+            CustomFilterButton {
+                id:removeKeyFrameButton
+                anchors {
+                    top: addKeyFrameButton.top
+                    left: addKeyFrameButton.right
+                    leftMargin: 20
+                    topMargin: 0
+                }
+                implicitWidth: 32
+                implicitHeight: 32
+
+                opacity: enabled ? 1.0 : 0.5
+                tooltip: qsTr('Remove key frame')
+                customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
+                //customText: qsTr('Remove')
+                buttonWidth : 85
+                onClicked: {
+                    var position        = timeline.getPositionInCurrentClip()
+
+                    if((position == 0) || (position == (filter.producerOut - filter.producerIn + 1 - 5))) 
+                        return   //首尾帧无法删除
+
+                    var bKeyFrame       = filter.bKeyFrame(position)
+                    if (bKeyFrame)
+                        filter.removeKeyFrameParaValue(position)
+                        removeKeyFrame()
+
+                    refreshFrameButtonsEnable() 
+                }
+            }
+
+            CustomFilterButton {
+                id:preKeyFrameButton
+                anchors {
+                    top: addKeyFrameButton.top
+                    left: removeKeyFrameButton.right
+                    leftMargin: 20
+                    topMargin: 0
+                }
+                implicitWidth: 32
+                implicitHeight: 32
+
+                opacity: enabled ? 1.0 : 0.5
+                tooltip: qsTr('Prev key frame')
+                customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
+                //customText: qsTr('<<')
+                buttonWidth : 85
+                onClicked: {
+                    var nFrame = filter.getPreKeyFrameNum(timeline.getPositionInCurrentClip())
+                    if(nFrame != -1)
+                    {
+                        filterDock.position = nFrame
+                    }
+                }
+            }
+
+            CustomFilterButton {
+                id:nextKeyFrameButton
+                anchors {
+                    top: addKeyFrameButton.top
+                    left: preKeyFrameButton.right
+                    leftMargin: 20
+                    topMargin: 0
+                }
+                implicitWidth: 32
+                implicitHeight: 32
+
+                opacity: enabled ? 1.0 : 0.5
+                tooltip: qsTr('Next key frame')
+                //customIconSource: 'qrc:///icons/light/32x32/bg.png'
+                customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
+                //customText: qsTr('>>')
+                buttonWidth : 85
+                onClicked: {
+                    var nFrame = filter.getNextKeyFrameNum(timeline.getPositionInCurrentClip())
+                    if(nFrame != -1)
+                    {
+                        filterDock.position = nFrame
+                        //frameChanged(nFrame)
+                    }
+                }
+            }
+        }
+
+    }
+
+    MessageDialog {
+        id: removeKeyFrameWarning
+        visible: false
+        title: qsTr("Confirm Removing Keyframes")
+        text: qsTr('This will remove all keyframes.<p>Do you still want to do this?')
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            enableKeyFrameCheckBox.checked = false
+
+            removeAllKeyFrame()
+        }
+        onNo: 
+            enableKeyFrameCheckBox.checked = true  
+        
+    }
+/*
     Label {
         text: qsTr('Key Frame :')
         Layout.alignment: Qt.AlignRight
@@ -73,118 +255,7 @@ Rectangle {
         }
     }
 
-    CustomFilterButton {
-        id:addKeyFrameButton
-        anchors {
-            top: parent.bottom - addKeyFrameButton.height
-            left: parent.left
-            leftMargin: 100
-            topMargin: 0
-        }
-        implicitWidth: 32
-        implicitHeight: 32
-
-        enabled: (metadata && (metadata.keyframes.parameterCount > 0)) ? true : false   //filter
-        opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Add key frame')
-        customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        customText: qsTr('Add')
-        buttonWidth : 85
-        onClicked: {
-            addFrameChanged()
-        }
-        property bool change1;
-        onEnabledChanged: {
-            var position = timeline.getPositionInCurrentClip()
-            preKeyFrameButton.enabled      = metadata && (metadata.keyframes.parameterCount > 0)
-            nextKeyFrameButton.enabled     = metadata && (metadata.keyframes.parameterCount > 0)
-            removeKeyFrameButton.enabled   = metadata && (metadata.keyframes.parameterCount > 0)
-            removeAllKeyFrameButton.enabled= metadata && (metadata.keyframes.parameterCount > 0)
-        }
-    }
-
-    CustomFilterButton {
-        id:removeKeyFrameButton
-        anchors {
-            top: addKeyFrameButton.top
-            left: addKeyFrameButton.right
-            leftMargin: 20
-            topMargin: 0
-        }
-        implicitWidth: 32
-        implicitHeight: 32
-
-        // enabled: filter.bKeyFrame(timeline.getPositionInCurrentClip())
-        enabled: true
-        opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Remove key frame')
-        customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        customText: qsTr('Remove')
-        buttonWidth : 85
-        onClicked: {
-            var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.bKeyFrame(position)
-            if (bKeyFrame)
-                filter.removeKeyFrameParaValue(position)
-                removeKeyFrame()
-        }
-    }
-
-    CustomFilterButton {
-        id:preKeyFrameButton
-        anchors {
-            top: addKeyFrameButton.top
-            left: removeKeyFrameButton.right
-            leftMargin: 20
-            topMargin: 0
-        }
-        implicitWidth: 32
-        implicitHeight: 32
-
-        enabled: filter.bHasPreKeyFrame(timeline.getPositionInCurrentClip())
-        opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Prev key frame')
-        customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        //customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
-        customText: qsTr('<<')
-        buttonWidth : 85
-        onClicked: {
-            var nFrame = filter.getPreKeyFrameNum(timeline.getPositionInCurrentClip())
-            if(nFrame != -1)
-            {
-                filterDock.position = nFrame
-            }
-        }
-    }
-
-    CustomFilterButton {
-        id:nextKeyFrameButton
-        anchors {
-            top: addKeyFrameButton.top
-            left: preKeyFrameButton.right
-            leftMargin: 0
-            topMargin: 0
-        }
-        implicitWidth: 32
-        implicitHeight: 32
-
-        enabled: filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
-        opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Next key frame')
-        customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        customText: qsTr('>>')
-        buttonWidth : 85
-        onClicked: {
-            var nFrame = filter.getNextKeyFrameNum(timeline.getPositionInCurrentClip())
-            if(nFrame != -1)
-            {
-                filterDock.position = nFrame
-                //frameChanged(nFrame)
-            }
-        }
-    }
+   
 
     CustomFilterButton {
         id:removeAllKeyFrameButton
@@ -210,26 +281,5 @@ Rectangle {
         }
     }
     
-
-
-
-//    CustomFilterButton {
-//        id:viewKeyFrameInfosButton
-//        anchors {
-//            top: addKeyFrameButton.top
-//            left: addKeyFrameButton.right
-//            leftMargin: 10
-//            topMargin: 0
-//        }
-//        implicitWidth: 32
-//        implicitHeight: 32
-
-//        enabled: (metadata) ? true : false
-//        opacity: enabled ? 1.0 : 0.5
-//        tooltip: qsTr('View key frame infos')
-//        customIconSource: 'qrc:///icons/light/32x32/list-add.png'
-//        onClicked: {
-//            keyFramesInfo.popup(viewKeyFrameInfosButton)
-//        }
-//    }
+*/
 }
