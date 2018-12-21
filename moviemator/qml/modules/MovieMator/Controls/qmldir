@@ -1,6 +1,7 @@
 module MovieMator.Controls
 ColorPicker 1.0 ColorPicker.qml
 Preset 1.0 Preset.qml
+InfoDialog 1.0 InfoDialog.qml
 ToolTip 1.0 ToolTip.qml
 UndoButton 1.0 UndoButton.qml
 TimeSpinner 1.0 TimeSpinner.qml
