@@ -8,6 +8,9 @@ RowLayout{
     id: keyFrame
     visible: false
     
+    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
+    property bool bAutoSetAsKeyFrame: true
+
     property double currentFrame: 0
     property bool bKeyFrame: false
     
@@ -18,6 +21,21 @@ RowLayout{
 
     function getCurrentFrame(){
         return currentFrame;
+    }
+
+    InfoDialog { 
+        id: addFrameInfoDialog
+        text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
+        property int position: 0 
+    }
+
+    function showAddFrameInfo(position)
+    {
+        if (bAutoSetAsKeyFrame == false) return
+
+        addFrameInfoDialog.show     = false
+        addFrameInfoDialog.show     = true
+        addFrameInfoDialog.position = position
     }
 
     function addKeyFrameValue()
@@ -66,26 +84,20 @@ RowLayout{
         filter.combineAllKeyFramePara();
         console.log("2222222222222222222222222222222222222222: ")
         
-
+        showAddFrameInfo(position)
     }
 
     function removeAllKeyFrame(){
-        console.log("removeAllKeyFrameremoveAllKeyFrameremoveAllKeyFrame: ")
-        var i=0
-        while(true){
-            var keyFrameCount = filter.getKeyFrameCountOnProject(metadata.keyframes.parameters[0].property);
-            console.log("keyFrameCountkeyFrameCount: " + keyFrameCount)
-            for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
-            {
-                console.log("keyIndexkeyIndexkeyIndex: " + keyIndex)
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metadata.keyframes.parameters[0].property);
-                filter.removeKeyFrameParaValue(nFrame);
-                filter.combineAllKeyFramePara();
-                console.log("nFramenFramenFramenFrame: " + nFrame)
-            }
-            i++;
-            if((keyFrameCount <= 0)||(i>=10))
-                break;
+        var position        = filter.producerOut - filter.producerIn + 1
+        
+        while(true) 
+        {  
+            position = filter.getPreKeyFrameNum(position)
+            if(position == -1) break;
+ 
+            filter.removeKeyFrameParaValue(position);
+            filter.combineAllKeyFramePara();
+            synchroData()
         }
     }
 
@@ -99,6 +111,22 @@ RowLayout{
     Component.onCompleted:
     {
         currentFrame = timeline.getPositionInCurrentClip()
+    }
+
+    // 开启关键帧
+    Connections {
+        target: keyFrameControl
+        onEnableKeyFrameChanged: {
+            bEnableKeyFrame = bEnable
+        }
+    }
+
+    // 自动添加关键帧信号，当参数改变时
+    Connections {
+        target: keyFrameControl
+        onAutoAddKeyFrameChanged: {
+            bAutoSetAsKeyFrame = bEnable
+        }
     }
 
    Connections {
@@ -133,6 +161,15 @@ RowLayout{
                 synchroData()
             }
    }
+
+   // 移除所有关键帧信号
+    Connections {
+             target: keyFrameControl
+             onRemoveAllKeyFrame: {
+                bKeyFrame = false
+                removeAllKeyFrame()
+             }
+    }
 
 }
 

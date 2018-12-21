@@ -261,6 +261,15 @@ Rectangle {
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }
+
+    Connections {
+        target: filter
+        onChanged: {
+            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+
+            autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
+        }
+    }
 /*
     Label {
         text: qsTr('Key Frame :')
