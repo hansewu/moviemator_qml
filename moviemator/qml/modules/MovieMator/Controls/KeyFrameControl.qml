@@ -254,8 +254,8 @@ Rectangle {
 
 
     Connections {
-        target: filter
-        onChanged: {
+        target: filterDock
+        onCurrentFilterChanged: {
             enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
 
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
