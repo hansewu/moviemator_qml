@@ -756,25 +756,17 @@ RowLayout{
         return currentFrame;
     }
     function removeAllKeyFrame(){
-        console.log("removeAllKeyFrameremoveAllKeyFrameremoveAllKeyFrame: ")
-        var i=0
-        while(true){
-            var keyFrameCount = filter.getKeyFrameCountOnProject(metadata.keyframes.parameters[0].property);
-            console.log("keyFrameCountkeyFrameCount: " + keyFrameCount)
-            for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
-            {
-                console.log("keyIndexkeyIndexkeyIndex: " + keyIndex)
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metadata.keyframes.parameters[0].property);
-                filter.removeKeyFrameParaValue(nFrame);
-                filter.combineAllKeyFramePara();
-                console.log("nFramenFramenFramenFrame: " + nFrame)
-            }
-            i++;
-            if((keyFrameCount <= 0)||(i>=40))
-                break;
+        var position        = filter.producerOut - filter.producerIn + 1
+        
+        while(true) 
+        {  
+            position = filter.getPreKeyFrameNum(position)
+            if(position == -1) break;
+ 
+            filter.removeKeyFrameParaValue(position);
+            filter.combineAllKeyFramePara();
+            synchroData()
         }
-
-        synchroData()
     }
 
     Component.onCompleted:
