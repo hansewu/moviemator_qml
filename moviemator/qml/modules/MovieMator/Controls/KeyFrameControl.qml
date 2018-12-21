@@ -30,7 +30,9 @@ Rectangle {
 
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position)
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position) && (position != 0) && (position != (filter.producerOut - filter.producerIn + 1 - 5))
+
+        autoAddKeyFrameCheckBox.enabled = enableKeyFrameCheckBox.checked
     }
 
     Connections {
@@ -247,6 +249,17 @@ Rectangle {
         onNo: 
             enableKeyFrameCheckBox.checked = true  
         
+    }
+
+
+
+    Connections {
+        target: filter
+        onChanged: {
+            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+
+            autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
+        }
     }
 /*
     Label {
