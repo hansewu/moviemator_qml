@@ -12,6 +12,9 @@ Rectangle {
     width: parent.width
     height: 100
 
+    signal enableKeyFrameChanged(bool bEnable)
+    signal autoAddKeyFrameChanged(bool bEnable)
+
     signal addFrameChanged()
     signal frameChanged(double keyFrameNum)
     signal removeKeyFrame()
@@ -90,7 +93,11 @@ Rectangle {
                     }
                 }
 
-                onCheckedChanged: refreshFrameButtonsEnable()
+                onCheckedChanged: {
+                    refreshFrameButtonsEnable()
+
+                    enableKeyFrameChanged(checked)
+                }
             }
 
             CheckBox {
@@ -99,12 +106,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 20
                 checked: false
-                property bool isReady: false
-                Component.onCompleted: isReady = true
                 onClicked: {
-                    if (isReady) {
-                        
-                    }
+                    autoAddKeyFrameChanged(checked)
                 }
 
                 style: CheckBoxStyle {
@@ -157,6 +160,10 @@ Rectangle {
                 buttonWidth : 85
                 onClicked: {
                     var position        = timeline.getPositionInCurrentClip()
+
+                    if((position == 0) || (position == (filter.producerOut - filter.producerIn + 1 - 5))) 
+                        return   //首尾帧无法删除
+
                     var bKeyFrame       = filter.bKeyFrame(position)
                     if (bKeyFrame)
                         filter.removeKeyFrameParaValue(position)
