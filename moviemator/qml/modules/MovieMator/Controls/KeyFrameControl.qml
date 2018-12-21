@@ -76,6 +76,8 @@ Rectangle {
                         {   
                             addFrameChanged()
                             refreshFrameButtonsEnable()
+
+                            autoAddKeyFrameCheckBox.checked = true
                         }  
                     }
                     else
@@ -104,9 +106,9 @@ Rectangle {
                 Layout.columnSpan: 4
                 anchors.left: parent.left
                 anchors.leftMargin: 20
-                checked: false
+                checked: true
                 onClicked: {
-                    autoAddKeyFrameChanged(checked)
+                    
                 }
 
                 style: CheckBoxStyle {
@@ -115,7 +117,11 @@ Rectangle {
                         text: qsTr('Auto Add Key Frames')
                     }
                 }
-                onCheckedChanged: refreshFrameButtonsEnable()     
+                onCheckedChanged: 
+                {
+                    refreshFrameButtonsEnable() 
+                    autoAddKeyFrameChanged(checked)
+                }    
             }
 
             CustomFilterButton {

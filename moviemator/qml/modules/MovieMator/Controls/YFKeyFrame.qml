@@ -9,7 +9,7 @@ RowLayout{
     visible: false
     
     property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
-    property bool bAutoSetAsKeyFrame: false
+    property bool bAutoSetAsKeyFrame: true
     
     property double currentFrame: 0
     property bool bKeyFrame: false
