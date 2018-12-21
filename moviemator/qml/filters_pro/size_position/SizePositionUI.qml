@@ -79,6 +79,8 @@ Item {
         {
             var nFrame = keyFrame.getCurrentFrame()
             
+            if (!filter.bKeyFrame(nFrame)) keyFrame.showAddFrameInfo(nFrame)
+
             var rectValue = filter.getRect(rectProperty)
             filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
             filter.combineAllKeyFramePara();
