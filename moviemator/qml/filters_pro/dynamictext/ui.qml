@@ -335,17 +335,12 @@ Item {
     }
 
     function setControls() {
-        filterRect = getAbsoluteRect(-1)
         textArea.text = filter.get('argument')
-//        fgColor.value = getHexStrColor(-1, fgcolourProperty)
         fontButton.text = filter.get('family')
         weightCombo.currentIndex = weightCombo.valueToIndex()
         insertFieldCombo.currentIndex = insertFieldCombo.valueToIndex()
-//        outlineColor.value = getHexStrColor(-1, olcolourProperty)
-//        outlineColor.temporaryColor = filter.get(olcolourProperty)
-//        outlineSpinner.value = filter.getDouble(outlineProperty)
-        console.log("sll------setControls---------")
         blockUpdate = true
+        filterRect = getAbsoluteRect(-1)
         fgColor.value = getHexStrColor(-1, fgcolourProperty)
         outlineColor.value = getHexStrColor(-1, olcolourProperty)
         outlineSpinner.value = filter.getDouble(outlineProperty)
@@ -353,9 +348,6 @@ Item {
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
         padSpinner.value = filter.getDouble(padProperty)
         blockUpdate = false
-//        bgColor.value = getHexStrColor(-1, bgcolourProperty)
-//        bgColor.temporaryColor = filter.get(bgcolourProperty)
-//        padSpinner.value = filter.getDouble(padProperty)
         var align = filter.get(halignProperty)
         if (align === 'left')
             leftRadioButton.checked = true
@@ -376,12 +368,8 @@ Item {
         if (filter.getKeyFrameNumber() > 0) {
             var nFrame = keyFrame.getCurrentFrame()
 
-            filterRect = getAbsoluteRect(nFrame)
-//            fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
-//            outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
-//            outlineSpinner.value = filter.getAnimDoubleValue(nFrame, outlineProperty)
-            console.log("sll------setKeyframedControls---------")
             blockUpdate = true
+            filterRect = getAbsoluteRect(nFrame)
             fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
             outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
             outlineSpinner.value = filter.getAnimDoubleValue(nFrame, outlineProperty)
@@ -389,13 +377,13 @@ Item {
             bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
             padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
             blockUpdate = false
-//            letterSpaceing.value = filter.getAnimDoubleValue(nFrame, letterSpaceingProperty)
-//            bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
-//            padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
         }
     }
 
     function setFilter() {
+        if (blockUpdate === true) {
+            return
+        }
         var x = parseFloat(rectX.text)
         var y = parseFloat(rectY.text)
         var w = parseFloat(rectW.text)
@@ -409,20 +397,11 @@ Item {
             filterRect.width = w
             filterRect.height = h
 
-
-            if(keyFrame.bKeyFrame)
-            {
-                var nFrame = keyFrame.getCurrentFrame()
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, getRelativeRect(filterRect), 1.0)
-                filter.combineAllKeyFramePara();
-            }
-            else
-            {
-                var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
-                if (keyFrameCount <= 0) {
-                    filter.set(rectProperty, getRelativeRect(filterRect))
-                    filter.set('size', filterRect.height)
-                }
+            var nFrame = keyFrame.getCurrentFrame();
+            if (filter.getKeyFrameNumber() > 0) {
+                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect), 1.0)
+            } else {
+                filter.set(rectProperty, getRelativeRect(filterRect))
             }
         }
     }
@@ -475,57 +454,6 @@ Item {
                 setKeyframedControls()
             }
         }
-
-
-//        Label {
-//            text: qsTr('Preset')
-//            Layout.alignment: Qt.AlignRight
-//            color: '#ffffff'
-//        }
-//        Preset {
-//            id: preset
-
-//            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
-//            'fgcolour', 'family', 'weight', 'olcolour', 'outline', 'bgcolour', 'pad']
-//            Layout.columnSpan: 4
-//            onBeforePresetLoaded: {
-//                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
-//                if (keyFrameCount > 0) {
-//                    filter.removeAllKeyFrame(rectProperty)
-//                    keyFrameCount = -1
-//                }
-//                keyFrameCount   = filter.getKeyFrameCountOnProject("fgcolour")
-//                if (keyFrameCount > 0) {
-//                    filter.removeAllKeyFrame("fgcolour")
-//                    keyFrameCount = -1
-//                }
-
-//                filter.resetProperty("fgcolour")
-//                filter.resetProperty(rectProperty)
-//            }
-//            onPresetSelected: {
-//                //加載關鍵幀
-//                var metaParamList = metadata.keyframes.parameters
-//                var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
-//                for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
-//                {
-//                    var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
-//                    for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
-//                        var prop = metaParamList[paramIndex].property
-//                        var keyValue = filter.getAnimRectValue(nFrame, prop)
-//                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
-//                    }
-//                }
-//                filter.combineAllKeyFramePara();
-
-//                setControls()
-//                setKeyframedControls()
-
-//                if (filter.isNew) {
-//                    filter.set('size', filterRect.height)
-//                }
-//            }
-//        }
 
         Label {
             text: qsTr('Preset')
