@@ -69,7 +69,6 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 20
                 checked: (filter.getKeyFrameNumber() > 0)
-                property bool isReady: false
                 onClicked: {
                     if(checked)
                     {   

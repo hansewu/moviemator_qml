@@ -2,7 +2,6 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.0
-import QtQuick.Dialogs 1.1
 
 RowLayout{
 
@@ -247,27 +246,19 @@ RowLayout{
         }
     }
 
-    ToolTip { 
-        id: tooltip; 
-        text: qsTr('Use Keyframes for this parameter') 
-    }
-
-    MessageDialog {
-        id: addFrameInfo
-        visible: false
-        title: qsTr("Confirm Removing Keyframes")
+    InfoDialog { 
+        id: addFrameInfoDialog
         text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
-        property int position: 0
+        property int position: 0 
     }
 
     function showAddFrameInfo(position)
     {
         if (bAutoSetAsKeyFrame == false) return
 
-        //addFrameInfo.position = position
-        //addFrameInfo.visible = true
-
-        //tooltip.visible = true
+        addFrameInfoDialog.show     = false
+        addFrameInfoDialog.show     = true
+        addFrameInfoDialog.position = position
     }
 
     // 添加为关键帧
@@ -615,7 +606,7 @@ RowLayout{
             }
         }else{
             filter.get(parameter.property)
-            filter.combineAllKeyFramePara();
+            //filter.combineAllKeyFramePara();
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
             console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
