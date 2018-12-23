@@ -212,6 +212,16 @@ Item {
         }
     }
 
+    function resetFilterPara () {
+        filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
+        filter.set(bgcolourProperty, Qt.rect(0.0, 0.0, 0.0, 0.0))
+        filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
+        filter.set(outlineProperty, 0)
+        filter.set(letterSpaceingProperty, 0)
+        filter.set(padProperty, 0)
+        filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
+    }
+
     function updateFilter(currentProperty, value) {
         if (blockUpdate === true) {
             return
@@ -584,6 +594,8 @@ Item {
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty]
             onBeforePresetLoaded: {
                 removeAllKeyFrame()
+
+                resetFilterPara()
             }
             onPresetSelected: {
                 //加載關鍵幀
@@ -1099,12 +1111,15 @@ Item {
     }
 
     // 移除所有关键帧信号
-//    Connections {
-//             target: keyFrameControl
-//             onRemoveAllKeyFrame: {
-//                bKeyFrame = false
-//                removeAllKeyFrame()
-//             }
-//    }
+    Connections {
+        target: keyFrameControl
+        onRemoveAllKeyFrame: {
+            removeAllKeyFrame()
+            resetFilterPara()
+
+            setControls()
+            setKeyframedControls()
+        }
+    }
 }
 
