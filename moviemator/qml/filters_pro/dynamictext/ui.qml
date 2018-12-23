@@ -1087,18 +1087,17 @@ Item {
     }
 
     // 移除关键帧信号
-//    Connections {
-//             target: keyFrameControl
-//             onRemoveKeyFrame: {
-//                bKeyFrame = false
-//                var nFrame = keyFrame.getCurrentFrame();
+    Connections {
+        target: keyFrameControl
+        onRemoveKeyFrame: {
+            var nFrame = timeline.getPositionInCurrentClip()
+            filter.removeKeyFrameParaValue(nFrame);
+            filter.combineAllKeyFramePara();
 
-//                filter.removeKeyFrameParaValue(nFrame);
-//                filter.combineAllKeyFramePara();
-//                synchroData()
+            setKeyframedControls()
+        }
+    }
 
-//             }
-//    }
     // 移除所有关键帧信号
 //    Connections {
 //             target: keyFrameControl
