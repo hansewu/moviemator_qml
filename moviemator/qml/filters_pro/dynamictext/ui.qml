@@ -105,8 +105,8 @@ Item {
                 var rectValue = filter.getAnimRectValue(nFrame, property)
                 filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
             } else {
-                var valueStr = filter.get(property)
-                filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                var valueStr = filter.getAnimIntValue(nFrame, property)
+                filter.setKeyFrameParaValue(nFrame, property, valueStr.toString());
             }
         }
         filter.combineAllKeyFramePara();
@@ -128,10 +128,9 @@ Item {
                     var rectValue = filter.getAnimRectValue(nFrame, property)
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
-                    var valueStr = filter.get(property)
+                    var valueStr = filter.getAnimIntValue(nFrame, property)
                     filter.setKeyFrameParaValue(nFrame, property, valueStr);
                 }
-
             }
         }
         filter.combineAllKeyFramePara();
@@ -140,73 +139,60 @@ Item {
     function setInAndOutKeyFrame () {
         var positionStart = 0
         var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
-        setKeyFrameOfFrame(positionStart)
-        setKeyFrameOfFrame(positionEnd)
+
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++) {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (paraType === "rect") {
+                var rectValue = filter.getRectOfTextFilter(property)
+                filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
+                filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
+            } else {
+                var valueStr = filter.getInt(property)
+                filter.setKeyFrameParaValue(positionStart, property, valueStr);
+                filter.setKeyFrameParaValue(positionEnd, property, valueStr);
+            }
+        }
+        filter.combineAllKeyFramePara();
     }
 
 
     function loadSavedKeyFrameNew () {
-        console.log("sll---------loadSavedKeyFrameNew---------")
         var metaParamList = metadata.keyframes.parameters
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
         for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
         {
             var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
-//                var prop = metaParamList[paramIndex].property
-//                var keyValue = filter.getAnimRectValue(nFrame, prop)
-//                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
-
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
                 if (paraType === "rect") {
-//                    filter.resetProperty(property)
                     var rectValue = filter.getAnimRectValue(nFrame, property)
-//                    var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
-//                    filter.resetProperty(property)
                     var valueStr = filter.getAnimIntValue(nFrame, property)
-//                    var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
-                    console.log("sll---------property---------", property)
-                    console.log("sll---------paraType---------", paraType)
-//                    console.log("sll---------valueStr---------", valueStr)
-                    console.log("sll---------tempValue---------", valueStr)
                     filter.setKeyFrameParaValue(nFrame, property, valueStr);
                 }
             }
         }
-
-        console.log("sll---------filter.combineAllKeyFramePara();---------")
         filter.combineAllKeyFramePara();
     }
 
     function loadSavedKeyFrame () {
         var metaParamList = metadata.keyframes.parameters
-        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+        var keyFrameCount = filter.getKeyFrameNumber()
         for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
         {
-            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
-//                var prop = metaParamList[paramIndex].property
-//                var keyValue = filter.getAnimRectValue(nFrame, prop)
-//                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
-
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[paramIndex].property)
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
                 if (paraType === "rect") {
-                    filter.resetProperty(property)
-//                    var rectValue = filter.getAnimRectValue(nFrame, property)
                     var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
-                    filter.resetProperty(property)
-//                    var valueStr = filter.getAnimIntValue(nFrame, property)
                     var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
-                    console.log("sll---------property---------", property)
-                    console.log("sll---------paraType---------", paraType)
-//                    console.log("sll---------valueStr---------", valueStr)
-                    console.log("sll---------tempValue---------", valueStr)
                     filter.setKeyFrameParaValue(nFrame, property, valueStr);
                 }
             }
@@ -231,7 +217,7 @@ Item {
             return
         }
         if (bEnableKeyFrame) {
-            var nFrame = keyFrame.getCurrentFrame()
+            var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) {
                 setKeyFrameParaValue(nFrame, currentProperty, value)
             } else {
@@ -443,7 +429,8 @@ Item {
 
     function setKeyframedControls() {
         if (filter.getKeyFrameNumber() > 0) {
-            var nFrame = keyFrame.getCurrentFrame()
+//            var nFrame = keyFrame.getCurrentFrame()
+            var nFrame = timeline.getPositionInCurrentClip()
 
             blockUpdate = true
             filterRect = getAbsoluteRect(nFrame)
@@ -512,78 +499,78 @@ Item {
         anchors.margins: 8
         rowSpacing : 25
 
-        KeyFrame {
-            id: keyFrame
-            Layout.columnSpan:5
-            onSetAsKeyFrame: {
-                console.log("sll---------onSetAsKeyFrame---------")
-                //如果没有关键帧，先创建头尾两个关键帧
-                if (filter.getKeyFrameNumber() <= 0) {
-                    setInAndOutKeyFrame()
-                }
-
-                //插入新的关键帧
-                var nFrame = keyFrame.getCurrentFrame()
-                setKeyFrameOfFrame(nFrame)
-
-                //更新关键帧相关控件
-                setKeyframedControls()
-            }
-            onRemovedAllKeyFrame: {
-                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
-                if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame(rectProperty)
-                    keyFrameCount = -1
-                }
-                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
-                if (keyFrameCount > 0) {
-                    filter.removeAllKeyFrame(fgcolourProperty)
-                    keyFrameCount = -1
-                }
-                filter.resetProperty(fgcolourProperty)
-                filter.resetProperty(rectProperty)
-
-                //重置带有动画的属性的属性值
-                filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
-                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
-            }
-            onLoadKeyFrame: {
-//                console.log("sll-------onLoadKeyFrame----")
-//                console.log("sll------111111111111111111111111111111111111-------")
-//                if (blockUpdate === true) {
-//                    return
+//        KeyFrame {
+//            id: keyFrame
+//            Layout.columnSpan:5
+//            onSetAsKeyFrame: {
+//                console.log("sll---------onSetAsKeyFrame---------")
+//                //如果没有关键帧，先创建头尾两个关键帧
+//                if (filter.getKeyFrameNumber() <= 0) {
+//                    setInAndOutKeyFrame()
 //                }
-//                console.log("sll------222222222222222222222222222222222222-------")
-                if (bEnableKeyFrame) {
-                    console.log("sll------3333333333333333333333333333333333-------")
-                    var nFrame = keyFrame.getCurrentFrame()
-                    if (bAutoSetAsKeyFrame === false) {
-                        if (filter.bKeyFrame(nFrame)) {
-                            console.log("sll------4444444444444444444444444444-------")
-                            loadSavedKeyFrame()
-                        }
-//                        else {
-//                            filter.set(letterSpaceingProperty, value)
-//                        }
-//                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-                    }
-//                    else {
+
+//                //插入新的关键帧
+//                var nFrame = keyFrame.getCurrentFrame()
+//                setKeyFrameOfFrame(nFrame)
+
+//                //更新关键帧相关控件
+//                setKeyframedControls()
+//            }
+//            onRemovedAllKeyFrame: {
+//                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame(rectProperty)
+//                    keyFrameCount = -1
+//                }
+//                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
+//                if (keyFrameCount > 0) {
+//                    filter.removeAllKeyFrame(fgcolourProperty)
+//                    keyFrameCount = -1
+//                }
+//                filter.resetProperty(fgcolourProperty)
+//                filter.resetProperty(rectProperty)
+
+//                //重置带有动画的属性的属性值
+//                filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
+//                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
+//            }
+//            onLoadKeyFrame: {
+////                console.log("sll-------onLoadKeyFrame----")
+////                console.log("sll------111111111111111111111111111111111111-------")
+////                if (blockUpdate === true) {
+////                    return
+////                }
+////                console.log("sll------222222222222222222222222222222222222-------")
+//                if (bEnableKeyFrame) {
+//                    console.log("sll------3333333333333333333333333333333333-------")
+//                    var nFrame = keyFrame.getCurrentFrame()
+//                    if (bAutoSetAsKeyFrame === false) {
 //                        if (filter.bKeyFrame(nFrame)) {
 //                            console.log("sll------4444444444444444444444444444-------")
 //                            loadSavedKeyFrame()
-//                        } else {
-//                            filter.set(letterSpaceingProperty, value)
 //                        }
+////                        else {
+////                            filter.set(letterSpaceingProperty, value)
+////                        }
+////                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
 //                    }
-                }
-//                else {
-//                    filter.set(letterSpaceingProperty, value)
+////                    else {
+////                        if (filter.bKeyFrame(nFrame)) {
+////                            console.log("sll------4444444444444444444444444444-------")
+////                            loadSavedKeyFrame()
+////                        } else {
+////                            filter.set(letterSpaceingProperty, value)
+////                        }
+////                    }
 //                }
+////                else {
+////                    filter.set(letterSpaceingProperty, value)
+////                }
 
 
-                setKeyframedControls()
-            }
-        }
+//                setKeyframedControls()
+//            }
+//        }
 
         Label {
             text: qsTr('Preset')
@@ -1063,24 +1050,42 @@ Item {
         }
     }
 
-    // 添加关键帧信号
-//    Connections {
-//             target: keyFrameControl
-//             onAddFrameChanged: {
-//                 bKeyFrame = true
-//                 synchroData()
-//                 addKeyFrameValue()
-//             }
-//    }
-    // 帧位置改变信号
-//    Connections {
-//             target: keyFrameControl
-//             onFrameChanged: {
-//                 currentFrame = keyFrameNum
-//                 bKeyFrame = filter.bKeyFrame(currentFrame)
-//                 loadKeyFrame()
-//             }
-//    }
+    //添加关键帧信号
+    Connections {
+        target: keyFrameControl
+        onAddFrameChanged: {
+             //如果没有关键帧，先创建头尾两个关键帧
+             if (filter.getKeyFrameNumber() <= 0) {
+                 setInAndOutKeyFrame()
+             }
+
+             //插入新的关键帧
+             var nFrame = timeline.getPositionInCurrentClip()
+             setKeyFrameOfFrame(nFrame)
+
+             //更新关键帧相关控件
+             setKeyframedControls()
+        }
+    }
+
+    //帧位置改变信号
+    Connections {
+        target: keyFrameControl
+        onFrameChanged: {
+            if (bEnableKeyFrame) {
+                var nFrame = keyFrameNum
+                console.log("sll------3333333333333333333333333333333333----nFrame---", nFrame)
+                if (bAutoSetAsKeyFrame === false) {
+                    if (filter.bKeyFrame(nFrame)) {
+                        console.log("sll------4444444444444444444444444444-------")
+                        loadSavedKeyFrame()
+                    }
+                }
+            }
+            setKeyframedControls()
+        }
+    }
+
     // 移除关键帧信号
 //    Connections {
 //             target: keyFrameControl
