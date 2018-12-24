@@ -12,7 +12,7 @@ Metadata {
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true
-         simpleProperties: ['geometry','fgcolour']
+         simpleProperties: ['geometry', 'fgcolour', 'olcolour', 'outline', 'bgcolour', 'pad', 'letter_spaceing']
          parameters: [
              Parameter {
                  name: qsTr('Position / Size')
@@ -25,6 +25,36 @@ Metadata {
                  property: 'fgcolour'
                  isSimple: true
                  paraType: "rect"
+             },
+             Parameter {
+                 name: qsTr('Outline Color')
+                 property: 'olcolour'
+                 isSimple: true
+                 paraType: "rect"
+             },
+             Parameter {
+                 name: qsTr('Outline')
+                 property: 'outline'
+                 isSimple: true
+                 paraType: "int"
+             },
+             Parameter {
+                 name: qsTr('Background Color')
+                 property: 'bgcolour'
+                 isSimple: true
+                 paraType: "rect"
+             },
+             Parameter {
+                 name: qsTr('Pad')
+                 property: 'pad'
+                 isSimple: true
+                 paraType: "int"
+             },
+             Parameter {
+                 name: qsTr('Letter Spaceing')
+                 property: 'letter_spaceing'
+                 isSimple: true
+                 paraType: "int"
              }
          ]
      }

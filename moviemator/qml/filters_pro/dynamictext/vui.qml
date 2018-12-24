@@ -15,7 +15,8 @@ Flickable {
     clip: true
     property real zoom: (video.zoom > 0)? video.zoom : 1.0
     property rect filterRect
-    contentWidth: video.rect.width * zoom
+    property bool blockUpdate: false
+    contentWidth: video.rect.width  * zoom
     contentHeight: video.rect.height * zoom
     contentX: video.offset.x
     contentY: video.offset.y
@@ -36,18 +37,55 @@ Flickable {
         return Qt.rect(absoluteRect.x / profile.width, absoluteRect.y / profile.height, absoluteRect.width / profile.width, absoluteRect.height / profile.height)
     }
 
-    Component.onCompleted: {
-        var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
-        if (keyFrameCount > 0) {
-            filterRect = getAbsoluteRect(0)
-       } else {
-            filterRect = getAbsoluteRect(-1)
-       }
+    function setKeyFrameParaValue (nFrame, currentPropert, value) {
+        var paramCount = metadata.keyframes.parameterCount
+        for(var i = 0; i < paramCount; i++) {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+            if (property === currentPropert) {
+                if (paraType === "rect") {
+                    filter.setKeyFrameParaRectValue(nFrame, property, value, 1.0)
+                } else {
+                    filter.setKeyFrameParaValue(nFrame, property, value);
+                }
+            } else {
+                if (paraType === "rect") {
+                    var rectValue = filter.getAnimRectValue(nFrame, property)
+                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                } else {
+                    var valueStr = filter.get(property)
+                    filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                }
 
-        if (filter.isNew) {
-            filter.set('size', filterRect.height)
+            }
+        }
+        filter.combineAllKeyFramePara();
+    }
+
+    function setRectangleControl() {
+        if (blockUpdate) return
+
+        var newValue = getAbsoluteRect(-1)
+        if (filter.getKeyFrameNumber() > 0) {
+            var position = timeline.getPositionInCurrentClip()
+            newValue = getAbsoluteRect(position)
+        }
+
+        if (filterRect !== newValue) {
+            filterRect = newValue
+            rectangle.setHandles(filterRect)
+        }
+    }
+
+    Component.onCompleted: {
+        if (filter.getKeyFrameNumber() > 0) {
+            var position = timeline.getPositionInCurrentClip()
+            filterRect = getAbsoluteRect(position)
+        } else {
+            filterRect = getAbsoluteRect(-1)
         }
         rectangle.setHandles(filterRect)
+        setRectangleControl()
     }
 
     MouseArea {
@@ -86,7 +124,7 @@ Flickable {
             text: filter.get('argument')
             font.family: filter.get('family')
             font.pixelSize: 24 //0.85 * height / text.split("\n").length
-            textMargin: filter.get('pad')
+            textMargin: filter.getDouble('pad')
             opacity: activeFocus
             onActiveFocusChanged: filter.set('disable', activeFocus)
             onTextChanged: filter.set('argument', text)
@@ -100,41 +138,24 @@ Flickable {
             handleSize: Math.max(Math.round(8 / zoom), 4)
             borderSize: Math.max(Math.round(1.33 / zoom), 1)
             onWidthScaleChanged: {
-                var position        = timeline.getPositionInCurrentClip()
-                var bKeyFrame       = filter.bKeyFrame(position)
-                if (bKeyFrame) {
-                    setHandles(getAbsoluteRect(position))
-                } else {
-                    setHandles(getAbsoluteRect(-1))
-                }
+                setHandles(filterRect)
             }
             onHeightScaleChanged: {
-                var position        = timeline.getPositionInCurrentClip()
-                var bKeyFrame       = filter.bKeyFrame(position)
-                if (bKeyFrame) {
-                    setHandles(getAbsoluteRect(position))
-                } else {
-                    setHandles(getAbsoluteRect(-1))
-                }
+                setHandles(filterRect)
             }
             onRectChanged:  {
+                blockUpdate = true
                 filterRect.x = Math.round(rect.x / rectangle.widthScale)
                 filterRect.y = Math.round(rect.y / rectangle.heightScale)
                 filterRect.width = Math.round(rect.width / rectangle.widthScale)
                 filterRect.height = Math.round(rect.height / rectangle.heightScale)
-                var position        = timeline.getPositionInCurrentClip()
-                var bKeyFrame       = filter.bKeyFrame(position)
-                if (bKeyFrame)
-                {
-                    filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(filterRect), 1.0)
-                    filter.combineAllKeyFramePara();
+                if (filter.getKeyFrameNumber() > 0) {
+                    var position = timeline.getPositionInCurrentClip()
+                    setKeyFrameParaValue(position, rectProperty, getRelativeRect(filterRect))
                 } else {
-                    var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
-                    if (keyFrameCount <= 0) {
-                        filter.set(rectProperty, getRelativeRect(filterRect))
-                    }
+                    filter.set(rectProperty, getRelativeRect(filterRect))
                 }
-                filter.set('size', filterRect.height)
+                blockUpdate = false
             }
         }
     }
@@ -142,51 +163,14 @@ Flickable {
     Connections {
         target: filter
         onChanged: {
-            var position        = timeline.getPositionInCurrentClip()
-            var newRect         = getAbsoluteRect(-1)
-            var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
-            //判断是否有关键帧
-            if(keyFrameCount > 0) {
-                newRect = getAbsoluteRect(position)
-            }
-
-            if (filterRect !== newRect) {
-                filterRect = newRect
-                rectangle.setHandles(filterRect)
-                filter.set('size', filterRect.height)
-            }
-            if (rectangle.aspectRatio !== getAspectRatio()) {
-                rectangle.aspectRatio = getAspectRatio()
-                rectangle.setHandles(filterRect)
-                var rect = rectangle.rectangle
-
-                var position        = timeline.getPositionInCurrentClip()
-                var bKeyFrame       = filter.bKeyFrame(position)
-                if (bKeyFrame)
-                {
-                    filter.setKeyFrameParaRectValue(position, rectProperty, getRelativeRect(rect), 1.0)
-                    filter.combineAllKeyFramePara();
-                } else {
-                    filter.set(rectProperty, getRelativeRect(rect))
-                }
-            }
+            setRectangleControl()
         }
     }
 
     Connections {
         target: filterDock
         onPositionChanged: {
-            var keyFrameCount = filter.getKeyFrameCountOnProject(rectProperty);
-            if (keyFrameCount > 0) {
-                var position = timeline.getPositionInCurrentClip()
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(position, rectProperty)
-                var newRect = filter.getAnimRectValue(nFrame, rectProperty)
-                if (filterRect !== newRect) {
-                    filterRect = newRect
-                    rectangle.setHandles(filterRect)
-                    filter.set('size', filterRect.height)
-                }
-            }
+            setRectangleControl()
         }
     }
 }

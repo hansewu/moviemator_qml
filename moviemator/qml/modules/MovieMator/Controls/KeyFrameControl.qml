@@ -30,7 +30,9 @@ Rectangle {
 
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position)
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position) && (position != 0) && (position != (filter.producerOut - filter.producerIn + 1 - 5))
+
+        autoAddKeyFrameCheckBox.enabled = enableKeyFrameCheckBox.checked
     }
 
     Connections {
@@ -76,6 +78,8 @@ Rectangle {
                         {   
                             addFrameChanged()
                             refreshFrameButtonsEnable()
+
+                            autoAddKeyFrameCheckBox.checked = true
                         }  
                     }
                     else
@@ -104,9 +108,9 @@ Rectangle {
                 Layout.columnSpan: 4
                 anchors.left: parent.left
                 anchors.leftMargin: 20
-                checked: false
+                checked: true
                 onClicked: {
-                    autoAddKeyFrameChanged(checked)
+                    
                 }
 
                 style: CheckBoxStyle {
@@ -115,7 +119,11 @@ Rectangle {
                         text: qsTr('Auto Add Key Frames')
                     }
                 }
-                onCheckedChanged: refreshFrameButtonsEnable()     
+                onCheckedChanged: 
+                {
+                    refreshFrameButtonsEnable() 
+                    autoAddKeyFrameChanged(checked)
+                }    
             }
 
             CustomFilterButton {
@@ -241,6 +249,26 @@ Rectangle {
         onNo: 
             enableKeyFrameCheckBox.checked = true  
         
+    }
+
+
+
+    Connections {
+        target: filterDock
+        onCurrentFilterChanged: {
+            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+
+            autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
+        }
+    }
+
+    Connections {
+        target: filter
+        onChanged: {
+            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+
+            autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
+        }
     }
 /*
     Label {

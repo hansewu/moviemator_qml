@@ -55,6 +55,12 @@ FocusScope {
     signal selected(int index)
     property ListModel listModel
 
+    function selectedOfIndex(index) {
+        gridView.currentIndex = index
+        gridView.currentItem.forceActiveFocus()
+        selected(index)
+    }
+
     Rectangle {
         anchors.fill: parent
         clip: true
