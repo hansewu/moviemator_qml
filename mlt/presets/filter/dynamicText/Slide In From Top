@@ -1,0 +1,12 @@
+geometry=0~=0.0984375 -0.555556 0.817969 0.2875 1;24~=0.0984375 0.313889 0.817969 0.2875 1;104~=0.0984375 0.313889 0.817969 0.2875 1
+halign=center
+valign=bottom
+argument=hello world
+size=207
+fgcolour=0~=255 255 255 255 1;24~=255 238 255 236 1;104~=255 255 255 255 1
+family=Arial Black
+weight=500
+olcolour=#1ce2e7
+outline=4
+bgcolour=#00000000
+pad=0

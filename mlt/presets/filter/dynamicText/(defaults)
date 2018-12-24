@@ -1,0 +1,12 @@
+geometry=0~=0.0671875 0.920833 0.867188 0.075 1;104~=0.0671875 0.920833 0.867188 0.075 1;108~=0.0671875 1.11111 0.867188 0.075 1
+halign=center
+valign=bottom
+argument=hello world hello world hello world hello world hello world
+size=54
+fgcolour=0|=255 255 255 255 1;104~=255 255 255 255 1;108~=255 255 255 255 1
+family=Sans
+weight=500
+olcolour=#ff000000
+outline=0
+bgcolour=#00000000
+pad=0
