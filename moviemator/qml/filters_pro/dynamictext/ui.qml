@@ -219,7 +219,10 @@ Item {
         filter.set(outlineProperty, 0)
         filter.set(letterSpaceingProperty, 0)
         filter.set(padProperty, 0)
-        filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
+        filter.set(rectProperty, Qt.rect(0.0148437, 0.441667, 0.948438, 0.195833))
+        filter.set(valignProperty, 'bottom')
+        filter.set(halignProperty, 'center')
+        filter.set('argument', 'Welcome to MovieMator')
     }
 
     function updateFilter(currentProperty, value) {
@@ -402,159 +405,8 @@ Item {
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
-            filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
-            filter.set(bgcolourProperty, Qt.rect(0.0, 0.0, 0.0, 0.0))
-            filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
-            filter.set('weight', 500)
-            filter.set('argument', 'welcome!')
 
-            //静态预设
-            filter.set(rectProperty, Qt.rect(0.0382813, 0.709722, 0.711719, 0.169444))
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'left')
-            filter.set('argument', 'hello world hello world')
-            filter.set(fgcolourProperty, Qt.rect(255, 216, 255, 237))
-            filter.set('family', 'DIN Alternate')
-            filter.savePreset(preset.parameters, qsTr('Bottom Left'))
-
-            filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'right')
-            filter.savePreset(preset.parameters, qsTr('Bottom Right'))
-
-            filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
-            filter.set(valignProperty, 'top')
-            filter.set(halignProperty, 'left')
-            filter.savePreset(preset.parameters, qsTr('Top Left'))
-
-            filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
-            filter.set(valignProperty, 'top')
-            filter.set(halignProperty, 'right')
-            filter.savePreset(preset.parameters, qsTr('Top Right'))
-
-            filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'center')
-            filter.savePreset(preset.parameters, qsTr('Lower Third'))
-
-
-            //动画预设
-            var totalFrame = filter.producerOut - filter.producerIn + 1 - 5
-            var oneSeconds2Frame = parseInt(profile.fps)
-            var startFrame = 0.0
-            var middleFrame = oneSeconds2Frame
-            var endFrame = totalFrame
-            var startValue = "-1.0 0.0 1.0 1.0 1.0"
-            var middleValue = "0.0 0.0 1.0 1.0 1.0"
-            var endValue = "0.0 0.0 1.0 1.0 1.0"
-
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
-
-            startValue = "1.0 0.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
-
-            startValue = "0.0 -1.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
-
-            startValue = "0.0 1.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
-
-            middleFrame = totalFrame - oneSeconds2Frame
-            if (middleFrame <= 24) {
-                middleFrame = totalFrame / 2
-            }
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "-1.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "1.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 -1.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            middleValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 1.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "-0.05 -0.05 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
-
-            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
-
-            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-            endValue = "-0.1 -0.05 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
-
-            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-            endValue = "0.0 -0.05 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
-
-            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-            endValue = "-0.05 -0.1 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
-
-            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-            endValue = "-0.05 0.0 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "-0.1 -0.1 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
-
-            startValue = "0.0 0.0 1.0 1.0 1.0"
-            endValue = "0.0 0.0 1.1 1.1 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
-
-            startValue = "-0.1 0.0 1.1 1.1 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
-
-            startValue = "0.0 -0.1 1.1 1.1 1.0"
-            endValue = "0.0 0.0 1.0 1.0 1.0"
-            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
-
-            filter.removeAllKeyFrame(rectProperty)
-
-            filter.set('argument', 'hello world hello world hello world hello world hello world')
-            filter.set(rectProperty, Qt.rect(0.0671875, 0.920833, 0.867188, 0.075))
-            filter.set(valignProperty, 'bottom')
-            filter.set(halignProperty, 'center')
-            filter.set('family', 'Sans')
-            filter.savePreset(preset.parameters)
+            resetFilterPara()
         }
 
         setControls()

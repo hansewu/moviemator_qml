@@ -1,0 +1,12 @@
+geometry=0~=0.0335937 1.11111 0.936719 0.119444 1;12~=0.0335937 0.85 0.936719 0.119444 1;96~=0.0335937 0.85 0.936719 0.119444 1;104~=0.0335937 1.25 0.936719 0.119444 1
+halign=center
+valign=bottom
+argument=hello world hello world hello world 
+size=85.9997
+fgcolour=0~=255 252 75 43 1;12~=255 252 75 43 1;96~=255 252 75 43 1;104~=255 252 75 43 1
+family=Russo One
+weight=500
+olcolour=#ffff0a
+outline=4
+bgcolour=#00000000
+pad=0

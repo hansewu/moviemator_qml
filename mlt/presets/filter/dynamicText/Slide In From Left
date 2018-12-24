@@ -1,0 +1,12 @@
+geometry=0~=-0.507812 0.543056 0.507812 0.238889 1;24~=0.0328125 0.543056 0.507812 0.238889 1;104~=0.0328125 0.543056 0.507812 0.238889 1
+halign=center
+valign=bottom
+argument=hello world
+size=172
+fgcolour=0~=255 255 255 255 1;24~=255 255 255 255 1;104~=255 255 255 255 1
+family=Baloo
+weight=500
+olcolour=#fd7d5b
+outline=7
+bgcolour=#00000000
+pad=0

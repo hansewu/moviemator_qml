@@ -1,0 +1,12 @@
+geometry=0~=0.0210938 0.176389 0.960156 0.640278 1;80~=0.0210938 0.176389 0.960156 0.640278 1;104~=1.01562 0.176389 0.960156 0.640278 1
+halign=center
+valign=bottom
+argument=world
+size=461
+fgcolour=0~=255 255 252 33 1;80~=255 255 255 10 1;104~=255 255 255 10 1
+family=Bebas Neue
+weight=500
+olcolour=#ff000000
+outline=0
+bgcolour=#00000000
+pad=0
