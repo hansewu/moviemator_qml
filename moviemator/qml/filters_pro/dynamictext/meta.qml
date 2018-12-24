@@ -9,6 +9,7 @@ Metadata {
     qml: "ui.qml"
     vui: 'vui.qml'
     isGpuCompatible: false
+    filterType: qsTr('Text')
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true

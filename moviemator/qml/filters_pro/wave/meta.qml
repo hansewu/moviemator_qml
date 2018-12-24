@@ -8,6 +8,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: false
     allowMultiple: false
+    filterType: qsTr('Effect')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

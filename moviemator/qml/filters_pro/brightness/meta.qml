@@ -9,6 +9,7 @@ Metadata {
     isFavorite: true
     gpuAlt: "movit.opacity"
     allowMultiple: false
+    filterType: qsTr('Color Adjustment')
     keyframes {
             allowAnimateIn: true
             allowAnimateOut: true

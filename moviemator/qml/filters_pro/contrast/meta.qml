@@ -9,6 +9,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.lift_gamma_gain"
+    filterType: qsTr('Color Adjustment')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

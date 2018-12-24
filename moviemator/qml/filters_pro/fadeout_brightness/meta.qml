@@ -10,6 +10,7 @@ Metadata {
     isFavorite: true
     gpuAlt: "movit.opacity"
     allowMultiple: false
+    filterType: qsTr('Effect')
     keyframes {
         allowTrim: false
         allowAnimateOut: true
