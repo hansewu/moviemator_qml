@@ -46,8 +46,6 @@ Item {
             rectTmp.width = 1.0
             rectTmp.height = 1.0
             
-            console.log("Component.onCompletedComponent.onCompleted-1: rectTmp" + rectTmp)
-            
             filter.set(rectProperty, rectTmp)
             filter.set(valignProperty, 'top')
             filter.set(halignProperty, 'left')
@@ -59,23 +57,28 @@ Item {
     }
 
     function setFilter() {
-        console.log("setFiltersetFiltersetFilter-1: ")
-        
         var x = parseFloat(rectX.text)
         var y = parseFloat(rectY.text)
         var w = parseFloat(rectW.text)
         var h = parseFloat(rectH.text)
+
         filterRect.x = x / profile.width
         filterRect.y = y / profile.height
         filterRect.width = w / profile.width
         filterRect.height = h / profile.height
+
+        /*
         rectTmp.x = x / profile.width
         rectTmp.y = y / profile.height
         rectTmp.width = w / profile.width
         rectTmp.height = h / profile.height
-        filter.set(rectProperty, rectTmp)
-        console.log("setFiltersetFiltersetFilter-3: rectProperty："+rectProperty)
-        if (filter.getKeyFrameNumber() > 0)
+        */
+
+        filter.resetProperty(rectProperty)
+        filter.set(rectProperty, filterRect)
+
+
+        if ((keyFrame.bEnableKeyFrame && keyFrame.bAutoSetAsKeyFrame) || filter.bKeyFrame(keyFrame.getCurrentFrame()))
         {
             var nFrame = keyFrame.getCurrentFrame()
             
@@ -89,59 +92,32 @@ Item {
     }
 
     function saveValues() {
-        console.log("saveValuessaveValuessaveValues-0: ")
         
         var x = parseFloat(rectX.text)
         var y = parseFloat(rectY.text)
         var w = parseFloat(rectW.text)
         var h = parseFloat(rectH.text)
-        filterRect.x = x / profile.width
-        filterRect.y = y / profile.height
-        filterRect.width = w / profile.width
-        filterRect.height = h / profile.height
-
+        filterRect.x        = x / profile.width
+        filterRect.y        = y / profile.height
+        filterRect.width    = w / profile.width
+        filterRect.height   = h / profile.height
+/*
         rectTmp.x = x / profile.width
         rectTmp.y = y / profile.height
         rectTmp.width = w / profile.width
-        rectTmp.height = h / profile.height
-        filter.set(rectProperty, rectTmp)
+        rectTmp.height = h / profile.height*/
+        filter.set(rectProperty, filterRect)
         console.log("saveValuessaveValuessaveValues-2: "+rectTmp)
         
     }
 
     function setControls() {
-        // if((filter.getKeyFrameNumber() > 0)){
-        //     fitRadioButton.checked = false //这样后面6个都enabled == false
-        //     fitRadioButton.enabled = false
-        //     fillRadioButton.enabled = false
-        //     distortRadioButton.enabled = false
-        // }else{
-        //     fitRadioButton.enabled = true
-        //     fillRadioButton.enabled = true
-        //     distortRadioButton.enabled = true
-
-            if (filter.get(distortProperty) === '1')
-                distortRadioButton.checked = true
-            else if (filter.get(fillProperty) === '1')
-                fillRadioButton.checked = true
-            else
-                fitRadioButton.checked = true
-            var align = filter.get(halignProperty)
-            if (align === 'left')
-                leftRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                centerRadioButton.checked = true
-            else if (filter.get(halignProperty) === 'right')
-                rightRadioButton.checked = true
-            align = filter.get(valignProperty)
-            if (align === 'top')
-                topRadioButton.checked = true
-            else if (align === 'center' || align === 'middle')
-                middleRadioButton.checked = true
-            else if (align === 'bottom')
-                bottomRadioButton.checked = true
-        // }
-        
+        if (filter.get(distortProperty) === '1')
+            distortRadioButton.checked = true
+        else if (filter.get(fillProperty) === '1')
+            fillRadioButton.checked = true
+        else
+            fitRadioButton.checked = true
     }
 
     function changeMode(){
@@ -257,6 +233,7 @@ Item {
         setFilter()
         setControls()
     }
+    
 
     ExclusiveGroup { id: sizeGroup }
     ExclusiveGroup { id: halignGroup }
@@ -273,22 +250,23 @@ Item {
             id: keyFrame
             Layout.columnSpan:5
             onSynchroData:{
-                if((!keyFrame.bKeyFrame)&&(filter.getKeyFrameNumber() <= 0)){
+                if(filter.getKeyFrameNumber() <= 0){
+                    filter.resetProperty(rectProperty)
+
                     var x = parseFloat(rectX.text) / profile.width
                     var y = parseFloat(rectY.text) / profile.height
                     var w = parseFloat(rectW.text) / profile.width
                     var h = parseFloat(rectH.text) / profile.height
 
-                    rectTmp.x = 0
-                    rectTmp.y = 0
-                    rectTmp.width = 0
-                    rectTmp.height = 0
-                    filter.set(rectProperty, rectTmp)
                     rectTmp.x = x
                     rectTmp.y = y
                     rectTmp.width = w
                     rectTmp.height = h
                     filter.set(rectProperty, rectTmp)
+                }
+                else
+                {
+
                 }
             }
             onSetAsKeyFrame:{
@@ -309,44 +287,23 @@ Item {
                 filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
                 filter.combineAllKeyFramePara();
                 console.log("111111111111111111111111111111111111111111111111-1: ")
+
                 setControls()
             }
-            onLoadKeyFrame:{
-                filter.getKeyFrameParaValue(keyFrameNum, rectProperty)
-                console.log("22222222222222222222222222222222222222222222222-0: " + keyFrameNum)
-                console.log("22222222222222222222222222222222222222222222222-0: " + rectProperty)
+            onLoadKeyFrame:
+            {   
+                var nFrame = keyFrame.getCurrentFrame()
+                if (filter.bKeyFrame(nFrame)) filter.combineAllKeyFramePara()
 
-                filter.get(rectProperty)
                 var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
-                var rect3 = filter.get(rectProperty)
-                console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue2: rect: " + rect)
-                console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue3: rect3: " + rect3)
 
                 filterRect.x = rect.x
                 filterRect.y = rect.y
                 filterRect.width = rect.width
-                filterRect.height = rect.height       
+                filterRect.height = rect.height   
+
                 metadata.keyframes.parameters[0].value = 'X'+ rect.x +'Y'+rect.y+'W'+rect.width+'H'+rect.height 
 
-                var textValue = filter.getKeyFrameParaValue(keyFrameNum, halignProperty);
-                if(textValue === "left")
-                    leftRadioButton.checked = true;
-                else if(textValue === "center")
-                    centerRadioButton.checked = true;
-                else if(textValue === "right")
-                    rightRadioButton.checked = true;
-
-                textValue = filter.getKeyFrameParaValue(keyFrameNum, valignProperty);
-                if(textValue === "top")
-                    topRadioButton.checked = true;
-                else if(textValue === "middle")
-                    middleRadioButton.checked = true;
-                else if(textValue === "bottom")
-                    bottomRadioButton.checked = true;
-                
-                filter.getAnimRectValue(keyFrameNum, rectProperty)
-
-                console.log("22222222222222222222222222222222222222222222222-1: ")
                 setControls()
             }
         }
@@ -425,63 +382,6 @@ Item {
         }
 
         Item { Layout.fillWidth: true }
-/*
-        Label {
-            text: qsTr('Horizontal fit')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        RadioButton {
-            id: leftRadioButton
-            text: qsTr('Left')
-            exclusiveGroup: halignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(halignProperty, 'left')
-        }
-        RadioButton {
-            id: centerRadioButton
-            text: qsTr('Center')
-            exclusiveGroup: halignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(halignProperty, 'center')
-        }
-        RadioButton {
-            id: rightRadioButton
-            text: qsTr('Right')
-            exclusiveGroup: halignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(halignProperty, 'right')
-        }
-        Item { Layout.fillWidth: true }
-
-        Label {
-            text: qsTr('Vertical fit')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        RadioButton {
-            id: topRadioButton
-            text: qsTr('Top')
-            exclusiveGroup: valignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(valignProperty, 'top')
-        }
-        RadioButton {
-            id: middleRadioButton
-            text: qsTr('Middle')
-            exclusiveGroup: valignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(valignProperty, 'middle')
-        }
-        RadioButton {
-            id: bottomRadioButton
-            text: qsTr('Bottom')
-            exclusiveGroup: valignGroup
-            enabled: fitRadioButton.checked
-            onClicked: filter.set(valignProperty, 'bottom')
-        }
-        //Item { Layout.fillWidth: true }
-*/
 
         Label {
             text: qsTr('Position')
@@ -537,8 +437,7 @@ Item {
             }
             
         }
-        
-        //Item { Layout.fillHeight: true }
+    
 
         SeparatorLine {
             Layout.columnSpan: 5
