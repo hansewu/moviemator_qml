@@ -168,7 +168,11 @@ Item {
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
                 if (paraType === "rect") {
+                    var strValue = filter.get(property)
                     var rectValue = filter.getAnimRectValue(nFrame, property)
+                    if (strValue.indexOf("#") !== -1) {
+                        rectValue = getRectColor(strValue)
+                    }
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
