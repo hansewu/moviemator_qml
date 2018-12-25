@@ -231,6 +231,9 @@ Item {
         if (bEnableKeyFrame) {
             var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) {
+                if (!filter.bKeyFrame(nFrame)) {
+                    showAddFrameInfo(nFrame)
+                }
                 setKeyFrameParaValue(nFrame, currentProperty, value)
             } else {
                 if (filter.bKeyFrame(nFrame)) {
@@ -242,6 +245,21 @@ Item {
         } else {
             filter.set(currentProperty, value)
         }
+    }
+
+    InfoDialog {
+        id: addFrameInfoDialog
+        text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
+        property int position: 0
+    }
+
+    function showAddFrameInfo(position)
+    {
+        if (filter.autoAddKeyFrame() == false) return
+
+        addFrameInfoDialog.show     = false
+        addFrameInfoDialog.show     = true
+        addFrameInfoDialog.position = position
     }
 
     Component.onCompleted: {
