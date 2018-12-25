@@ -13,6 +13,7 @@ RowLayout {
     property string temporaryColor: "black"
 
     signal pickStarted
+    signal cancel()
 
     SystemPalette { id: activePalette; colorGroup: SystemPalette.Active }
 
@@ -67,6 +68,7 @@ RowLayout {
         }
         onRejected: {
             temporaryColor = color
+            cancel()
         }
         onAccepted: {
 //            updateColor(value, currentColor)

@@ -37,6 +37,8 @@ Item {
     property bool blockUpdate: true
     property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
     property bool bAutoSetAsKeyFrame: false
+    property bool bTemporaryKeyFrame: false
+
     width: 500
     height: 1000
 
@@ -248,6 +250,48 @@ Item {
             }
         } else {
             filter.set(currentProperty, value)
+        }
+    }
+
+    function updateTemporaryKeyFrame (currentProperty, value) {
+        if (blockUpdate === true) {
+            return
+        }
+        if (bEnableKeyFrame) {
+            var nFrame = timeline.getPositionInCurrentClip()
+            if (bAutoSetAsKeyFrame) {
+                if (!filter.bKeyFrame(nFrame)) {
+                    bTemporaryKeyFrame = true
+                }
+                setKeyFrameParaValue(nFrame, currentProperty, value)
+            } else {
+                if (filter.bKeyFrame(nFrame)) {
+                    setKeyFrameParaValue(nFrame, currentProperty, value)
+                } else {
+                    filter.set(currentProperty, value)
+                }
+            }
+        } else {
+            filter.set(currentProperty, value)
+        }
+    }
+
+    function removeTemporaryKeyFrame () {
+        if (blockUpdate === true) {
+            return
+        }
+        if (bEnableKeyFrame) {
+            if (bAutoSetAsKeyFrame) {
+                var nFrame = timeline.getPositionInCurrentClip()
+                if (filter.bKeyFrame(nFrame) && bTemporaryKeyFrame) {
+                    filter.removeKeyFrameParaValue(nFrame);
+                    filter.combineAllKeyFramePara();
+
+                    setKeyframedControls()
+
+                    bTemporaryKeyFrame = false
+                }
+            }
         }
     }
 
@@ -717,9 +761,16 @@ Item {
                 id: fgColor
                 eyedropper: false
                 alpha: true
+                onCancel: {
+                    removeTemporaryKeyFrame()
+                }
+                onTemporaryColorChanged: {
+                    updateTemporaryKeyFrame(fgcolourProperty, getRectColor(temporaryColor))
+                }
                 onValueChanged:
                 {
                     updateFilter(fgcolourProperty, getRectColor(value))
+                    bTemporaryKeyFrame = false
 //                    if (blockUpdate === true) {
 //                        return
 //                    }
@@ -830,11 +881,15 @@ Item {
             id: outlineColor
             eyedropper: false
             alpha: true
-//            onTemporaryColorChanged: {
-//                filter.set('olcolour', temporaryColor)
-//            }
+            onCancel: {
+                removeTemporaryKeyFrame()
+            }
+            onTemporaryColorChanged: {
+                updateTemporaryKeyFrame(olcolourProperty, getRectColor(temporaryColor))
+            }
             onValueChanged: {
                 updateFilter(olcolourProperty, getRectColor(value))
+                bTemporaryKeyFrame = false
 //                if (blockUpdate === true) {
 //                    return
 //                }
@@ -882,11 +937,15 @@ Item {
             id: bgColor
             eyedropper: false
             alpha: true
-//            onTemporaryColorChanged: {
-//                filter.set(bgcolourProperty, temporaryColor)
-//            }
+            onCancel: {
+                removeTemporaryKeyFrame()
+            }
+            onTemporaryColorChanged: {
+                updateTemporaryKeyFrame(bgcolourProperty, getRectColor(temporaryColor))
+            }
             onValueChanged: {
                 updateFilter(bgcolourProperty, getRectColor(value))
+                bTemporaryKeyFrame = false
 //                if (blockUpdate === true) {
 //                    return
 //                }
