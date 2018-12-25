@@ -8,9 +8,25 @@ RowLayout{
     id: keyFrame
     visible: false
     
-    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
-    property bool bAutoSetAsKeyFrame: true
+    function updateEnableKeyFrame(bEnable)
+    {
+        bEnableKeyFrame = bEnable
+        filter.setEnableAnimation(bEnableKeyFrame)
 
+        return bEnableKeyFrame
+    }
+
+    function updateAutoSetAsKeyFrame(bEnable)
+    {
+        bAutoSetAsKeyFrame = bEnable
+        filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+
+        return bAutoSetAsKeyFrame
+    }
+
+    property bool bEnableKeyFrame: updateEnableKeyFrame((filter.getKeyFrameNumber() > 0))
+    property bool bAutoSetAsKeyFrame: updateAutoSetAsKeyFrame(true)
+    
     property double currentFrame: 0
     property bool bKeyFrame: false
     
@@ -117,7 +133,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onEnableKeyFrameChanged: {
-            bEnableKeyFrame = bEnable
+            updateEnableKeyFrame(bEnable)
         }
     }
 
@@ -125,7 +141,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onAutoAddKeyFrameChanged: {
-            bAutoSetAsKeyFrame = bEnable
+            updateAutoSetAsKeyFrame(bEnable)
         }
     }
 
