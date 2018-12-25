@@ -7,4 +7,5 @@ Metadata {
     name: qsTr("Rutt-Etra-Izer (HTML)")
     mlt_service: "webvfx"
     qml: "ui.qml"
+    filterType: qsTr('Effect')
 }

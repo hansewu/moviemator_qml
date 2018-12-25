@@ -10,4 +10,5 @@ Metadata {
     allowMultiple: false
     isClipOnly: true
     freeVersion: true
+    filterType: qsTr('Crop')
 }

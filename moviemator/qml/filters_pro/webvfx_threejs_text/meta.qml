@@ -7,4 +7,5 @@ Metadata {
     name: qsTr("3D Text (HTML)")
     mlt_service: "webvfx"
     qml: "ui.qml"
+    filterType: qsTr("Text")
 }

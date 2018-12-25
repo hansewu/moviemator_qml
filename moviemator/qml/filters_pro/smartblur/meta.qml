@@ -24,4 +24,5 @@ Metadata {
     name: qsTr("Reduce Noise")
     mlt_service: 'avfilter.smartblur'
     qml: 'ui.qml'
+    filterType: qsTr('Effect')
 }

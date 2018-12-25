@@ -79,6 +79,31 @@ Window {
 //            anchors.bottomMargin: 10
            spacing: 2
 
+
+            Component {
+                id: sectionDelegate
+
+                Item {
+                    height: sectionText.implicitHeight + 4
+                    width: parent ? parent.width : undefined
+                    Rectangle {
+                        anchors.fill: parent
+                        color: activePalette.alternateBase
+                    }
+                    Label {
+                        id: sectionText
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        anchors.leftMargin: 4
+                        text: section
+                        color: activePalette.windowText
+                        font.bold: true
+                    }
+                }
+            }
+
+
+
             ScrollView {
                 id: scrollView
                 width: parent.width
@@ -95,12 +120,13 @@ Window {
 
                     anchors.fill: parent
                     model: metadatamodel
-                    delegate: FilterMenuDelegate {}
+                    delegate: FilterMenuDelegate{}
+                    section.property: vidButton.checked ? "filterTypeDisplay" : ""
+                    section.delegate: sectionDelegate
                     boundsBehavior: Flickable.StopAtBounds
                     snapMode: ListView.SnapToItem
                     currentIndex: -1
                     focus: true
-
                 }
 
                 style: ScrollViewStyle {
@@ -168,7 +194,6 @@ Window {
 
                             vidButton.iconSource = 'qrc:///icons/light/32x32/video-television.png'
                             audButton.iconSource = 'qrc:///icons/light/32x32/speaker.png'
-
                         }
 
                     }
@@ -187,7 +212,7 @@ Window {
                             metadatamodel.filter = MovieMator.MetadataModel.VideoFilter
                             vidButton.iconSource = 'qrc:///icons/light/32x32/video-television-highlight.png'
                             favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks.png'
-                            audButton.iconSource = 'qrc:///icons/light/32x32/speaker.png'
+                            audButton.iconSource = 'qrc:///icons/light/32x32/speaker.png' 
                         }
                     }
                 }
@@ -207,7 +232,6 @@ Window {
 
                             vidButton.iconSource = 'qrc:///icons/light/32x32/video-television.png'
                             favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks.png'
-
                         }
                     }
                 }

@@ -11,6 +11,7 @@ Metadata {
     gpuAlt: 'movit.rect'
     isFavorite: true
     allowMultiple: false
+    filterType: qsTr('Transform')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

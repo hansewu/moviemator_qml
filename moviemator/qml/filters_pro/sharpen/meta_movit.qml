@@ -7,6 +7,7 @@ Metadata {
     mlt_service: "movit.sharpen"
     needsGPU: true
     qml: "ui_movit.qml"
+    filterType: qsTr('Effect')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

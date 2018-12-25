@@ -8,4 +8,5 @@ Metadata {
     needsGPU: true
     qml: "ui.qml"
     allowMultiple: false
+    filterType: qsTr('Crop')
 }

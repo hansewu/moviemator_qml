@@ -10,6 +10,7 @@ Metadata {
     isGpuCompatible: false
     isFavorite: false
     allowMultiple: false
+    filterType: qsTr('Stabilization')
     keyframes {
         allowTrim: false
         allowAnimateIn: true

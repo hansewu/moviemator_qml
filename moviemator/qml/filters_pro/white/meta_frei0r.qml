@@ -8,6 +8,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.white_balance"
+    filterType: qsTr('Color Adjustment')
     // keyframes {
     //     allowAnimateIn: true
     //     allowAnimateOut: true
