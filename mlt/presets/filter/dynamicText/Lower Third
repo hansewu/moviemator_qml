@@ -2,9 +2,9 @@ geometry=0~=0.0570312 0.715278 0.888281 0.145833 1;104~=0.0570312 0.715278 0.888
 halign=center
 valign=bottom
 argument=hello world hello world hello world
-size=105
+size=106.18
 fgcolour=0|=255 255 255 10 1;104~=255 255 255 10 1;108~=255 255 255 10 1
-family=Abril Fatface
+family=Arial Black
 weight=500
 olcolour=#ff000000
 outline=0

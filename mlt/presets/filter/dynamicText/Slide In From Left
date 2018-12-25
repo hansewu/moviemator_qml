@@ -4,7 +4,7 @@ valign=bottom
 argument=hello world
 size=172
 fgcolour=0~=255 255 255 255 1;24~=255 255 255 255 1;104~=255 255 255 255 1
-family=Baloo
+family=Arial Black
 weight=500
 olcolour=#fd7d5b
 outline=7

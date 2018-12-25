@@ -2,9 +2,9 @@ geometry=0~=0.623437 0.368056 0.386719 0.305556 1;24~=0.275 0.234722 0.725 0.543
 halign=center
 valign=bottom
 argument=hello
-size=391
+size=396.487
 fgcolour=0|=255 32 255 255 1;24~=255 32 255 255 1;104~=255 32 255 255 1;108~=255 32 255 255 1
-family=Wawati SC
+family=Impact
 weight=500
 olcolour=#ff000000
 outline=0

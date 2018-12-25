@@ -2,9 +2,9 @@ geometry=0~=-0.0015625 0.273611 0.801562 0.418056 1;24~=0.204687 0.377778 0.6031
 halign=center
 valign=bottom
 argument=hello world 
-size=159
+size=149.023
 fgcolour=0|=255 32 255 255 1;24~=255 32 255 255 1;104~=255 32 255 255 1;108~=255 32 255 255 1
-family=Nanum Pen Script
+family=Comic Sans MS
 weight=500
 olcolour=#ff000000
 outline=0

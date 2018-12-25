@@ -4,7 +4,7 @@ valign=bottom
 argument=hello world hello world
 size=122
 fgcolour=0|=255 216 255 237 1;104~=255 216 255 237 1;108~=255 216 255 237 1
-family=DIN Alternate
+family=Comic Sans MS
 weight=500
 olcolour=#ff000000
 outline=0

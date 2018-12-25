@@ -4,7 +4,7 @@ valign=bottom
 argument=hello world hello world hello world 
 size=85.9997
 fgcolour=0~=255 252 75 43 1;12~=255 252 75 43 1;96~=255 252 75 43 1;104~=255 252 75 43 1
-family=Russo One
+family=Arial
 weight=500
 olcolour=#ffff0a
 outline=4

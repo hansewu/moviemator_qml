@@ -2,9 +2,9 @@ geometry=0~=0.00234375 0.419444 0.997656 0.168056 1;108~=0.0273438 0.105556 0.62
 halign=center
 valign=bottom
 argument=hello world hello world
-size=105
+size=108.895
 fgcolour=0~=255 128 0 128 1;108~=255 128 0 128 1
-family=Impact
+family=Arial Black
 weight=500
 olcolour=#ff000000
 outline=0

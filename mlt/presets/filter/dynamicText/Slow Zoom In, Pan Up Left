@@ -2,9 +2,9 @@ geometry=0~=0 0.347222 0.335156 0.125 1;108~=-0.00703125 0.35 1.01172 0.255556 1
 halign=center
 valign=bottom
 argument=hello world
-size=184
+size=90.4472
 fgcolour=0~=255 255 255 255 1;108~=255 255 255 255 1
-family=Kumar One
+family=Impact
 weight=500
 olcolour=#ff000000
 outline=2

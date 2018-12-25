@@ -2,9 +2,9 @@ geometry=0~=0.0484375 0.7 0.448437 0.115278 1;104~=0.0453125 0.679167 0.691406 0
 halign=center
 valign=bottom
 argument=hello world hello
-size=115.06
+size=83.2425
 fgcolour=0~=255 255 255 255 1;104~=255 255 255 255 1
-family=American Typewriter
+family=Microsoft Sans Serif
 weight=500
 olcolour=#ff000000
 outline=0
