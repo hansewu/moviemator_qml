@@ -77,6 +77,23 @@ Flickable {
         }
     }
 
+    function updateFilter(currentProperty, value) {
+        if (filter.enableAnimation()) {
+            var nFrame = timeline.getPositionInCurrentClip()
+            if (filter.autoAddKeyFrame()) {
+                setKeyFrameParaValue(nFrame, currentProperty, value)
+            } else {
+                if (filter.bKeyFrame(nFrame)) {
+                    setKeyFrameParaValue(nFrame, currentProperty, value)
+                } else {
+                    filter.set(currentProperty, value)
+                }
+            }
+        } else {
+            filter.set(currentProperty, value)
+        }
+    }
+
     Component.onCompleted: {
         if (filter.getKeyFrameNumber() > 0) {
             var position = timeline.getPositionInCurrentClip()
@@ -149,12 +166,14 @@ Flickable {
                 filterRect.y = Math.round(rect.y / rectangle.heightScale)
                 filterRect.width = Math.round(rect.width / rectangle.widthScale)
                 filterRect.height = Math.round(rect.height / rectangle.heightScale)
-                if (filter.getKeyFrameNumber() > 0) {
-                    var position = timeline.getPositionInCurrentClip()
-                    setKeyFrameParaValue(position, rectProperty, getRelativeRect(filterRect))
-                } else {
-                    filter.set(rectProperty, getRelativeRect(filterRect))
-                }
+
+                updateFilter(rectProperty, getRelativeRect(filterRect))
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    var position = timeline.getPositionInCurrentClip()
+//                    setKeyFrameParaValue(position, rectProperty, getRelativeRect(filterRect))
+//                } else {
+//                    filter.set(rectProperty, getRelativeRect(filterRect))
+//                }
                 blockUpdate = false
             }
         }

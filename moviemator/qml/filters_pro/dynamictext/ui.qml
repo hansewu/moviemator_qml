@@ -181,13 +181,12 @@ Item {
 
     function loadSavedKeyFrame () {
         var metaParamList = metadata.keyframes.parameters
-        var keyFrameCount = filter.getKeyFrameNumber()
-        for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
-        {
-            for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
-                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[paramIndex].property)
-                var property = metadata.keyframes.parameters[paramIndex].property
-                var paraType = metadata.keyframes.parameters[paramIndex].paraType
+        for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++) {
+            var property = metadata.keyframes.parameters[paramIndex].property
+            var paraType = metadata.keyframes.parameters[paramIndex].paraType
+            var keyFrameCount = filter.getKeyFrameNumber()
+            for(var keyIndex = 0; keyIndex < keyFrameCount; keyIndex++) {
+                var nFrame = filter.getKeyFrame(keyIndex)
                 if (paraType === "rect") {
                     var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
@@ -197,7 +196,7 @@ Item {
                 }
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.combineAllKeyFramePara()
     }
 
     function removeAllKeyFrame () {
@@ -246,6 +245,9 @@ Item {
     }
 
     Component.onCompleted: {
+        filter.setEnableAnimation(bEnableKeyFrame)
+        filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+
         //导入上次工程保存的关键帧
         loadSavedKeyFrameNew()
 
@@ -1061,6 +1063,7 @@ Item {
         target: keyFrameControl
         onEnableKeyFrameChanged: {
             bEnableKeyFrame = bEnable
+            filter.setEnableAnimation(bEnableKeyFrame)
         }
     }
 
@@ -1069,6 +1072,7 @@ Item {
         target: keyFrameControl
         onAutoAddKeyFrameChanged: {
             bAutoSetAsKeyFrame = bEnable
+            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
         }
     }
 
