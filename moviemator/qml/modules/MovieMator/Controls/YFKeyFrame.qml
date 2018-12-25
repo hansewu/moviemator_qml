@@ -8,8 +8,22 @@ RowLayout{
     id: keyFrame
     visible: false
     
-    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
-    property bool bAutoSetAsKeyFrame: true
+    function updateEnableKeyFrame(bEnable)
+    {
+        bEnableKeyFrame = bEnable
+        filter.setEnableAnimation(bEnableKeyFrame)
+        return bEnableKeyFrame
+    }
+
+    function updateAutoSetAsKeyFrame(bEnable)
+    {
+        bAutoSetAsKeyFrame = bEnable
+        filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+        return bAutoSetAsKeyFrame
+    }
+
+    property bool bEnableKeyFrame: updateEnableKeyFrame((filter.getKeyFrameNumber() > 0))
+    property bool bAutoSetAsKeyFrame: updateAutoSetAsKeyFrame(true)
     
     property double currentFrame: 0
     property bool bKeyFrame: false
@@ -382,7 +396,8 @@ RowLayout{
     }
     // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
-        resetAnim2No(layoutRoot)
+        clearAllFilterAnimationStatus()
+        //resetAnim2No(layoutRoot)
 
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
@@ -429,6 +444,18 @@ RowLayout{
 
         }
     }
+
+    function clearAllFilterAnimationStatus() {
+        if(filter.getKeyFrameNumber() > 0) return 
+
+        var metaParamList = metadata.keyframes.parameters
+        for(var i = 0; i < metaParamList.length; i++)
+        {
+            var parameter = metaParamList[i]
+            filter.resetProperty(parameter.property)
+        }
+    }
+
     function resetAnim2No(layoutRoot){
         //最后一个关键帧移除之后触发用的
         var metaParamList1 = metadata.keyframes.parameters
@@ -778,7 +805,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onEnableKeyFrameChanged: {
-            bEnableKeyFrame = bEnable
+            updateEnableKeyFrame(bEnable)
         }
     }
 
@@ -786,7 +813,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onAutoAddKeyFrameChanged: {
-            bAutoSetAsKeyFrame = bEnable
+            updateAutoSetAsKeyFrame(bEnable)
         }
     }
 
