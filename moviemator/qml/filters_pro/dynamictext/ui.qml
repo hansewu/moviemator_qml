@@ -828,7 +828,7 @@ Item {
 
         Label {
             text: qsTr('Letter Spaceing')
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
         SpinBox {
