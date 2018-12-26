@@ -315,8 +315,8 @@ Rectangle {
             clipRoot.forceActiveFocus();
             clipRoot.clicked(clipRoot)
 
-            if (isTransition)
-                menu.popup()
+            //if (isTransition)
+            //    menu.popup()
         }
         onPositionChanged: {
             if (!isTransition)
@@ -349,23 +349,24 @@ Rectangle {
 
         }
         onDoubleClicked: timeline.position = clipRoot.x / multitrack.scaleFactor
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.RightButton
-            propagateComposedEvents: true
-            cursorShape: (trimInMouseArea.drag.active || trimOutMouseArea.drag.active)? Qt.SizeHorCursor :
+        onClicked: mainwindow.setMultitrackAsCurrentProducer()
+    }
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        propagateComposedEvents: true
+        cursorShape: (trimInMouseArea.drag.active || trimOutMouseArea.drag.active)? Qt.SizeHorCursor :
 //                (fadeInMouseArea.drag.active || fadeOutMouseArea.drag.active)? Qt.PointingHandCursor :
-                drag.active? Qt.ClosedHandCursor :
-                isBlank? Qt.ArrowCursor : Qt.OpenHandCursor
-            onClicked: {
-                if (!isBlank)
-                {
-                    clipRoot.forceActiveFocus();
-                    clipRoot.clicked(clipRoot)
-                }
-                menu.popup()
+            drag.active? Qt.ClosedHandCursor :
+            isBlank? Qt.ArrowCursor : Qt.OpenHandCursor
+        onClicked: {
+            if (!isBlank)
+            {
+                clipRoot.forceActiveFocus();
+                clipRoot.clicked(clipRoot)
             }
+            mainwindow.setMultitrackAsCurrentProducer()
+            menu.popup()
         }
     }
 
