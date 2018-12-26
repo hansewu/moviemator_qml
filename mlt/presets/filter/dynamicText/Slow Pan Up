@@ -1,12 +1,13 @@
-geometry=0~=0.015625 -0.313889 0.963281 0.134722 1;104~=0.015625 0.869444 0.963281 0.134722 1
+geometry=0~=0.015625 -0.313889 0.963281 0.134722 1;48~=0.015625 0.833333 0.963281 0.134722 1
 halign=center
 valign=bottom
 argument=hello world hello worldhello worldhello worldhello world
 size=96.9998
-fgcolour=0|=255 255 255 10 1;104~=255 255 255 10 1
+fgcolour=0|=255 255 255 10 1;48~=255 255 255 10 1
 family=Georgia
 weight=500
-olcolour=#ff000000
-outline=0
-bgcolour=#00000000
-pad=0
+olcolour=0~=255 0 0 0 1;48~=255 0 0 0 1
+outline=00:00:00.000|=0
+bgcolour=0~=0 0 0 0 1;48~=0 0 0 0 1
+pad=00:00:00.000|=0
+letter_spaceing=00:00:00.000=0;00:00:02.000=0
