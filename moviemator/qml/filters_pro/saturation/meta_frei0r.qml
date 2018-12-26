@@ -7,6 +7,7 @@ Metadata {
     mlt_service: "frei0r.saturat0r"
     qml: "ui_frei0r.qml"
     gpuAlt: "movit.saturation"
+    filterType: qsTr('Color Adjustment')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

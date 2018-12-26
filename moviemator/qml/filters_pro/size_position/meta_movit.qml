@@ -11,6 +11,7 @@ Metadata {
     vui: 'vui_movit.qml'
     allowMultiple: false
     isFavorite: true
+    filterType: qsTr('Transform')
     keyframes {
         allowTrim: false
         allowAnimateIn: true

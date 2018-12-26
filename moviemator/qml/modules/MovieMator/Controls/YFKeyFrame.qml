@@ -8,11 +8,27 @@ RowLayout{
     id: keyFrame
     visible: false
     
-    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
-    property bool bAutoSetAsKeyFrame: true
+    function updateEnableKeyFrame(bEnable)
+    {
+        bEnableKeyFrame = bEnable
+        filter.setEnableAnimation(bEnableKeyFrame)
+        return bEnableKeyFrame
+    }
+
+    function updateAutoSetAsKeyFrame(bEnable)
+    {
+        bAutoSetAsKeyFrame = bEnable
+        filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+        return bAutoSetAsKeyFrame
+    }
+
+    property bool bEnableKeyFrame: updateEnableKeyFrame((filter.getKeyFrameNumber() > 0))
+    property bool bAutoSetAsKeyFrame: updateAutoSetAsKeyFrame(true)
     
     property double currentFrame: 0
     property bool bKeyFrame: false
+
+    property bool bBlockSignal: false
 
     signal synchroData()
     signal loadKeyFrame()
@@ -20,6 +36,7 @@ RowLayout{
     // 滤镜初始化
     function initFilter(layoutRoot){
         //导入上次工程保存的关键帧
+        bBlockSignal = true
         var metaParamList = metadata.keyframes.parameters
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
         for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
@@ -31,7 +48,9 @@ RowLayout{
                 filter.setKeyFrameParaValue(nFrame, prop, keyValue.toString())
             }
         }
+        bBlockSignal = false
         filter.combineAllKeyFramePara();
+        
 
         // 初始化关键帧控件
         if (filter.isNew){
@@ -102,6 +121,8 @@ RowLayout{
         console.log("controlValueChangedcontrolValueChanged:")
         var userChange = false
         var valueChange = false
+
+        bBlockSignal = true
         // 可能一个控件对应几个配置项
         var parameterList = findParameter(id)
         for(var paramIndex=0;paramIndex<parameterList.length;paramIndex++){
@@ -229,7 +250,7 @@ RowLayout{
                 break;
             }
         }
-        
+        bBlockSignal = false
         console.log("userChangeuserChangeuserChangeuserChange: " + userChange)
         
         // 添加关键帧
@@ -269,6 +290,7 @@ RowLayout{
         console.log("position: " + position)
         if (position < 0) return
 
+        bBlockSignal = true
         //添加首尾关键帧
         if (filter.getKeyFrameNumber() <= 0)
         {
@@ -284,12 +306,14 @@ RowLayout{
                 filter.setKeyFrameParaValue(0, key, value.toString());
             }
         }
+        bBlockSignal = false
 
         //重复点击不生效
         var bKeyFrame = filter.bKeyFrame(position)
         if (bKeyFrame)
             return
 
+        bBlockSignal = true
         //插入关键帧
         var paramCount = metadata.keyframes.parameterCount
         for(var i = 0; i < paramCount; i++)
@@ -334,6 +358,7 @@ RowLayout{
         filter.combineAllKeyFramePara();
         bKeyFrame = true
 
+        bBlockSignal = false
         console.log("2222222222222222222222222222222222222222: ")
 
         showAddFrameInfo(position)
@@ -341,6 +366,8 @@ RowLayout{
 
     //帧位置改变时加载控件参数
     function loadFrameValue(layoutRoot){
+        if(bBlockSignal == true) return
+
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
@@ -382,8 +409,10 @@ RowLayout{
     }
     // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
-        resetAnim2No(layoutRoot)
+        clearAllFilterAnimationStatus()
+        //resetAnim2No(layoutRoot)
 
+        bBlockSignal = true
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
@@ -391,9 +420,6 @@ RowLayout{
             if(control == null)
                 continue;
             
-            console.log("setDatassetDatassetDatassetDatassetDatas: " + paramIndex)
-            console.log("setDatassetDatassetDatassetDatassetDatas: parameter.property:" + parameter.property)
-            console.log("setDatassetDatassetDatassetDatassetDatas: control.value:" + control.value)
             switch(parameter.controlType)
             {
             case "SliderSpinner":
@@ -428,7 +454,21 @@ RowLayout{
             }
 
         }
+
+        bBlockSignal = false
     }
+
+    function clearAllFilterAnimationStatus() {
+        if(filter.getKeyFrameNumber() > 0) return 
+
+        var metaParamList = metadata.keyframes.parameters
+        for(var i = 0; i < metaParamList.length; i++)
+        {
+            var parameter = metaParamList[i]
+            filter.resetProperty(parameter.property)
+        }
+    }
+
     function resetAnim2No(layoutRoot){
         //最后一个关键帧移除之后触发用的
         var metaParamList1 = metadata.keyframes.parameters
@@ -778,7 +818,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onEnableKeyFrameChanged: {
-            bEnableKeyFrame = bEnable
+            updateEnableKeyFrame(bEnable)
         }
     }
 
@@ -786,7 +826,7 @@ RowLayout{
     Connections {
         target: keyFrameControl
         onAutoAddKeyFrameChanged: {
-            bAutoSetAsKeyFrame = bEnable
+            updateAutoSetAsKeyFrame(bEnable)
         }
     }
 

@@ -48,6 +48,21 @@ Flickable {
         rectangle.setHandles(rectHandles)
     }
 
+    InfoDialog { 
+        id: addFrameInfoDialog
+        text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
+        property int position: 0 
+    }
+
+    function showAddFrameInfo(position)
+    {
+        if (filter.autoAddKeyFrame() == false) return
+
+        addFrameInfoDialog.show     = false
+        addFrameInfoDialog.show     = true
+        addFrameInfoDialog.position = position
+    }
+
     Component.onCompleted: {
         var rectT = filter.getRect(rectProperty)
         console.log("Component.onCompletedComponent.onCompleted-2: rectT: " + rectT)
@@ -79,29 +94,23 @@ Flickable {
             borderSize: Math.max(Math.round(1.33 / zoom), 1)
             onWidthScaleChanged: {
                 updateRectangleUI()
-
-                console.log("onWidthScaleChangedonWidthScaleChangedonWidthScaleChanged")
             }
             onHeightScaleChanged: {
                 updateRectangleUI()
             }
             onRectChanged:  {
-                console.log("onRectChangedonRectChangedonRectChanged-1: rectangle.widthScale: "+rectangle.widthScale)
-                console.log("onRectChangedonRectChangedonRectChanged-1: rectangle.heightScale: "+rectangle.heightScale)
-                console.log("onRectChangedonRectChangedonRectChanged-1: rect: "+rect)
-                filterRect.x = rect.x / rectangle.widthScale / profile.width
-                filterRect.y = rect.y / rectangle.heightScale / profile.height
-                filterRect.width = rect.width / rectangle.widthScale / profile.width
-                filterRect.height = rect.height / rectangle.heightScale / profile.height
-                console.log("onRectChangedonRectChangedonRectChanged-1: filterRect: "+filterRect)
-                rectCtr.x = filterRect.x
-                rectCtr.y = filterRect.y
-                rectCtr.width = filterRect.width
-                rectCtr.height = filterRect.height
-                filter.set(rectProperty, rectCtr)
-                console.log("onRectChangedonRectChangedonRectChanged-1: rectCtr: "+rectCtr)
-                var position = timeline.getPositionInCurrentClip()
-                var bKeyFrame = filter.bKeyFrame(position)
+                filterRect.x        = rect.x / rectangle.widthScale / profile.width
+                filterRect.y        = rect.y / rectangle.heightScale / profile.height
+                filterRect.width    = rect.width / rectangle.widthScale / profile.width
+                filterRect.height   = rect.height / rectangle.heightScale / profile.height
+                
+                //rectCtr.x = filterRect.x
+                //rectCtr.y = filterRect.y
+                //rectCtr.width = filterRect.width
+                //rectCtr.height = filterRect.height
+                //filter.resetProperty(rectProperty)
+                //filter.set(rectProperty, rectCtr)
+                
                 vuiTimer1.restart()
             }
         
@@ -132,11 +141,7 @@ Flickable {
         repeat: false
         onTriggered: 
         {
-            // if(isModeChanged()){
-            //     onModeChanged()
-            // }else{
-                onFilterChanged()
-            // }
+            onFilterChanged()
         }
     }
     function onModeChanged(){
@@ -187,7 +192,7 @@ Flickable {
     Connections {
         target: filterDock
         onPositionChanged: {
-            console.log("8888888888888888888: metaValue:"+ metaValue)
+            
             if(metaValue != metadata.keyframes.parameters[0].value){
                 metaValue = metadata.keyframes.parameters[0].value
                 var x = metaValue.substring(1,metaValue.indexOf('Y'))
@@ -195,14 +200,13 @@ Flickable {
                 var w = metaValue.substring(metaValue.indexOf('W')+1,metaValue.indexOf('H'))
                 var h = metaValue.substring(metaValue.indexOf('H')+1)
 
-                rectCtr2.x = parseFloat(x) * profile.width
-                rectCtr2.y = parseFloat(y) * profile.height
-                rectCtr2.width = parseFloat(w) * profile.width
+                rectCtr2.x      = parseFloat(x) * profile.width
+                rectCtr2.y      = parseFloat(y) * profile.height
+                rectCtr2.width  = parseFloat(w) * profile.width
                 rectCtr2.height = parseFloat(h) * profile.height
                 rectangle.setHandles(rectCtr2)
                 
                 console.log("onPositionChangedonPositionChangedonPositionChanged: " + rectCtr2)
-                
             }
         }
     }
@@ -212,30 +216,19 @@ Flickable {
         interval: 100
         repeat: false
         onTriggered: 
-        {
-            if (filter.getKeyFrameNumber() > 0)
+        {   
+            filter.resetProperty(rectProperty)
+            filter.set(rectProperty, filterRect)
+
+            var position = timeline.getPositionInCurrentClip()
+            if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.bKeyFrame(position))
             {
-                var position = timeline.getPositionInCurrentClip()
+                if (!filter.bKeyFrame(position)) showAddFrameInfo(position)
+                
                 var rectValue = filter.getRect(rectProperty)
                 filter.setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
                 filter.combineAllKeyFramePara();
             }
-            
-            
-            console.log("onRectChangedonRectChangedonRectChanged-1: rectProperty: "+rectProperty)
-            console.log("onRectChangedonRectChangedonRectChanged-1: rectValueTemp: "+rectValue)
         }
     }
-    Timer {
-        id : vuiTimer2
-        interval: 50
-        repeat: false
-        onTriggered: 
-        {
-            filter.set(rectProperty, rectCtr)
-        }
-    }
-
-    
-    
 }

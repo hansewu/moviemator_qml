@@ -6,6 +6,7 @@ Metadata {
     name: qsTr("Old Film: Grain")
     mlt_service: "grain"
     qml: "ui.qml"
+    filterType: qsTr('Effect')
     keyframes {
         minimumVersion: '3'
         allowAnimateIn: true

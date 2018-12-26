@@ -8,6 +8,7 @@ Metadata {
     mlt_service: "movit.opacity"
     needsGPU: true
     qml: "ui.qml"
+    filterType: qsTr('Effect')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

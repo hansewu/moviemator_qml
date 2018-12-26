@@ -1,0 +1,13 @@
+geometry=0~=0.0375 0.138889 0.564844 0.140278 1;13~=0.0375 0.138889 0.564844 0.140278 1
+halign=center
+valign=bottom
+argument=hello world hello world
+size=101
+fgcolour=0~=0 216 255 237 1;13~=255 216 255 237 1
+family=Comic Sans MS
+weight=500
+olcolour=0~=255 0 0 0 1;13~=255 0 0 0 1
+outline=00:00:00.000|=0;00:00:00.542=0
+bgcolour=0~=0 0 0 0 1;13~=0 0 0 0 1
+pad=00:00:00.000|=0;00:00:00.542=0
+letter_spaceing=00:00:00.000=0;00:00:00.542=0

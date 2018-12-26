@@ -9,6 +9,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     allowMultiple: false
+    filterType: qsTr('Transform')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

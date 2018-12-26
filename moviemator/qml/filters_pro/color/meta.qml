@@ -8,6 +8,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.lift_gamma_gain"
+    filterType: qsTr('Color Adjustment')
     keyframes {
         parameters: [
             Parameter {
@@ -16,7 +17,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '0'
+                defaultValue: '60'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -26,7 +27,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '0'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -36,7 +37,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '0'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -46,7 +47,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '127.5'
+                defaultValue: '60'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -56,7 +57,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '127.5'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -66,7 +67,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '127.5'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -76,7 +77,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '63.75'
+                defaultValue: '60'
                 value: '0'
                 factorFunc:  ['c:63.75']
             },
@@ -86,7 +87,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '63.75'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:63.75']
             },
@@ -96,7 +97,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '63.75'
+                defaultValue: '20'
                 value: '0'
                 factorFunc:  ['c:63.75']
             }

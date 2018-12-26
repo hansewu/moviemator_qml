@@ -1,0 +1,13 @@
+geometry=0~=0.261719 0.109722 0.739844 0.780556 1;24~=0.251563 0.273611 0.520312 0.465278 1
+halign=center
+valign=bottom
+argument=hello
+size=562
+fgcolour=0|=255 255 255 255 1;24~=255 255 255 255 1
+family=Arial Black
+weight=500
+olcolour=0~=255 0 0 0 1;24~=255 0 0 0 1
+outline=00:00:00.000|=0
+bgcolour=0~=0 0 0 0 1;24~=0 0 0 0 1
+pad=00:00:00.000|=0
+letter_spaceing=00:00:00.000=0;00:00:01.000=0

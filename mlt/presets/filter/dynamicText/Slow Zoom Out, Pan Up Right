@@ -1,0 +1,13 @@
+geometry=0~=0.623437 0.368056 0.386719 0.305556 1;24~=0.446094 0.391667 0.553906 0.384722 1
+halign=center
+valign=bottom
+argument=hello
+size=277
+fgcolour=0|=255 32 255 255 1;24~=255 32 255 255 1
+family=Impact
+weight=500
+olcolour=0~=255 0 0 0 1;24~=255 0 0 0 1
+outline=00:00:00.000|=0;00:00:01.000=0
+bgcolour=0~=0 0 0 0 1;24~=0 0 0 0 1
+pad=00:00:00.000|=0;00:00:01.000=0
+letter_spaceing=0=0;24=0

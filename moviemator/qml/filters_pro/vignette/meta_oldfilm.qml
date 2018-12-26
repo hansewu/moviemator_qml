@@ -7,6 +7,7 @@ Metadata {
     mlt_service: "vignette"
     qml: "ui_oldfilm.qml"
     gpuAlt: "movit.vignette"
+    filterType: qsTr('Color Adjustment')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

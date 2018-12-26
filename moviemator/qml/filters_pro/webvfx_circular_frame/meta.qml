@@ -7,6 +7,7 @@ Metadata {
     name: qsTr("Circular Frame (HTML)")
     mlt_service: "webvfx"
     qml: "ui.qml"
+    filterType: qsTr('Effect')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

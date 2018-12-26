@@ -77,6 +77,41 @@ Flickable {
         }
     }
 
+    function updateFilter(currentProperty, value) {
+        if (filter.enableAnimation()) {
+            var nFrame = timeline.getPositionInCurrentClip()
+            if (filter.autoAddKeyFrame()) {
+                if (!filter.bKeyFrame(nFrame)) {
+                    showAddFrameInfo(nFrame)
+                }
+                setKeyFrameParaValue(nFrame, currentProperty, value)
+            } else {
+                if (filter.bKeyFrame(nFrame)) {
+                    setKeyFrameParaValue(nFrame, currentProperty, value)
+                } else {
+                    filter.set(currentProperty, value)
+                }
+            }
+        } else {
+            filter.set(currentProperty, value)
+        }
+    }
+
+    InfoDialog {
+        id: addFrameInfoDialog
+        text: qsTr('Auto set as key frame at postion')+ ": " + position + "."
+        property int position: 0
+    }
+
+    function showAddFrameInfo(position)
+    {
+        if (filter.autoAddKeyFrame() == false) return
+
+        addFrameInfoDialog.show     = false
+        addFrameInfoDialog.show     = true
+        addFrameInfoDialog.position = position
+    }
+
     Component.onCompleted: {
         if (filter.getKeyFrameNumber() > 0) {
             var position = timeline.getPositionInCurrentClip()
@@ -149,12 +184,14 @@ Flickable {
                 filterRect.y = Math.round(rect.y / rectangle.heightScale)
                 filterRect.width = Math.round(rect.width / rectangle.widthScale)
                 filterRect.height = Math.round(rect.height / rectangle.heightScale)
-                if (filter.getKeyFrameNumber() > 0) {
-                    var position = timeline.getPositionInCurrentClip()
-                    setKeyFrameParaValue(position, rectProperty, getRelativeRect(filterRect))
-                } else {
-                    filter.set(rectProperty, getRelativeRect(filterRect))
-                }
+
+                updateFilter(rectProperty, getRelativeRect(filterRect))
+//                if (filter.getKeyFrameNumber() > 0) {
+//                    var position = timeline.getPositionInCurrentClip()
+//                    setKeyFrameParaValue(position, rectProperty, getRelativeRect(filterRect))
+//                } else {
+//                    filter.set(rectProperty, getRelativeRect(filterRect))
+//                }
                 blockUpdate = false
             }
         }
