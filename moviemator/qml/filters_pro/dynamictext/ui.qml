@@ -159,16 +159,36 @@ Item {
         filter.combineAllKeyFramePara();
     }
 
+    function getMaxKeyFrameCountInfo() {
+        var metaParamList = metadata.keyframes.parameters
+        var maxKeyFrameConut = 0
+        var maxKeyFramePropert = metaParamList[0].property
+        for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++) {
+            var property = metaParamList[paramIndex].property
+            var keyFrameCount = filter.getKeyFrameCountOnProject(property)
+            if (keyFrameCount > maxKeyFrameConut) {
+                maxKeyFrameConut = keyFrameCount
+                maxKeyFramePropert = property
+            }
+        }
+
+        return [maxKeyFrameConut, maxKeyFramePropert]
+    }
 
     function loadSavedKeyFrameNew () {
         var metaParamList = metadata.keyframes.parameters
-        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
-        for(var keyIndex = 0; keyIndex < keyFrameCount;keyIndex++)
+        var maxKeyFrameCountInfo = getMaxKeyFrameCountInfo()
+        for(var keyIndex = 0; keyIndex < maxKeyFrameCountInfo[0]; keyIndex++)
         {
-            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
+            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, maxKeyFrameCountInfo[1])
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
+                if (nFrame > (filter.producerOut - filter.producerIn + 1 - 5)) {
+                    filter.removeAnimationKeyFrame(nFrame, property)
+                    continue
+                }
+
                 if (paraType === "rect") {
                     var strValue = filter.get(property)
                     var rectValue = filter.getAnimRectValue(nFrame, property)
