@@ -217,6 +217,7 @@ Item {
                     var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
+                    filter.resetProperty(property)
                     var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
                     filter.setKeyFrameParaValue(nFrame, property, valueStr);
                 }
@@ -241,8 +242,11 @@ Item {
         filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
         filter.set(bgcolourProperty, Qt.rect(0.0, 0.0, 0.0, 0.0))
         filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
+        filter.resetProperty(outlineProperty)
         filter.set(outlineProperty, 0)
+        filter.resetProperty(letterSpaceingProperty)
         filter.set(letterSpaceingProperty, 0)
+        filter.resetProperty(padProperty)
         filter.set(padProperty, 0)
         filter.set(rectProperty, Qt.rect(0.0148437, 0.441667, 0.948438, 0.195833))
         filter.set(valignProperty, 'bottom')
