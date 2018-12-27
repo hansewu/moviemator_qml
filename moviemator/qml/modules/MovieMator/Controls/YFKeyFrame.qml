@@ -115,6 +115,8 @@ RowLayout{
 
             }
         }
+
+        loadKeyFrame()
     }
     // 控件发生修改时反应
     function controlValueChanged(id){
