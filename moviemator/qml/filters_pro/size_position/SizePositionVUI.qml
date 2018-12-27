@@ -111,6 +111,8 @@ Flickable {
                 //filter.resetProperty(rectProperty)
                 //filter.set(rectProperty, rectCtr)
                 
+                filter.resetProperty(rectProperty)
+                filter.set(rectProperty, filterRect)
                 vuiTimer1.restart()
             }
         
@@ -217,8 +219,8 @@ Flickable {
         repeat: false
         onTriggered: 
         {   
-            filter.resetProperty(rectProperty)
-            filter.set(rectProperty, filterRect)
+            //filter.resetProperty(rectProperty)
+            //filter.set(rectProperty, filterRect)
 
             var position = timeline.getPositionInCurrentClip()
             if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.bKeyFrame(position))
