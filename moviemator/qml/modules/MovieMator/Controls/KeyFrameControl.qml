@@ -64,12 +64,16 @@ Rectangle {
         GridLayout {
             columns: 4
     
-
+               
             CheckBox {
                 id: enableKeyFrameCheckBox
                 Layout.columnSpan: 4
                 anchors.left: parent.left
                 anchors.leftMargin: 20
+                anchors.top: parent.top
+                anchors.topMargin: -5
+               
+                text: qsTr('Enable Key Frames')
                 checked: (filter.getKeyFrameNumber() > 0)
                 onClicked: {
                     if(checked)
@@ -88,14 +92,14 @@ Rectangle {
                             removeKeyFrameWarning.visible = true
                     }
                 }
-
+/*
                 style: CheckBoxStyle {
                     label: Text {
                         color: "white"
                         text: qsTr('Enable Key Frames')
                     }
                 }
-
+*/
                 onCheckedChanged: {
                     refreshFrameButtonsEnable()
 
@@ -108,17 +112,21 @@ Rectangle {
                 Layout.columnSpan: 4
                 anchors.left: parent.left
                 anchors.leftMargin: 20
+                anchors.top: enableKeyFrameCheckBox.bottom
+                anchors.topMargin: 0
+                text: qsTr('Auto Add Key Frames')
                 checked: true
+                opacity: enableKeyFrameCheckBox.checked ? 1.0 : 0.5
                 onClicked: {
                     
                 }
-
+/*
                 style: CheckBoxStyle {
                     label: Text {
                         color: "white"
                         text: qsTr('Auto Add Key Frames')
                     }
-                }
+                }*/
                 onCheckedChanged: 
                 {
                     refreshFrameButtonsEnable() 
@@ -129,10 +137,10 @@ Rectangle {
             CustomFilterButton {
                 id:addKeyFrameButton
                 anchors {
-                    top: parent.bottom
+                    top: autoAddKeyFrameCheckBox.bottom
                     left: parent.left
                     leftMargin: 10
-                    topMargin: -37
+                    topMargin: 0
                 }
                 implicitWidth: 32
                 implicitHeight: 32
