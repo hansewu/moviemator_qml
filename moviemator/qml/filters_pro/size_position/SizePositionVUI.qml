@@ -64,15 +64,21 @@ Flickable {
     }
 
     Component.onCompleted: {
+
         var rectT = filter.getRect(rectProperty)
-        console.log("Component.onCompletedComponent.onCompleted-2: rectT: " + rectT)
-        console.log("Component.onCompletedComponent.onCompleted-2: filterRect: " + filterRect)
+        if (filter.getKeyFrameNumber() > 0) {
+            var position = timeline.getPositionInCurrentClip()
+            filterRect = filter.getAnimRectValue(position, rectProperty)
+        } else {
+            filterRect = filter.getRect(rectProperty)
+        }
+
         rectT.x = filterRect.x * profile.width
         rectT.y = filterRect.y * profile.height
         rectT.width = filterRect.width * profile.width
         rectT.height = filterRect.height * profile.height
+
         rectangle.setHandles(rectT)
-        console.log("Component.onCompletedComponent.onCompleted-2: rectT-2: " + rectT)
     }
 
     DropArea { anchors.fill: parent }
