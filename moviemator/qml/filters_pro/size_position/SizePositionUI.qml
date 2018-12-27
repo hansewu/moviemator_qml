@@ -54,6 +54,8 @@ Item {
         setControls()
 
         // metadata.keyframes.parameters[0].value = rectTmp
+
+        keyFrame.initFilter()
     }
 
     function setFilter() {

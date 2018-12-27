@@ -35,6 +35,11 @@ RowLayout{
     signal loadKeyFrame(double keyFrameNum)
     signal removedAllKeyFrame()
 
+    function initFilter(){
+        var currentFrame = timeline.getPositionInCurrentClip()
+        loadKeyFrame(currentFrame)
+    }
+
     function getCurrentFrame(){
         return currentFrame;
     }
