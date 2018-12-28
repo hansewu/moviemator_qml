@@ -40,7 +40,7 @@ Item {
     property bool bTemporaryKeyFrame: false
 
     width: 500
-    height: 1000
+    height: 750
 
     function getHexStrColor(position, propertyName) {
         var colorRect = filter.getRectOfTextFilter(propertyName)
@@ -327,7 +327,7 @@ Item {
 
     function showAddFrameInfo(position)
     {
-        if (filter.autoAddKeyFrame() == false) return
+        if (filter.autoAddKeyFrame() === false) return
 
         addFrameInfoDialog.show     = false
         addFrameInfoDialog.show     = true
@@ -933,8 +933,8 @@ Item {
         }
         SpinBox {
             id: outlineSpinner
-            Layout.minimumWidth: 120
-            Layout.maximumWidth: 120
+            Layout.minimumWidth: 150
+            Layout.maximumWidth: 150
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
@@ -990,8 +990,8 @@ Item {
         }
         SpinBox {
             id: padSpinner
-            Layout.minimumWidth: 120
-            Layout.maximumWidth: 120
+            Layout.minimumWidth: 150
+            Layout.maximumWidth: 150
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
