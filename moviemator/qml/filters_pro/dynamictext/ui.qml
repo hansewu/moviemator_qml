@@ -862,6 +862,7 @@ Item {
             Layout.columnSpan: 4
             minimumValue: 0
             maximumValue: 500
+            horizontalAlignment:Qt.AlignLeft
             decimals: 0
             onValueChanged: {
                 updateFilter(letterSpaceingProperty, value.toString())
@@ -937,6 +938,7 @@ Item {
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 30
+            horizontalAlignment:Qt.AlignLeft
             decimals: 0
             onValueChanged: {
                 updateFilter(outlineProperty, value.toString())
@@ -993,6 +995,7 @@ Item {
             Layout.columnSpan: 2
             minimumValue: 0
             maximumValue: 100
+            horizontalAlignment:Qt.AlignLeft
             decimals: 0
             onValueChanged: {
                 updateFilter(padProperty, value.toString())
