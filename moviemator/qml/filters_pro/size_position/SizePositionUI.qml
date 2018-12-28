@@ -451,7 +451,7 @@ Item {
             id: fitButton
             text: qsTr('Fit')
             tooltip: qsTr('Fit')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/size-fit.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFit = true
@@ -476,7 +476,7 @@ Item {
             id: fitCropButton
             text: qsTr('FitCrop')
             tooltip: qsTr('FitCrop')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/size-fit-crop.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFitCrop = true
@@ -501,7 +501,7 @@ Item {
             id: tileButton
             text: qsTr('Tile')
             tooltip: qsTr('Tile')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/size-tile.png"
             //width:100
             Layout.alignment: Qt.AlignRight
             onClicked: {

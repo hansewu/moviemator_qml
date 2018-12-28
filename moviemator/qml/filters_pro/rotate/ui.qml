@@ -147,7 +147,7 @@ Item {
             id: rotateButton
             text: qsTr('90°')
             tooltip: qsTr('Rotate 90°')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/rotate-90.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 rotationSlider.value = 80
@@ -159,7 +159,7 @@ Item {
             id: rotateButton2
             text: qsTr('180°')
             tooltip: qsTr('Rotate 180°')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/rotate-180.png"
             Layout.alignment: Qt.AlignCenter
             onClicked: {
                 rotationSlider.value = 170
@@ -171,7 +171,7 @@ Item {
             id: rotateButton3
             text: qsTr('270°')
             tooltip: qsTr('Rotate 270°')
-            iconSource: "qrc:///icons/light/32x32/bg.png"
+            iconSource: "qrc:///icons/light/32x32/rotate-270.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 rotationSlider.value = 260
