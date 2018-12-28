@@ -1216,7 +1216,9 @@ Item {
                     }
                 }
             }
+            setControls()
             setKeyframedControls()
+            filter.set('size', filterRect.height)
         }
     }
 
