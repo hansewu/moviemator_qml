@@ -140,7 +140,7 @@ Item {
 
     function setInAndOutKeyFrame () {
         var positionStart = 0
-        var positionEnd = filter.producerOut - filter.producerIn + 1 - 5
+        var positionEnd = filter.producerOut - filter.producerIn + 1
 
         var paramCount = metadata.keyframes.parameterCount
         for(var i = 0; i < paramCount; i++) {
@@ -184,7 +184,7 @@ Item {
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
-                if (nFrame > (filter.producerOut - filter.producerIn + 1 - 5)) {
+                if (nFrame > (filter.producerOut - filter.producerIn + 1)) {
                     filter.removeAnimationKeyFrame(nFrame, property)
                     continue
                 }
@@ -378,7 +378,7 @@ Item {
 
 
 //            //动画预设
-//            var totalFrame = filter.producerOut - filter.producerIn + 1 - 5
+//            var totalFrame = filter.producerOut - filter.producerIn + 1
 //            var oneSeconds2Frame = parseInt(profile.fps)
 //            var startFrame = 0.0
 //            var middleFrame = oneSeconds2Frame

@@ -3,6 +3,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 
 Item {
     width: 300
@@ -145,37 +146,85 @@ Item {
 
         Button {
             id: rotateButton
-            text: qsTr('90°')
+            //text: qsTr('90°')
             tooltip: qsTr('Rotate 90°')
-            iconSource: "qrc:///icons/light/32x32/rotate-90.png"
+            //iconSource: "qrc:///icons/light/32x32/rotate-90.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 rotationSlider.value = 80
                 rotationSlider.value = 90
             }
+            implicitWidth: 56
+            implicitHeight: 56
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: rotateButton.pressed? "qrc:///icons/light/32x32/rotate-90-a.png" : "qrc:///icons/light/32x32/rotate-90.png"
+            }
         }
 
         Button {
             id: rotateButton2
-            text: qsTr('180°')
+            //text: qsTr('180°')
             tooltip: qsTr('Rotate 180°')
-            iconSource: "qrc:///icons/light/32x32/rotate-180.png"
+            //iconSource: "qrc:///icons/light/32x32/rotate-180.png"
             Layout.alignment: Qt.AlignCenter
             onClicked: {
                 rotationSlider.value = 170
                 rotationSlider.value = 180
             }
+            implicitWidth: 56
+            implicitHeight: 56
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                    //implicitWidth: 50
+                    //implicitHeight: 10
+                    //border.width: 1
+                    //border.color:"#888"
+                    //radius:3
+                    /*gradient:Gradient {
+                        GradientStop {position:0; color: "#ccc"}
+                        GradientStop {position:1; color: "#aaa"}
+                    }
+                    */
+                }
+                
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: rotateButton2.pressed? "qrc:///icons/light/32x32/rotate-180-a.png" : "qrc:///icons/light/32x32/rotate-180.png"
+            }
+        
         }
 
         Button {
             id: rotateButton3
-            text: qsTr('270°')
+            //text: qsTr('270°')
             tooltip: qsTr('Rotate 270°')
-            iconSource: "qrc:///icons/light/32x32/rotate-270.png"
+            //iconSource: "qrc:///icons/light/32x32/rotate-270.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 rotationSlider.value = 260
                 rotationSlider.value = 270
+            }
+            implicitWidth: 56
+            implicitHeight: 56
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: rotateButton3.pressed? "qrc:///icons/light/32x32/rotate-270-a.png" : "qrc:///icons/light/32x32/rotate-270.png"
             }
         }
 

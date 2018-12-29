@@ -76,7 +76,7 @@ RowLayout{
                 var key = metadata.keyframes.parameters[i].property
                 var value = filter.get(key)
 
-                var position2 = filter.producerOut - filter.producerIn + 1 - 5
+                var position2 = filter.producerOut - filter.producerIn + 1
                 
                 filter.setKeyFrameParaValue(position2, key, value.toString() );
                 filter.setKeyFrameParaValue(0, key, value.toString() );
