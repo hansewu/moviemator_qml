@@ -11,6 +11,7 @@ Metadata {
     gpuAlt: "movit.opacity"
     allowMultiple: false
     filterType: qsTr('Effect')
+    freeVersion: true
     keyframes {
         allowTrim: false
         allowAnimateIn: true
