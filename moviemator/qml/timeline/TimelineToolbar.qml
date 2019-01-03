@@ -25,7 +25,9 @@ ToolBar {
     property real wheelx: 0.0
     property real scaleValue: 1.01
     property real maxWidth: 1.0
-    property int flag: 0
+    property bool flag: true
+    // scaleCopy：用来过渡 multitrack.scaleFactor随 scaleSlider.value变化
+    property real scaleCopy: scaleSliderValue
     // Add -End
 
     id: root
@@ -339,6 +341,32 @@ ToolBar {
                 disabledIconSource: 'qrc:///timeline/timeline-toolbar-transition-d.png'
             }
             // Add -End
+
+            Rectangle {
+                implicitWidth: 44
+                implicitHeight: 44
+                color: 'transparent'
+                Image {
+                    anchors.centerIn: parent
+                    source: 'qrc:///timeline/timeline-toolbar-separator.png'
+                }
+            }
+            // Add -显示所有 Clips
+            CustomToolbutton {
+                id: allClipsButton
+                action: showAllClipsAction
+                visible: true
+                bEnabled: hasClipOrTrackSelected
+
+                implicitWidth: 44
+                implicitHeight: 44
+
+                customText:qsTr('All Clips')
+
+                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
+            }
+            // Add -End
         }
 
         ColorOverlay {
@@ -413,14 +441,7 @@ ToolBar {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         z: 2
-        onValueChanged: {
-            if(flag==0){   // 鼠标滚轮缩放
-                Logic.scrollIfZoomNeeded(wheelx, scaleValue)
-            }
-            else{  // 按钮缩放
-                Logic.scrollIfNeeded()
-            }
-        }
+        onValueChanged: flag ? Logic.scrollIfZoomNeeded(wheelx, scaleValue) : Logic.scrollIfNeeded()
     }
 
     // Add -滤镜菜单
@@ -591,8 +612,12 @@ ToolBar {
         //iconName: 'posAndSize'
 //        iconSource: 'qrc:///timeline/timeline-toolbar-zoomout.png'
         onTriggered: {
-            flag = 1
-            scaleSlider.value -= 0.1
+            flag = false
+            // scaleSlider.value -= 0.1
+            if(scaleCopy != 0) {
+                scaleSlider.value = scaleCopy - 0.1
+                scaleCopy = scaleSlider.value 
+            }
         }
     }
 
@@ -602,8 +627,10 @@ ToolBar {
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-zoomin.png'
         onTriggered: {
-            flag = 1
-            scaleSlider.value += 0.1
+            flag = false
+            // scaleSlider.value += 0.1
+            scaleSlider.value = scaleCopy + 0.1
+            scaleCopy = scaleSlider.value 
         }
     }
 
@@ -636,6 +663,24 @@ ToolBar {
             if(tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition){
                 timeline.onShowProperties(currentTrack, timeline.selection[0])
             }
+        }
+    }
+    // Add -End
+
+    // Add -显示所有 Clips
+    // 长度超过 scrollView就直接铺满整个 scrollView
+    Action {
+        id: showAllClipsAction
+        tooltip: qsTr("Show all clips")
+        enabled: hasClipOrTrackSelected
+        onTriggered: {
+            var scaleRefer = scrollView.width / (tracksContainer.width / multitrack.scaleFactor * 1.01);
+            if(multitrack.scaleFactor >= scaleRefer) {
+                // scaleRefer<0.01说明比最小的缩放还要小
+                scaleCopy = scaleRefer<0.01 ? 0 : Math.round(Math.pow(scaleRefer-0.01, 1/3) / 0.0625) * 0.0625;
+                multitrack.scaleFactor = scaleRefer;
+            }
+            scrollView.flickableItem.contentX = 0;
         }
     }
     // Add -End

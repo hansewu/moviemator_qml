@@ -68,11 +68,13 @@ Rectangle {
 
     function getColor() {
 //        return isBlank? 'transparent' : isTransition? 'mediumpurple' : isAudio? 'darkseagreen' : root.moviematorBlue
-        return isBlank? 'transparent' : isTransition? '#8c953f' : isAudio? '#2a5733' : '#2f798f'
+        // return isBlank? 'transparent' : isTransition? '#8c953f' : isAudio? '#2a5733' : '#2f798f'
+        return isBlank? 'transparent' : isTransition? '#8c953f' : '#0F7267'
     }
 
     function getSelectedColor() {
-        return isBlank? 'transparent' : isTransition? '#8c953f': isAudio? '#419f51' : '#2eb9df'
+        // return isBlank? 'transparent' : isTransition? '#8c953f': isAudio? '#419f51' : '#2eb9df'
+        return isBlank? 'transparent' : isTransition? '#8c953f': '#C0482C'
     }
 
     function reparent(track) {
@@ -164,8 +166,8 @@ Rectangle {
         visible: selected && !isBlank
         anchors.fill: parent
         color: 'transparent'
-        border.width: 2
-        border.color: 'white'
+        border.width: 1     // 2
+        border.color: '#DE9690'  // 'white'
     }
 
     Rectangle { // border
@@ -174,7 +176,7 @@ Rectangle {
         anchors.fill: parent
         color: 'transparent'
         border.width: 1
-        border.color: backgroundColor
+        border.color: '#1A4540'     // backgroundColor
     }
 
 
@@ -250,7 +252,7 @@ Rectangle {
         id: label
         text: clipName
         visible: !isBlank && !isTransition
-        font.pointSize: 10
+        font.pointSize: 9       // 10
         anchors {
             top: parent.top
             left: parent.left
@@ -258,7 +260,7 @@ Rectangle {
             leftMargin: parent.border.width +
                 ((isAudio || !settings.timelineShowThumbnails) ? 0 : inThumbnail.width) + 1
         }
-        color: 'black'
+        color: '#C7F3ED'    // 'black'
     }
 
 

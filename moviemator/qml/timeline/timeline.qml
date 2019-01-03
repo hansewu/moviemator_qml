@@ -20,11 +20,14 @@ Rectangle {
     function zoomIn(wheelx) {
 //        scaleSlider.value += 0.0625
 
-        toolbar.flag = 0
+        toolbar.flag = true
         toolbar.wheelx = wheelx
         toolbar.scaleValue = multitrack.scaleFactor
 
-        toolbar.scaleSliderValue += 0.0625
+        // toolbar.scaleSliderValue += 0.0625
+        toolbar.scaleSliderValue = toolbar.scaleCopy + 0.0625
+        toolbar.scaleCopy = toolbar.scaleSliderValue
+
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
     }
@@ -32,11 +35,15 @@ Rectangle {
     function zoomOut(wheelx) {
 //        scaleSlider.value -= 0.0625
 
-        toolbar.flag = 0
+        toolbar.flag = true
         toolbar.wheelx = wheelx
         toolbar.scaleValue = multitrack.scaleFactor
         
-        toolbar.scaleSliderValue -= 0.0625
+        // toolbar.scaleSliderValue -= 0.0625
+        if(toolbar.scaleCopy != 0){
+            toolbar.scaleSliderValue = toolbar.scaleCopy - 0.0625
+            toolbar.scaleCopy = toolbar.scaleSliderValue
+        }
         for (var i = 0; i < tracksRepeater.count; i++)
             tracksRepeater.itemAt(i).redrawWaveforms()
     }
@@ -456,7 +463,7 @@ Rectangle {
             Rectangle {
                 id: cursor
                 visible: x >= 0     // timeline.position > -1
-                color: "#d1d1d1"    // activePalette.text
+                color: "#C0482C"    // activePalette.text
                 width: 1
                 height: root.height - scrollView.__horizontalScrollBar.height - toolbar.height
                 x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX
