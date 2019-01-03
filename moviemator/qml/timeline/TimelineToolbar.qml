@@ -70,6 +70,7 @@ ToolBar {
                 implicitHeight: 44
                 customIconSource: 'qrc:///timeline/timeline-toolbar-menu-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-menu-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-menu-d.png'
             }
 
             Rectangle {
@@ -90,6 +91,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-append-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-append-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-append-d.png'
             }
 
             CustomToolbutton {
@@ -100,6 +102,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-insert-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-insert-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-insert-d.png'
             }
 
             CustomToolbutton {
@@ -110,6 +113,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-remove-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-remove-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-remove-d.png'
             }
 
 
@@ -121,6 +125,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-split-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-split-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-split-d.png'
             }
 
             Rectangle {
@@ -178,8 +183,9 @@ ToolBar {
                 tooltip: qsTr('Change the position and size of the clip')
                 customText: qsTr('Resize')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-size-n.png':'qrc:///timeline/timeline-toolbar-size-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-size-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-size-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-size-d.png'
             }
 
             CustomToolbutton {
@@ -195,8 +201,9 @@ ToolBar {
                 tooltip: qsTr('Rotate clip')
                 customText: qsTr('Rotate')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-rotate-n.png':'qrc:///timeline/timeline-toolbar-rotate-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-rotate-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-rotate-p.png'
+                disabledIconSource:'qrc:///timeline/timeline-toolbar-rotate-d.png'
             }
 
             CustomToolbutton {
@@ -212,8 +219,9 @@ ToolBar {
                 tooltip: qsTr('Crop clip')
                 customText: qsTr('Crop')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-crop-n.png':'qrc:///timeline/timeline-toolbar-crop-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-crop-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-crop-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-crop-d.png'
             }
 
             // 时间线工具栏去掉淡入淡出按钮
@@ -265,8 +273,9 @@ ToolBar {
                 tooltip: qsTr('Volume')
                 customText: qsTr('Volume')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-volume-n.png':'qrc:///timeline/timeline-toolbar-volume-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-volume-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-volume-p.png'
+                disabledIconSource:'qrc:///timeline/timeline-toolbar-volume-d.png'
             }
 
             CustomToolbutton {
@@ -280,8 +289,9 @@ ToolBar {
 
                 customText:qsTr('Add Text')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-text-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-text-d.png'
             }
 
             // Add -添加滤镜按钮
@@ -296,8 +306,9 @@ ToolBar {
 
                 customText:qsTr('Add Filter')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-filter-n.png':'qrc:///timeline/timeline-toolbar-filter-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-filter-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-filter-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-filter-d.png'
             }
             // Add -End
 
@@ -323,8 +334,9 @@ ToolBar {
 
                 customText:qsTr('Transition Settings')
 
-                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-transition-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-transition-d.png'
             }
             // Add -End
         }

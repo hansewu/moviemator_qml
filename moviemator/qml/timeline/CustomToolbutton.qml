@@ -8,6 +8,7 @@ ToolButton
 {
     property url customIconSource
     property url pressedIconSource
+    property url disabledIconSource
     property string customText
     property bool bEnabled:true
 
@@ -17,7 +18,7 @@ ToolButton
             }
     }
     Image {
-        source: parent.pressed? parent.pressedIconSource : parent.customIconSource
+        source: bEnabled ? (parent.pressed ? parent.pressedIconSource : parent.customIconSource) : parent.disabledIconSource
         fillMode: Image.PreserveAspectFit // For not stretching image (optional)
         anchors.fill: parent
         anchors.horizontalCenter: parent.horizontalCenter
