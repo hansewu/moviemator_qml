@@ -4,6 +4,7 @@ import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Layouts 1.1
 import MovieMator.Controls 1.0
+import QtQuick.Controls.Styles 1.0
 
 Item {
     property string fillProperty
@@ -244,7 +245,7 @@ Item {
     GridLayout {
         columns: 5
         rowSpacing: 13
-        columnSpacing: 5
+        columnSpacing: 20
         anchors.fill: parent
         anchors.margins: 18
 
@@ -281,7 +282,7 @@ Item {
                 console.log("rectValuerectValuerectValuerectValue: " + rectValue)
                 if (filter.getKeyFrameNumber() <= 0)
                 {
-                    var position2 = filter.producerOut - filter.producerIn + 1 - 5
+                    var position2 = filter.producerOut - filter.producerIn + 1
                     filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
                     filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
                     filter.combineAllKeyFramePara();
@@ -449,9 +450,9 @@ Item {
 
         Button {
             id: fitButton
-            text: qsTr('Fit')
+            //text: qsTr('Fit')
             tooltip: qsTr('Fit')
-            iconSource: "qrc:///icons/light/32x32/size-fit.png"
+            //iconSource: "qrc:///icons/light/32x32/size-fit.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFit = true
@@ -470,13 +471,26 @@ Item {
                     fit()
                 }
             }
+
+            implicitWidth: 55
+            implicitHeight: 41
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: fitButton.pressed? "qrc:///icons/light/32x32/size-fit-a.png" : "qrc:///icons/light/32x32/size-fit.png"
+            }
         }
 
         Button {
             id: fitCropButton
-            text: qsTr('FitCrop')
+            //text: qsTr('FitCrop')
             tooltip: qsTr('FitCrop')
-            iconSource: "qrc:///icons/light/32x32/size-fit-crop.png"
+            //iconSource: "qrc:///icons/light/32x32/size-fit-crop.png"
             Layout.alignment: Qt.AlignRight
             onClicked: {
                 bFitCrop = true
@@ -495,13 +509,25 @@ Item {
                     fitCrop()
                 }
             }
+            implicitWidth: 55
+            implicitHeight: 41
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: fitCropButton.pressed? "qrc:///icons/light/32x32/size-fit-crop-a.png" : "qrc:///icons/light/32x32/size-fit-crop.png"
+            }
         }
 
         Button {
             id: tileButton
-            text: qsTr('Tile')
+            //text: qsTr('Tile')
             tooltip: qsTr('Tile')
-            iconSource: "qrc:///icons/light/32x32/size-tile.png"
+            //iconSource: "qrc:///icons/light/32x32/size-tile.png"
             //width:100
             Layout.alignment: Qt.AlignRight
             onClicked: {
@@ -520,6 +546,18 @@ Item {
                 {
                     tile()
                 }
+            }
+            implicitWidth: 55
+            implicitHeight: 41
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: tileButton.pressed? "qrc:///icons/light/32x32/size-tile-a.png" : "qrc:///icons/light/32x32/size-tile.png"
             }
         }
 

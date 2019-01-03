@@ -8,6 +8,7 @@ Metadata {
     mlt_service: "volume"
     qml: "ui.qml"
     isFavorite: true
+    freeVersion: true
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

@@ -10,8 +10,9 @@ Metadata {
     vui: 'vui_affine.qml'
     gpuAlt: 'movit.rect'
     isFavorite: true
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Transform')
+    freeVersion: true
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

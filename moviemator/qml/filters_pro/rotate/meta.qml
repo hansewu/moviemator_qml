@@ -8,8 +8,9 @@ Metadata {
     mlt_service: "affine"
     qml: "ui.qml"
     isFavorite: true
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Transform')
+    freeVersion: true
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

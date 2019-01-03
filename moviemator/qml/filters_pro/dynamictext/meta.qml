@@ -10,6 +10,7 @@ Metadata {
     vui: 'vui.qml'
     isGpuCompatible: false
     filterType: qsTr('Text')
+    freeVersion: true
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true
