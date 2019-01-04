@@ -104,7 +104,7 @@ Item {
             id: fontCombo
             Layout.row: 2
             Layout.column: 1
-            model: ListModel {
+            listModel: ListModel {
                 ListElement {name: 'Droid Sans'}
                 ListElement {name: 'Droid Serif'}
                 ListElement {name: 'Gentilis'}
