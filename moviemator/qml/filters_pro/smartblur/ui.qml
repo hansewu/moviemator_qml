@@ -188,7 +188,6 @@ Item {
             decimals: 0
             spinnerWidth: 80
             onValueChanged: {
-                {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
@@ -209,5 +208,4 @@ Item {
 
         Item { Layout.fillHeight: true }
     }
-}
 }

@@ -42,6 +42,8 @@ Item {
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
 
+            loadPresets()
+
             rectTmp.x = 0.0
             rectTmp.y = 0.0
             rectTmp.width = 1.0
@@ -58,6 +60,39 @@ Item {
 
         keyFrame.initFilter()
     }
+           
+        
+    function loadPresets()
+    {
+        rectTmp.x       = 0.0
+        rectTmp.y       = 0.5
+        rectTmp.width   = 0.5
+        rectTmp.height  = 0.5
+
+        filter.set(rectProperty,   rectTmp)
+        filter.savePreset(preset.parameters, qsTr('Bottom Left'))
+
+        rectTmp.x       = 0.5
+        rectTmp.y       = 0.5
+        rectTmp.width   = 0.5
+        rectTmp.height  = 0.5
+        filter.set(rectProperty,   rectTmp)
+        filter.savePreset(preset.parameters, qsTr('Bottom Right'))
+
+        rectTmp.x       = 0.0
+        rectTmp.y       = 0.0
+        rectTmp.width   = 0.5
+        rectTmp.height  = 0.5
+        filter.set(rectProperty,   rectTmp)
+        filter.savePreset(preset.parameters, qsTr('Top Left'))
+
+        rectTmp.x       = 0.5
+        rectTmp.y       = 0.0
+        rectTmp.width   = 0.5
+        rectTmp.height  = 0.5
+        filter.set(rectProperty,   rectTmp)
+        filter.savePreset(preset.parameters, qsTr('Top Right'))
+    } 
 
     function setFilter() {
         var x = parseFloat(rectX.text)

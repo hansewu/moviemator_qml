@@ -66,8 +66,8 @@ Item {
             minimumValue: 0
             maximumValue: 360
             decimals: 1
-            spinnerWidth: 110
-            suffix: qsTr(' degree')
+            spinnerWidth: 80
+            suffix: qsTr(' °')//qsTr(' degree')
             onValueChanged:{
                keyFrame.controlValueChanged(rotationSlider) 
             }
@@ -87,7 +87,7 @@ Item {
             minimumValue: 0.1
             maximumValue: 200
             decimals: 1
-            spinnerWidth: 110
+            spinnerWidth: 80
             suffix: ' %'
             onValueChanged: {
                 keyFrame.controlValueChanged(scaleSlider) 
@@ -112,7 +112,7 @@ Item {
             id: xOffsetSlider
             minimumValue: -1000
             maximumValue: 1000
-            spinnerWidth: 110
+            spinnerWidth: 80
             onValueChanged:{
                 keyFrame.controlValueChanged(xOffsetSlider) 
             }
@@ -130,7 +130,7 @@ Item {
             id: yOffsetSlider
             minimumValue: -1000
             maximumValue: 1000
-            spinnerWidth: 110
+            spinnerWidth: 80
             onValueChanged:{
                 keyFrame.controlValueChanged(yOffsetSlider) 
             }
