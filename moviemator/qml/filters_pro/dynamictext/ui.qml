@@ -740,19 +740,53 @@ Item {
             }
         }
 
+//        Label {
+//            text: qsTr('Insert field')
+//            Layout.alignment: Qt.AlignLeft
+//            color: '#ffffff'
+//        }
+//        ComboBox {
+//            id: insertFieldCombo
+//            Layout.columnSpan: 4
+//            Layout.minimumHeight: 32
+//            Layout.maximumHeight: 32
+//            Layout.minimumWidth: preset.width
+//            Layout.maximumWidth: preset.width
+//            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
+//            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
+//            function valueToIndex() {
+//                var textStr = filter.get('argument')
+//                for (var i = 0; i < values.length; ++i)
+//                    if (values[i] === textStr) break;
+//                if (i === values.length) i = 0;
+//                return i;
+//            }
+//            onActivated: {
+//                textArea.insert(textArea.cursorPosition, values[index])
+//            }
+//        }
+
         Label {
             text: qsTr('Insert field')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
         }
-        ComboBox {
+        MyComboBox {
             id: insertFieldCombo
             Layout.columnSpan: 4
+            width: 100
+            height: 32
             Layout.minimumHeight: 32
             Layout.maximumHeight: 32
             Layout.minimumWidth: preset.width
             Layout.maximumWidth: preset.width
-            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
+            listModel: ListModel {
+                ListElement {name: qsTr('default')}
+                ListElement {name: qsTr('Timecode')}
+                ListElement {name: qsTr('Frame #', 'Frame number')}
+                ListElement {name: qsTr('File date')}
+                ListElement {name: qsTr('File name')}
+            }
             property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
             function valueToIndex() {
                 var textStr = filter.get('argument')
@@ -761,8 +795,8 @@ Item {
                 if (i === values.length) i = 0;
                 return i;
             }
-            onActivated: {
-                textArea.insert(textArea.cursorPosition, values[index])
+            onCurrentIndexChanged: {
+                textArea.insert(textArea.cursorPosition, values[currentIndex])
             }
         }
 
@@ -829,13 +863,36 @@ Item {
                     }
                 }
             }
-            ComboBox {
+//            ComboBox {
+//                id: weightCombo
+//                Layout.minimumHeight: 32
+//                Layout.maximumHeight: 32
+//                Layout.minimumWidth: (preset.width - 8) / 2
+//                Layout.maximumWidth: (preset.width - 8) / 2
+//                model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
+//                property var values: [Font.Normal, Font.Bold, Font.Light]
+//                function valueToIndex() {
+//                    var w = filter.getDouble('weight')
+//                    for (var i = 0; i < values.length; ++i)
+//                        if (values[i] === w) break;
+//                    if (i === values.length) i = 0;
+//                    return i;
+//                }
+//                onActivated: {
+//                    filter.set('weight', 10 * values[index])
+//                }
+//           }
+            MyComboBox {
                 id: weightCombo
                 Layout.minimumHeight: 32
                 Layout.maximumHeight: 32
                 Layout.minimumWidth: (preset.width - 8) / 2
                 Layout.maximumWidth: (preset.width - 8) / 2
-                model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
+                listModel: ListModel {
+                    ListElement {name: qsTr('Normal')}
+                    ListElement {name: qsTr('Bold')}
+                    ListElement {name: qsTr('Light', 'thin font stroke')}
+                }
                 property var values: [Font.Normal, Font.Bold, Font.Light]
                 function valueToIndex() {
                     var w = filter.getDouble('weight')
@@ -844,8 +901,8 @@ Item {
                     if (i === values.length) i = 0;
                     return i;
                 }
-                onActivated: {
-                    filter.set('weight', 10 * values[index])
+                onCurrentIndexChanged: {
+                     filter.set('weight', 10 * values[currentIndex])
                 }
            }
         }

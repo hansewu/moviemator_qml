@@ -45,10 +45,20 @@ Item {
                 color: '#ffffff'
 
             }
-            ComboBox {
+//            ComboBox {
+//                id: modeCombo
+//                Layout.minimumWidth: 200
+//                model: [qsTr('Shadows (Lift)'), qsTr('Midtones (Gamma)'), qsTr('Highlights (Gain)')]
+//                onCurrentIndexChanged: filter.set(paramAction, currentIndex / 2)
+//            }
+            MyComboBox {
                 id: modeCombo
                 Layout.minimumWidth: 200
-                model: [qsTr('Shadows (Lift)'), qsTr('Midtones (Gamma)'), qsTr('Highlights (Gain)')]
+                listModel: ListModel {
+                    ListElement {name: qsTr('Shadows (Lift)')}
+                    ListElement {name: qsTr('Midtones (Gamma)')}
+                    ListElement {name: qsTr('Highlights (Gain)')}
+                }
                 onCurrentIndexChanged: filter.set(paramAction, currentIndex / 2)
             }
         }
