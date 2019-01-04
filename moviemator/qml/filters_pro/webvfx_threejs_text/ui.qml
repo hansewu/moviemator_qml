@@ -84,11 +84,33 @@ Item {
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        ComboBox {
+//        ComboBox {
+//            id: fontCombo
+//            Layout.row: 2
+//            Layout.column: 1
+//            model: ['Droid Sans', 'Droid Serif', 'Gentilis', 'Helvetiker', 'Optimer']
+//            property var values: ['droid sans', 'droid serif', 'gentilis', 'helvetiker', 'optimer']
+//            function valueToIndex() {
+//                var w = filter.get('font')
+//                for (var i = 0; i < values.length; ++i)
+//                    if (values[i] === w) break;
+//                if (i === values.length) i = 0;
+//                return i;
+//            }
+//            currentIndex: valueToIndex()
+//            onActivated: filter.set('font', values[index])
+//        }
+        MyComboBox {
             id: fontCombo
             Layout.row: 2
-            Layout.column: 1            
-            model: ['Droid Sans', 'Droid Serif', 'Gentilis', 'Helvetiker', 'Optimer']
+            Layout.column: 1
+            model: ListModel {
+                ListElement {name: 'Droid Sans'}
+                ListElement {name: 'Droid Serif'}
+                ListElement {name: 'Gentilis'}
+                ListElement {name: 'Helvetiker'}
+                ListElement {name: 'Optimer'}
+            }
             property var values: ['droid sans', 'droid serif', 'gentilis', 'helvetiker', 'optimer']
             function valueToIndex() {
                 var w = filter.get('font')
@@ -97,8 +119,9 @@ Item {
                 if (i === values.length) i = 0;
                 return i;
             }
-            currentIndex: valueToIndex()
-            onActivated: filter.set('font', values[index])
+            onCurrentIndexChanged: {
+                filter.set('font', values[currentIndex])
+            }
         }
         CheckBox {
             id: boldCheckBox

@@ -2,6 +2,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import MovieMator.Controls 1.0
 
 Item {
     width: 300
@@ -26,9 +27,20 @@ Item {
             Label { text: qsTr('Copy from')
             color: '#ffffff'
             }
-            ComboBox {
+//            ComboBox {
+//                id: combo
+//                model: [qsTr('Left to right'), qsTr('Right to left')]
+//                onCurrentIndexChanged: {
+//                    filter.set(fromParameter, currentIndex)
+//                    filter.set(toParameter, 1 - currentIndex)
+//                }
+//            }
+            MyComboBox {
                 id: combo
-                model: [qsTr('Left to right'), qsTr('Right to left')]
+                listModel: ListModel {
+                    ListElement {name: qsTr('Left to right')}
+                    ListElement {name: qsTr('Right to left')}
+                }
                 onCurrentIndexChanged: {
                     filter.set(fromParameter, currentIndex)
                     filter.set(toParameter, 1 - currentIndex)
