@@ -25,7 +25,9 @@ ToolBar {
     property real wheelx: 0.0
     property real scaleValue: 1.01
     property real maxWidth: 1.0
-    property int flag: 0
+    property bool flag: true
+    // scaleCopy：用来过渡 multitrack.scaleFactor随 scaleSlider.value变化
+    property real scaleCopy: scaleSliderValue
     // Add -End
 
     id: root
@@ -70,6 +72,7 @@ ToolBar {
                 implicitHeight: 44
                 customIconSource: 'qrc:///timeline/timeline-toolbar-menu-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-menu-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-menu-d.png'
             }
 
             Rectangle {
@@ -90,6 +93,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-append-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-append-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-append-d.png'
             }
 
             CustomToolbutton {
@@ -100,6 +104,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-insert-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-insert-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-insert-d.png'
             }
 
             CustomToolbutton {
@@ -110,6 +115,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-remove-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-remove-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-remove-d.png'
             }
 
 
@@ -121,6 +127,7 @@ ToolBar {
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-split-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-split-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-split-d.png'
             }
 
             Rectangle {
@@ -178,8 +185,9 @@ ToolBar {
                 tooltip: qsTr('Change the position and size of the clip')
                 customText: qsTr('Resize')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-size-n.png':'qrc:///timeline/timeline-toolbar-size-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-size-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-size-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-size-d.png'
             }
 
             CustomToolbutton {
@@ -195,8 +203,9 @@ ToolBar {
                 tooltip: qsTr('Rotate clip')
                 customText: qsTr('Rotate')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-rotate-n.png':'qrc:///timeline/timeline-toolbar-rotate-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-rotate-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-rotate-p.png'
+                disabledIconSource:'qrc:///timeline/timeline-toolbar-rotate-d.png'
             }
 
             CustomToolbutton {
@@ -212,8 +221,9 @@ ToolBar {
                 tooltip: qsTr('Crop clip')
                 customText: qsTr('Crop')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-crop-n.png':'qrc:///timeline/timeline-toolbar-crop-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-crop-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-crop-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-crop-d.png'
             }
 
             // 时间线工具栏去掉淡入淡出按钮
@@ -265,8 +275,9 @@ ToolBar {
                 tooltip: qsTr('Volume')
                 customText: qsTr('Volume')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-volume-n.png':'qrc:///timeline/timeline-toolbar-volume-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-volume-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-volume-p.png'
+                disabledIconSource:'qrc:///timeline/timeline-toolbar-volume-d.png'
             }
 
             CustomToolbutton {
@@ -280,8 +291,9 @@ ToolBar {
 
                 customText:qsTr('Add Text')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-text-n.png':'qrc:///timeline/timeline-toolbar-text-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-text-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-text-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-text-d.png'
             }
 
             // Add -添加滤镜按钮
@@ -296,8 +308,9 @@ ToolBar {
 
                 customText:qsTr('Add Filter')
 
-                customIconSource: enabled?'qrc:///timeline/timeline-toolbar-filter-n.png':'qrc:///timeline/timeline-toolbar-filter-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-filter-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-filter-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-filter-d.png'
             }
             // Add -End
 
@@ -322,6 +335,33 @@ ToolBar {
                 implicitHeight: 44
 
                 customText:qsTr('Transition Settings')
+
+                customIconSource: 'qrc:///timeline/timeline-toolbar-transition-n.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-transition-d.png'
+            }
+            // Add -End
+
+            Rectangle {
+                implicitWidth: 44
+                implicitHeight: 44
+                color: 'transparent'
+                Image {
+                    anchors.centerIn: parent
+                    source: 'qrc:///timeline/timeline-toolbar-separator.png'
+                }
+            }
+            // Add -显示所有 Clips
+            CustomToolbutton {
+                id: allClipsButton
+                action: showAllClipsAction
+                visible: true
+                bEnabled: hasClipOrTrackSelected
+
+                implicitWidth: 44
+                implicitHeight: 44
+
+                customText:qsTr('All Clips')
 
                 customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
@@ -401,14 +441,7 @@ ToolBar {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         z: 2
-        onValueChanged: {
-            if(flag==0){   // 鼠标滚轮缩放
-                Logic.scrollIfZoomNeeded(wheelx, scaleValue)
-            }
-            else{  // 按钮缩放
-                Logic.scrollIfNeeded()
-            }
-        }
+        onValueChanged: flag ? Logic.scrollIfZoomNeeded(wheelx, scaleValue) : Logic.scrollIfNeeded()
     }
 
     // Add -滤镜菜单
@@ -579,8 +612,12 @@ ToolBar {
         //iconName: 'posAndSize'
 //        iconSource: 'qrc:///timeline/timeline-toolbar-zoomout.png'
         onTriggered: {
-            flag = 1
-            scaleSlider.value -= 0.1
+            flag = false
+            // scaleSlider.value -= 0.1
+            if(scaleCopy != 0) {
+                scaleSlider.value = scaleCopy - 0.1
+                scaleCopy = scaleSlider.value 
+            }
         }
     }
 
@@ -590,8 +627,10 @@ ToolBar {
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-zoomin.png'
         onTriggered: {
-            flag = 1
-            scaleSlider.value += 0.1
+            flag = false
+            // scaleSlider.value += 0.1
+            scaleSlider.value = scaleCopy + 0.1
+            scaleCopy = scaleSlider.value 
         }
     }
 
@@ -624,6 +663,24 @@ ToolBar {
             if(tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition){
                 timeline.onShowProperties(currentTrack, timeline.selection[0])
             }
+        }
+    }
+    // Add -End
+
+    // Add -显示所有 Clips
+    // 长度超过 scrollView就直接铺满整个 scrollView
+    Action {
+        id: showAllClipsAction
+        tooltip: qsTr("Show all clips")
+        enabled: hasClipOrTrackSelected
+        onTriggered: {
+            var scaleRefer = scrollView.width / (tracksContainer.width / multitrack.scaleFactor * 1.01);
+            if(multitrack.scaleFactor >= scaleRefer) {
+                // scaleRefer<0.01说明比最小的缩放还要小
+                scaleCopy = scaleRefer<0.01 ? 0 : Math.round(Math.pow(scaleRefer-0.01, 1/3) / 0.0625) * 0.0625;
+                multitrack.scaleFactor = scaleRefer;
+            }
+            scrollView.flickableItem.contentX = 0;
         }
     }
     // Add -End

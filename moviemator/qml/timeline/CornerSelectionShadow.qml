@@ -19,7 +19,7 @@ Item {
         rotation: mirrorGradient ? -90 : 90
         gradient: Gradient {
             GradientStop { position: 0.0; color: "transparent" }
-            GradientStop { position: 1.0; color: "white" }
+            GradientStop { position: 1.0; color: "#C0482C" /*"white"*/ }
         }
         PulsingAnimation {
             target: shadowGradient

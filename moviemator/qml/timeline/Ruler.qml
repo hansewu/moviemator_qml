@@ -83,7 +83,7 @@ Rectangle {
             Label {
                 anchors.top: parent.top
                 anchors.topMargin: 5
-                color: "#d1d1d1"    // activePalette.windowText
+                color: "#c4c4c4"    // activePalette.windowText
                 x: markStartX + index * stepSize * stepRatio + 2
                 // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
                 // 只有显示出来的才转换

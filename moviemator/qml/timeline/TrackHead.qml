@@ -25,7 +25,7 @@ Rectangle {
         lockButtonAnim.restart();
     }
 
-    SystemPalette { id: activePalette }
+    SystemPalette { id: activePalette; colorGroup: SystemPalette.Active}
     color: selected ? selectedTrackColor : normalColor  //(index % 2)? activePalette.alternateBase : activePalette.base
     border.color: selected? 'white' : backgroundColor//'transparent'
     border.width: selected? 2 : 1
@@ -37,7 +37,7 @@ Rectangle {
             when: trackHeadRoot.selected
             PropertyChanges {
                 target: trackHeadRoot
-                color: isVideo? '#2eb9df' : '#419f51'//root.moviematorBlue : 'darkseagreen'
+                color: activePalette.highlight
             }
         },
         State {
