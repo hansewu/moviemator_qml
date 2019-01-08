@@ -7,7 +7,7 @@ import QtQuick.Controls.Styles 1.0
 
 Item {
     width: 300
-    height: 280
+    height: 330
     Component.onCompleted: {
         keyFrame.initFilter(layoutRoot)
     }

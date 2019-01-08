@@ -507,7 +507,7 @@ Item {
                 }
             }
 
-            implicitWidth: 55
+            implicitWidth: 56
             implicitHeight: 41
             style: ButtonStyle {
                 background: Rectangle {
@@ -544,7 +544,7 @@ Item {
                     fitCrop()
                 }
             }
-            implicitWidth: 55
+            implicitWidth: 56
             implicitHeight: 41
             style: ButtonStyle {
                 background: Rectangle {
@@ -582,7 +582,7 @@ Item {
                     tile()
                 }
             }
-            implicitWidth: 55
+            implicitWidth: 56
             implicitHeight: 41
             style: ButtonStyle {
                 background: Rectangle {

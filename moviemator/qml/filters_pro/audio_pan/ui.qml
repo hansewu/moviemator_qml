@@ -26,10 +26,20 @@ Item {
             Layout.alignment: Qt.AlignRight
             color: '#ffffff'
         }
-        ComboBox {
+//        ComboBox {
+//            id: combo
+//            Layout.columnSpan: 2
+//            model: [qsTr('Left'), qsTr('Right')]
+//            onCurrentIndexChanged: filter.set('channel', currentIndex)
+//        }
+
+        MyComboBox {
             id: combo
             Layout.columnSpan: 2
-            model: [qsTr('Left'), qsTr('Right')]
+            listModel: ListModel {
+                ListElement {name: qsTr('Left')}
+                ListElement {name: qsTr('Right')}
+            }
             onCurrentIndexChanged: filter.set('channel', currentIndex)
         }
 

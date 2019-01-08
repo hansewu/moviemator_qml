@@ -6,6 +6,7 @@ import QtQuick.Window 2.1
 
 RowLayout {
     property var parameters: []
+    property ListModel listMode: ListModel {}
 
     // Tell the parent QML page to update its controls.
     signal beforePresetLoaded()
@@ -13,14 +14,34 @@ RowLayout {
 
     Component.onCompleted: {
         filter.loadPresets()
+        var count = filter.presetCount()
+        for (var i = 0; i < count; i++) {
+            var presetStr = filter.getPresetWithIndex(i)
+            listMode.append({name: presetStr})
+        }
     }
 
-    ComboBox {
+//    ComboBox {
+//        id: presetCombo
+//        Layout.fillWidth: true
+//        Layout.minimumWidth: 100
+//        Layout.maximumWidth: 264
+//        model: filter.presets
+//        onCurrentTextChanged: {
+//            if (currentText.length > 1) {//一个空格
+//                beforePresetLoaded()
+//                filter.preset(currentText)
+//                presetSelected()
+//            }
+//        }
+//    }
+
+    MyComboBox {
         id: presetCombo
         Layout.fillWidth: true
         Layout.minimumWidth: 100
         Layout.maximumWidth: 264
-        model: filter.presets
+        listModel: listMode
         onCurrentTextChanged: {
             if (currentText.length > 1) {//一个空格
                 beforePresetLoaded()

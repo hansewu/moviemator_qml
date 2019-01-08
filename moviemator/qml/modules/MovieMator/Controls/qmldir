@@ -16,3 +16,5 @@ YFKeyFrame 1.0 YFKeyFrame.qml
 SeparatorLine 1.0 SeparatorLine.qml
 GridMenu 1.0 GridMenu.qml
 NewPreset 1.0 NewPreset.qml
+MyListView 1.0 MyListView.qml
+MyComboBox 1.0 MyComboBox.qml
