@@ -98,7 +98,7 @@ RowLayout {
     SpinBox {
         id: spinner
 
-        Layout.minimumWidth: 70
+        Layout.minimumWidth: (suffix == '')?51:70
         minimumValue: slider.minimumValue / ratio
         maximumValue: slider.maximumValue / ratio
         stepSize: 1 / Math.pow(10, decimals)
@@ -126,8 +126,8 @@ RowLayout {
                     color: parent.color
                 }
             }
-            incrementControl: Rectangle {}
-            decrementControl: Rectangle {}
+            // incrementControl: Rectangle {}
+            // decrementControl: Rectangle {}
         }
     }
 }
