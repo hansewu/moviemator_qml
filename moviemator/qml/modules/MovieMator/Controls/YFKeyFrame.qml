@@ -30,6 +30,8 @@ RowLayout{
 
     property bool bBlockSignal: false
 
+    property rect colorRect
+
     signal synchroData()
     signal loadKeyFrame()
 
@@ -211,21 +213,24 @@ RowLayout{
                 paramIndex = paramIndex+2
                 break;
 
-            case "ColorPicker":
+            case "ColorPicker"://setKeyFrameParaRectValue
                 console.log("id.valueid.valueid.valueid.value: " + id.objectName)
                 console.log("id.valueid.valueid.valueid.value: " + id.value)
                 console.log("parameter.propertyparameter.property: " + parameter.property)
                 console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+                colorRect.x = saveValueCalc(parseInt("0x" + id.value.slice(1, 3)),parameter.factorFunc)
+                colorRect.y = saveValueCalc(parseInt("0x" + id.value.slice(3, 5)),parameter.factorFunc)
+                colorRect.width = saveValueCalc(parseInt("0x" + id.value.slice(5, 7)),parameter.factorFunc)
             
                 if(filter.bKeyFrame(currentFrame))
                 {
-                    filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(id.value,parameter.factorFunc).toString())
+                    filter.setKeyFrameParaRectValue(currentFrame, parameter.property, colorRect)
                     filter.combineAllKeyFramePara()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((id.value == parameter.value)||(Math.abs(id.value - parameter.value) < 1)){
 
                 }else{
-                    filter.set(parameter.property, saveValueCalc(id.value,parameter.factorFunc))
+                    filter.set(parameter.property, colorRect)
                     userChange = true
                 }
                 break;
@@ -402,7 +407,6 @@ RowLayout{
                 loadSlider(control,paramIndex)
             
             default :
-                control.value = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property)
                 break;
             }
             // 一个控件对应几个参数的，取一次就可以反算出来了
@@ -443,7 +447,10 @@ RowLayout{
                 break;
 
             case "ColorPicker":
-                filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
+                colorRect.x = saveValueCalc(parseInt("0x" + control.value.slice(1, 3)),parameter.factorFunc)
+                colorRect.y = saveValueCalc(parseInt("0x" + control.value.slice(3, 5)),parameter.factorFunc)
+                colorRect.width = saveValueCalc(parseInt("0x" + control.value.slice(5, 7)),parameter.factorFunc)
+                filter.set(parameter.property,colorRect)
                 break;
 
             case "Slider":
@@ -742,30 +749,20 @@ RowLayout{
     function loadColorPicker(control,paramIndex){
         var parameter = metadata.keyframes.parameters[paramIndex]
         console.log("loadControlSliderloadControlSliderloadControlSlider: ")
-        if(filter.bKeyFrame(currentFrame)){
-            var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
-            if(tempValue != -1.0)
-            {
-                control.value = loadValueCalc(tempValue,parameter.factorFunc)
-                console.log("loadControlSliderloadControlSlider-1: " + control.value)
-            }
-        }else{
-            filter.get(parameter.property)
-            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
-            filter.get(parameter.property)
-            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
-            parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
-            console.log("parameter.propertyparameter.property: " + parameter.property)
-            console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
-            // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
-            var parameterList = findParameter(control)
-            for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
-                metadata.keyframes.parameters[parameterList[i]].value = parameter.value
-            }
-            control.value = parameter.value
-            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
-            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
-        }
+
+        filter.get(parameter.property)
+        var tempValue = filter.getAnimRectValue(currentFrame, parameter.property)
+        filter.get(parameter.property)
+        console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+        parameter.value = Qt.rgba(parseFloat(tempValue.x),parseFloat(tempValue.y),parseFloat(tempValue.width),1.0)
+
+        console.log("parameter.propertyparameter.property: " + parameter.property)
+        console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
+        // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
+        control.value = parameter.value
+        console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
+        console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+        
     }
     function loadSlider(control,paramIndex){
         var parameter = metadata.keyframes.parameters[paramIndex]
