@@ -302,12 +302,13 @@ RowLayout{
                 var key = metadata.keyframes.parameters[i].property
                 var value = filter.get(key)
 
-                var position2 = filter.producerOut - filter.producerIn + 1
+                var position2 = timeline.getCurrentClipLength() - 1//filter.producerOut - filter.producerIn + 1
                 
                 filter.setKeyFrameParaValue(position2, key, value.toString());
                 filter.setKeyFrameParaValue(0, key, value.toString());
             }
         }
+
         bBlockSignal = false
 
         //重复点击不生效
@@ -798,7 +799,7 @@ RowLayout{
         return currentFrame;
     }
     function removeAllKeyFrame(){
-        var position        = filter.producerOut - filter.producerIn + 1
+        var position        = timeline.getCurrentClipLength() //filter.producerOut - filter.producerIn + 1
         
         while(true) 
         {  

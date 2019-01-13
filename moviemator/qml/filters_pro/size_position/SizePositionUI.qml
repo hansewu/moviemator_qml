@@ -317,7 +317,7 @@ Item {
                 console.log("rectValuerectValuerectValuerectValue: " + rectValue)
                 if (filter.getKeyFrameNumber() <= 0)
                 {
-                    var position2 = filter.producerOut - filter.producerIn + 1
+                    var position2 = (timeline.getCurrentClipLength() - 1) //filter.producerOut - filter.producerIn + 1
                     filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
                     filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
                     filter.combineAllKeyFramePara();

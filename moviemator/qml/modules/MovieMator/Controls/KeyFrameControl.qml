@@ -30,7 +30,7 @@ Rectangle {
 
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position) && (position != 0) && (position != (filter.producerOut - filter.producerIn + 1))
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position) && (position != 0) && (position != (timeline.getCurrentClipLength() - 1))
 
         autoAddKeyFrameCheckBox.enabled = enableKeyFrameCheckBox.checked
     }
@@ -176,7 +176,7 @@ Rectangle {
                 onClicked: {
                     var position        = timeline.getPositionInCurrentClip()
 
-                    if((position == 0) || (position == (filter.producerOut - filter.producerIn + 1))) 
+                    if((position == 0) || (position == (timeline.getCurrentClipLength() - 1))) 
                         return   //首尾帧无法删除
 
                     var bKeyFrame       = filter.bKeyFrame(position)

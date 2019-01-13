@@ -140,7 +140,7 @@ Item {
 
     function setInAndOutKeyFrame () {
         var positionStart = 0
-        var positionEnd = filter.producerOut - filter.producerIn + 1
+        var positionEnd = (timeline.getCurrentClipLength() - 1)//filter.producerOut - filter.producerIn + 1
 
         var paramCount = metadata.keyframes.parameterCount
         for(var i = 0; i < paramCount; i++) {
@@ -184,7 +184,7 @@ Item {
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
                 var property = metadata.keyframes.parameters[paramIndex].property
                 var paraType = metadata.keyframes.parameters[paramIndex].paraType
-                if (nFrame > (filter.producerOut - filter.producerIn + 1)) {
+                if (nFrame > (timeline.getCurrentClipLength() - 1)) {
                     filter.removeAnimationKeyFrame(nFrame, property)
                     continue
                 }
