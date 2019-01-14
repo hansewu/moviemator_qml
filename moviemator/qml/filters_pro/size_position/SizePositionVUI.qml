@@ -216,6 +216,8 @@ Flickable {
                 
                 console.log("onPositionChangedonPositionChangedonPositionChanged: " + rectCtr2)
             }
+
+            rectangle.visible = (timeline.getPositionInCurrentClip() >= 0) ? true : false 
         }
     }
 

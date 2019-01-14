@@ -208,6 +208,8 @@ Flickable {
         target: filterDock
         onPositionChanged: {
             setRectangleControl()
+
+            rectangle.visible = (timeline.getPositionInCurrentClip() >= 0) ? true : false
         }
     }
 }
