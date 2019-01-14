@@ -5,7 +5,6 @@
  * Copyright (c) 2016-2019 EffectMatrix Inc.
  * Author: vgawen <gdb_1986@163.com>
  *
- *
  * Copyright (c) 2016-2019 EffectMatrix Inc.
  * Author: wyl <wyl@pylwyl.local>
  *
