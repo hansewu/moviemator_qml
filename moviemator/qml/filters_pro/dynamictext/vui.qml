@@ -105,7 +105,7 @@ Flickable {
 
     function showAddFrameInfo(position)
     {
-        if (filter.autoAddKeyFrame() == false) return
+        if (filter.autoAddKeyFrame() === false) return
 
         addFrameInfoDialog.show     = false
         addFrameInfoDialog.show     = true
