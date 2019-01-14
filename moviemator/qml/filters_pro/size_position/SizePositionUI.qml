@@ -1,4 +1,11 @@
 
+/*
+ * Copyright (c) 2011-2016 Meltytech, LLC
+ *
+ * Copyright (c) 2016-2019 EffectMatrix Inc.
+ * Author: wyl <wyl@pylwyl.local>
+ */
+
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Dialogs 1.1
