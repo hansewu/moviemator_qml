@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2016-2019 EffectMatrix Inc.
  * Author: wyl <wyl@pylwyl.local>
+ * Author: Dragon-S <15919917852@163.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +18,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/*
- * Copyright (c) 2011-2016 Meltytech, LLC
- *
- * Copyright (c) 2016-2019 EffectMatrix Inc.
- * Author: wyl <wyl@pylwyl.local>
  */
 
 import QtQuick 2.0
