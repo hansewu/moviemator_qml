@@ -4,6 +4,7 @@
  *
  * Copyright (c) 2016-2019 EffectMatrix Inc.
  * Author: wyl <wyl@pylwyl.local>
+ * Author: fuyunhuaxin <2446010587@qq.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

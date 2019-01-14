@@ -3,6 +3,8 @@
  *
  * Copyright (c) 2016-2019 EffectMatrix Inc.
  * Author: wyl <wyl@pylwyl.local>
+ * Author: fuyunhuaxin <2446010587@qq.com>
+ *
  */
 
 import QtQuick 2.0
