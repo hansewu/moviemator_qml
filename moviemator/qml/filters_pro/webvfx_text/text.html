@@ -1,0 +1,109 @@
+<html>
+<head>
+<style type="text/css">
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+.slideShine{
+     background:#871317 -webkit-linear-gradient(left,#561214,#febaf7 50%,#ff0 90%,#561214) no-repeat 0 0;
+     background-size:20% 100%; 
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+     font-size: 100px;
+     text-align: center;
+     font-weight: bold;
+     text-decoration: underline;
+
+     /*-webkit-animation: slideShine 4s linear infinite; 所有动画属性的简写属性，除了 animation-play-state 属性。*/
+     -webkit-animation-name: slideShine;/*规定 @keyframes 动画的名称*/
+     -webkit-animation-duration: 4s;/*规定动画完成一个周期所花费的秒或毫秒。默认是 0。*/
+     -webkit-animation-timing-function: linear;/*规定动画的速度曲线。默认是 "ease"。*/
+     -webkit-animation-delay: 0;/*规定动画何时开始。默认是 0。*/
+     -webkit-animation-iteration-count: infinite;/*规定动画被播放的次数。默认是 1。*/
+     -webkit-animation-direction: normal;/*规定动画是否在下一周期逆向地播放。默认是 "normal"。*/
+     -webkit-animation-play-state: running;/*规定动画是否正在运行或暂停。默认是 "running"。*/
+     -webkit-animation-fill-mode: none;/*规定对象动画时间之外的状态。*/
+}
+
+@-webkit-keyframes slideShine {
+     0% {
+          background-position: 0 0;
+        }
+     100% {
+          background-position: 100% 100%;
+      }
+ }
+<p class="slideShine" >→css3文字渐变动画效果 >></p>
+
+</style>
+<script type="text/javascript">
+function Filter() {
+    /*
+    // Create a canvas
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    document.body.appendChild(this.canvas);
+    this.context = this.canvas.getContext('2d');
+
+    // Set the document backgrouind color.
+    var color = webvfx.getStringParameter('color');
+    if (!color)
+        color = 'black';
+    document.body.bgColor = color;
+
+    // Clip video to a circle in the middle of the canvas
+    this.radius = webvfx.getNumberParameter('radius');
+    if (!this.radius)
+        this.radius = 0.5;
+    this.context.beginPath();
+    this.context.arc(this.canvas.width/2, this.canvas.height/2,
+                     this.canvas.height * this.radius, 0, Math.PI*2, true)
+    this.context.clip();
+
+    this.image = new Image();
+    this.n = 0
+    */
+}
+
+Filter.prototype.render = function(time) {
+    /*
+    var color = webvfx.getStringParameter('color')
+    if (color && color != document.body.bgColor)
+        document.body.bgColor = color;
+
+    var radius = webvfx.getNumberParameter('radius')
+    if (radius && radius != this.radius) {
+        this.radius = radius;
+
+        // Clear/reset the canvas
+        this.canvas.width = this.canvas.width;
+
+        this.context.beginPath();
+        this.context.arc(this.canvas.width/2, this.canvas.height/2,
+                         this.canvas.height * this.radius, 0, Math.PI*2, true)
+        this.context.clip();
+    }
+    */
+    webvfx.getImage("video").assignToHTMLImageElement(this.image);
+    this.context.drawImage(this.image, 0, 0);
+}
+
+function init() {
+    var filter = new Filter();
+    webvfx.renderRequested.connect(filter, Filter.prototype.render);
+    webvfx.imageTypeMap = { "video" : webvfx.SourceImageType };
+    webvfx.readyRender(true);
+}
+window.addEventListener("load", init, false);
+</script>
+</head>
+<body>
+
+<p class="slideShine" >css3文字渐变动画效果 >></p>
+
+</body>
+</html>
