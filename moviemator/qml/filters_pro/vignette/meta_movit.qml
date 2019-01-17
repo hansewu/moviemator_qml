@@ -26,7 +26,7 @@ Metadata {
                 objectName: 'radiusSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.030'
+                defaultValue: '0.30'
                 value: '0'
                 factorFunc:  ['c:100.0']
             },
@@ -36,7 +36,7 @@ Metadata {
                 objectName: 'innerSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.030'
+                defaultValue: '0.30'
                 value: '0'
                 factorFunc:  ['c:100.0']
             }
