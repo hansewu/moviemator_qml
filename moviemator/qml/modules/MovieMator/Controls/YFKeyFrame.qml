@@ -69,7 +69,9 @@ RowLayout{
     }
     // 滤镜初始化
     function initFilter(layoutRoot){
-        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
+        if(metadata.keyframes.parameters.length == 1)
+            filter.setInAndOut(0, timeline.getCurrentClipParentLength())
+
         console.log("initFilterinitFilterinitFilterinitFilterinitFilter-0: ")
         //导入上次工程保存的关键帧
         bBlockSignal = true
