@@ -19,7 +19,7 @@ Metadata {
                 objectName: 'noiseSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '40'
+                defaultValue: '0.040'
                 value: '0'
                 factorFunc:  []
             },
@@ -29,7 +29,7 @@ Metadata {
                 objectName: 'brightnessSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '83'
+                defaultValue: '0.083'
                 value: '0'
                 factorFunc:  []
             }

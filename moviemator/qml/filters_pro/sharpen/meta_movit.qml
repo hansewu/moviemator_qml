@@ -19,7 +19,7 @@ Metadata {
                 objectName: 'cradiusslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '2'
+                defaultValue: '0.02'
                 value: '0'
                 factorFunc:  []
             },
@@ -39,7 +39,7 @@ Metadata {
                 objectName: 'corrslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.95'
+                defaultValue: '0.0095'
                 value: '0'
                 factorFunc:  []
             },
@@ -49,7 +49,7 @@ Metadata {
                 objectName: 'noiseslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.01'
+                defaultValue: '0.0001'
                 value: '0'
                 factorFunc:  []
             }

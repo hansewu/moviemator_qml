@@ -19,8 +19,8 @@ Metadata {
                 property: 'u'
                 objectName: 'sliderBlue'
                 controlType: 'SliderSpinner'
-                paraType: 'int'
-                defaultValue: '80'
+                paraType: 'double'
+                defaultValue: '0.008'
                 value: '0'
                 factorFunc:  []
             },
@@ -29,8 +29,8 @@ Metadata {
                 property: 'v'
                 objectName: 'sliderRed'
                 controlType: 'SliderSpinner'
-                paraType: 'int'
-                defaultValue: '160'
+                paraType: 'double'
+                defaultValue: '0.016'
                 value: '0'
                 factorFunc:  []
             }

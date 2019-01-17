@@ -20,7 +20,7 @@ Metadata {
                 objectName: 'wslider'
                 controlType: 'SliderSpinner'
                 paraType: 'int'
-                defaultValue: '2'
+                defaultValue: '0.02'
                 value: '0'
                 factorFunc:  []
             },
@@ -30,7 +30,7 @@ Metadata {
                 objectName: 'hslider'
                 controlType: 'SliderSpinner'
                 paraType: 'int'
-                defaultValue: '2'
+                defaultValue: '0.02'
                 value: '0'
                 factorFunc:  []
             }

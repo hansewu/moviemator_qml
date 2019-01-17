@@ -85,18 +85,7 @@ Item {
     // 文本响应函数
     function stringValueChanged(objectName){
         var ctr = findControl(objectName,layoutRoot)
-        var paramIndexList = findParameter(ctr)
-        if(paramIndexList.length <= 0){
-            console.log("findParameter Error: "+paramIndexList.length)
-            return;
-        }
-        if(ctr.editable){
-            filter.set(Handdle.metaParamList[paramIndexList[0]].property,ctr.editText)
-        }
-        else{
-            filter.set(Handdle.metaParamList[paramIndexList[0]].property,ctr.currentText)
-        }
-        
+        keyFrame.controlValueChanged(ctr)
     }
 
     function strinCtrUndoClicked(objectName){
@@ -111,7 +100,10 @@ Item {
     function keyFrameLoad(){
         keyFrame.loadFrameValue(layoutRoot)
     }
-
+    // 初始化所有控件的值并将默认值写入滤镜中
+    function initFilter(){
+        keyFrame.initFilter(layoutRoot)
+    }
     
     Component.onCompleted: {
         
@@ -122,9 +114,12 @@ Item {
             var h = paramNum * 26 + 50
             root.height = (h > root.height)? h : root.height
         }
-        Handdle.init()
-        keyFrame = findControl("keyFrame",layoutRoot)
+        
+        console.log("filter.isNewfilter.isNewfilter.isNew: " + filter.isNew)
 
+        Handdle.init(filter.isNew)
+        keyFrame = findControl("keyFrame",layoutRoot)
+        initFilter()
         
     }
 

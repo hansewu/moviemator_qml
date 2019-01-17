@@ -20,7 +20,7 @@ Metadata {
                 objectName: 'waveSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '10'
+                defaultValue: '0.10'
                 value: '0'
                 factorFunc:  []
             },
@@ -30,7 +30,7 @@ Metadata {
                 objectName: 'speedSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '5'
+                defaultValue: '0.05'
                 value: '0'
                 factorFunc:  []
             },
@@ -40,7 +40,7 @@ Metadata {
                 objectName: 'deformXCheckBox'
                 controlType: 'CheckBox'
                 paraType: 'int'
-                defaultValue: ''
+                defaultValue: '0'
                 value: ''
                 factorFunc:  []
             },
@@ -50,7 +50,7 @@ Metadata {
                 objectName: 'deformYCheckBox'
                 controlType: 'CheckBox'
                 paraType: 'int'
-                defaultValue: ''
+                defaultValue: '0'
                 value: ''
                 factorFunc:  []
             }

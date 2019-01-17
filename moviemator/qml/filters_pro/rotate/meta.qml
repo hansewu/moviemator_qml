@@ -33,7 +33,7 @@ Metadata {
                 objectName: 'scaleSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '100'
+                defaultValue: '1'
                 value: '0'
                 factorFunc:  ['b:100.0']
             },
@@ -43,7 +43,7 @@ Metadata {
                 objectName: 'scaleSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '100'
+                defaultValue: '1'
                 value: '0'
                 factorFunc:  ['b:100.0']
             },

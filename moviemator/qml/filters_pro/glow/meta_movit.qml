@@ -19,7 +19,7 @@ Metadata {
                 objectName: 'radiusslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.020'
                 value: '0'
                 factorFunc:  []
             },
@@ -29,7 +29,7 @@ Metadata {
                 objectName: 'blurslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '1.0'
+                defaultValue: '0.01'
                 value: '0'
                 factorFunc:  []
             },
@@ -39,7 +39,7 @@ Metadata {
                 objectName: 'cutoffslider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.2'
+                defaultValue: '0.002'
                 value: '0'
                 factorFunc:  []
             }

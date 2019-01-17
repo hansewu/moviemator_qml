@@ -20,7 +20,7 @@ Metadata {
                 objectName: 'radiusSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '50'
+                defaultValue: '0.050'
                 value: '0'
                 factorFunc:  ['c:100.0']
             },
@@ -30,7 +30,7 @@ Metadata {
                 objectName: 'smoothSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '80'
+                defaultValue: '0.080'
                 value: '0'
                 factorFunc:  ['c:100.0']
             },
@@ -40,7 +40,7 @@ Metadata {
                 objectName: 'modeCheckBox'
                 controlType: 'CheckBox'
                 paraType: 'int'
-                defaultValue: ''
+                defaultValue: '0'
                 value: ''
                 factorFunc:  []
             },
@@ -50,7 +50,7 @@ Metadata {
                 objectName: 'opacitySlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '100'
+                defaultValue: '1'
                 value: '0'
                 factorFunc:  ['c:100.0','-:1.0','x:-1.0']
             }

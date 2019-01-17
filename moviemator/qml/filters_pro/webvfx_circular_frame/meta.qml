@@ -19,7 +19,7 @@ Metadata {
                 objectName: 'slider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '50'
+                defaultValue: '0.5'
                 value: '0'
                 factorFunc:  ['c:100']
             }

@@ -73,7 +73,7 @@ function createCheckBox(paramInfo,index){
         +       '}'
         +    '}'
     var ctr = Qt.createQmlObject(str,layoutRoot, "dynamicSnippet1");
-    ctr.checked = Math.round(parseFloat(paramInfo.defaultValue));
+    // ctr.checked = Math.round(parseFloat(paramInfo.defaultValue));
 }
 // 生成滑条
 function createSlider(paramInfo,index){
@@ -90,7 +90,7 @@ function createSlider(paramInfo,index){
         +   '}'
     
     var ctr = Qt.createQmlObject(str,layoutRoot, "dynamicSnippet1");
-    ctr.value = parseFloat(paramInfo.defaultValue) * 100
+    // ctr.value = parseFloat(paramInfo.defaultValue) * 100
 }
 // 生成滑条还原操作按钮
 function createSliderUndo(paramInfo,index){
@@ -113,8 +113,8 @@ function createColorPicker(paramInfo,index){
         +        'onValueChanged: {colorPickerChanged(objectName);}'
         +    '}'
     var ctr = Qt.createQmlObject(str,layoutRoot, "dynamicSnippet1");
-    var rgb = paramInfo.defaultValue.split(" ")
-    ctr.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
+    // var rgb = paramInfo.defaultValue.split(" ")
+    // ctr.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
 }
 // 颜色选择轮操作按钮
 function createColorUndo(paramInfo,index){
@@ -183,20 +183,7 @@ function extractStringList(paramInfo){
     }
     return modelList
 }
-function findDefaultIndex(strValue,modelList){
 
-    if(modelList.length <= 0){
-        return 0
-    }
-
-    for(var i=0;i<modelList.length;i++){
-
-        if(strValue == modelList[i]){
-            return i
-        }
-    }
-    return 0
-}
 // 生成文本输入框
 function createStringCtr(paramInfo,index){
     var str = ''
@@ -210,11 +197,6 @@ function createStringCtr(paramInfo,index){
         +   '}'
     var ctr = Qt.createQmlObject(str,layoutRoot, "dynamicSnippet1");
     ctr.model = extractStringList(paramInfo)
-    var ind = findDefaultIndex(paramInfo.defaultValue,ctr.model)
-    console.log("createStringCtrcreateStringCtr: paramInfo.defaultValue: " + paramInfo.defaultValue)
-    console.log("createStringCtrcreateStringCtr:ctr.model:" + ctr.model)
-    console.log("createStringCtrcreateStringCtr:ind:" + ind)
-    ctr.currentIndex = ind
 }
 // 文本框还原操作按钮
 function createStringCtrUndo(paramInfo,index){
@@ -370,7 +352,7 @@ function setMetaKeyFrameParams(paramInfo,index){
     return rt
 }
 
-function init(){  //滤镜UI界面初始化
+function init(isNew){  //滤镜UI界面初始化
     // 引入YFKeyframe
     createKeyFrame()
 
@@ -393,7 +375,7 @@ function init(){  //滤镜UI界面初始化
     for(var i=0;i<paramNum;i++){ 
         var index = i
         var paramInfo = metaParamList[i] 
-        if(paramInfo.controlType == ''){//如果已经设过了就不设了
+        if(isNew){//如果已经设过了就不设了
             setMetaKeyFrameParams(paramInfo,i)
         }
         index = createUIbyParamType(paramInfo,i) 
