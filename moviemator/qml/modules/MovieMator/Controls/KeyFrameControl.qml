@@ -96,7 +96,7 @@ Rectangle {
                 anchors.topMargin: -5
                
                 text: qsTr('Enable Key Frames')
-                checked: (filter.getKeyFrameNumber() > 0)
+                checked: (filter && filter.getKeyFrameNumber() > 0)
                 onClicked: {
                     if(checked)
                     {   
@@ -286,7 +286,7 @@ Rectangle {
     Connections {
         target: filterDock
         onCurrentFilterChanged: {
-            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+            enableKeyFrameCheckBox.checked = ( filter && filter.getKeyFrameNumber() > 0)
 
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
@@ -295,7 +295,7 @@ Rectangle {
     Connections {
         target: filter
         onChanged: {
-            enableKeyFrameCheckBox.checked = (filter.getKeyFrameNumber() > 0)
+            enableKeyFrameCheckBox.checked = (filter && filter.getKeyFrameNumber() > 0)
 
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
