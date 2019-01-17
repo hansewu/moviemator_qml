@@ -44,6 +44,7 @@ Item {
     height: 250
 
     Component.onCompleted: {
+        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);

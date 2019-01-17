@@ -342,6 +342,8 @@ Item {
         filter.setEnableAnimation(bEnableKeyFrame)
         filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
 
+        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
+
         //导入上次工程保存的关键帧
         loadSavedKeyFrameNew()
 
