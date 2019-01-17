@@ -102,6 +102,7 @@ Item {
     }
     // 初始化所有控件的值并将默认值写入滤镜中
     function initFilter(){
+        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
         keyFrame.initFilter(layoutRoot)
     }
     
