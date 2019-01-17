@@ -69,6 +69,7 @@ RowLayout{
     }
     // 滤镜初始化
     function initFilter(layoutRoot){
+        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
         console.log("initFilterinitFilterinitFilterinitFilterinitFilter-0: ")
         //导入上次工程保存的关键帧
         bBlockSignal = true
@@ -473,9 +474,11 @@ RowLayout{
         bBlockSignal = false
 
 
-        var t = filter.get('u')
-        console.log("2222222222222222222222222222222222222222-0: "+t)
-        console.log("2222222222222222222222222222222222222222: ")
+        for(var i = 0; i < paramCount; i++)
+        {
+            var key = metadata.keyframes.parameters[i].property
+            var t = filter.get(key)
+        }
 
         showAddFrameInfo(position)
     }
