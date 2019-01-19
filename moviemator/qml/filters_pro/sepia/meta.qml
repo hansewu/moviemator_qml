@@ -15,7 +15,7 @@ Metadata {
     qml: 'ui.qml'
     isFavorite: true
     allowMultiple: false
-    filterType: qsTr('Effect')
+    filterType: qsTr('Sepia Tone')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

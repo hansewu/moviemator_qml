@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "movit.blur"
     needsGPU: true
     qml: "ui_movit.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('Blur')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

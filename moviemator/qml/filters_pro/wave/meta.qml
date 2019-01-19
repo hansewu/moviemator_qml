@@ -15,7 +15,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: false
     allowMultiple: false
-    filterType: qsTr('Effect')
+    filterType: qsTr('Distortion')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
