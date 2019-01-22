@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.4
 
 Item {
     id: comboBox
-    width: 80
+    width: 100
     height: 18
     z: 3
 
@@ -80,7 +80,7 @@ Item {
                     catChanged(index)
                 }
                 onEntered: {
-                    parent.color = 'red'
+                    parent.color = '#C0482C'
                 }
                 onExited: {
                     parent.color = '#525252'

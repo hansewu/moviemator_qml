@@ -8,7 +8,7 @@ import MovieMator.Controls 1.0
 
 Rectangle {
     id: root
-    color: "#323232"
+    color: "transparent"
     property int repeaterItemWidth: 130
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
@@ -90,13 +90,11 @@ Rectangle {
             id:delegateRoot
             width: scrollView.width-20
             height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + filterhead.height + 10
-            // width:300
-            // height:300
             anchors{
                 left:parent.left
                 leftMargin:20
             }
-            color: '#323232'
+            color: 'transparent'
             function refreshFilters(){
                 console.log("typename:"+typename)
                 filters.clear()
@@ -118,14 +116,14 @@ Rectangle {
                 id:filterhead
                 width: parent.width
                 height: 28
-                color: '#333333'
+                color: 'transparent'
                 Text {
                     width: contentWidth
                     height: parent.height
                     id: catName
                     text: typename
                     color: '#ffffff'
-                    font.pixelSize: 15
+                    font.pixelSize: 13
                     z:2
                     anchors{
                         left: parent.left
@@ -135,13 +133,13 @@ Rectangle {
                 Image {
                     id: line
                     source: 'qrc:///icons/light/32x32/line.png'
-                    height:parent.height
+                    height:3
                     z:1
                     anchors{
                         left: catName.right
                         leftMargin:5
                         bottom: catName.bottom
-                        bottomMargin:3
+                        bottomMargin:18
                     }
                 }
 
@@ -161,7 +159,7 @@ Rectangle {
                     Rectangle{
                         width: repeaterItemWidth
                         height: repeaterItemHeight
-                        color: '#323223'
+                        color: 'transparent'
 
                         Button { 
                             width:20
@@ -198,7 +196,7 @@ Rectangle {
                             height: 80
                             z:1
                             radius: 3 
-                            color: checked ? 'red':'#787878'
+                            color: checked ? '#C0482C':'#787878'
                             property bool checked: (objectName == currentChoosed)?true:false
                             Image {
                                 id: myIcon
@@ -258,7 +256,7 @@ Rectangle {
                 top:parent.top
                 topMargin: 7
             }
-            text: '滤镜'
+            text: qsTr('Filters')
             font.pixelSize: 12
             color: '#ffffff'
         }
@@ -304,7 +302,7 @@ Rectangle {
                 implicitWidth: 14
                 implicitHeight: 14
                 Rectangle {
-                    color: "#323232"
+                    color: "transparent"
                     anchors.fill: parent
                     anchors.margins: 3
                     radius: 4
@@ -314,7 +312,7 @@ Rectangle {
                 implicitWidth: 14
                 implicitHeight: 14
                 Rectangle {
-                    color: "#323223"
+                    color: "transparent"
                     anchors.fill: parent
                 }
             }
