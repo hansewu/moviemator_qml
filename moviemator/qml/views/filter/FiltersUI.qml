@@ -8,8 +8,9 @@ import MovieMator.Controls 1.0
 
 Rectangle {
     id: root
-    property int repeaterItemWidth: 140
-    property int repeaterItemHeight: 108
+    color: "#323232"
+    property int repeaterItemWidth: 130
+    property int repeaterItemHeight: 96
     property var currentChoosed : 0
 
     property var filtersInfoList: []
@@ -33,25 +34,30 @@ Rectangle {
     }
 
     function addFilter(index){
-         filtersResDock.addFilterItem(index)
+        filtersResDock.addFilterItem(index)
     }
 
     Component.onCompleted: {
         var num = filtersInfo.rowCount();
         for(var i=0;i< filtersInfo.rowCount();i++){
+            // console.log("visiblevisiblevisiblevisible-0: " + filtersInfo.get(i).visible)
             var filterInfo = {
                 id: filtersInfo.get(i).name + '' + i,
                 index : i,
+                visible:filtersInfo.get(i).visible,
                 name : filtersInfo.get(i).name,
                 filterType : filtersInfo.get(i).filterType,
                 imageSourcePath : filtersInfo.get(i).imageSourcePath,
             }
             filtersInfoList.push(filterInfo)
+            
+            console.log("visiblevisiblevisiblevisible: " + filterInfo.visible)
+            
         }
         
         catList.clear()
         catListAll.clear()
-        catListAll.append({"typename":qsTr("All")})
+        catListAll.append({"typename":"全部"})
         for(var i=0;i<filtersInfoList.length;i++){
             console.log("filterTypeStrfilterTypeStr: " +i+":"+ filtersInfoList[i].filterType)
             if('' == filtersInfoList[i].filterType) continue;
@@ -83,7 +89,7 @@ Rectangle {
         Rectangle{
             id:delegateRoot
             width: scrollView.width-20
-            height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + filterhead.height + 30
+            height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + filterhead.height + 10
             // width:300
             // height:300
             anchors{
@@ -96,6 +102,9 @@ Rectangle {
                 filters.clear()
                 for(var i=0;i<filtersInfoList.length;i++){
                     if(typename === filtersInfoList[i].filterType){
+                        if('1' == filtersInfoList[i].visible){
+                            continue;
+                        }
                         filters.append(filtersInfoList[i])
                         console.log("name: " + filtersInfoList[i].name)
                     }
@@ -108,15 +117,16 @@ Rectangle {
             Rectangle{
                 id:filterhead
                 width: parent.width
-                height: 15
+                height: 28
                 color: '#333333'
                 Text {
-                    width: 30
+                    width: contentWidth
                     height: parent.height
                     id: catName
                     text: typename
                     color: '#ffffff'
-                    font.pixelSize: 9
+                    font.pixelSize: 15
+                    z:2
                     anchors{
                         left: parent.left
                         leftMargin: -10
@@ -124,10 +134,14 @@ Rectangle {
                 }
                 Image {
                     id: line
-                    source: 'qrc:///icons/light/32x32/line.png'
+                    source: "line.png"
+                    height:parent.height
+                    z:1
                     anchors{
                         left: catName.right
+                        leftMargin:5
                         bottom: catName.bottom
+                        bottomMargin:3
                     }
                 }
 
@@ -157,7 +171,7 @@ Rectangle {
                                 top:parent.top
                                 topMargin:-10
                                 right:parent.right
-                                rightMargin:10
+                                rightMargin:12
                             }
                             visible:id.checked ? true : false
                             checkable : true
@@ -180,21 +194,21 @@ Rectangle {
                         Rectangle{
                             id:id
                             objectName:index
-                            width: 120
-                            height: 90
+                            width: 110
+                            height: 80
                             z:1
-                            radius: 3
+                            radius: 3 
                             color: checked ? 'red':'#787878'
                             property bool checked: (objectName == currentChoosed)?true:false
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
-                                width: 114
-                                height: 70
+                                width: 106
+                                height: 60
                                 source: 'j20.jpg'
                                 anchors {
                                     top: parent.top
-                                    topMargin: 3
+                                    topMargin: 2
                                 }
                             }
                             Text {
@@ -255,7 +269,7 @@ Rectangle {
                 bottom: parent.bottom
                 bottomMargin: 6
                 right: parent.right
-                rightMargin: 53
+                rightMargin: 13
             }
             Component.onCompleted: {
                 catCombox.setModel(catListAll)
@@ -279,7 +293,10 @@ Rectangle {
         id: scrollView
         width: parent.width
         height: parent.height - filterHead.height
-        anchors.top: filterHead.bottom
+        anchors{
+            top : filterHead.bottom
+            topMargin: 10
+        }
         style: ScrollViewStyle {
             transientScrollBars: false
             //  scrollToClickedPosition:true
@@ -287,7 +304,7 @@ Rectangle {
                 implicitWidth: 14
                 implicitHeight: 14
                 Rectangle {
-                    color: "#787878"
+                    color: "#323232"
                     anchors.fill: parent
                     anchors.margins: 3
                     radius: 4

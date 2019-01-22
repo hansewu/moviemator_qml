@@ -5,7 +5,7 @@ import QtQuick.Controls.Styles 1.4
 
 Item {
     id: comboBox
-    width: 45
+    width: 80
     height: 18
     z: 3
 
