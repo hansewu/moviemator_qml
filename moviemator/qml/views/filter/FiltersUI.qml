@@ -57,7 +57,7 @@ Rectangle {
         
         catList.clear()
         catListAll.clear()
-        catListAll.append({"typename":"全部"})
+        catListAll.append({"typename":qsTr('All')})
         for(var i=0;i<filtersInfoList.length;i++){
             console.log("filterTypeStrfilterTypeStr: " +i+":"+ filtersInfoList[i].filterType)
             if('' == filtersInfoList[i].filterType) continue;
@@ -134,7 +134,7 @@ Rectangle {
                 }
                 Image {
                     id: line
-                    source: "line.png"
+                    source: 'qrc:///icons/light/32x32/line.png'
                     height:parent.height
                     z:1
                     anchors{
