@@ -18,3 +18,4 @@ GridMenu 1.0 GridMenu.qml
 NewPreset 1.0 NewPreset.qml
 MyListView 1.0 MyListView.qml
 MyComboBox 1.0 MyComboBox.qml
+FilterComboBox 1.0 FilterComboBox.qml
