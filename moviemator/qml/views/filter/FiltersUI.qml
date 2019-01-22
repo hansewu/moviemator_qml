@@ -8,17 +8,11 @@ import MovieMator.Controls 1.0
 
 Rectangle {
     id: root
-    // width:400
-    // // width:parent
-    // height:400
     property int repeaterItemWidth: 140
     property int repeaterItemHeight: 108
+    property var currentChoosed : 0
 
     property var filtersInfoList: []
-
-    function initMetadatamodel(){
-
-    }
 
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.length;i++){
@@ -29,15 +23,6 @@ Rectangle {
         return null
     }
 
-    // function findAttachedFilterModel(name){
-    //     for(var i=0;i<attachedfiltersmodel.rowCount();i++){
-    //         if(name == attachedfiltersmodel.getMetadata(i).name){
-    //             return i
-    //         }
-    //     }
-    //     return -1
-    // }
-
     function findFilterType(type){
         for(var i=0;i<catListAll.count;i++){
             if(type == catListAll.get(i).typename){
@@ -47,46 +32,29 @@ Rectangle {
         return null
     }
 
+    function addFilter(index){
+         filtersResDock.addFilterItem(index)
+    }
+
     Component.onCompleted: {
-
-        console.log("onCompletedonCompletedonCompleted--0: ")
-
         var num = filtersInfo.rowCount();
         for(var i=0;i< filtersInfo.rowCount();i++){
             var filterInfo = {
+                id: filtersInfo.get(i).name + '' + i,
+                index : i,
                 name : filtersInfo.get(i).name,
                 filterType : filtersInfo.get(i).filterType,
                 imageSourcePath : filtersInfo.get(i).imageSourcePath,
             }
             filtersInfoList.push(filterInfo)
         }
-        console.log("onCompletedonCompletedonCompleted-1: ")
-
-        // for(var i=0;i<50;i++){
-            
-        //     console.log("iiiiiiiiiiiiiiii: " + i)
-            
-        //     var filterInfo = {
-        //         name : "A",
-        //         filterType : "B",
-        //         imageSourcePath : "C"
-        //     }
-        //     filtersInfoList.push(filterInfo)
-        // }
-
-        for(var j=0;j<filtersInfoList.length;j++){
-            console.log(j+"name: " + filtersInfoList[j].name)
-            console.log(j+"filterType: " + filtersInfoList[j].filterType)
-            console.log(j+"imageSourcePath: " + filtersInfoList[j].imageSourcePath)
-        }
         
         catList.clear()
         catListAll.clear()
-        catListAll.append({"typename":"全部"})
+        catListAll.append({"typename":qsTr("All")})
         for(var i=0;i<filtersInfoList.length;i++){
-            
             console.log("filterTypeStrfilterTypeStr: " +i+":"+ filtersInfoList[i].filterType)
-            
+            if('' == filtersInfoList[i].filterType) continue;
             if(null == findFilterType(filtersInfoList[i].filterType)){
                 catList.append({"typename":filtersInfoList[i].filterType})
                 catListAll.append({"typename":filtersInfoList[i].filterType})
@@ -106,7 +74,7 @@ Rectangle {
     ListModel{
         id:catListAll
         ListElement{
-            typename:'全部'
+            typename:qsTr('All')
         }
     }
 
@@ -114,13 +82,13 @@ Rectangle {
         id:delegate
         Rectangle{
             id:delegateRoot
-            width: scrollView.width-100
+            width: scrollView.width-20
             height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + filterhead.height + 30
             // width:300
             // height:300
             anchors{
                 left:parent.left
-                leftMargin:50
+                leftMargin:20
             }
             color: '#323232'
             function refreshFilters(){
@@ -135,6 +103,7 @@ Rectangle {
             }
             Component.onCompleted: {
                 refreshFilters()
+                currentChoosed = filters.get(0).index
             }
             Rectangle{
                 id:filterhead
@@ -155,7 +124,7 @@ Rectangle {
                 }
                 Image {
                     id: line
-                    source: "line.png"
+                    source: 'qrc:///icons/light/32x32/line.png'
                     anchors{
                         left: catName.right
                         bottom: catName.bottom
@@ -180,10 +149,43 @@ Rectangle {
                         height: repeaterItemHeight
                         color: '#323223'
 
+                        Button { 
+                            width:20
+                            height:20
+                            z:2
+                            anchors{
+                                top:parent.top
+                                topMargin:-10
+                                right:parent.right
+                                rightMargin:10
+                            }
+                            visible:id.checked ? true : false
+                            checkable : true
+                            onClicked:{
+                                addFilter(index)
+                            }
+                            style: ButtonStyle { 
+                                background:Rectangle{ 
+                                    implicitHeight: parent.height 
+                                    implicitWidth: parent.width 
+                                    color: "transparent" //设置背景透明，否则会出现默认的白色背景 
+                                    Image{ 
+                                        anchors.fill: parent 
+                                        source: control.hovered ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : 'qrc:///icons/light/32x32/filter_add.png' ; 
+                                    } 
+                                } 
+                            } 
+                        }
+
                         Rectangle{
+                            id:id
+                            objectName:index
                             width: 120
                             height: 90
-                            color: '#787878'
+                            z:1
+                            radius: 3
+                            color: checked ? 'red':'#787878'
+                            property bool checked: (objectName == currentChoosed)?true:false
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
@@ -211,10 +213,11 @@ Rectangle {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    parent.color='red'
-                                    var mod = findFilterModel(name)
-                                    attachedfiltersmodel.add(mod)
-
+                                    currentChoosed = parent.objectName
+                                }
+                                onDoubleClicked:{
+                                    currentChoosed = parent.objectName
+                                    addFilter(index)
                                 }
                             }
                         }
