@@ -15,7 +15,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.opacity"
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Color Adjustment')
     keyframes {
             allowAnimateIn: true

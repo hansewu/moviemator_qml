@@ -14,6 +14,6 @@ Metadata {
     mlt_service: "crop"
     needsGPU: true
     qml: "ui.qml"
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Crop')
 }

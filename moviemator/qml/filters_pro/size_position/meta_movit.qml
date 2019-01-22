@@ -16,7 +16,7 @@ Metadata {
     needsGPU: true
     qml: 'ui_movit.qml'
     vui: 'vui_movit.qml'
-    allowMultiple: false
+//    allowMultiple: false
     isFavorite: true
     filterType: qsTr('Transform')
     keyframes {

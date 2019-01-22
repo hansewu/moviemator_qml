@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "sepia"
     qml: 'ui.qml'
     isFavorite: true
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Sepia Tone')
     keyframes {
         allowAnimateIn: true

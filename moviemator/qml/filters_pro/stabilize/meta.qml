@@ -16,7 +16,7 @@ Metadata {
     isClipOnly: true
     isGpuCompatible: false
     isFavorite: false
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Stabilization')
     keyframes {
         allowTrim: false

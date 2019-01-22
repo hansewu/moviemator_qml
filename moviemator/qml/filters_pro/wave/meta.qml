@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "wave"
     qml: "ui.qml"
     isFavorite: false
-    allowMultiple: false
+//    allowMultiple: false
     filterType: qsTr('Distortion')
     keyframes {
         allowAnimateIn: true
