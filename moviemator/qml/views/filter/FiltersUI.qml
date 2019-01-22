@@ -51,7 +51,7 @@ Rectangle {
             }
             filtersInfoList.push(filterInfo)
             
-            console.log("visiblevisiblevisiblevisible: " + filterInfo.visible)
+            //console.log("visiblevisiblevisiblevisible: " + filterInfo.visible)
             
         }
         
@@ -100,11 +100,10 @@ Rectangle {
                 filters.clear()
                 for(var i=0;i<filtersInfoList.length;i++){
                     if(typename === filtersInfoList[i].filterType){
-                        if('1' == filtersInfoList[i].visible){
+                        if(filtersInfoList[i].visible == '0'){
                             continue;
                         }
                         filters.append(filtersInfoList[i])
-                        console.log("name: " + filtersInfoList[i].name)
                     }
                 }
             }

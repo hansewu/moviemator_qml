@@ -257,7 +257,7 @@ Rectangle {
                 }
             }
             PropertyChanges {
-                target: attachedContainer; width: 150
+                target: attachedContainer; width: 120
                 height: root.height - addButton.height * 2
             }
         },
