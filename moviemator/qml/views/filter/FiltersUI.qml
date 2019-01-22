@@ -40,7 +40,6 @@ Rectangle {
     Component.onCompleted: {
         var num = filtersInfo.rowCount();
         for(var i=0;i< filtersInfo.rowCount();i++){
-            // console.log("visiblevisiblevisiblevisible-0: " + filtersInfo.get(i).visible)
             var filterInfo = {
                 id: filtersInfo.get(i).name + '' + i,
                 index : i,
@@ -50,9 +49,6 @@ Rectangle {
                 imageSourcePath : filtersInfo.get(i).imageSourcePath,
             }
             filtersInfoList.push(filterInfo)
-            
-            //console.log("visiblevisiblevisiblevisible: " + filterInfo.visible)
-            
         }
         
         catList.clear()
@@ -66,9 +62,6 @@ Rectangle {
                 catListAll.append({"typename":filtersInfoList[i].filterType})
             }
         }
-
-        console.log("catList: " + catList.count)
-        console.log("catListAll: " + catListAll.count)
     }
 
     ListModel{
@@ -202,7 +195,7 @@ Rectangle {
                                 anchors.horizontalCenter : parent.horizontalCenter
                                 width: 106
                                 height: 60
-                                source: 'j20.jpg'
+                                source: imageSourcePath
                                 anchors {
                                     top: parent.top
                                     topMargin: 2
