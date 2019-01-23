@@ -768,6 +768,27 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id :showFilter
+        visible: !isBlank && hasFilter
+        height: 20
+        width: 20
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.margins: parent.border.width
+        opacity: 0.6
+        color: 'black'
+        radius: 3
+
+        Image {
+            id: filterImage
+            source: 'qrc:///icons/light/32x32/show-filters.png'
+            height:1
+            z:1
+            anchors.fill: parent
+        }
+
+    }
 
     Rectangle {
         visible: !isBlank && selected && currentFilter && currentFilter.keyframeNumber > 0
