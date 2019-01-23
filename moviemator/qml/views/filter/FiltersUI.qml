@@ -182,9 +182,9 @@ Rectangle {
                             z:2
                             anchors{
                                 top:parent.top
-                                topMargin:-10
+                                topMargin:2
                                 right:parent.right
-                                rightMargin:12
+                                rightMargin:22
                             }
                             // visible:id.checked ? true : false
                             visible:id.hoverStat ? true : (id.checked ? true : false)
