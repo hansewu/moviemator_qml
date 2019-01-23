@@ -1,4 +1,22 @@
-
+/*
+ * Copyright (c) 2016-2019 EffectMatrix Inc.
+ * Author: wyl1987527 <wyl1987527@163.com>
+ * Author: Author: fuyunhuaxin <2446010587@qq.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
 import QtQuick 2.2
 import QtQuick.Window 2.1
 import QtQuick.Controls 1.4
@@ -13,12 +31,10 @@ Rectangle {
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
 
-    property var filtersInfoList: []
-
     function findFilterModel(name){
-        for(var i=0;i<filtersInfoList.length;i++){
-            if(name == filtersInfoList[i].name){
-                return filtersInfoList[i]
+        for(var i=0;i<filtersInfoList.count;i++){
+            if(name == filtersInfoList.get(i).name){
+                return filtersInfoList.get(i)
             }
         }
         return null
@@ -37,9 +53,10 @@ Rectangle {
         filtersResDock.addFilterItem(index)
     }
 
-    Component.onCompleted: {
+    function updateData()
+    {
         var num = filtersInfo.rowCount();
-        for(var i=0;i< filtersInfo.rowCount();i++){
+       for(var i=0;i< filtersInfo.rowCount();i++){
             var filterInfo = {
                 id: filtersInfo.get(i).name + '' + i,
                 index : i,
@@ -48,20 +65,23 @@ Rectangle {
                 filterType : filtersInfo.get(i).filterType,
                 imageSourcePath : filtersInfo.get(i).imageSourcePath,
             }
-            filtersInfoList.push(filterInfo)
+            filtersInfoList.append(filterInfo)
         }
-        
+
         catList.clear()
         catListAll.clear()
         catListAll.append({"typename":qsTr('All')})
-        for(var i=0;i<filtersInfoList.length;i++){
-            console.log("filterTypeStrfilterTypeStr: " +i+":"+ filtersInfoList[i].filterType)
-            if('' == filtersInfoList[i].filterType) continue;
-            if(null == findFilterType(filtersInfoList[i].filterType)){
-                catList.append({"typename":filtersInfoList[i].filterType})
-                catListAll.append({"typename":filtersInfoList[i].filterType})
+        for(var i=0;i<filtersInfoList.count;i++){
+            if('' == filtersInfoList.get(i).filterType) continue;
+            if(null == findFilterType(filtersInfoList.get(i).filterType)){
+                catList.append({"typename":filtersInfoList.get(i).filterType})
+                catListAll.append({"typename":filtersInfoList.get(i).filterType})
             }
         }
+    }
+
+    Component.onCompleted: {
+        updateData()
     }
 
     ListModel{
@@ -77,7 +97,11 @@ Rectangle {
         }
     }
 
-    Component{ //代理
+     ListModel{
+        id:filtersInfoList
+    }
+
+    Component{
         id:delegate
         Rectangle{
             id:delegateRoot
@@ -89,14 +113,13 @@ Rectangle {
             }
             color: 'transparent'
             function refreshFilters(){
-                console.log("typename:"+typename)
                 filters.clear()
-                for(var i=0;i<filtersInfoList.length;i++){
-                    if(typename === filtersInfoList[i].filterType){
-                        if(filtersInfoList[i].visible == '0'){
+                for(var i=0;i<filtersInfoList.count;i++){
+                    if(typename === filtersInfoList.get(i).filterType){
+                        if(filtersInfoList.get(i).visible == false){
                             continue;
                         }
-                        filters.append(filtersInfoList[i])
+                        filters.append(filtersInfoList.get(i))
                     }
                 }
             }
@@ -172,7 +195,7 @@ Rectangle {
                                 background:Rectangle{ 
                                     implicitHeight: parent.height 
                                     implicitWidth: parent.width 
-                                    color: "transparent" //设置背景透明，否则会出现默认的白色背景 
+                                    color: "transparent" 
                                     Image{ 
                                         anchors.fill: parent 
                                         source: control.hovered ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : 'qrc:///icons/light/32x32/filter_add.png' ; 
@@ -289,7 +312,6 @@ Rectangle {
         }
         style: ScrollViewStyle {
             transientScrollBars: false
-            //  scrollToClickedPosition:true
             handle: Item {
                 implicitWidth: 14
                 implicitHeight: 14
@@ -322,12 +344,12 @@ Rectangle {
             }
 
         }
-        ListView{ //视图
+        ListView{ 
             width:parent.width;
             height:parent.height
-            model:catList //关联数据模型
-            delegate:delegate //关联代理
-            focus:true //可以获得焦点，这样就可以响应键盘了
+            model:catList 
+            delegate:delegate 
+            focus:true 
         }
     }
 }
