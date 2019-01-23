@@ -104,29 +104,6 @@ Item {
         anchors.margins: 20
         rowSpacing: 15
         
-        KeyFrame{
-             id: keyFrame
-             Layout.columnSpan:3
-             onLoadKeyFrame:
-             {
-                 
-                 console.log("onLoadKeyFrameonLoadKeyFrame: " + keyFrameNum)
-                 var whiteValue = filter.getKeyFrameParaValue(keyFrameNum, neutralParam);
-                 if(whiteValue != -1.0)
-                 {
-                     colorPicker.value = whiteValue
-                 }
-                 console.log("whiteValue1: " + whiteValue)
-
-                 whiteValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, tempParam);
-                 if(whiteValue != -1.0)
-                 {
-                     tempslider.value = whiteValue * tempScale
-                 }
-                 console.log("whiteValue2: " + whiteValue)
-
-             }
-        }
 
         Label {
             text: qsTr('Preset') + "      "
@@ -159,16 +136,9 @@ Item {
             Component.onCompleted: isReady = true
             onValueChanged: {
                 if (isReady) {
-                    if(keyFrame.bKeyFrame)
-                    {
-                        var nFrame = keyFrame.getCurrentFrame();
-                        filter.setKeyFrameParaValue(nFrame,neutralParam, value)
-                        filter.combineAllKeyFramePara()
-                    }
-                    else
-                    {
-                        filter.set(neutralParam, ""+value)
-                    }
+                    
+                    filter.set(neutralParam, ""+value)
+                    
                     filter.set("disable", 0);
                 }
             }
@@ -222,18 +192,10 @@ Item {
                 Component.onCompleted: isReady = true
                 onValueChanged: {
                     if (isReady) {
-                        if(keyFrame.bKeyFrame)
-                        {
-                            var nFrame = keyFrame.getCurrentFrame();
-                            filter.setKeyFrameParaValue(nFrame,tempParam, (value/tempScale))
-                            filter.combineAllKeyFramePara()
-                            tempspinner.value = value
-                        }
-                        else
-                        {
+                        
                             tempspinner.value = value
                             filter.set(tempParam, value / tempScale)
-                        }
+                        
                     }
                 }
             }
