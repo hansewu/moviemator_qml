@@ -106,7 +106,7 @@ Rectangle {
         Rectangle{
             id:delegateRoot
             width: scrollView.width-20
-            height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + filterhead.height + 10
+            height: Math.ceil(filters.count / parseInt(width / repeaterItemWidth)) * repeaterItemHeight + 10
             anchors{
                 left:parent.left
                 leftMargin:20
@@ -131,9 +131,7 @@ Rectangle {
             Flow {
                 id:itemFlow
                 width: parent.width
-                anchors{
-                    top:filterhead.bottom
-                }
+
                 Repeater{
                     id:rep
                     model: ListModel{
