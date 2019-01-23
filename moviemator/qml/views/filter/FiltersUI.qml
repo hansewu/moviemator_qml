@@ -186,7 +186,8 @@ Rectangle {
                                 right:parent.right
                                 rightMargin:12
                             }
-                            visible:id.checked ? true : false
+                            // visible:id.checked ? true : false
+                            visible:id.hoverStat ? true : (id.checked ? true : false)
                             checkable : true
                             onClicked:{
                                 addFilter(index)
@@ -213,6 +214,7 @@ Rectangle {
                             radius: 3 
                             color: checked ? '#C0482C':'#787878'
                             property bool checked: (objectName == currentChoosed)?true:false
+                            property bool hoverStat:false
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
@@ -237,15 +239,27 @@ Rectangle {
                                 color: '#ffffff'
                                 font.pixelSize: 9
                             }
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    currentChoosed = parent.objectName
+                            
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            preventStealing:true
+                            onClicked: {
+                                currentChoosed = id.objectName
+                            }
+                            onDoubleClicked:{
+                                currentChoosed = id.objectName
+                                addFilter(index)
+                            }
+                            onEntered:{
+                                id.hoverStat = true
+                            }
+                            onExited:{
+                                if(!containsMouse){
+                                    id.hoverStat = false
                                 }
-                                onDoubleClicked:{
-                                    currentChoosed = parent.objectName
-                                    addFilter(index)
-                                }
+
                             }
                         }
                     }
