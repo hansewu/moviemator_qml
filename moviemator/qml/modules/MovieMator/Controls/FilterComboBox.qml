@@ -100,11 +100,24 @@ Item {
                 }
                 onEntered: {
                     parent.color = '#C0482C'
+                    timer.stop()
                 }
                 onExited: {
                     parent.color = '#525252'
+                    timer.restart()
                 }
             }
+        }
+
+    }
+
+    Timer {
+        id : timer
+        interval: 3000
+        repeat: false
+        onTriggered: 
+        {
+            listView.visible = false
         }
     }
 }
