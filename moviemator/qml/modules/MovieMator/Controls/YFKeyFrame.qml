@@ -99,7 +99,7 @@ RowLayout{
                 var prop = metaParamList[paramIndex].property
                 var keyValue = '';
                 if(metaParamList[paramIndex].paraType == 'rect'){
-                    keyValue = filter.getAnimRectValue(keyIndex, prop);
+                    keyValue = filter.getAnimRectValue(nFrame, prop);
                     filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
                 }else{
                     keyValue = filter.getKeyValueOnProjectOnIndex(keyIndex, prop);

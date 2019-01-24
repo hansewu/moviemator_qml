@@ -375,7 +375,7 @@ function init(isNew){  //滤镜UI界面初始化
     for(var i=0;i<paramNum;i++){ 
         var index = i
         var paramInfo = metaParamList[i] 
-        if(isNew){//如果已经设过了就不设了
+        if('' == paramInfo.controlType){//如果已经设过了就不设了
             setMetaKeyFrameParams(paramInfo,i)
         }
         index = createUIbyParamType(paramInfo,i) 
