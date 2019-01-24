@@ -45,10 +45,23 @@ Item {
     height: 250
 
     Component.onCompleted: {
+        
+        console.log("Component.onCompletedComponent.onCompleted: ")
+        
         filter.setInAndOut(0, timeline.getCurrentClipParentLength())
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
+        
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
+
+        if(keyFrameCount == -1){
+            var getvalue = filter.get(metaParamList[0].property)
+            var li = getvalue.split('~=')
+            if(li.length >= 4){
+                keyFrameCount = li.length -1
+            }
+        }
+        
         for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
         {
             var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)

@@ -273,7 +273,7 @@ Rectangle {
 
     Text {
         id: label
-        text: isAnimSticker ? 'AnimSticker' : clipName
+        text: clipName
         visible: !isBlank && !isTransition
         font.pointSize: 9       // 10
         anchors {
@@ -281,7 +281,7 @@ Rectangle {
             left: parent.left
             topMargin: parent.border.width + 2
             leftMargin: parent.border.width +
-                ((isAudio || !settings.timelineShowThumbnails) ? 0 : inThumbnail.width) + 1
+                ((isAudio || !settings.timelineShowThumbnails || isAnimSticker) ? 0 : inThumbnail.width) + 1
         }
         color: '#C7F3ED'    // 'black'
     }
