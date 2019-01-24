@@ -233,11 +233,14 @@ RowLayout{
                 break;
 
             case "CheckBox":
+                console.log("id.checkedid.checkedid.checkedid.checked: " + id.checked)
+                console.log("parameter.propertyparameter.property: " + parameter.property)
+                console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
                 if(filter.bKeyFrame(currentFrame))
                 {
                     filter.setKeyFrameParaValue(currentFrame, parameter.property, Number(id.checked).toString())
                     filter.combineAllKeyFramePara()
-                }else if((id.value == parameter.value)||(Math.abs(id.checked - parameter.value) < 1)){
+                }else if((id.checked == parameter.value)||(Math.abs(id.checked - parameter.value) < 1)){
                     
                 }else{
                     filter.set(parameter.property, Number(id.checked))

@@ -35,16 +35,11 @@ Item {
     // 复选框响应函数
     function checkBoxClicked(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = findParameter(ctr)
-        filter.set(Handdle.metaParamList[paramIndexList[0]].property,""+Number(ctr.checked))
+        keyFrame.controlValueChanged(ctr)
     }
     // 滑条响应函数
     function sliderValueChanged(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-
-        // var paramIndexList = findParameter(ctr)
-        // filter.set(Handdle.metaParamList[paramIndexList[0]].property,""+ctr.value/100)
-
         keyFrame.controlValueChanged(ctr)
     }
     // 滑条还原函数
