@@ -330,7 +330,7 @@ Rectangle {
                 implicitWidth: 14
                 implicitHeight: 14
                 Rectangle {
-                    color: "transparent"
+                    color: "#787878"
                     anchors.fill: parent
                     anchors.margins: 3
                     radius: 4
@@ -345,6 +345,10 @@ Rectangle {
                 }
             }
             scrollBarBackground: Item {
+                Rectangle {
+                    color: "#323232"
+                    anchors.fill: parent
+                }
                 implicitWidth: 14
                 implicitHeight: 14
             }

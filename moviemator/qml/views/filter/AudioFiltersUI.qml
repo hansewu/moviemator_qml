@@ -131,7 +131,6 @@ Rectangle {
             Flow {
                 id:itemFlow
                 width: parent.width
-
                 Repeater{
                     id:rep
                     model: ListModel{
@@ -258,31 +257,6 @@ Rectangle {
             font.pixelSize: 12
             color: '#ffffff'
         }
-
-        // FilterComboBox {
-        //     id:catCombox
-        //     anchors{
-        //         bottom: parent.bottom
-        //         bottomMargin: 6
-        //         right: parent.right
-        //         rightMargin: 13
-        //     }
-        //     Component.onCompleted: {
-        //         catCombox.setModel(catListAll)
-        //     }
-        //     onCatChanged:{
-        //         if(index <= 0){
-        //             catList.clear()
-        //             for(var i=1;i<catListAll.count;i++){
-        //                 catList.append(catListAll.get(i))
-        //             }
-        //         }else{
-        //             var chosed = catListAll.get(index)
-        //             catList.clear()
-        //             catList.append(chosed)
-        //         }
-        //     }
-        // }
     }
 
     ScrollView{
@@ -299,7 +273,7 @@ Rectangle {
                 implicitWidth: 14
                 implicitHeight: 14
                 Rectangle {
-                    color: "transparent"
+                    color: "#787878"
                     anchors.fill: parent
                     anchors.margins: 3
                     radius: 4
