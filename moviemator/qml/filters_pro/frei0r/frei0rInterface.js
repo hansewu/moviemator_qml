@@ -353,8 +353,6 @@ function setMetaKeyFrameParams(paramInfo,index){
 }
 
 function init(isNew){  //滤镜UI界面初始化
-    // 引入YFKeyframe
-    createKeyFrame()
 
     // 打印日志信息
     console.log("num_params:"+paramNum)

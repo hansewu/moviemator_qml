@@ -117,9 +117,9 @@ Item {
         }
         
         console.log("filter.isNewfilter.isNewfilter.isNew: " + filter.isNew)
-
-        Handdle.init(filter.isNew)
+        Handdle.createKeyFrame()
         keyFrame = findControl("keyFrame",layoutRoot)
+        Handdle.init(filter.isNew)
         initFilter()
         
     }
@@ -130,34 +130,4 @@ Item {
         columns: 3
         anchors.margins: 8
     }
-    Dialog {
-        id:myDialog
-        visible: false
-        title: "Blue sky dialog"
-
-        contentItem: Rectangle {
-            color: "lightskyblue"
-            implicitWidth: 400
-            implicitHeight: 400
-            TextField {
-                id:infomation
-                text: ""
-                anchors.fill: parent
-            }
-        }
-        // var paramList = metadata.keyframes.parameters
-        // for(var i=0;i<paramList.length;i++){
-        //     var param = paramList[i]
-            
-        //     console.log("33333333333333333: " + param.paraType)
-            
-        //     if(param.paraType == 'string'){
-        //         infomation.text = metadata.name + " : "+'string'
-        //         myDialog.visible = true
-        //         break;
-        //     }
-        // }
-    }
-    
-    
 }

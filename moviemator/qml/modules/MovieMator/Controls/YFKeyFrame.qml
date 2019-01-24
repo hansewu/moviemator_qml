@@ -86,37 +86,40 @@ RowLayout{
                 break;
             }
         }
-        console.log("keyParamkeyParamkeyParam: " + keyParam)
-        console.log("metaParamList[keyParam].paraType: " + metaParamList[keyParam].paraType)
-        
-        var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
-        console.log("keyFrameCountkeyFrameCountkeyFrameCount: " + keyFrameCount)
-        for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
-        {
-            var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[keyParam].property);
-            console.log(keyIndex + "nFramenFramenFramenFramenFramenFrame: " + nFrame)
-            for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
-                var prop = metaParamList[paramIndex].property
-                var keyValue = '';
-                if(metaParamList[paramIndex].paraType == 'rect'){
-                    keyValue = filter.getAnimRectValue(nFrame, prop);
-                    filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
-                }else{
-                    keyValue = filter.getKeyValueOnProjectOnIndex(keyIndex, prop);
-                    filter.setKeyFrameParaValue(nFrame, prop, keyValue.toString())
+        if(keyParam < metaParamList.length){
+            console.log("keyParamkeyParamkeyParam: " + keyParam)
+            console.log("metaParamList[keyParam].paraType: " + metaParamList[keyParam].paraType)
+            
+            var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
+            console.log("keyFrameCountkeyFrameCountkeyFrameCount: " + keyFrameCount)
+            for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
+            {
+                var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[keyParam].property);
+                console.log(keyIndex + "nFramenFramenFramenFramenFramenFrame: " + nFrame)
+                for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+                    var prop = metaParamList[paramIndex].property
+                    var keyValue = '';
+                    if(metaParamList[paramIndex].paraType == 'rect'){
+                        keyValue = filter.getAnimRectValue(nFrame, prop);
+                        filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+                    }else{
+                        keyValue = filter.getKeyValueOnProjectOnIndex(keyIndex, prop);
+                        filter.setKeyFrameParaValue(nFrame, prop, keyValue.toString())
+                    }
+                    console.log(paramIndex + "propproppropproppropprop: " + prop)
+                    console.log(paramIndex + "keyValuekeyValuekeyValuekeyValue: " + keyValue)
+                    
                 }
-                console.log(paramIndex + "propproppropproppropprop: " + prop)
-                console.log(paramIndex + "keyValuekeyValuekeyValuekeyValue: " + keyValue)
-                
+            }
+            bBlockSignal = false
+            console.log("initFilterinitFilterinitFilterinitFilterinitFilter-1-0: ")
+            filter.combineAllKeyFramePara();
+            console.log("initFilterinitFilterinitFilterinitFilterinitFilter-1: ")
+            if(keyFrameCount > 0){
+                loadKeyFrame()
             }
         }
-        bBlockSignal = false
-        console.log("initFilterinitFilterinitFilterinitFilterinitFilter-1-0: ")
-        filter.combineAllKeyFramePara();
-        console.log("initFilterinitFilterinitFilterinitFilterinitFilter-1: ")
-        if(keyFrameCount > 0){
-            loadKeyFrame()
-        }
+        
         
         console.log("initFilterinitFilterinitFilterinitFilterinitFilter-2: ")
         // 初始化关键帧控件
@@ -873,15 +876,15 @@ RowLayout{
         filter.get(parameter.property)
         var tempValue = filter.getAnimRectValue(currentFrame, parameter.property)
         filter.get(parameter.property)
-        console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+        console.log("loadColorPickerloadColorPicker-2:tempValue: " + tempValue)
         parameter.value = Qt.rgba(parseFloat(tempValue.x),parseFloat(tempValue.y),parseFloat(tempValue.width),1.0)
 
         console.log("parameter.propertyparameter.property: " + parameter.property)
         console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
         // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
         control.value = parameter.value
-        console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
-        console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+        console.log("loadColorPickerloadColorPicker-2:parameter.value: " + parameter.value)
+        console.log("loadColorPickerloadColorPicker-2:control.value: " + control.value)
         
     }
     function loadSlider(control,paramIndex){
@@ -898,7 +901,7 @@ RowLayout{
             filter.get(parameter.property)
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
+            console.log("loadSliderloadSlider-2:tempValue: " + tempValue)
             parameter.value = loadValueCalc(tempValue,parameter.factorFunc)
             console.log("parameter.propertyparameter.property: " + parameter.property)
             console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
@@ -908,8 +911,8 @@ RowLayout{
                 metadata.keyframes.parameters[parameterList[i]].value = parameter.value
             }
             control.value = parameter.value
-            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
-            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.value)
+            console.log("loadSliderloadSlider-2:parameter.value: " + parameter.value)
+            console.log("loadSliderloadSlider-2:control.value: " + control.value)
         }
     }
     function loadStringCtr(control,paramIndex){
@@ -923,23 +926,6 @@ RowLayout{
                 control.currentIndex = index0
                 console.log("loadControlSliderloadControlSlider-1: " + control.currentText)
             }
-        }else{
-            filter.get(parameter.property)
-            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
-            filter.get(parameter.property)
-            console.log("loadControlSliderloadControlSlider-2:tempValue: " + tempValue)
-            parameter.value = tempValue
-            console.log("parameter.propertyparameter.property: " + parameter.property)
-            console.log("parameter.valueparameter.valueparameter.value: " + parameter.value)
-            // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
-            var parameterList = findParameter(control)
-            for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
-                metadata.keyframes.parameters[parameterList[i]].value = parameter.value
-            }
-            var index0 = findDefaultIndex(parameter.value,control.model)
-            control.currentIndex = index0
-            console.log("loadControlSliderloadControlSlider-2:parameter.value: " + parameter.value)
-            console.log("loadControlSliderloadControlSlider-2:control.value: " + control.currentText)
         }
     }
     function getCurrentFrame(){
