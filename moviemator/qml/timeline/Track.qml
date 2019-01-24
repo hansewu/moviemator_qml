@@ -87,7 +87,7 @@ Rectangle {
             speed: model.speed
             selected: trackRoot.isCurrentTrack && trackRoot.selection.indexOf(index) !== -1
             hasFilter: model.hasFilter
-
+            isAnimSticker: model.isAnimSticker
 
             onClicked: trackRoot.clipClicked(clip, trackRoot);
             onMoved: {

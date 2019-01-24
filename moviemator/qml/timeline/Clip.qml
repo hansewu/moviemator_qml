@@ -53,6 +53,7 @@ Rectangle {
     property string hash: ''
     property double speed: 1.0
     property bool hasFilter: false
+    property bool isAnimSticker: false
 
 
     signal clicked(var clip)
@@ -272,7 +273,7 @@ Rectangle {
 
     Text {
         id: label
-        text: clipName
+        text: isAnimSticker ? 'AnimSticker' : clipName
         visible: !isBlank && !isTransition
         font.pointSize: 9       // 10
         anchors {
