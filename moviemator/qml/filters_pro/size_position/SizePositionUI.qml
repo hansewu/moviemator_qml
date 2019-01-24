@@ -39,6 +39,7 @@ Item {
     property bool bTile: false
     property bool bFit: false
     property bool bFitCrop: false
+    property bool bFitNoScale: false
 
     width: 350
     height: 250
@@ -232,6 +233,40 @@ Item {
         filterRect.y = 0
         filterRect.width = 1
         filterRect.height = 1
+
+        setFilter()
+        setControls()
+    }
+
+    function fitNoScale()
+    {
+        bFitNoScale = false
+
+        filter.resetProperty(fillProperty)
+        filter.resetProperty(distortProperty)
+
+        filter.set(fillProperty, 1)
+        filter.set(distortProperty, 0)
+
+        var scale = 1
+        if(filter.producerAspect > profile.width/profile.height) 
+        {
+            if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
+                scale = filter.mediaWidth/profile.width
+
+            filterRect.height   = 1.0/filter.producerAspect * profile.width/profile.height * scale
+            filterRect.width    = 1 * scale
+        }
+        else
+        {   
+            if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
+                scale = filter.mediaHeight/profile.height
+
+            filterRect.width    = filter.producerAspect * profile.height/profile.width * scale
+            filterRect.height   = 1 * scale
+        }
+        filterRect.x        = (1.0 - filterRect.width)/2.0
+        filterRect.y        = (1.0 - filterRect.height)/2.0
 
         setFilter()
         setControls()
@@ -505,6 +540,42 @@ Item {
         }
 
         Button {
+            id: fit1Button
+            tooltip: qsTr('1:1')
+            Layout.alignment: Qt.AlignRight
+            onClicked: {
+                bFitNoScale = true
+
+                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                {   
+                    if(fillRadioButton.checked)   //填配模式
+                    {
+                        fitNoScale()
+                    }
+                    else
+                        sizeKeyFrameWarning.visible = true
+                }
+                else          
+                {
+                    fitNoScale()
+                }
+            }
+
+            implicitWidth: 56
+            implicitHeight: 41
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: fit1Button.pressed? "qrc:///icons/light/32x32/size-fit-1-a.png" : "qrc:///icons/light/32x32/size-fit-1.png"
+            }
+        }
+
+        Button {
             id: fitButton
             //text: qsTr('Fit')
             tooltip: qsTr('Fit')
@@ -585,7 +656,7 @@ Item {
             tooltip: qsTr('Tile')
             //iconSource: "qrc:///icons/light/32x32/size-tile.png"
             //width:100
-            Layout.alignment: Qt.AlignRight
+            Layout.alignment: Qt.AlignLeft
             onClicked: {
                 bTile = true
 
@@ -647,11 +718,13 @@ Item {
             if (bTile) tile()
             if (bFit) fit()
             if (bFitCrop) fitCrop()
+            if (bFitNoScale) fitNoScale()
         }
         onNo: {
             if (bTile) bTile = false
             if (bFit) bFit = false
             if (bFitCrop) bFitCrop = false
+            if (bFitNoScale) bFitNoScale = false
 
             setControls()  
         }
