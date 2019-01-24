@@ -86,12 +86,13 @@ RowLayout{
                 break;
             }
         }
+
+        var keyFrameCount = 0
         if(keyParam < metaParamList.length){
-            console.log("keyParamkeyParamkeyParam: " + keyParam)
-            console.log("metaParamList[keyParam].paraType: " + metaParamList[keyParam].paraType)
-            
-            var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
+            filter.get(metaParamList[keyParam].property)
+            keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
             console.log("keyFrameCountkeyFrameCountkeyFrameCount: " + keyFrameCount)
+            
             for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
             {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[keyParam].property);
