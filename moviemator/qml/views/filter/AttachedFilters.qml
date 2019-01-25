@@ -36,6 +36,17 @@ Rectangle {
         indexDelay.index = index
         indexDelay.running = true
     }
+
+    // 移除所有关键帧信号
+    Connections {
+        target: timeline
+        onSelected_sll_singal: {
+            console.log("sll---qml--index-----", index)
+            attachedFiltersView.currentIndex = index
+            filterClicked(index)
+            setCurrentFilter(index)
+        }
+    }
     
     Timer {
         id: indexDelay
