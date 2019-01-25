@@ -37,7 +37,7 @@ Rectangle {
         indexDelay.running = true
     }
 
-    // 移除所有关键帧信号
+    //只用于模板clip被选中时被调用
     Connections {
         target: timeline
         onSizeAndPositionFilterSelected: {
