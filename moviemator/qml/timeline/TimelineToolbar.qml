@@ -382,7 +382,7 @@ ToolBar {
                 implicitWidth: 44
                 implicitHeight: 44
 
-                customText:qsTr('All Clips')
+                customText:qsTr('Zoom to Fit')
 
                 customIconSource: 'qrc:///timeline/timeline-toolbar-fit-n.png'
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-fit-p.png'
