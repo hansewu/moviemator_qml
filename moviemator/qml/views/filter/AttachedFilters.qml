@@ -40,8 +40,7 @@ Rectangle {
     // 移除所有关键帧信号
     Connections {
         target: timeline
-        onSelected_sll_singal: {
-            console.log("sll---qml--index-----", index)
+        onSizeAndPositionFilterSelected: {
             attachedFiltersView.currentIndex = index
             filterClicked(index)
             setCurrentFilter(index)
