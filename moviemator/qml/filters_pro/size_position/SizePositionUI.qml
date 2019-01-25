@@ -52,15 +52,9 @@ Item {
         var metaParamList = metadata.keyframes.parameters
         
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
-
-        if(keyFrameCount == -1){
-            var getvalue = filter.get(metaParamList[0].property)
-            var li = getvalue.split('~=')
-            if(li.length >= 4){
-                keyFrameCount = li.length -1
-            }
+        if(keyFrameCount < 0){
+                keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
         }
-        
         for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
         {
             var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[0].property)
