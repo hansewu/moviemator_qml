@@ -377,15 +377,16 @@ ToolBar {
                 id: allClipsButton
                 action: showAllClipsAction
                 visible: true
-                bEnabled: hasClipOrTrackSelected
+                //bEnabled: hasClipOrTrackSelected
 
                 implicitWidth: 44
                 implicitHeight: 44
 
                 customText:qsTr('All Clips')
 
-                customIconSource: bEnabled?'qrc:///timeline/timeline-toolbar-transition-n.png':'qrc:///timeline/timeline-toolbar-transition-p.png'
-                pressedIconSource: 'qrc:///timeline/timeline-toolbar-transition-p.png'
+                customIconSource: 'qrc:///timeline/timeline-toolbar-fit-n.png'
+                pressedIconSource: 'qrc:///timeline/timeline-toolbar-fit-p.png'
+                disabledIconSource: 'qrc:///timeline/timeline-toolbar-fit-n.png'
             }
             // Add -End
         }
