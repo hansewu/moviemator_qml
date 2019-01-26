@@ -72,12 +72,9 @@ RowLayout{
         if(metadata.keyframes.parameters.length == 1)
             filter.setInAndOut(0, timeline.getCurrentClipParentLength())
 
-        console.log("initFilterinitFilterinitFilterinitFilterinitFilter-0: ")
         //导入上次工程保存的关键帧
-        bBlockSignal = true
+        //bBlockSignal = true
         var metaParamList = metadata.keyframes.parameters
-        console.log("metaParamListmetaParamListmetaParamList: " + metaParamList)
-        console.log("metaParamListmetaParamListmetaParamList-length: " + metaParamList.length)
         if(metaParamList.length <= 0) return
         // 由于string没有关键帧，所以通过string类型的参数获取关键帧个数会出错，因此不能用string类型的参数去获取关键帧个数和关键帧位置
         var keyParam = 0
@@ -94,6 +91,7 @@ RowLayout{
                 keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
             }
             
+            bBlockSignal = true
             for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
             {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[keyParam].property);
@@ -115,9 +113,9 @@ RowLayout{
                 loadKeyFrame()
             }
         }
-        
+
         // 初始化关键帧控件
-        if (filter.isNew || keyFrameCount<=0){
+        if (filter.isNew && keyFrameCount<=0){
             
             
             for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
@@ -169,6 +167,8 @@ RowLayout{
 
             }
         }
+
+        loadKeyFrame()
     }
 
     // 控件发生修改时反应
@@ -417,7 +417,7 @@ RowLayout{
     //帧位置改变时加载控件参数
     function loadFrameValue(layoutRoot){
         if(bBlockSignal == true) return
-
+        currentFrame = timeline.getPositionInCurrentClip()
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
