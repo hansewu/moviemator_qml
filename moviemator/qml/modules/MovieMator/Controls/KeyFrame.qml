@@ -133,6 +133,7 @@ RowLayout{
     function removeAllKeyFrame(){
         var position        = timeline.getCurrentClipLength() //filter.producerOut - filter.producerIn + 1
         
+        filter.combineAllKeyFramePara();
         while(true) 
         {  
             position = filter.getPreKeyFrameNum(position)
