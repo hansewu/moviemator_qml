@@ -36,6 +36,16 @@ Rectangle {
         indexDelay.index = index
         indexDelay.running = true
     }
+
+    //只用于模板clip被选中时被调用
+    Connections {
+        target: timeline
+        onSizeAndPositionFilterSelected: {
+            attachedFiltersView.currentIndex = index
+            filterClicked(index)
+            setCurrentFilter(index)
+        }
+    }
     
     Timer {
         id: indexDelay

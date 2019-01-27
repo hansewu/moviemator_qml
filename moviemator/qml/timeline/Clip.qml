@@ -935,11 +935,11 @@ Rectangle {
             onTriggered: timeline.onTextSettings(trackIndex, index)
        }
 
-       MenuItem {
-           visible: !isBlank && !isTransition
-            text:qsTr('Export as template')
-            onTriggered: timeline.exportAsTemplate(trackIndex, index)
-       }
+//       MenuItem {
+//           visible: !isBlank && !isTransition
+//            text:qsTr('Export as template')
+//            onTriggered: timeline.exportAsTemplate(trackIndex, index)
+//       }
 
     }
 }
