@@ -60,7 +60,7 @@ Item {
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
-            value: filter.getDouble('alpha') * 100.0
+            // value: filter.getDouble('alpha') * 100.0
             onValueChanged: {
                 keyFrame.controlValueChanged(slider)
             }
