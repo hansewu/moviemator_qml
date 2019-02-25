@@ -48,7 +48,7 @@ Item {
         
         console.log("Component.onCompletedComponent.onCompleted: ")
         
-        filter.setInAndOut(0, timeline.getCurrentClipParentLength())
+        filter.setInAndOut(0, timeline.getCurrentClipParentLength() - 1)
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
         

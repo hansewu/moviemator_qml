@@ -41,7 +41,8 @@ Item {
         if (aspectRatio === 0.0) {
             bottomRightHandle.x = topLeftHandle.x + Math.round(rect.width * widthScale) - handleSize
             bottomRightHandle.y = topLeftHandle.y + Math.round(rect.height * heightScale) - handleSize
-        } else if (aspectRatio > 1.0) {
+        } else if (aspectRatio > profile.width/profile.height) {       // 原来 aspectRation > 1.0的情况
+        // 宽图片的 aspectRatio > profile.width/profile.height 时才需要这样处理，其他宽图片不需要这样处理
             bottomRightHandle.x = topLeftHandle.x + Math.round(rect.width * widthScale) - handleSize
             bottomRightHandle.y = topLeftHandle.y + Math.round(rect.width * widthScale / aspectRatio) - handleSize
         } else {
