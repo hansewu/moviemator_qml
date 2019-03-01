@@ -41,8 +41,6 @@ Rectangle {
         indexDelay.index = index
         indexDelay.running = true
     }
-
-
     //只用于模板clip被选中时被调用
     Connections {
         target: timeline
@@ -71,8 +69,12 @@ Rectangle {
                 visualModel.items.addGroups(i,1,"audio")
             }
         }
+        if(chooseVideoFilter.checked == true){
+            attachedFiltersView.currentIndex = attachedFilters.oldIndexVideo
+        }else{
+            attachedFiltersView.currentIndex = attachedFilters.oldIndexAudio
+        }
     }
-
     property var filterType: qsTr("Video")
     SystemPalette { id: activePalette }
     Timer {
@@ -91,16 +93,14 @@ Rectangle {
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            refreshGridModel()
             addDelay.restart()
         }
     }
     Timer {
         id: addDelay
-        interval: 1000
+        interval: 200
         repeat:false
         onTriggered: {
-            // refreshGridModel()
             if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
                 return
             }
@@ -127,6 +127,7 @@ Rectangle {
                     attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
                 }
             }
+            refreshGridModel()
         }
     }
 
@@ -297,13 +298,15 @@ Rectangle {
                         name: "audio" 
                     }
                 ]  
-                filterOnGroup: "video"  
+                // filterOnGroup: "video"  
+                
                 delegate: MouseArea {
                     id: delegateRoot
                     property int visualIndex: DelegateModel.itemsIndex
                     height: attachedFiltersView.cellHeight
                     width: attachedFiltersView.cellWidth
                     drag.target: icon
+                    
                     onClicked: {
                         if(visualModel.filterOnGroup == 'video'){
                             attachedFilters.oldIndexVideo = index
@@ -334,6 +337,14 @@ Rectangle {
                         color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'#787878'
                         radius: 3
                         
+                        Component.onCompleted: {
+                            if(!attachedFiltersView.isReady){
+                                refreshGridModel()
+                                visualModel.filterOnGroup = 'video'
+                                attachedFiltersView.isReady = true
+                            }
+                        }
+
                         CheckBox {
                             id: filterDelegateCheck
                             z:4
@@ -439,7 +450,6 @@ Rectangle {
                 positionViewAtIndex(currentIndex, GridView.Contain);
             }
             onCountChanged: {
-                refreshGridModel()
                 possiblySelectFirstFilter();
             }
             
