@@ -36,6 +36,7 @@ Rectangle {
     signal filterClicked(int index)
     property int oldIndexVideo:0
     property int oldIndexAudio:0
+    property int oldFiltersNum:0
     
     function setCurrentFilter(index) {
         indexDelay.index = index
@@ -93,7 +94,10 @@ Rectangle {
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            addDelay.restart()
+            if(attachedFilters.oldFiltersNum < attachedfiltersmodel.rowCount()){
+                addDelay.restart()
+                attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
+            }
         }
     }
     Timer {
@@ -342,6 +346,7 @@ Rectangle {
                                 refreshGridModel()
                                 visualModel.filterOnGroup = 'video'
                                 attachedFiltersView.isReady = true
+                                attachedFilters.oldFiltersNum = visualModel.items.count
                             }
                         }
 
