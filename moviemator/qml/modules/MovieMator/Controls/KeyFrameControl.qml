@@ -157,45 +157,68 @@ Rectangle {
                 }    
             }
 
-            CustomFilterButton {
+            Button {
                 id:addKeyFrameButton
                 anchors {
                     top: autoAddKeyFrameCheckBox.bottom
                     left: parent.left
-                    leftMargin: 10
-                    topMargin: 0
+                    leftMargin: 15
+                    topMargin: 7
                 }
-                implicitWidth: 32
-                implicitHeight: 32
+                implicitWidth: 25
+                implicitHeight: 25
 
                 enabled: refreshFrameButtonsEnable() 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Add key frame')
-                customIconSource: 'qrc:///icons/light/32x32/list-add.png'
+                //customIconSource: 'qrc:///icons/light/32x32/list-add.png'
                 //customText: qsTr('Add')
-                buttonWidth : 85
+                //buttonWidth : 85
                 onClicked: {
                     addFrameChanged()
                     refreshFrameButtonsEnable() 
                 }
+
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: 'transparent'
+                    }  
+                }
+                Image {
+                    fillMode: Image.PreserveAspectCrop
+                    anchors.fill: parent
+                    source: addKeyFrameButton.pressed ? "qrc:///icons/light/32x32/add_keyframe-on.png" : (enabled?'qrc:///icons/light/32x32/add_keyframe.png':'qrc:///icons/light/32x32/add_keyframe_disable.png')
+                }
             }
 
-            CustomFilterButton {
+            Button {
                 id:removeKeyFrameButton
                 anchors {
                     top: addKeyFrameButton.top
                     left: addKeyFrameButton.right
-                    leftMargin: 20
-                    topMargin: 0
+                    leftMargin: 30
+                    topMargin: 1
                 }
-                implicitWidth: 32
-                implicitHeight: 32
+                implicitWidth: 25
+                implicitHeight: 25
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Remove key frame')
-                customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
+                //customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
                 //customText: qsTr('Remove')
-                buttonWidth : 85
+                //buttonWidth : 85
+
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: 'transparent'
+                    }  
+                }
+                Image {
+                    fillMode: Image.PreserveAspectCrop
+                    anchors.fill: parent
+                    source: removeKeyFrameButton.pressed ? "qrc:///icons/light/32x32/remove_keyframe-on.png" : (enabled?'qrc:///icons/light/32x32/remove_keyframe.png':'qrc:///icons/light/32x32/remove_keyframe_disable.png')
+                }
+
                 onClicked: {
                     var position        = timeline.getPositionInCurrentClip()
 
@@ -211,22 +234,22 @@ Rectangle {
                 }
             }
 
-            CustomFilterButton {
+            Button {
                 id:preKeyFrameButton
                 anchors {
                     top: addKeyFrameButton.top
                     left: removeKeyFrameButton.right
-                    leftMargin: 20
-                    topMargin: 0
+                    leftMargin: 30
+                    topMargin: 1
                 }
-                implicitWidth: 32
-                implicitHeight: 32
+                implicitWidth: 25
+                implicitHeight: 25
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Prev key frame')
-                customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
+                //customIconSource: enabled?'qrc:///icons/light/32x32/previous_keyframe.png' :'qrc:///icons/light/32x32/previous_keyframe_disable.png'
                 //customText: qsTr('<<')
-                buttonWidth : 85
+                //buttonWidth : 85
                 onClicked: {
                     var nFrame = filter.getPreKeyFrameNum(timeline.getPositionInCurrentClip())
                     if(nFrame != -1)
@@ -234,25 +257,36 @@ Rectangle {
                         filterDock.position = nFrame
                     }
                 }
+
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: 'transparent'
+                    }  
+                }
+                Image {
+                    fillMode: Image.PreserveAspectCrop
+                    anchors.fill: parent
+                    source: preKeyFrameButton.pressed? "qrc:///icons/light/32x32/previous_keyframe-on.png" : (enabled?'qrc:///icons/light/32x32/previous_keyframe.png':'qrc:///icons/light/32x32/previous_keyframe_disable.png')
+                }
             }
 
-            CustomFilterButton {
+            Button {
                 id:nextKeyFrameButton
                 anchors {
                     top: addKeyFrameButton.top
                     left: preKeyFrameButton.right
-                    leftMargin: 20
-                    topMargin: 0
+                    leftMargin: 30
+                    topMargin: 1
                 }
-                implicitWidth: 32
-                implicitHeight: 32
+                implicitWidth: 25
+                implicitHeight: 25
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Next key frame')
                 //customIconSource: 'qrc:///icons/light/32x32/bg.png'
-                customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
+                //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
                 //customText: qsTr('>>')
-                buttonWidth : 85
+                //buttonWidth : 85
                 onClicked: {
                     var nFrame = filter.getNextKeyFrameNum(timeline.getPositionInCurrentClip())
                     if(nFrame != -1)
@@ -260,6 +294,16 @@ Rectangle {
                         filterDock.position = nFrame
                         //frameChanged(nFrame)
                     }
+                }
+                style: ButtonStyle {
+                    background: Rectangle {
+                        color: 'transparent'
+                    }  
+                }
+                Image {
+                    fillMode: Image.PreserveAspectCrop
+                    anchors.fill: parent
+                    source: nextKeyFrameButton.pressed? "qrc:///icons/light/32x32/next_keyframe-on.png" : (enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png')
                 }
             }
         }
