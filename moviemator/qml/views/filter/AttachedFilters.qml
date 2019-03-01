@@ -103,11 +103,11 @@ Rectangle {
         onChanged: {
             if(attachedFilters.oldFiltersNum < attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
                 addDelay.restart()
-                attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
             }
             else{
                 showParamterSetting(attachedFiltersView.currentIndex)
             }
+            attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
         }
     }
     Timer {
