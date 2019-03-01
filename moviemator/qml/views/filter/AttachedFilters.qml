@@ -30,6 +30,7 @@ import MovieMator.Controls 1.0
 import QtQml 2.2
 import QtQuick.Layouts 1.1
 import com.moviemator.qml 1.0 as MovieMator
+import 'translateTool.js' as Trans
 Rectangle {
     id: attachedFilters
     color: '#353535'
@@ -37,6 +38,7 @@ Rectangle {
     property int oldIndexVideo:0
     property int oldIndexAudio:0
     property int oldFiltersNum:0
+    property bool translate2CH: ("简体中文" == Qt.locale().nativeLanguageName)
     
     function setCurrentFilter(index) {
         indexDelay.index = index
@@ -407,6 +409,7 @@ Rectangle {
                             id:filterDelegateName
                             z:3
                             text: model.display
+                            text: translate2CH?Trans.transEn2Ch(model.display):model.display
                             verticalAlignment:Text.AlignBottom
                             wrapMode: Text.Wrap
                             anchors.fill: parent
