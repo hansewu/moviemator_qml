@@ -100,6 +100,9 @@ Rectangle {
                 addDelay.restart()
                 attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
             }
+            else{
+                filterClicked(attachedFiltersView.currentIndex)
+            }
         }
     }
     Timer {
@@ -408,7 +411,6 @@ Rectangle {
                         Label { 
                             id:filterDelegateName
                             z:3
-                            text: model.display
                             text: translate2CH?Trans.transEn2Ch(model.display):model.display
                             verticalAlignment:Text.AlignBottom
                             wrapMode: Text.Wrap
