@@ -49,7 +49,7 @@ Rectangle {
         target: timeline
         onSizeAndPositionFilterSelected: {
             attachedFiltersView.currentIndex = index
-            filterClicked(index)
+            showParamterSetting(index)
             setCurrentFilter(index)
         }
     }
@@ -78,6 +78,11 @@ Rectangle {
             attachedFiltersView.currentIndex = attachedFilters.oldIndexAudio
         }
     }
+    function showParamterSetting(index) {
+        if((isFilterVisible(index) && chooseVideoFilter.checked) || (!isFilterVisible(index) && chooseAudioFilter.checked)){
+            filterClicked(index)
+        }
+    }
     property var filterType: qsTr("Video")
     SystemPalette { id: activePalette }
     Timer {
@@ -96,12 +101,12 @@ Rectangle {
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            if(attachedFilters.oldFiltersNum < attachedfiltersmodel.rowCount()){
+            if(attachedFilters.oldFiltersNum < attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
                 addDelay.restart()
                 attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
             }
             else{
-                filterClicked(attachedFiltersView.currentIndex)
+                showParamterSetting(attachedFiltersView.currentIndex)
             }
         }
     }
@@ -192,7 +197,7 @@ Rectangle {
                 filterType = qsTr("Video")
                 refreshGridModel()
                 visualModel.filterOnGroup = "video" 
-                filterClicked(attachedFilters.oldIndexVideo)
+                showParamterSetting(attachedFilters.oldIndexVideo)
             }
         }
     }
@@ -245,7 +250,7 @@ Rectangle {
                 filterType = qsTr("Audio")
                 refreshGridModel()
                 visualModel.filterOnGroup = "audio" 
-                filterClicked(attachedFilters.oldIndexAudio)
+                showParamterSetting(attachedFilters.oldIndexAudio)
             }
         }
     }
@@ -322,7 +327,7 @@ Rectangle {
                         }else{
                             attachedFilters.oldIndexAudio = index
                         }
-                        filterClicked(index)
+                        showParamterSetting(index)
                     }
                     onDoubleClicked: {
                         if(visualModel.filterOnGroup == 'video'){
@@ -332,7 +337,7 @@ Rectangle {
                         }
                         model.checkState = !model.checkState
                         filterDelegateCheck.checkedState = model.checkState
-                        filterClicked(index)
+                        showParamterSetting(index)
                     }
                     Rectangle {
                         id: icon
@@ -469,7 +474,7 @@ Rectangle {
             function possiblySelectFirstFilter() {
                 if (count > 0 && currentIndex == -1) {
                     currentIndex = 0;
-                    filterClicked(currentIndex);
+                    showParamterSetting(currentIndex);
                 }
             }
 
