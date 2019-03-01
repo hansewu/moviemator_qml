@@ -97,15 +97,15 @@ Rectangle {
                 checked: (filter && filter.getKeyFrameNumber() > 0)
                 style: CheckBoxStyle {
                     indicator: Rectangle {
-                        color:'red'
+                        color:'transparent'
                         radius: 3
                         z:1
-                        implicitWidth: 13
-                        implicitHeight: 13
+                        implicitWidth: 18
+                        implicitHeight: 18
                         Image {
                             z:2
                             anchors.fill: parent
-                            source:enableKeyFrameCheckBox.checked ? '1.jpg':'2.jpg'
+                            source:enableKeyFrameCheckBox.checked ? 'qrc:///icons/light/32x32/key-a.png' : 'qrc:///icons/light/32x32/key.png'
                         }
                     }
                 }
@@ -142,17 +142,18 @@ Rectangle {
                 opacity: enableKeyFrameCheckBox.checked ? 1.0 : 0.5
                 onClicked: {
                 }
+                height:25
                 style: CheckBoxStyle {
                     indicator: Rectangle {
-                        color:'red'
+                        color:'transparent'
                         radius: 3
                         z:1
-                        implicitWidth: 13
-                        implicitHeight: 13
+                        implicitWidth: 18
+                        implicitHeight: 18
                         Image {
                             z:2
                             anchors.fill: parent
-                            source:autoAddKeyFrameCheckBox.checked ? '1.jpg':'2.jpg'
+                            source:autoAddKeyFrameCheckBox.checked ? 'qrc:///icons/light/32x32/key-a.png' : 'qrc:///icons/light/32x32/key.png'
                         }
                     }
                 }
