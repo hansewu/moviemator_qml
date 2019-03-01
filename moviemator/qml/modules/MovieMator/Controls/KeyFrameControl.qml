@@ -30,9 +30,9 @@ import QtQuick.Dialogs 1.1
 Rectangle {
     id:keyFrame
 
-    color: '#353535'//activePalette.window
+    color: 'transparent'//activePalette.window
     width: parent.width
-    height: 100
+    height: 90
 
     signal enableKeyFrameChanged(bool bEnable)
     signal autoAddKeyFrameChanged(bool bEnable)
@@ -72,6 +72,7 @@ Rectangle {
         height: parent.height
         title: " " + qsTr('Key Frame') + " "
         //font.pixelSize: 15
+        flat:true
         anchors {
             top: parent.top
             left: parent.left

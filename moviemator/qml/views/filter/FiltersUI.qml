@@ -23,6 +23,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Controls.Styles 1.4
 import MovieMator.Controls 1.0
+import QtQml 2.2
+import 'translateTool.js' as Trans
 
 Rectangle {
     id: root
@@ -30,7 +32,8 @@ Rectangle {
     property int repeaterItemWidth: 130
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
-
+    property bool translate2CH: ("简体中文" == Qt.locale().nativeLanguageName)
+    
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
             if(name == filtersInfoList.get(i).name){
@@ -235,7 +238,7 @@ Rectangle {
                                     leftMargin: 5
                                     horizontalCenter: parent.horizontalLeft
                                 }
-                                text: name
+                                text: translate2CH?Trans.transEn2Ch(name):name
                                 color: '#ffffff'
                                 font.pixelSize: 9
                             }

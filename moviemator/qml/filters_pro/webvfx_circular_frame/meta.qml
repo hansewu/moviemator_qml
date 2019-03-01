@@ -30,6 +30,17 @@ Metadata {
                 value: '0'
                 factorFunc:  ['c:100']
             }
+            ,
+            Parameter {
+                name: qsTr('color')
+                property: 'color'
+                objectName: '*'
+                controlType: 'ColorPicker'
+                paraType: 'rect'
+                defaultValue: '0.5 0.5 0.5'
+                value: '#000000'
+                factorFunc:  ['c:255.0']
+            }
         ]
     }
 }

@@ -247,16 +247,23 @@ RowLayout{
                 break;
 
             case "ColorPicker":
-                colorRect.x = saveValueCalc(parseInt("0x" + id.value.slice(1, 3)),parameter.factorFunc)
-                colorRect.y = saveValueCalc(parseInt("0x" + id.value.slice(3, 5)),parameter.factorFunc)
-                colorRect.width = saveValueCalc(parseInt("0x" + id.value.slice(5, 7)),parameter.factorFunc)
+                var rv = parseInt("0x" + id.value.slice(1, 3))
+                var gv = parseInt("0x" + id.value.slice(3, 5))
+                var bv = parseInt("0x" + id.value.slice(5, 7))
+                colorRect.x = saveValueCalc(rv,parameter.factorFunc)
+                colorRect.y = saveValueCalc(gv,parameter.factorFunc)
+                colorRect.width = saveValueCalc(bv,parameter.factorFunc)
+
+                var rp = parseInt("0x" + parameter.value.slice(1, 3))
+                var gp = parseInt("0x" + parameter.value.slice(3, 5))
+                var bp = parseInt("0x" + parameter.value.slice(5, 7))
             
                 if(filter.bKeyFrame(currentFrame))
                 {
                     filter.setKeyFrameParaRectValue(currentFrame, parameter.property, colorRect)
                     filter.combineAllKeyFramePara()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
-                }else if((id.value == parameter.value)||(Math.abs(id.value - parameter.value) < 1)){
+                }else if((id.value == parameter.value)||(Math.abs(rv+gv+bv - rp - gp - bp) < 8)){
 
                 }else{
                     filter.set(parameter.property, colorRect)

@@ -70,7 +70,7 @@ Rectangle {
             minimumValue: 0
             maximumValue: 100
             suffix: ' %'
-            value: filter.getDouble('radius') * slider.maximumValue
+            // value: filter.getDouble('radius') * slider.maximumValue
             onValueChanged: keyFrame.controlValueChanged(slider)
         }
         UndoButton {
@@ -83,6 +83,7 @@ Rectangle {
             color: '#ffffff'
         }
         ColorPicker {
+            objectName: 'colorSwatch'
             id: colorSwatch
             Layout.columnSpan: 2
             value: filter.get('color')

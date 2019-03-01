@@ -28,6 +28,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
 import QtQuick.Controls.Styles 1.4
+import Qt.labs.controls 1.0
 
 Rectangle {
     id: root
@@ -45,7 +46,7 @@ Rectangle {
     
     function setCurrentFilter(index) {
         attachedFilters.setCurrentFilter(index)
-        removeButton.selectedIndex = index
+        // removeButton.selectedIndex = index
         filterConfig.source = metadata ? metadata.qmlFilePath : ""
     }
 
@@ -56,11 +57,11 @@ Rectangle {
     onHeightChanged: _setLayout()
     
     function _setLayout() {
-        if (height > width - 200) {
-            root.state = "landscape"
-        } else {
-            root.state = "landscape"
-        }
+        // if (height > width - 200) {
+        //     root.state = "portrait"
+        // } else {
+        //     root.state = "landscape"
+        // }
     }
     
     SystemPalette { id: activePalette }
@@ -85,7 +86,7 @@ Rectangle {
             leftMargin: 10
             rightMargin: 10
         }
-        color: activePalette.highlight
+        color: '#535353'
         visible: attachedfiltersmodel.producerTitle != ""
     }
 
@@ -106,79 +107,58 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
     }
 
-
     GridLayout {
         id: attachedContainer
         columns: 3
+        // width: titleBackground.width
+        height: 100
         anchors {
             top: titleBackground.bottom
+            topMargin: 20
             left: parent.left
             leftMargin: 10
+            right:parent.right
             rightMargin: 10
-            topMargin: 6
-            bottom: parent.bottom
-            bottomMargin: 130
         }
-
-        AttachedFilters {
-            id: attachedFilters
-            Layout.columnSpan: 3
+        Rectangle{
+            color: '#353535'
+            border.color: "black"
+            border.width: 1
             anchors.fill: parent
-            //Layout.fillWidth: true
-            //Layout.fillHeight: true
-            onFilterClicked: {
-                root.currentFilterRequested(index)
-            }
-            Label {
-                anchors.centerIn: parent
-                text: qsTr("Nothing selected")
-                color: activePalette.text
-                visible: !attachedfiltersmodel.isProducerSelected
-            }
-        }
-
-        CustomFilterButton {
-            id:addButton
-            anchors.top: attachedFilters.bottom
-
-            enabled: attachedfiltersmodel.ready
-            opacity: enabled ? 1.0 : 0.5
-            tooltip: qsTr('Add a filter')
-
-            implicitWidth: 32
-            implicitHeight: 32
-
-            customIconSource: 'qrc:///icons/light/32x32/list-add.png'
-            onClicked: {
-                filterMenu.popup(addButton, propertiesContainer.dockPosition)
+            AttachedFilters {
+                id: attachedFilters
+                color:'transparent'
+                Layout.columnSpan: 3
+                height:parent.height - 4
+                anchors {
+                    top: parent.top
+                    // topMargin: 2
+                    left: parent.left
+                    leftMargin: 2
+                    right:parent.right
+                    rightMargin: 2
+                }
+                onFilterClicked: {
+                    root.currentFilterRequested(index)
+                }
+                Label {
+                    anchors.centerIn: parent
+                    text: qsTr("Nothing selected")
+                    color: activePalette.text
+                    visible: !attachedfiltersmodel.isProducerSelected
+                }
             }
         }
-
-        CustomFilterButton {
-            id:removeButton
-            anchors.top: addButton.top
-            property int selectedIndex: -1
-            enabled: selectedIndex > -1 ? true : false
-            opacity: enabled ? 1.0 : 0.5
-            tooltip: qsTr('Remove selected filter')
-
-            implicitWidth: 32
-            implicitHeight: 32
-
-            customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
-            onClicked: {
-                attachedfiltersmodel.remove(selectedIndex)
-            }
-        }
-/*
-        Item {
-            Layout.fillWidth: true
-        }*/
     }
 
     ScrollView {
         id: filterConfigScrollView
-
+        anchors {
+            top: attachedContainer.bottom
+            bottom: keyFrameControl.top
+            left: root.left
+            right: root.right
+        }
         style: ScrollViewStyle {
                 transientScrollBars: false
               //  scrollToClickedPosition:true
@@ -229,54 +209,69 @@ Rectangle {
             }
         }
     }
-
-    KeyFrameControl {
-        id: keyFrameControl
+    Rectangle{
+        color: '#353535'
+        border.color: "black"
+        border.width: 1
+        height: 90
+        // width:parent.width -10
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            leftMargin: 10
-            rightMargin: 10
+            leftMargin:10
+            rightMargin:10
+            bottomMargin:5
         }
-        
+        radius: 2//圆角
         visible: metadata && (metadata.keyframes.parameterCount > 0)
-    }
 
-
-    states: [
-        State {
-            name: "landscape"  // 左右结构
-            AnchorChanges {
-                target: filterConfigScrollView
-                anchors {
-                    top: titleBackground.bottom
-                    bottom: attachedContainer.bottom //root.bottom
-                    left: attachedContainer.right
-                    right: root.right
-                }
-            }
-            PropertyChanges {
-                target: attachedContainer; width: 120
-                height: root.height - addButton.height * 2
-            }
-        },
-        State {
-            name: "portrait"  //上下结构
-            AnchorChanges {
-                target: filterConfigScrollView
-                anchors {
-                    top: attachedContainer.bottom
-                    bottom: root.bottom
-                    left: root.left
-                    right: root.right
-                }
-            }
-            PropertyChanges {
-                target: attachedContainer
-                width: titleBackground.width
-                height: 165
+        KeyFrameControl {
+            id: keyFrameControl
+            width:parent.width-4
+            height:parent.height+10
+            anchors {
+                horizontalCenter: parent.horizontalCenter;
+                bottom: parent.bottom
             }
         }
-    ]
+    }
+    
+
+
+    // states: [
+    //     State {
+    //         name: "landscape"  // 左右结构
+    //         AnchorChanges {
+    //             target: filterConfigScrollView
+    //             anchors {
+    //                 top: titleBackground.bottom
+    //                 bottom: attachedContainer.bottom //root.bottom
+    //                 left: attachedContainer.right
+    //                 right: root.right
+    //             }
+    //         }
+    //         PropertyChanges {
+    //             target: attachedContainer; width: 120
+    //             height: root.height
+    //         }
+    //     },
+    //     State {
+    //         name: "portrait"  //上下结构
+    //         AnchorChanges {
+    //             target: filterConfigScrollView
+    //             anchors {
+    //                 top: attachedContainer.bottom
+    //                 bottom: keyFrameControl.top
+    //                 left: root.left
+    //                 right: root.right
+    //             }
+    //         }
+    //         PropertyChanges {
+    //             target: attachedContainer
+    //             width: titleBackground.width
+    //             height: 100
+    //         }
+    //     }
+    // ]
 }

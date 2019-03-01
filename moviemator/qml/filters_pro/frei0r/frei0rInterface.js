@@ -289,7 +289,7 @@ function setColorParam(index){
     paramInfo1.objectName = objectName
     paramInfo1.controlType = 'ColorPicker'
     // paramInfo1.defaultValue = ''
-    paramInfo1.value = ''
+    paramInfo1.value = '#000000'
     paramInfo1.factorFunc = ['c:255.0']
 }
 // 设置position类型的配置项

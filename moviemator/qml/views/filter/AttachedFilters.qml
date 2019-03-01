@@ -26,16 +26,22 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQml.Models 2.1
 import QtQuick.Controls.Styles 1.4
-
+import MovieMator.Controls 1.0
+import QtQml 2.2
+import QtQuick.Layouts 1.1
+import com.moviemator.qml 1.0 as MovieMator
 Rectangle {
     id: attachedFilters
-    
+    color: '#353535'
     signal filterClicked(int index)
+    property int oldIndexVideo:0
+    property int oldIndexAudio:0
     
     function setCurrentFilter(index) {
         indexDelay.index = index
         indexDelay.running = true
     }
+
 
     //只用于模板clip被选中时被调用
     Connections {
@@ -46,7 +52,29 @@ Rectangle {
             setCurrentFilter(index)
         }
     }
-    
+    function isFilterVisible(index){
+        var rt = false
+        if(attachedfiltersmodel.rowCount() > 0){
+            if((index >=0)&&(index < attachedfiltersmodel.rowCount())&&(attachedfiltersmodel.isVisible(index))){
+                rt = true
+            }
+        }
+        return rt
+    }
+    function refreshGridModel(){
+        visualModel.groups[3].remove(0,visualModel.groups[3].count)
+        visualModel.groups[4].remove(0,visualModel.groups[4].count)
+        for(var i=0;i<attachedfiltersmodel.rowCount();i++){
+            if(isFilterVisible(i)){
+                visualModel.items.addGroups(i,1,"video")
+            }else{
+                visualModel.items.addGroups(i,1,"audio")
+            }
+        }
+    }
+
+    property var filterType: qsTr("Video")
+    SystemPalette { id: activePalette }
     Timer {
         id: indexDelay
         property int index: 0
@@ -56,155 +84,344 @@ Rectangle {
             attachedFiltersView.currentIndex = index
         }
     }
-    
-    color: '#525252'//activePalette.base
+    ListModel{
+        id:tmpList
+    }
 
-    SystemPalette { id: activePalette }
-
-    Component {
-        id: filterDelegate
-        
-        Rectangle {
-            id: background
-            
-            // Trick to make the model item available to the dragItem
-            property var modelData: model
-            property var viewData: ListView
-            property int _dragTarget: ListView.view ? ListView.view.dragTarget : -1
-            property int _currentIndex: ListView.currentIndex ? ListView.currentIndex : -1
-
-            height: filterDelegateText.implicitHeight
-            width: parent ? parent.width : undefined
-            color: "transparent"
-            border.width: 2
-            border.color: _dragTarget === model.index ? activePalette.highlight : "transparent"
-
-            Row {
-                height: parent.height
-                
-                Item {
-                    width: 4
-                    height: parent.height
+    Connections {
+        target: attachedfiltersmodel
+        onChanged: {
+            refreshGridModel()
+            addDelay.restart()
+        }
+    }
+    Timer {
+        id: addDelay
+        interval: 1000
+        repeat:false
+        onTriggered: {
+            refreshGridModel()
+            if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
+                return
+            }
+            if(chooseVideoFilter.checked == true){
+                if(isFilterVisible(attachedFiltersView.currentIndex)){
+                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                    attachedFilters.oldIndexAudio++
+                }else{
+                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
+                    chooseVideoFilter.checked = false
+                    chooseAudioFilter.checked = true
+                    filterType = qsTr("Audio")
+                    visualModel.filterOnGroup = "audio" 
                 }
-                
-                CheckBox {
-                    id: filterDelegateCheck
-                    width: 15
-                    anchors.verticalCenter: parent.verticalCenter
-                    checkedState: model.checkState
-                    onClicked: {
-                        model.checkState = !model.checkState
-                    }
-                }
-                
-                Item {
-                    width: 4
-                    height: parent.height
-                }
-                
-                Label { 
-                    id: filterDelegateText
-                    text: model.display
-                    color: _currentIndex === model.index ? '#ffffff' : '#ffffff'
-                    width: background.ListView.width - 23
-        
-                    MouseArea {
-                        id: mouseArea
-                        anchors.fill: parent
-                        onDoubleClicked: {
-                            model.checkState = !model.checkState
-                            filterDelegateCheck.checkedState = model.checkState
-                        }
-                    }
+            }else{
+                if(isFilterVisible(attachedFiltersView.currentIndex)){
+                    chooseAudioFilter.checked = false
+                    chooseVideoFilter.checked = true
+                    filterType = qsTr("Video")
+                    visualModel.filterOnGroup = "video"
+                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                    attachedFilters.oldIndexAudio++
+                }else{
+                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
                 }
             }
         }
     }
-    
-    Component {
-        id: sectionDelegate
 
-        Item {
-            height: sectionText.implicitHeight + 4
-            width: parent ? parent.width : undefined
-            Rectangle {
-                anchors.fill: parent
-                color: activePalette.alternateBase
+    Rectangle{
+        id:videoBtnBack
+        color: '#353535'
+        border.color: chooseVideoFilter.checked ? "black":'#353535'
+        border.width: 2
+        z:4
+        width:45
+        height:22
+        radius: 4
+        anchors{
+            bottom:parent.top
+            topMargin:-2
+            left:parent.left
+            leftMargin:-2
+        }
+        Button{
+            id: chooseVideoFilter
+            width:parent.width - 4
+            height:parent.height - 1
+            z:5
+            anchors{
+                left:parent.left
+                leftMargin:2
+                bottom:parent.bottom
+                bottomMargin:-1
             }
-            Label {
-                id: sectionText
-                anchors.fill: parent
-                anchors.topMargin: 2
-                anchors.leftMargin: 4
-                text: section
-                color: activePalette.windowText
-                font.bold: true
+            Text{
+                text:qsTr("Video")
+                color: chooseVideoFilter.checked ? activePalette.highlight : 'white'
+                anchors.centerIn: parent
+            }
+            checkable:true
+            checked:true
+            style: ButtonStyle {
+                background: Rectangle {
+                    color:'#353535'
+                    border.width: 2
+                    border.color: control.checked ? '#353535' : 'black'
+                }
+            }
+            onClicked:{
+                chooseAudioFilter.checked = false
+                filterType = qsTr("Video")
+                refreshGridModel()
+                visualModel.filterOnGroup = "video" 
+                filterClicked(attachedFilters.oldIndexVideo)
             }
         }
     }
-
+    Rectangle{
+        color: '#353535'
+        border.color: chooseAudioFilter.checked ? "black":'#353535'
+        border.width: 2
+        z:4
+        width:45
+        height:22
+        radius: 4
+        anchors{
+            bottom:videoBtnBack.bottom
+            left:videoBtnBack.right
+        }
+        Button{
+            id: chooseAudioFilter
+            width:parent.width - 4
+            height:parent.height - 1
+            z:5
+            anchors{
+                left:parent.left
+                leftMargin:2
+                bottom:parent.bottom
+                bottomMargin:-1
+            }
+            Text{
+                text:qsTr("Audio")
+                color: chooseAudioFilter.checked ? activePalette.highlight : 'white'
+                anchors.centerIn: parent
+            }
+            checkable:true
+            checked:false
+            style: ButtonStyle {
+                background: Rectangle {
+                    color:'#353535'
+                    border.width: 2
+                    border.color: control.checked ? '#353535' : 'black'
+                }
+            }
+            onClicked:{
+                chooseVideoFilter.checked = false
+                filterType = qsTr("Audio")
+                refreshGridModel()
+                visualModel.filterOnGroup = "audio" 
+                filterClicked(attachedFilters.oldIndexAudio)
+            }
+        }
+    }
+    
     ScrollView {
         anchors.fill: parent
-
         style: ScrollViewStyle {
-                transientScrollBars: false
-              //  scrollToClickedPosition:true
-                handle: Item {
-                    implicitWidth: 14
-                    implicitHeight: 14
+            transientScrollBars: false
+            //  scrollToClickedPosition:true
+            handle: Item {
+                implicitWidth: 14
+                implicitHeight: 14
+                Rectangle {
+                    color: "#787878"
+                    anchors.fill: parent
+                    anchors.margins: 3
+                    radius: 4
+                }
+            }
+            scrollBarBackground: Item {
+                implicitWidth: 14
+                implicitHeight: 14
+            }
+            decrementControl: Rectangle {
+                        implicitWidth: 0
+                        implicitHeight: 0
+            }
+            incrementControl: Rectangle {
+                        implicitWidth: 0
+                        implicitHeight: 0
+            }
+        }
+        GridView {
+            id: attachedFiltersView
+            property int dragTarget: -1
+            property bool isReady:false
+            property int preferIndex:0
+            cellHeight:82
+            cellWidth:85
+            anchors.fill: parent
+            flow:GridView.FlowTopToBottom
+            displaced: Transition {
+                NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
+            }
+            model: DelegateModel {
+                id: visualModel
+                model:attachedfiltersmodel
+                groups: [  
+                    DelegateModelGroup {  
+                        includeByDefault: false  
+                        name: "displayField"  
+                    } 
+                    ,DelegateModelGroup {  
+                        includeByDefault: false  
+                        name: "video"  
+                    } 
+                    ,DelegateModelGroup {  
+                        includeByDefault: false  
+                        name: "audio" 
+                    }
+                ]  
+                filterOnGroup: "video"  
+                delegate: MouseArea {
+                    id: delegateRoot
+                    property int visualIndex: DelegateModel.itemsIndex
+                    height: attachedFiltersView.cellHeight
+                    width: attachedFiltersView.cellWidth
+                    drag.target: icon
+                    onClicked: {
+                        if(visualModel.filterOnGroup == 'video'){
+                            attachedFilters.oldIndexVideo = index
+                        }else{
+                            attachedFilters.oldIndexAudio = index
+                        }
+                        filterClicked(index)
+                    }
+                    onDoubleClicked: {
+                        if(visualModel.filterOnGroup == 'video'){
+                            attachedFilters.oldIndexVideo = index
+                        }else{
+                            attachedFilters.oldIndexAudio = index
+                        }
+                        model.checkState = !model.checkState
+                        filterDelegateCheck.checkedState = model.checkState
+                        filterClicked(index)
+                    }
                     Rectangle {
-                        color: "#787878"
-                        anchors.fill: parent
-                        anchors.margins: 3
-                        radius: 4
+                        id: icon
+                        z:2
+                        width: 80
+                        height: 60
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter;
+                            verticalCenter: parent.verticalCenter
+                        }
+                        color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'#787878'
+                        radius: 3
+                        
+                        CheckBox {
+                            id: filterDelegateCheck
+                            z:4
+                            anchors{
+                                top:filterDelegateImage.top
+                                topMargin:-2
+                                left:filterDelegateImage.left
+                                leftMargin:0
+                            }
+                            checkedState: model.checkState
+                            onClicked: {
+                                model.checkState = !model.checkState
+                            }
+                            style: CheckBoxStyle {
+                                indicator: Rectangle {
+                                    implicitWidth: 15
+                                    implicitHeight: 15
+                                    radius: 3
+                                    border.width: 0
+                                    Rectangle {
+                                        color: "#555"
+                                        radius: 1
+                                        anchors.fill: parent
+                                    }
+                                }
+                            }
+                        }
+                        CustomFilterButton {
+                            id:filterDelegateDelete
+                            anchors{
+                                top:parent.top
+                                right:parent.right
+                            }
+                            opacity: enabled ? 1.0 : 0.5
+                            tooltip: qsTr('Remove selected filter')
+                            z:4
+                            width:20
+                            height:20
+
+                            customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
+                            onClicked: {
+                                attachedFiltersView.model.model.remove(index)
+                            }
+                        }
+                        Label { 
+                            id:filterDelegateName
+                            z:3
+                            text: model.display
+                            verticalAlignment:Text.AlignBottom
+                            wrapMode: Text.Wrap
+                            anchors.fill: parent
+                        }
+                        Image {
+                            id:filterDelegateImage
+                            z:2
+                            source: model.thumbnail
+                            width: 76
+                            height: 40
+                            anchors {
+                                horizontalCenter: parent.horizontalCenter;
+                                top:parent.top
+                                topMargin:2
+                            }
+                        }
+
+                        Drag.active: delegateRoot.drag.active
+                        Drag.source: delegateRoot
+                        Drag.hotSpot.x: 36
+                        Drag.hotSpot.y: 36
+
+                        states: [
+                            State {
+                                when: icon.Drag.active
+                                ParentChange {
+                                    target: icon
+                                    parent: attachedFiltersView
+                                }
+
+                                AnchorChanges {
+                                    target: icon;
+                                    anchors.horizontalCenter: undefined;
+                                    anchors.verticalCenter: undefined
+                                }
+                            }
+                        ]
+                    }
+
+                    DropArea {
+                        anchors { fill: parent; margins: 15 }
+                        onEntered: visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
                     }
                 }
-                scrollBarBackground: Item {
-                    implicitWidth: 14
-                    implicitHeight: 14
-                }
-                decrementControl: Rectangle {
-                            implicitWidth: 0
-                            implicitHeight: 0
-                }
-                incrementControl: Rectangle {
-                            implicitWidth: 0
-                            implicitHeight: 0
-                }
-
             }
-        ListView {
-            id: attachedFiltersView
-
-            
-            property int dragTarget: -1
-            
-            anchors.fill: parent
-            model: attachedfiltersmodel
-            delegate: filterDelegate
-            boundsBehavior: Flickable.StopAtBounds
-            snapMode: ListView.SnapToItem
-            currentIndex: -1
-            highlight: Rectangle { 
-                color: activePalette.highlight
-                width: parent ? parent.width : undefined
-            }
-            focus: true
-            section.property: "typeDisplay"
-            section.delegate: sectionDelegate
-            spacing: 4
-            highlightMoveVelocity: 1000
-
-            Component.onCompleted: {
-                model.modelReset.connect(positionViewAtBeginning)
-            }
-            
             onCurrentIndexChanged: {
                 possiblySelectFirstFilter();
-                positionViewAtIndex(currentIndex, ListView.Contain);
+                positionViewAtIndex(currentIndex, GridView.Contain);
             }
-            onCountChanged: possiblySelectFirstFilter();
-
+            onCountChanged: {
+                refreshGridModel()
+                possiblySelectFirstFilter();
+            }
+            
             function possiblySelectFirstFilter() {
                 if (count > 0 && currentIndex == -1) {
                     currentIndex = 0;
@@ -212,94 +429,7 @@ Rectangle {
                 }
             }
 
-            MouseArea {
-                property int oldIndex: -1
-                property point grabPos: Qt.point(0,0)
-                property string grabSection: ""
-                
-                function beginDrag() {
-                    var grabbedItem = attachedFiltersView.itemAt(mouseX, mouseY)
-                    oldIndex = attachedFiltersView.indexAt(mouseX, mouseY)
-                    grabPos = Qt.point(mouseX - grabbedItem.x, mouseY - grabbedItem.y)
-                    grabSection = grabbedItem.viewData.section
-                    dragItem.model = grabbedItem.modelData
-                    dragItem.sourceComponent = filterDelegate
-                    dragItem.x = mouseX - grabPos.x
-                    dragItem.y = mouseY - grabPos.y
-                    filterClicked(oldIndex)
-                    attachedFiltersView.dragTarget = oldIndex
-                    cursorShape = Qt.DragMoveCursor
-                    autoScrollTimer.running = true
-                }
-                
-                function endDrag() {
-                    oldIndex = -1
-                    attachedFiltersView.dragTarget = -1
-                    dragItem.sourceComponent = null
-                    cursorShape = Qt.ArrowCursor
-                    autoScrollTimer.running = false
-                }
-                
-                function updateDragTarget() {
-                    var mouseItem = attachedFiltersView.itemAt(mouseX, mouseY)
-                    if (mouseItem && mouseItem.viewData.section === grabSection) {
-                        dragItem.x = mouseX - grabPos.x
-                        dragItem.y = mouseY - grabPos.y - attachedFiltersView.contentY
-                        attachedFiltersView.dragTarget = attachedFiltersView.indexAt(mouseX, mouseY)
-                    } 
-                }
-                
-                propagateComposedEvents: true
-                anchors.fill: attachedFiltersView.contentItem
-                z: 1
-                
-                onClicked: {
-                    filterClicked(attachedFiltersView.indexAt(mouseX, mouseY))
-                    mouse.accepted = false
-                }
-                
-                onPressAndHold: {
-                    if (oldIndex === -1) {
-                        beginDrag()
-                    }
-                }
-                onReleased: {
-                    if (oldIndex !== -1
-                            && attachedFiltersView.dragTarget !== -1
-                            && oldIndex !== attachedFiltersView.dragTarget) {
-                        attachedfiltersmodel.move(oldIndex, attachedFiltersView.dragTarget)
-                    }
-                    endDrag()
-                    mouse.accepted = true;
-                }
-                onPositionChanged: {
-                    if (oldIndex === -1) {
-                        beginDrag()
-                    }
-                    updateDragTarget()
-                }
-                onCanceled: endDrag()
-                
-                Timer {
-                    id: autoScrollTimer
-                    interval: 500
-                    running: false
-                    repeat: true
-                    onTriggered: {
-                        // Make sure previous and next indices are always visible
-                        var nextIndex = attachedFiltersView.dragTarget + 1
-                        var prevIndex = attachedFiltersView.dragTarget - 1
-                        if (nextIndex < attachedFiltersView.count) {
-                            attachedFiltersView.positionViewAtIndex(nextIndex, ListView.Contain)
-                            parent.updateDragTarget()
-                        }
-                        if (prevIndex >= 0) {
-                            attachedFiltersView.positionViewAtIndex(prevIndex, ListView.Contain)
-                            parent.updateDragTarget()
-                        }
-                    }
-                }
-            }
+            
             
             Loader {
                 id: dragItem
