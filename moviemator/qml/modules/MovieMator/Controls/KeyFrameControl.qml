@@ -86,8 +86,6 @@ Rectangle {
         
         GridLayout {
             columns: 4
-    
-               
             CheckBox {
                 id: enableKeyFrameCheckBox
                 Layout.columnSpan: 4
@@ -95,9 +93,22 @@ Rectangle {
                 anchors.leftMargin: 20
                 anchors.top: parent.top
                 anchors.topMargin: -5
-               
                 text: qsTr('Enable Key Frames')
                 checked: (filter && filter.getKeyFrameNumber() > 0)
+                style: CheckBoxStyle {
+                    indicator: Rectangle {
+                        color:'red'
+                        radius: 3
+                        z:1
+                        implicitWidth: 13
+                        implicitHeight: 13
+                        Image {
+                            z:2
+                            anchors.fill: parent
+                            source:enableKeyFrameCheckBox.checked ? '1.jpg':'2.jpg'
+                        }
+                    }
+                }
                 onClicked: {
                     if(checked)
                     {   
@@ -105,7 +116,6 @@ Rectangle {
                         {   
                             addFrameChanged()
                             refreshFrameButtonsEnable()
-
                             autoAddKeyFrameCheckBox.checked = true
                         }  
                     }
@@ -115,21 +125,11 @@ Rectangle {
                             removeKeyFrameWarning.visible = true
                     }
                 }
-/*
-                style: CheckBoxStyle {
-                    label: Text {
-                        color: "white"
-                        text: qsTr('Enable Key Frames')
-                    }
-                }
-*/
                 onCheckedChanged: {
                     refreshFrameButtonsEnable()
-
                     enableKeyFrameChanged(checked)
                 }
             }
-
             CheckBox {
                 id: autoAddKeyFrameCheckBox
                 Layout.columnSpan: 4
@@ -141,15 +141,21 @@ Rectangle {
                 checked: true
                 opacity: enableKeyFrameCheckBox.checked ? 1.0 : 0.5
                 onClicked: {
-                    
                 }
-/*
                 style: CheckBoxStyle {
-                    label: Text {
-                        color: "white"
-                        text: qsTr('Auto Add Key Frames')
+                    indicator: Rectangle {
+                        color:'red'
+                        radius: 3
+                        z:1
+                        implicitWidth: 13
+                        implicitHeight: 13
+                        Image {
+                            z:2
+                            anchors.fill: parent
+                            source:autoAddKeyFrameCheckBox.checked ? '1.jpg':'2.jpg'
+                        }
                     }
-                }*/
+                }
                 onCheckedChanged: 
                 {
                     refreshFrameButtonsEnable() 
