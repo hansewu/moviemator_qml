@@ -100,7 +100,7 @@ Rectangle {
         interval: 1000
         repeat:false
         onTriggered: {
-            refreshGridModel()
+            // refreshGridModel()
             if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
                 return
             }
@@ -165,12 +165,19 @@ Rectangle {
             checked:true
             style: ButtonStyle {
                 background: Rectangle {
-                    color:'#353535'
+                    color:'transparent'
                     border.width: 2
                     border.color: control.checked ? '#353535' : 'black'
+                    Image{
+                        anchors.centerIn: parent
+                        width:parent.width-4
+                        height:parent.height-4
+                        source:chooseVideoFilter.checked ? '1.jpg' : '2.jpg'
+                    }
                 }
             }
             onClicked:{
+                if(!checked) checked=true
                 chooseAudioFilter.checked = false
                 filterType = qsTr("Video")
                 refreshGridModel()
@@ -211,12 +218,19 @@ Rectangle {
             checked:false
             style: ButtonStyle {
                 background: Rectangle {
-                    color:'#353535'
+                    color:'transparent'
                     border.width: 2
                     border.color: control.checked ? '#353535' : 'black'
+                    Image{
+                        anchors.centerIn: parent
+                        width:parent.width-4
+                        height:parent.height-4
+                        source:chooseAudioFilter.checked ? '1.jpg' : '2.jpg'
+                    }
                 }
             }
             onClicked:{
+                if(!checked) checked=true
                 chooseVideoFilter.checked = false
                 filterType = qsTr("Audio")
                 refreshGridModel()
@@ -335,31 +349,38 @@ Rectangle {
                             }
                             style: CheckBoxStyle {
                                 indicator: Rectangle {
+                                    color:'transparent'
                                     implicitWidth: 15
                                     implicitHeight: 15
                                     radius: 3
                                     border.width: 0
-                                    Rectangle {
-                                        color: "#555"
-                                        radius: 1
+                                    Image {
                                         anchors.fill: parent
+                                        source:(icon.color==activePalette.highlight)?(filterDelegateCheck.checkedState?'1.jpg':'2.jpg'):(filterDelegateCheck.checkedState?'3.jpg':'4.jpg')
                                     }
                                 }
                             }
                         }
-                        CustomFilterButton {
+                        Button {
                             id:filterDelegateDelete
                             anchors{
                                 top:parent.top
                                 right:parent.right
                             }
-                            opacity: enabled ? 1.0 : 0.5
                             tooltip: qsTr('Remove selected filter')
                             z:4
-                            width:20
-                            height:20
-
-                            customIconSource: 'qrc:///icons/light/32x32/list-remove.png'
+                            width:15
+                            height:15
+                            style: ButtonStyle {
+                                background: Rectangle {
+                                    color:'transparent'
+                                    anchors.fill: parent
+                                    Image{
+                                        anchors.fill: parent
+                                        source:filterDelegateDelete.pressed ? '1.jpg' : '2.jpg'
+                                    }
+                                }
+                            }
                             onClicked: {
                                 attachedFiltersView.model.model.remove(index)
                             }
