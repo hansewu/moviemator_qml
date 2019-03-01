@@ -125,6 +125,7 @@ Rectangle {
             border.color: "black"
             border.width: 1
             anchors.fill: parent
+            anchors.topMargin: 5
             AttachedFilters {
                 id: attachedFilters
                 color:'transparent'
@@ -132,7 +133,7 @@ Rectangle {
                 height:parent.height - 4
                 anchors {
                     top: parent.top
-                    // topMargin: 2
+                    topMargin: 2
                     left: parent.left
                     leftMargin: 2
                     right:parent.right

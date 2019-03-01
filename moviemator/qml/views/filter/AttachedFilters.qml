@@ -132,27 +132,27 @@ Rectangle {
 
     Rectangle{
         id:videoBtnBack
-        color: '#353535'
-        border.color: chooseVideoFilter.checked ? "black":'#353535'
-        border.width: 2
+        color: 'transparent'
+        //border.color: chooseVideoFilter.checked ? "black":'#353535'
+        //border.width: 2
         z:4
-        width:45
-        height:22
-        radius: 4
+        width:50
+        height:28
+        //radius: 4
         anchors{
             bottom:parent.top
-            topMargin:-2
+            topMargin:0
             left:parent.left
             leftMargin:-2
         }
         Button{
             id: chooseVideoFilter
-            width:parent.width - 4
+            width:parent.width
             height:parent.height - 1
             z:5
             anchors{
                 left:parent.left
-                leftMargin:2
+                leftMargin:0
                 bottom:parent.bottom
                 bottomMargin:-1
             }
@@ -166,13 +166,13 @@ Rectangle {
             style: ButtonStyle {
                 background: Rectangle {
                     color:'transparent'
-                    border.width: 2
-                    border.color: control.checked ? '#353535' : 'black'
+                    //border.width: 2
+                    //border.color: control.checked ? '#353535' : 'black'
                     Image{
                         anchors.centerIn: parent
-                        width:parent.width-4
+                        width:parent.width
                         height:parent.height-4
-                        source:chooseVideoFilter.checked ? '1.jpg' : '2.jpg'
+                        source:chooseVideoFilter.checked ? 'qrc:///icons/filters/icon/tab_btn-a.png' : 'qrc:///icons/filters/icon/tab_btn.png'
                     }
                 }
             }
@@ -187,13 +187,13 @@ Rectangle {
         }
     }
     Rectangle{
-        color: '#353535'
-        border.color: chooseAudioFilter.checked ? "black":'#353535'
-        border.width: 2
+        color: 'transparent'
+        //border.color: chooseAudioFilter.checked ? "black":'#353535'
+        //border.width: 2
         z:4
-        width:45
-        height:22
-        radius: 4
+        width:50
+        height:28
+        //radius: 4
         anchors{
             bottom:videoBtnBack.bottom
             left:videoBtnBack.right
@@ -205,7 +205,7 @@ Rectangle {
             z:5
             anchors{
                 left:parent.left
-                leftMargin:2
+                leftMargin:-1
                 bottom:parent.bottom
                 bottomMargin:-1
             }
@@ -219,13 +219,13 @@ Rectangle {
             style: ButtonStyle {
                 background: Rectangle {
                     color:'transparent'
-                    border.width: 2
-                    border.color: control.checked ? '#353535' : 'black'
+                    //border.width: 2
+                    //border.color: control.checked ? '#353535' : 'black'
                     Image{
                         anchors.centerIn: parent
-                        width:parent.width-4
+                        width:parent.width
                         height:parent.height-4
-                        source:chooseAudioFilter.checked ? '1.jpg' : '2.jpg'
+                        source:chooseAudioFilter.checked ? 'qrc:///icons/filters/icon/tab_btn-a.png' : 'qrc:///icons/filters/icon/tab_btn.png'
                     }
                 }
             }
@@ -332,7 +332,7 @@ Rectangle {
                             verticalCenter: parent.verticalCenter
                         }
                         color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'#787878'
-                        radius: 3
+                        radius: 2
                         
                         CheckBox {
                             id: filterDelegateCheck
@@ -341,7 +341,7 @@ Rectangle {
                                 top:filterDelegateImage.top
                                 topMargin:-2
                                 left:filterDelegateImage.left
-                                leftMargin:0
+                                leftMargin:-2
                             }
                             checkedState: model.checkState
                             onClicked: {
@@ -356,7 +356,7 @@ Rectangle {
                                     border.width: 0
                                     Image {
                                         anchors.fill: parent
-                                        source:(icon.color==activePalette.highlight)?(filterDelegateCheck.checkedState?'1.jpg':'2.jpg'):(filterDelegateCheck.checkedState?'3.jpg':'4.jpg')
+                                        source:(icon.color==activePalette.highlight) ? (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select2-a.png' : 'qrc:///icons/filters/icon/filter_select2.png') : (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select-a.png' : 'qrc:///icons/filters/icon/filter_select.png')
                                     }
                                 }
                             }
@@ -377,7 +377,9 @@ Rectangle {
                                     anchors.fill: parent
                                     Image{
                                         anchors.fill: parent
-                                        source:filterDelegateDelete.pressed ? '1.jpg' : '2.jpg'
+                                        source: filterDelegateDelete.pressed ? 'qrc:///icons/filters/icon/filter_remove-on.png' : 'qrc:///icons/filters/icon/filter_remove.png'
+
+                                        
                                     }
                                 }
                             }
@@ -392,6 +394,7 @@ Rectangle {
                             verticalAlignment:Text.AlignBottom
                             wrapMode: Text.Wrap
                             anchors.fill: parent
+                            anchors.leftMargin:2
                         }
                         Image {
                             id:filterDelegateImage
