@@ -38,7 +38,7 @@ Rectangle {
     property int oldIndexVideo:0
     property int oldIndexAudio:0
     property int oldFiltersNum:0
-    property bool translate2CH: ("简体中文" == Qt.locale().nativeLanguageName)
+    property bool translate2CH: ("zh_CN" == Qt.locale().name)
     
     function setCurrentFilter(index) {
         indexDelay.index = index
