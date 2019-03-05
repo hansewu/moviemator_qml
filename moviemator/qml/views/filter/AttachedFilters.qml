@@ -63,8 +63,10 @@ Rectangle {
         return rt
     }
     function refreshGridModel(){
-        visualModel.groups[3].remove(0,visualModel.groups[3].count)
-        visualModel.groups[4].remove(0,visualModel.groups[4].count)
+        if(visualModel.groups[3].count > 0)
+            visualModel.groups[3].remove(0,visualModel.groups[3].count)
+        if(visualModel.groups[4].count > 0)
+            visualModel.groups[4].remove(0,visualModel.groups[4].count)
         for(var i=0;i<attachedfiltersmodel.rowCount();i++){
             if(isFilterVisible(i)){
                 visualModel.items.addGroups(i,1,"video")
