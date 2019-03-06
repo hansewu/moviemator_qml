@@ -53,6 +53,38 @@ Rectangle {
             setCurrentFilter(index)
         }
     }
+
+    Connections {
+        target: timeline
+        onSelectionChanged: {
+            console.log("ffffffffffffffff-0-5")
+            attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
+            switchDelay.restart()
+        }
+    }
+    Timer {
+        id: switchDelay
+        interval: 200
+        repeat:false
+        onTriggered: {
+            refreshGridModel()
+            if(chooseVideoFilter.checked && (visualModel.groups[3].count <= 0)){
+                chooseVideoFilter.checked = false
+                chooseAudioFilter.checked = true
+                filterType = qsTr("Audio")
+                visualModel.filterOnGroup = "audio" 
+                showParamterSetting(0)
+            }else if(chooseAudioFilter.checked && (visualModel.groups[4].count <= 0)){
+                chooseAudioFilter.checked = false
+                chooseVideoFilter.checked = true
+                filterType = qsTr("Video")
+                visualModel.filterOnGroup = "video"
+                showParamterSetting(0)
+            }else{
+                showParamterSetting(attachedFiltersView.currentIndex)
+            }
+        }
+    }
     function isFilterVisible(index){
         var rt = false
         if(attachedfiltersmodel.rowCount() > 0){
@@ -96,19 +128,13 @@ Rectangle {
             attachedFiltersView.currentIndex = index
         }
     }
-    ListModel{
-        id:tmpList
-    }
 
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            if(attachedFilters.oldFiltersNum < attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
-                addDelay.restart()
-            }
-            else{
-                showParamterSetting(attachedFiltersView.currentIndex)
-            }
+            console.log(attachedFilters.oldFiltersNum)
+            console.log(attachedfiltersmodel.rowCount())
+            addDelay.restart()
             attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
         }
     }
@@ -117,33 +143,38 @@ Rectangle {
         interval: 200
         repeat:false
         onTriggered: {
-            if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
-                return
-            }
-            if(chooseVideoFilter.checked == true){
-                if(isFilterVisible(attachedFiltersView.currentIndex)){
-                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
-                    attachedFilters.oldIndexAudio++
-                }else{
-                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
-                    chooseVideoFilter.checked = false
-                    chooseAudioFilter.checked = true
-                    filterType = qsTr("Audio")
-                    visualModel.filterOnGroup = "audio" 
+            if(attachedFilters.oldFiltersNum <= attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
+                if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
+                    return
                 }
+                if(chooseVideoFilter.checked == true){
+                    if(isFilterVisible(attachedFiltersView.currentIndex)){
+                        attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                        attachedFilters.oldIndexAudio++
+                    }else{
+                        attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
+                        chooseVideoFilter.checked = false
+                        chooseAudioFilter.checked = true
+                        filterType = qsTr("Audio")
+                        visualModel.filterOnGroup = "audio" 
+                    }
+                }else{
+                    if(isFilterVisible(attachedFiltersView.currentIndex)){
+                        chooseAudioFilter.checked = false
+                        chooseVideoFilter.checked = true
+                        filterType = qsTr("Video")
+                        visualModel.filterOnGroup = "video"
+                        attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                        attachedFilters.oldIndexAudio++
+                    }else{
+                        attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
+                    }
+                }
+                refreshGridModel()
             }else{
-                if(isFilterVisible(attachedFiltersView.currentIndex)){
-                    chooseAudioFilter.checked = false
-                    chooseVideoFilter.checked = true
-                    filterType = qsTr("Video")
-                    visualModel.filterOnGroup = "video"
-                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
-                    attachedFilters.oldIndexAudio++
-                }else{
-                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
-                }
+                showParamterSetting(attachedFiltersView.currentIndex)
             }
-            refreshGridModel()
+            
         }
     }
 
@@ -297,6 +328,7 @@ Rectangle {
             displaced: Transition {
                 NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
             }
+            
             model: DelegateModel {
                 id: visualModel
                 model:attachedfiltersmodel
@@ -480,8 +512,6 @@ Rectangle {
                 }
             }
 
-            
-            
             Loader {
                 id: dragItem
                 

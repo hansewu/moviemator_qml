@@ -157,6 +157,7 @@ Rectangle {
         anchors {
             top: attachedContainer.bottom
             bottom: keyFrameControlContainer.top
+            bottomMargin:10
             left: root.left
             right: root.right
         }

@@ -66,7 +66,7 @@ Item {
     }
     ListView {
         id: listView
-        height :250
+        height :300
         width: comboButton.width
         z: 3
         // 保证在最顶，控件可见
