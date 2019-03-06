@@ -156,7 +156,8 @@ Rectangle {
         id: filterConfigScrollView
         anchors {
             top: attachedContainer.bottom
-            bottom: keyFrameControl.top
+            bottom: keyFrameControlContainer.top
+            bottomMargin:10
             left: root.left
             right: root.right
         }
@@ -211,6 +212,7 @@ Rectangle {
         }
     }
     Rectangle{
+        id:keyFrameControlContainer
         color: '#353535'
         border.color: "black"
         border.width: 1
