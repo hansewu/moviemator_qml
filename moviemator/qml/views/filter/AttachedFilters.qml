@@ -57,7 +57,6 @@ Rectangle {
     Connections {
         target: timeline
         onSelectionChanged: {
-            console.log("ffffffffffffffff-0-5")
             attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
             switchDelay.restart()
         }
@@ -132,8 +131,6 @@ Rectangle {
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            console.log(attachedFilters.oldFiltersNum)
-            console.log(attachedfiltersmodel.rowCount())
             addDelay.restart()
             attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
         }
@@ -388,7 +385,6 @@ Rectangle {
                         Component.onCompleted: {
                             if(!attachedFiltersView.isReady){
                                 refreshGridModel()
-                                visualModel.filterOnGroup = 'video'
                                 attachedFiltersView.isReady = true
                                 attachedFilters.oldFiltersNum = visualModel.items.count
                             }
