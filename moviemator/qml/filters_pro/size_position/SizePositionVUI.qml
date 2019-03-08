@@ -186,13 +186,11 @@ Flickable {
             rectTmp = filter.getAnimRectValue(position, rectProperty)
             filter.get(rectProperty)
         }
-        console.log("onChangedonChangedonChanged-2: newRect: "+newRect)
         
         newRect.x = rectTmp.x * profile.width 
         newRect.y = rectTmp.y * profile.height
         newRect.width = rectTmp.width * profile.width
         newRect.height = rectTmp.height * profile.height
-        console.log("RectangleControlRectangleControlRectangleControl-2-1:newRect: "+newRect)
         rectangle.setHandles(newRect)
         
         if (rectangle.aspectRatio !== getAspectRatio()) {
@@ -235,7 +233,6 @@ Flickable {
                 rectCtr2.height = parseFloat(h) * profile.height
                 rectangle.setHandles(rectCtr2)
                 
-                console.log("onPositionChangedonPositionChangedonPositionChanged: " + rectCtr2)
             }
 
             rectangle.visible = (timeline.getPositionInCurrentClip() >= 0) ? true : false 

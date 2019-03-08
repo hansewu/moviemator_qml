@@ -116,8 +116,6 @@ RowLayout{
 
         // 初始化关键帧控件
         if (filter.isNew && keyFrameCount<=0){
-            
-            
             for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
                 var parameter = metaParamList[paramIndex]
                 var control = findControl(parameter.objectName,layoutRoot)
@@ -126,14 +124,11 @@ RowLayout{
                 switch(parameter.controlType)
                 {
                 case "SliderSpinner":
-                
                     control.value = parseFloat(parameter.defaultValue) * 100
-                    // filter.set(parameter.property,saveValueCalc(control.value,parameter.factorFunc))
                     break;
 
                 case "CheckBox":
                     control.checked = Math.round(parseFloat(parameter.defaultValue))
-                    // filter.set(parameter.property,Number(control.checked))
                     break;
 
                 case "ColorWheelItem":
@@ -173,7 +168,6 @@ RowLayout{
 
     // 控件发生修改时反应
     function controlValueChanged(id){
-        console.log("controlValueChangedcontrolValueChanged:")
         var userChange = false
         var valueChange = false
 
@@ -185,7 +179,6 @@ RowLayout{
             switch(parameter.controlType)
             {
             case "SliderSpinner":
-            
                 if(filter.bKeyFrame(currentFrame))
                 {
                     filter.setKeyFrameParaValue(currentFrame, parameter.property, saveValueCalc(id.value,parameter.factorFunc).toString())
@@ -337,9 +330,7 @@ RowLayout{
     // 添加为关键帧
     function addKeyFrameValue(){
         
-        console.log("11111111111111111111111111111111111: ")
         var position = timeline.getPositionInCurrentClip()
-        console.log("position: " + position)
         if (position < 0) return
 
         bBlockSignal = true
@@ -374,7 +365,6 @@ RowLayout{
         bBlockSignal = true
         //插入关键帧
         var paramCount = metadata.keyframes.parameterCount
-        console.log("paramCountparamCountparamCount: " + paramCount)
         for(var i = 0; i < paramCount; i++)
         {
             
@@ -399,12 +389,9 @@ RowLayout{
                 filter.setKeyFrameParaRectValue(position, key, value);
                 break;
             default:
-                console.log("addKeyFrameValueERROR: " + position + ' ' + key)
                 break;
             }
         }
-        
-        console.log("1111111111111111-0: ")
         
         filter.combineAllKeyFramePara();
         bKeyFrame = true
@@ -574,15 +561,11 @@ RowLayout{
     //加减乘除 分别用 + - x c 被除b，对数log，指数pow
     // 控件到程序的写入保存计算
     function saveValueCalc(value,factorFunc){
-        
-        console.log("saveValueCalcsaveValueCalc: " + value +" : " + factorFunc)
-        
         var rt = value
         for(var i=0;i<factorFunc.length;i++){
             var calc = factorFunc[i]
             var calcSymbol = calc.substring(0,calc.lastIndexOf(":"))
             var calcValue = parseFloat(calc.substring(calc.lastIndexOf(":")+1,calc.length))
-            console.log(rt + ":saveValueCalcsaveValueCalc-1: " + calcSymbol +" : " + calcValue)
             switch(calcSymbol)
             {
             case '+':
@@ -615,18 +598,15 @@ RowLayout{
                 break;
             }
         }
-        console.log("saveValueCalcsaveValueCalc2: " + rt)
         return rt;
     }
     // 程序到控件参数的加载计算，刚好与写入保存相反
     function loadValueCalc(value,factorFunc){
-        console.log("loadValueCalcloadValueCalc: " + value +" : " + factorFunc)
         var rt = value
         for(var i=factorFunc.length-1;i>=0;i--){
             var calc = factorFunc[i]
             var calcSymbol = calc.substring(0,calc.lastIndexOf(":"))
             var calcValue = parseFloat(calc.substring(calc.lastIndexOf(":")+1,calc.length))
-            console.log(rt + ":loadValueCalcloadValueCalc-1: " + calcSymbol +" : " + calcValue)
             switch(calcSymbol)
             {
             case '+':
@@ -658,7 +638,6 @@ RowLayout{
                 break;
             }
         }
-        console.log("loadValueCalcloadValueCalc2: " + rt)
         return rt;
     }
     // 根据objectName和root节点查找子节点

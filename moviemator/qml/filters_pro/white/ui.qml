@@ -63,20 +63,11 @@ Item {
             var index=0
             for(index=0; index<keyFrameCount;index++)
             {
-                console.log("1.....")
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(index, tempParam);
                 var keyValue = filter.getKeyValueOnProjectOnIndex(index, tempParam);
-
-
-                console.log(nFrame)
-                console.log(tempParam)
-                console.log(keyValue)
                 filter.setKeyFrameParaValue(nFrame, tempParam, keyValue)
 
                 keyValue = filter.getStringKeyValueOnProjectOnIndex(index, neutralParam);
-                console.log(nFrame)
-                console.log(tempParam)
-                console.log(keyValue)
                 filter.setKeyFrameParaValue(nFrame,neutralParam, keyValue)
 
             }

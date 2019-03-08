@@ -102,8 +102,6 @@ Item {
     }
     
     Component.onCompleted: {
-        
-
         // 根据参数计算参数控件容器的高度
         var paramNum = metadata.keyframes.parameters.length
         if(paramNum > 0){
@@ -111,7 +109,6 @@ Item {
             root.height = (h > root.height)? h : root.height
         }
         
-        console.log("filter.isNewfilter.isNewfilter.isNew: " + filter.isNew)
         Handdle.createKeyFrame()
         keyFrame = findControl("keyFrame",layoutRoot)
         Handdle.init(filter.isNew)

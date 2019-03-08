@@ -221,13 +221,11 @@ Rectangle {
                             }
                             onEntered:{
                                 id.hoverStat = true
-                                console.log("onEnteredonEnteredonEntered: "+id.hoverStat)
                             }
                             onExited:{
                                 if(!containsMouse){
                                     id.hoverStat = false
                                 }
-                                console.log("onExitedonExitedonExitedonExited: "+id.hoverStat)
                             }
                         }
                     }

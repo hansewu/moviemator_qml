@@ -85,47 +85,21 @@ Item {
         }
         else
         {
-            console.log("1.... loadwheels is called")
-            console.log(filter.getDouble("lift_r"))
-            console.log(filter.getDouble("lift_g"))
-            console.log(filter.getDouble("lift_b"))
-            console.log(filter.getDouble("gamma_r"))
-            console.log(filter.getDouble("gamma_g"))
-            console.log(filter.getDouble("gamma_b"))
-            console.log(filter.getDouble("gain_r"))
-            console.log(filter.getDouble("gain_g"))
-            console.log(filter.getDouble("gain_b"))
-
-
             var liftColor = Qt.rgba( filter.getDouble("lift_r"),
                                        filter.getDouble("lift_g"),
                                        filter.getDouble("lift_b"),
                                        1.0 )
-            console.log(liftColor)
-
-
-
             var gammaColor = Qt.rgba( filter.getDouble("gamma_r") / gammaFactor,
                                         filter.getDouble("gamma_g") / gammaFactor,
                                         filter.getDouble("gamma_b") / gammaFactor,
                                         1.0 )
-            console.log(gammaColor)
-
-
-
            var gainColor = Qt.rgba( filter.getDouble("gain_r") / gainFactor,
                                        filter.getDouble("gain_g") / gainFactor,
                                        filter.getDouble("gain_b") / gainFactor,
                                        1.0 )
-            console.log(gainColor)
-
            liftwheel.color = liftColor;
            gammawheel.color = gammaColor;
            gainwheel.color = gainColor;
-
-
-
-
         }
    }
     

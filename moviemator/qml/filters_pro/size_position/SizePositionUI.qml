@@ -46,8 +46,6 @@ Item {
 
     Component.onCompleted: {
         
-        console.log("Component.onCompletedComponent.onCompleted: ")
-        
         filter.setInAndOut(0, timeline.getCurrentClipParentLength() - 1)
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
@@ -154,7 +152,6 @@ Item {
             var rectValue = filter.getRect(rectProperty)
             filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
             filter.combineAllKeyFramePara();
-            console.log("setFiltersetFiltersetFilter-2: "+rectValue)
         }
     }
 
@@ -174,7 +171,6 @@ Item {
         rectTmp.width = w / profile.width
         rectTmp.height = h / profile.height*/
         filter.set(rectProperty, filterRect)
-        console.log("saveValuessaveValuessaveValues-2: "+rectTmp)
         
     }
 
@@ -214,8 +210,6 @@ Item {
         filter.get(rectProperty)
         var rect = filter.getAnimRectValue(position, rectProperty)
         var rect3 = filter.get(rectProperty)
-        console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue2: rect: " + rect)
-        console.log("getAnimRectValuegetAnimRectValuegetAnimRectValue3: rect3: " + rect3)
 
         filterRect.x = rect.x
         filterRect.y = rect.y
@@ -372,12 +366,9 @@ Item {
             }
             onSetAsKeyFrame:{
                 var nFrame = keyFrame.getCurrentFrame()
-                console.log("111111111111111111111111111111111111111111111111-0: "+ nFrame)
-                console.log("111111111111111111111111111111111111111111111111-0: "+ rectProperty)
                 saveValues()
             
                 var rectValue = filter.getRect(rectProperty)
-                console.log("rectValuerectValuerectValuerectValue: " + rectValue)
                 if (filter.getKeyFrameNumber() <= 0)
                 {
                     var position2 = (timeline.getCurrentClipLength() - 1) //filter.producerOut - filter.producerIn + 1
@@ -387,7 +378,6 @@ Item {
                 }
                 filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
                 filter.combineAllKeyFramePara();
-                console.log("111111111111111111111111111111111111111111111111-1: ")
 
                 setControls()
             }

@@ -84,9 +84,7 @@ RowLayout{
     function addKeyFrameValue()
     {
         
-        console.log("11111111111111111111111111111111111: ")
         var position = timeline.getPositionInCurrentClip()
-        console.log("position: " + position)
         if (position < 0) return
 
         //添加首尾关键帧
@@ -116,16 +114,10 @@ RowLayout{
                 filter.setKeyFrameParaRectValue(position, key, rect, 1.0)
             } else {
                 var value = filter.get(key)
-
-                console.log("key: "+key)
-                console.log("value: "+value)
-                console.log("values: "+value.toString())
-
                 filter.setKeyFrameParaValue(position, key, value.toString() );
             }
         }
         filter.combineAllKeyFramePara();
-        console.log("2222222222222222222222222222222222222222: ")
         
         showAddFrameInfo(position)
     }

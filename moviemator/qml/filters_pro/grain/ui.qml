@@ -34,8 +34,6 @@ Item {
 
     function setControls() {
         var keyFrameCount = filter.getKeyFrameCountOnProject("noise");
-        console.log("1....., keyFrameCount:")
-        console.log(keyFrameCount)
         if(keyFrameCount > 0)
         {
             var index=0
@@ -51,18 +49,11 @@ Item {
             }
 
             filter.combineAllKeyFramePara();
-            console.log(filter.getKeyValueOnProjectOnIndex(0, "noise"))
-            console.log(filter.getKeyValueOnProjectOnIndex(0, "brightness"))
-
             noiseSlider.value = filter.getKeyValueOnProjectOnIndex(0, "noise")
             brightnessSlider.value = filter.getKeyValueOnProjectOnIndex(0, "brightness")
         }
         else
         {
-            console.log("12...")
-            console.log(filter.get('noise'))
-            console.log(filter.get('brightness'))
-
             noiseSlider.value = filter.get('noise')
             brightnessSlider.value = filter.get('brightness')
         }
