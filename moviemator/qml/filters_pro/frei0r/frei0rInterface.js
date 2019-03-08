@@ -358,15 +358,7 @@ function init(isNew){  //滤镜UI界面初始化
     console.log("num_params:"+paramNum)
     for(var i=0;i<paramNum;i++){ 
         var paramInfo = metaParamList[i] 
-        console.log("111111111111111111-0:"+paramInfo.name)
-        console.log("111111111111111111-1:"+paramInfo.property)
-        console.log("111111111111111111-1:"+paramInfo.objectName)
-        console.log("111111111111111111-1:"+paramInfo.controlType)
-        console.log("111111111111111111-1:"+paramInfo.paraType)
-        console.log("111111111111111111-1:"+paramInfo.defaultValue)
-        console.log("111111111111111111-1:"+paramInfo.value)
-        console.log("111111111111111111-1:"+paramInfo.factorFunc)
-        console.log("111111111111111111-1:"+paramInfo.explanation)
+        paramInfo.value = paramInfo.defaultValue
     }
     
     // metadata.filterType = qsTr('frei0r')
@@ -383,15 +375,6 @@ function init(isNew){  //滤镜UI界面初始化
 
     for(var i=0;i<paramNum;i++){ 
         var paramInfo = metaParamList[i] 
-        console.log("222222222222222222-0:"+paramInfo.name)
-        console.log("222222222222222222-2:"+paramInfo.property)
-        console.log("222222222222222222-2:"+paramInfo.objectName)
-        console.log("222222222222222222-2:"+paramInfo.controlType)
-        console.log("222222222222222222-2:"+paramInfo.paraType)
-        console.log("222222222222222222-2:"+paramInfo.defaultValue)
-        console.log("222222222222222222-2:"+paramInfo.value)
-        console.log("222222222222222222-2:"+paramInfo.factorFunc)
-        console.log("222222222222222222-1:"+paramInfo.explanation)
     }
 }
 
