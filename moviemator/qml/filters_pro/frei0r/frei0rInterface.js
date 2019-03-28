@@ -353,15 +353,6 @@ function setMetaKeyFrameParams(paramInfo,index){
 }
 
 function init(isNew){  //滤镜UI界面初始化
-
-    // 打印日志信息
-    console.log("num_params:"+paramNum)
-    for(var i=0;i<paramNum;i++){ 
-        var paramInfo = metaParamList[i] 
-        paramInfo.value = paramInfo.defaultValue
-    }
-    
-    // metadata.filterType = qsTr('frei0r')
     for(var i=0;i<paramNum;i++){ 
         var index = i
         var paramInfo = metaParamList[i] 
@@ -372,10 +363,6 @@ function init(isNew){  //滤镜UI界面初始化
         i=index
     }
     createFootFill()//填充空白区域
-
-    for(var i=0;i<paramNum;i++){ 
-        var paramInfo = metaParamList[i] 
-    }
 }
 
 // 根据objectName和root节点查找子节点

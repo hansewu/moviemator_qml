@@ -118,6 +118,7 @@ RowLayout{
         if (filter.isNew && keyFrameCount<=0){
             for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
                 var parameter = metaParamList[paramIndex]
+                parameter.value = parameter.defaultValue
                 var control = findControl(parameter.objectName,layoutRoot)
                 if(control == null)
                     continue;
