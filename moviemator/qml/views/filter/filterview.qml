@@ -74,7 +74,9 @@ Rectangle {
             if(typeof attachedfiltersmodel == 'undefined'){
                 throw new Error("attachedfiltersmodel is undefined")
             }
-
+            if(typeof metadatamodel == 'undefined'){
+                throw new Error("metadatamodel is undefined")
+            }
             attachedfiltersmodel.add(metadatamodel.get(index))
         }
     }
