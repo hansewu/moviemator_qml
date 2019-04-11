@@ -39,7 +39,7 @@ Rectangle {
     property int oldIndexAudio:0
     property int oldFiltersNum:0
     property bool translate2CH: ("zh_CN" == Qt.locale().name)
-    
+
     function setCurrentFilter(index) {
         indexDelay.index = index
         indexDelay.running = true
@@ -55,23 +55,23 @@ Rectangle {
     }
 
     Connections {
-        target: timeline
-        onSelectionChanged: {
-            attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
-            switchDelay.restart()
+        target: attachedfiltersmodel
+        onIsProducerSelectedChanged: {
+            switchFilterType()
         }
     }
-    Timer {
-        id: switchDelay
-        interval: 200
-        repeat:false
-        onTriggered: {
-            refreshGridModel()
+    function switchFilterType(){
+        if(typeof attachedfiltersmodel == 'undefined'){
+            throw new Error("attachedfiltersmodel is undefined")
+        }
+
+        attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
+        refreshGridModel()
             if(chooseVideoFilter.checked && (visualModel.groups[3].count <= 0)){
                 chooseVideoFilter.checked = false
                 chooseAudioFilter.checked = true
                 filterType = qsTr("Audio")
-                visualModel.filterOnGroup = "audio" 
+                visualModel.filterOnGroup = "audio"
                 showParamterSetting(0)
             }else if(chooseAudioFilter.checked && (visualModel.groups[4].count <= 0)){
                 chooseAudioFilter.checked = false
@@ -82,9 +82,12 @@ Rectangle {
             }else{
                 showParamterSetting(attachedFiltersView.currentIndex)
             }
-        }
     }
+
     function isFilterVisible(index){
+        if(typeof attachedfiltersmodel == 'undefined'){
+            throw new Error("attachedfiltersmodel is undefined")
+        }
         var rt = false
         if(attachedfiltersmodel.rowCount() > 0){
             if((index >=0)&&(index < attachedfiltersmodel.rowCount())&&(attachedfiltersmodel.isVisible(index))){
@@ -94,6 +97,9 @@ Rectangle {
         return rt
     }
     function refreshGridModel(){
+        if(typeof attachedfiltersmodel == 'undefined'){
+            throw new Error("attachedfiltersmodel is undefined")
+        }
         if(visualModel.groups[3].count > 0)
             visualModel.groups[3].remove(0,visualModel.groups[3].count)
         if(visualModel.groups[4].count > 0)
@@ -131,47 +137,44 @@ Rectangle {
     Connections {
         target: attachedfiltersmodel
         onChanged: {
-            addDelay.restart()
-            attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
+            changeFilters()
         }
     }
-    Timer {
-        id: addDelay
-        interval: 200
-        repeat:false
-        onTriggered: {
-            if(attachedFilters.oldFiltersNum <= attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
-                if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
-                    return
-                }
-                if(chooseVideoFilter.checked == true){
-                    if(isFilterVisible(attachedFiltersView.currentIndex)){
-                        attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
-                        attachedFilters.oldIndexAudio++
-                    }else{
-                        attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
-                        chooseVideoFilter.checked = false
-                        chooseAudioFilter.checked = true
-                        filterType = qsTr("Audio")
-                        visualModel.filterOnGroup = "audio" 
-                    }
-                }else{
-                    if(isFilterVisible(attachedFiltersView.currentIndex)){
-                        chooseAudioFilter.checked = false
-                        chooseVideoFilter.checked = true
-                        filterType = qsTr("Video")
-                        visualModel.filterOnGroup = "video"
-                        attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
-                        attachedFilters.oldIndexAudio++
-                    }else{
-                        attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
-                    }
-                }
-                refreshGridModel()
-            }else{
-                showParamterSetting(attachedFiltersView.currentIndex)
+    function changeFilters(){
+        if(typeof attachedfiltersmodel == 'undefined'){
+            throw new Error("attachedfiltersmodel is undefined")
+        }
+        attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
+        if(attachedFilters.oldFiltersNum <= attachedfiltersmodel.rowCount() || attachedfiltersmodel.rowCount() == 0){
+            if(attachedFiltersView.currentIndex < 0 || attachedFiltersView.currentIndex >= attachedfiltersmodel.rowCount()){
+                return
             }
-            
+            if(chooseVideoFilter.checked == true){
+                if(isFilterVisible(attachedFiltersView.currentIndex)){
+                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                    attachedFilters.oldIndexAudio++
+                }else{
+                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
+                    chooseVideoFilter.checked = false
+                    chooseAudioFilter.checked = true
+                    filterType = qsTr("Audio")
+                    visualModel.filterOnGroup = "audio"
+                }
+            }else{
+                if(isFilterVisible(attachedFiltersView.currentIndex)){
+                    chooseAudioFilter.checked = false
+                    chooseVideoFilter.checked = true
+                    filterType = qsTr("Video")
+                    visualModel.filterOnGroup = "video"
+                    attachedFilters.oldIndexVideo = attachedFiltersView.currentIndex
+                    attachedFilters.oldIndexAudio++
+                }else{
+                    attachedFilters.oldIndexAudio = attachedFiltersView.currentIndex
+                }
+            }
+            refreshGridModel()
+        }else{
+            showParamterSetting(attachedFiltersView.currentIndex)
         }
     }
 
@@ -226,7 +229,7 @@ Rectangle {
                 chooseAudioFilter.checked = false
                 filterType = qsTr("Video")
                 refreshGridModel()
-                visualModel.filterOnGroup = "video" 
+                visualModel.filterOnGroup = "video"
                 showParamterSetting(attachedFilters.oldIndexVideo)
             }
         }
@@ -279,12 +282,20 @@ Rectangle {
                 chooseVideoFilter.checked = false
                 filterType = qsTr("Audio")
                 refreshGridModel()
-                visualModel.filterOnGroup = "audio" 
+                visualModel.filterOnGroup = "audio"
                 showParamterSetting(attachedFilters.oldIndexAudio)
             }
         }
     }
-    
+    function filterItemChosed(index){
+        if(visualModel.filterOnGroup == 'video'){
+            attachedFilters.oldIndexVideo = index
+        }else{
+            attachedFilters.oldIndexAudio = index
+        }
+        showParamterSetting(index)
+        attachedFiltersView.currentIndex = index
+    }
     ScrollView {
         anchors.fill: parent
         style: ScrollViewStyle {
@@ -325,40 +336,38 @@ Rectangle {
             displaced: Transition {
                 NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
             }
-            
+
             model: DelegateModel {
                 id: visualModel
                 model:attachedfiltersmodel
-                groups: [  
-                    DelegateModelGroup {  
-                        includeByDefault: false  
-                        name: "displayField"  
-                    } 
-                    ,DelegateModelGroup {  
-                        includeByDefault: false  
-                        name: "video"  
-                    } 
-                    ,DelegateModelGroup {  
-                        includeByDefault: false  
-                        name: "audio" 
+                groups: [
+                    DelegateModelGroup {
+                        includeByDefault: false
+                        name: "displayField"
                     }
-                ]  
-                // filterOnGroup: "video"  
-                
+                    ,DelegateModelGroup {
+                        includeByDefault: false
+                        name: "video"
+                    }
+                    ,DelegateModelGroup {
+                        includeByDefault: false
+                        name: "audio"
+                    }
+                ]
+                // filterOnGroup: "video"
+
                 delegate: MouseArea {
                     id: delegateRoot
                     property int visualIndex: DelegateModel.itemsIndex
                     height: attachedFiltersView.cellHeight
                     width: attachedFiltersView.cellWidth
                     drag.target: icon
-                    
+
                     onClicked: {
-                        if(visualModel.filterOnGroup == 'video'){
-                            attachedFilters.oldIndexVideo = index
-                        }else{
-                            attachedFilters.oldIndexAudio = index
-                        }
-                        showParamterSetting(index)
+                        filterItemChosed(index)
+                    }
+                    function chooseFilterItem(index){
+
                     }
                     onDoubleClicked: {
                         if(visualModel.filterOnGroup == 'video'){
@@ -381,12 +390,16 @@ Rectangle {
                         }
                         color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'#787878'
                         radius: 2
-                        
+
                         Component.onCompleted: {
                             if(!attachedFiltersView.isReady){
                                 refreshGridModel()
                                 attachedFiltersView.isReady = true
                                 attachedFilters.oldFiltersNum = visualModel.items.count
+                                visualModel.filterOnGroup = "video"
+                                if(visualModel.groups[3].count <= 0){
+                                    visualModel.filterOnGroup = "audio"
+                                }
                             }
                         }
 
@@ -434,8 +447,6 @@ Rectangle {
                                     Image{
                                         anchors.fill: parent
                                         source: filterDelegateDelete.pressed ? 'qrc:///icons/filters/icon/filter_remove-on.png' : 'qrc:///icons/filters/icon/filter_remove.png'
-
-                                        
                                     }
                                 }
                             }
@@ -443,7 +454,7 @@ Rectangle {
                                 attachedFiltersView.model.model.remove(index)
                             }
                         }
-                        Label { 
+                        Label {
                             id:filterDelegateName
                             z:3
                             text: translate2CH?Trans.transEn2Ch(model.display):model.display
@@ -489,7 +500,15 @@ Rectangle {
 
                     DropArea {
                         anchors { fill: parent; margins: 15 }
-                        onEntered: visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
+                        onEntered: {
+                            if(typeof attachedfiltersmodel == 'undefined'){
+                                throw new Error("attachedfiltersmodel is undefined")
+                            }
+                            // visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
+                            attachedfiltersmodel.move(drag.source.visualIndex, delegateRoot.visualIndex)
+                            attachedFiltersView.currentIndex = drag.source.visualIndex
+                            filterItemChosed(attachedFiltersView.currentIndex)
+                        }
                     }
                 }
             }
@@ -500,7 +519,7 @@ Rectangle {
             onCountChanged: {
                 possiblySelectFirstFilter();
             }
-            
+
             function possiblySelectFirstFilter() {
                 if (count > 0 && currentIndex == -1) {
                     currentIndex = 0;
@@ -510,10 +529,10 @@ Rectangle {
 
             Loader {
                 id: dragItem
-                
+
                 // Emulate the delegate properties added by ListView
                 property var model : Object()
-                
+
                 onLoaded: {
                     item.color = activePalette.highlight
                     item.opacity = 0.5

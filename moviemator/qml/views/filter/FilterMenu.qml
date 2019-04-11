@@ -47,6 +47,10 @@ Window {
         // 时间线工具栏添加滤镜按钮和滤镜界面的添加按钮会互相影响，
         // 会导致激活的滤镜类型与列表对应不上；
         // 判断是哪种滤镜，把对应按钮的选中状态和图片切换一下。
+        if((typeof metadata == 'undefined')||(typeof metadata.filter == 'undefined')){
+            throw new Error("metadata is abnormal"+metadata)
+        }
+
         if (metadatamodel.filter == MovieMator.MetadataModel.FavoritesFilter) {
             favButton.checked = true
             favButton.iconSource = 'qrc:///icons/light/32x32/bookmarks-highlight.png'

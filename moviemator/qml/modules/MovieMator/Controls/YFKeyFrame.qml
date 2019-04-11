@@ -69,13 +69,17 @@ RowLayout{
     }
     // 滤镜初始化
     function initFilter(layoutRoot){
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+
         if(metadata.keyframes.parameters.length == 1)
             filter.setInAndOut(0, timeline.getCurrentClipParentLength())
 
         //导入上次工程保存的关键帧
         //bBlockSignal = true
         var metaParamList = metadata.keyframes.parameters
-        if(metaParamList.length <= 0) return
+        if((typeof metaParamList == 'undefined')||(metaParamList.length <= 0)) return
         // 由于string没有关键帧，所以通过string类型的参数获取关键帧个数会出错，因此不能用string类型的参数去获取关键帧个数和关键帧位置
         var keyParam = 0
         for(keyParam=0;keyParam<metaParamList.length;keyParam++){
@@ -169,13 +173,22 @@ RowLayout{
 
     // 控件发生修改时反应
     function controlValueChanged(id){
+        if(typeof id == 'undefined'){
+            throw new Error("id is undefined:"+id)
+        }
         var userChange = false
         var valueChange = false
 
         bBlockSignal = true
         // 可能一个控件对应几个配置项
         var parameterList = findParameter(id)
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         for(var paramIndex=0;paramIndex<parameterList.length;paramIndex++){
+            if(metadata.keyframes.parameters.length < parameterList[paramIndex]){
+                throw new Error("metadata length abnormal:"+metadata.keyframes.parameters.length+" "+parameterList[paramIndex]);
+            }
             var parameter = metadata.keyframes.parameters[parameterList[paramIndex]]
             switch(parameter.controlType)
             {
@@ -330,7 +343,9 @@ RowLayout{
 
     // 添加为关键帧
     function addKeyFrameValue(){
-        
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var position = timeline.getPositionInCurrentClip()
         if (position < 0) return
 
@@ -400,9 +415,9 @@ RowLayout{
         bBlockSignal = false
 
 
-        for(var i = 0; i < paramCount; i++)
+        for(var j = 0; j < paramCount; j++)
         {
-            var key = metadata.keyframes.parameters[i].property
+            var key = metadata.keyframes.parameters[j].property
             var t = filter.get(key)
         }
 
@@ -411,8 +426,15 @@ RowLayout{
 
     //帧位置改变时加载控件参数
     function loadFrameValue(layoutRoot){
+        if(typeof layoutRoot == 'undefined'){
+            throw new Error("layoutRoot is undefined:"+layoutRoot)
+        }
+
         if(bBlockSignal == true) return
         currentFrame = timeline.getPositionInCurrentClip()
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
@@ -455,10 +477,16 @@ RowLayout{
     }
     // 数据写入，将控件的数值set到filter里面
     function setDatas(layoutRoot){
+        if(typeof layoutRoot == 'undefined'){
+            throw new Error("layoutRoot is undefined:"+layoutRoot)
+        }
         clearAllFilterAnimationStatus()
         //resetAnim2No(layoutRoot)
 
         bBlockSignal = true
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var metaParamList = metadata.keyframes.parameters
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
@@ -514,6 +542,9 @@ RowLayout{
     function clearAllFilterAnimationStatus() {
         if(filter.getKeyFrameNumber() > 0) return 
 
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var metaParamList = metadata.keyframes.parameters
         for(var i = 0; i < metaParamList.length; i++)
         {
@@ -523,7 +554,13 @@ RowLayout{
     }
 
     function resetAnim2No(layoutRoot){
+        if(typeof layoutRoot == 'undefined'){
+            throw new Error("layoutRoot is undefined:"+layoutRoot)
+        }
         //最后一个关键帧移除之后触发用的
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var metaParamList1 = metadata.keyframes.parameters
         var parameter = metaParamList1[0]
         var control = findControl(parameter.objectName,layoutRoot)
@@ -586,7 +623,11 @@ RowLayout{
                 break;
             
             case 'b':
-                rt = calcValue / rt
+                if (rt == 0)
+                   rt = 1
+                else
+                   rt = calcValue / rt
+                //rt = calcValue / rt
                 break;
 
             case 'log':
@@ -627,7 +668,11 @@ RowLayout{
                 break;
 
             case 'b':
-                rt = calcValue / rt
+                if (rt == 0)
+                   rt = 1
+                else
+                   rt = calcValue / rt
+                //rt = calcValue / rt
                 break;
 
             case 'log':
@@ -643,6 +688,10 @@ RowLayout{
     }
     // 根据objectName和root节点查找子节点
     function findControl(objectName,root){
+        if((typeof root == 'undefined')||(typeof root.children == 'undefined')){
+            throw new Error("root is abnormal:"+root)
+        }
+
         var controlList = root.children
         for(var i=0;i<controlList.length;i++){
             if(objectName === controlList[i].objectName){
@@ -669,6 +718,12 @@ RowLayout{
     }
     // 根据控件id查找配置项
     function findParameter(id){
+        if((typeof id == 'undefined')||(typeof id.objectName == 'undefined')){
+            throw new Error("id is abnormal:"+id)
+        }
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
         var rt = [];
         for(var i=0;i<metadata.keyframes.parameters.length;i++){
             if(id.objectName === metadata.keyframes.parameters[i].objectName)
@@ -678,6 +733,17 @@ RowLayout{
     }
     // 加载单条滑条数据 : 由于是需要对meta里面的value进行直接修改，所以不能传对象，只能传地址
     function loadControlSlider(control,paramIndex){
+        if((typeof control == 'undefined')||(typeof control.value == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex)
+        }
+
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.bKeyFrame(currentFrame)){
             var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
@@ -719,6 +785,16 @@ RowLayout{
         }
     }
     function loadControlCheckbox(control,paramIndex){
+        if((typeof control == 'undefined')||(typeof control.checked == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex)
+        }
+
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.bKeyFrame(currentFrame)){
             var test = filter.get(parameter.property)
@@ -736,6 +812,15 @@ RowLayout{
         }
     }
     function loadControlColorWheel(control,paramIndex1,paramIndex2,paramIndex3){
+        if((typeof control == 'undefined')||(typeof control.color == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex3){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex3)
+        }
         var parameter1 = metadata.keyframes.parameters[paramIndex1]
         var parameter2 = metadata.keyframes.parameters[paramIndex2]
         var parameter3 = metadata.keyframes.parameters[paramIndex3]
@@ -769,6 +854,16 @@ RowLayout{
         
     }
     function loadColorPicker(control,paramIndex){
+        if((typeof control == 'undefined')||(typeof control.value == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex)
+        }
         var parameter = metadata.keyframes.parameters[paramIndex]
 
         filter.get(parameter.property)
@@ -780,6 +875,16 @@ RowLayout{
         
     }
     function loadSlider(control,paramIndex){
+        if((typeof control == 'undefined')||(typeof control.value == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex)
+        }
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.bKeyFrame(currentFrame)){
             var tempValue = filter.getKeyFrameParaDoubleValue(currentFrame, parameter.property);
@@ -801,6 +906,16 @@ RowLayout{
         }
     }
     function loadStringCtr(control,paramIndex){
+        if((typeof control == 'undefined')||(typeof control.currentIndex == 'undefined')){
+            throw new Error("control is abnormal:"+control)
+        }
+
+        if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
+            throw new Error("metadata is abnormal")
+        }
+        if(metadata.keyframes.parameters.length < paramIndex){
+            throw new Error("metadata.keyframes.parameters array not longer enough:"+metadata.keyframes.parameters.length + " "+paramIndex)
+        }
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.bKeyFrame(currentFrame)){
             var tempValue = filter.getKeyFrameParaValue(currentFrame, parameter.property);

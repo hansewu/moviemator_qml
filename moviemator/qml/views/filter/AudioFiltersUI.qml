@@ -50,11 +50,18 @@ Rectangle {
     }
 
     function addFilter(index){
+        if(typeof AudioFiltersResDock == 'undefined'){
+            throw new Error("AudioFiltersResDock is undefined")
+        }
+
         AudioFiltersResDock.addAudioFilterItem(index)
     }
 
     function updateData()
     {
+        if(typeof AudioFiltersInfo == 'undefined'){
+            throw new Error("AudioFiltersInfo is undefined")
+        }
         var num = AudioFiltersInfo.rowCount();
        for(var i=0;i< AudioFiltersInfo.rowCount();i++){
             var filterInfo = {

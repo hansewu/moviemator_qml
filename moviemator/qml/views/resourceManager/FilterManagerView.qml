@@ -46,6 +46,9 @@ Rectangle {
                     exclusiveGroup: typeGroup
                     onCheckedChanged: {
                         if (checked) {
+                            if(typeof metadatamodel == 'undefined'){
+                                throw new Error("metadatamodel is undefined")
+                            }
                             metadatamodel.filter = MovieMator.MetadataModel.FavoritesFilter
                         }
                     }

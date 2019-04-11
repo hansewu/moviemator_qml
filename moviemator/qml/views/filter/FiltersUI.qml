@@ -53,13 +53,20 @@ Rectangle {
     }
 
     function addFilter(index){
+        if(typeof filtersResDock == 'undefined'){
+            throw new Error("filtersResDock is undefined")
+        }
+
         filtersResDock.addFilterItem(index)
     }
 
     function updateData()
     {
+        if(typeof filtersInfo == 'undefined'){
+            throw new Error("filtersInfo is undefined")
+        }
         var num = filtersInfo.rowCount();
-       for(var i=0;i< filtersInfo.rowCount();i++){
+        for(var i=0;i< filtersInfo.rowCount();i++){
             var filterInfo = {
                 id: filtersInfo.get(i).name + '' + i,
                 index : i,
