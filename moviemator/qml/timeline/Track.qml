@@ -44,8 +44,13 @@ Rectangle {
     signal checkSnap(var clip)
 
     function redrawWaveforms() {
-        for (var i = 0; i < repeater.count; i++)
-            repeater.itemAt(i).generateWaveform()
+        console.assert(repeater);
+        if(!repeater) return;
+        for (var i = 0; i < repeater.count; i++){
+            console.assert(repeater.imteAt(i));
+            if(repeater.itemAt(i))
+                repeater.itemAt(i).generateWaveform()
+        }
     }
 
     function snapClip(clip) {
@@ -57,6 +62,8 @@ Rectangle {
     }
 
     function clipAt(index) {
+        console.assert(repeater);
+        if(!repeater) return;
         return repeater.itemAt(index)
     }
 
@@ -66,28 +73,29 @@ Rectangle {
     DelegateModel {
         id: trackModel
         Clip {
-            clipName: model.name
-            clipResource: model.resource
-            clipDuration: model.duration
-            mltService: model.mlt_service
-            inPoint: model.in
-            outPoint: model.out
-            isBlank: model.blank
-            isAudio: model.audio
-            isText: model.text
-            textThumbnail: model.thumbnail
-            isTransition: model.isTransition
-            audioLevels: model.audioLevels
-            width: model.duration * timeScale
+            // 当 model.xxx的值是 undefined时使用 ||''来消除警告
+            clipName: model.name || ''
+            clipResource: model.resource || ''
+            clipDuration: model.duration || ''
+            mltService: model.mlt_service || ''
+            inPoint: model.in || 0
+            outPoint: model.out || 0
+            isBlank: model.blank || false
+            isAudio: model.audio || false
+            isText: model.text || false
+            textThumbnail: model.thumbnail || ''
+            isTransition: model.isTransition || false
+            audioLevels: model.audioLevels || ''
+            width: model.duration * timeScale || 0
             height: trackRoot.height
             trackIndex: trackRoot.DelegateModel.itemsIndex
-            fadeIn: model.fadeIn
-            fadeOut: model.fadeOut
-            hash: model.hash
-            speed: model.speed
+            fadeIn: model.fadeIn || 0
+            fadeOut: model.fadeOut || 0
+            hash: model.hash || ''
+            speed: model.speed || 1.0
             selected: trackRoot.isCurrentTrack && trackRoot.selection.indexOf(index) !== -1
-            hasFilter: model.hasFilter
-            isAnimSticker: model.isAnimSticker
+            hasFilter: model.hasFilter || false
+            isAnimSticker: model.isAnimSticker || false
 
             onClicked: trackRoot.clipClicked(clip, trackRoot);
             onMoved: {
@@ -105,11 +113,13 @@ Rectangle {
                         trackModel.items.remove(clipIndex, 1)
                     }
                 }
-                if (!timeline.moveClip(fromTrack, toTrack, clipIndex, frame))
+                console.assert(timeline);
+                if (timeline && !timeline.moveClip(fromTrack, toTrack, clipIndex, frame))
                     clip.x = clip.originalX
             }
             onDragged: {
-                if (toolbar.scrub) {
+                console.assert(timeline);
+                if (toolbar.scrub && timeline) {
                     root.stopScrolling = false
                     timeline.position = Math.round(clip.x / timeScale)
                 }
@@ -126,7 +136,8 @@ Rectangle {
                 if (!(mouse.modifiers & Qt.AltModifier) && toolbar.snap && !toolbar.ripple)
                     delta = Logic.snapTrimIn(clip, delta)
                 if (delta != 0) {
-                    if (timeline.trimClipIn(trackRoot.DelegateModel.itemsIndex,
+                    console.assert(timeline);
+                    if (timeline && timeline.trimClipIn(trackRoot.DelegateModel.itemsIndex,
                                             clip.DelegateModel.itemsIndex, delta, toolbar.ripple)) {
                         // Show amount trimmed as a time in a "bubble" help.
                         var s = timeline.timecode(Math.abs(clip.originalX))
@@ -151,7 +162,8 @@ Rectangle {
                 if (!(mouse.modifiers & Qt.AltModifier) && toolbar.snap && !toolbar.ripple)
                     delta = Logic.snapTrimOut(clip, delta)
                 if (delta != 0) {
-                    if (timeline.trimClipOut(trackRoot.DelegateModel.itemsIndex,
+                    console.assert(timeline);
+                    if (timeline && timeline.trimClipOut(trackRoot.DelegateModel.itemsIndex,
                                              clip.DelegateModel.itemsIndex, delta, toolbar.ripple)) {
                         // Show amount trimmed as a time in a "bubble" help.
                         var s = timeline.timecode(Math.abs(clip.originalX))

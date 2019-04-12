@@ -69,8 +69,13 @@ Rectangle {
         }
         onPressedChanged: {
             if (!pressed) {
-                for (var i = 0; i < tracksRepeater.count; i++)
-                    tracksRepeater.itemAt(i).redrawWaveforms()
+                console.assert(tracksRepeater);
+                if(!tracksRepeater) return;
+                for (var i = 0; i < tracksRepeater.count; i++){
+                    console.assert(tracksRepeater.itemAt(i));
+                    if(tracksRepeater.itemAt(i))
+                        tracksRepeater.itemAt(i).redrawWaveforms()
+                }
             }
         }
     }

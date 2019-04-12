@@ -389,32 +389,57 @@ ToolBar {
                 disabledIconSource: 'qrc:///timeline/timeline-toolbar-fit-n.png'
             }
             // Add -End
+
+            ColorOverlay {
+                id: snapColorEffect
+                visible: false//snapButton.checked
+                anchors.fill: snapButton
+                source: snapButton
+                color: checkedColor
+                cached: true
+            }
+            ColorOverlay {
+                id: scrubColorEffect
+                visible: scrubButton.checked
+                anchors.fill: scrubButton
+                source: scrubButton
+                color: checkedColor
+                cached: true
+            }
+            ColorOverlay {
+                id: rippleColorEffect
+                visible: rippleButton.checked
+                anchors.fill: rippleButton
+                source: rippleButton
+                color: checkedColor
+                cached: true
+            }
         }
 
-        ColorOverlay {
-            id: snapColorEffect
-            visible: false//snapButton.checked
-            anchors.fill: snapButton
-            source: snapButton
-            color: checkedColor
-            cached: true
-        }
-        ColorOverlay {
-            id: scrubColorEffect
-            visible: scrubButton.checked
-            anchors.fill: scrubButton
-            source: scrubButton
-            color: checkedColor
-            cached: true
-        }
-        ColorOverlay {
-            id: rippleColorEffect
-            visible: rippleButton.checked
-            anchors.fill: rippleButton
-            source: rippleButton
-            color: checkedColor
-            cached: true
-        }
+        // ColorOverlay {
+        //     id: snapColorEffect
+        //     visible: false//snapButton.checked
+        //     anchors.fill: snapButton
+        //     source: snapButton
+        //     color: checkedColor
+        //     cached: true
+        // }
+        // ColorOverlay {
+        //     id: scrubColorEffect
+        //     visible: scrubButton.checked
+        //     anchors.fill: scrubButton
+        //     source: scrubButton
+        //     color: checkedColor
+        //     cached: true
+        // }
+        // ColorOverlay {
+        //     id: rippleColorEffect
+        //     visible: rippleButton.checked
+        //     anchors.fill: rippleButton
+        //     source: rippleButton
+        //     color: checkedColor
+        //     cached: true
+        // }
 
 
 
@@ -490,8 +515,12 @@ ToolBar {
         tooltip: qsTr('Cut - Copy the current clip to the Source\nplayer and ripple delete it')
         //iconName: 'edit-cut'
         //iconSource: 'qrc:///icons/oxygen/32x32/actions/edit-cut.png'
-        enabled: timeline.selection.length
-        onTriggered: timeline.removeSelection(true)
+        enabled: timeline ? timeline.selection.length : false
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.removeSelection(true)
+        }
     }
 
     Action {
@@ -499,8 +528,12 @@ ToolBar {
         tooltip: qsTr('Copy - Copy the current clip to the Source player (C)')
         //iconName: 'edit-copy'
         //iconSource: 'qrc:///icons/oxygen/32x32/actions/edit-copy.png'
-        enabled: timeline.selection.length
-        onTriggered: timeline.copyClip(currentTrack, timeline.selection[0])
+        enabled: timeline ? timeline.selection.length : false
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.copyClip(currentTrack, timeline.selection[0])
+        }
     }
 
     Action {
@@ -508,7 +541,11 @@ ToolBar {
         tooltip: qsTr('Paste - Insert clip into the current track\nshifting following clips to the right (V)')
         //iconName: 'edit-paste'
         //iconSource: 'qrc:///icons/oxygen/32x32/actions/edit-paste.png'
-        onTriggered: timeline.insert(currentTrack)
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.insert(currentTrack)
+        }
     }
 
     Action {
@@ -518,7 +555,10 @@ ToolBar {
         //iconSource: 'qrc:///timeline/timeline-toolbar-append-n.png'
         onTriggered:
         {
-            timeline.append(currentTrack)
+            console.assert(timeline);
+            if(timeline){
+                timeline.append(currentTrack)
+            }
             hasClipOrTrackSelected = true;
         }
     }
@@ -529,7 +569,11 @@ ToolBar {
         tooltip: qsTr('Remove current clip')
         //iconName: 'list-remove'
         //iconSource: 'qrc:///timeline/timeline-toolbar-remove-n.png'
-        onTriggered: timeline.lift(currentTrack, timeline.selection[0])//timeline.remove(currentTrack, selection[0])
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.lift(currentTrack, timeline.selection[0])//timeline.remove(currentTrack, selection[0])
+        }
     }
 
 //    Action {
@@ -545,7 +589,11 @@ ToolBar {
         tooltip: qsTr('Insert clip into the current track\nshifting following clips to the right (V)')
         //iconName: 'insert'
         //iconSource: 'qrc:///timeline/timeline-toolbar-insert-n.png'
-        onTriggered: timeline.insert(currentTrack)
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.insert(currentTrack)
+        }
     }
 
 //    Action {
@@ -561,7 +609,11 @@ ToolBar {
         tooltip: qsTr('Split At Playhead (S)')
         //iconName: 'split'
         //iconSource: 'qrc:///timeline/timeline-toolbar-split-n.png'
-        onTriggered: timeline.splitClip(currentTrack)
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.splitClip(currentTrack)
+        }
     }
 
     Action {
@@ -570,7 +622,11 @@ ToolBar {
         //iconName: 'posAndSize'
         enabled:hasClipOrTrackSelected
         //iconSource: 'qrc:///timeline/timeline-toolbar-size-n.png'
-        onTriggered: timeline.addPositionAndSizeFilter()
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.addPositionAndSizeFilter()
+        }
     }
 
     Action {
@@ -579,7 +635,11 @@ ToolBar {
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-rotate-n.png'
         enabled: hasClipOrTrackSelected
-        onTriggered: timeline.addRotateFilter()
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.addRotateFilter()
+        }
     }
 
     Action {
@@ -588,7 +648,11 @@ ToolBar {
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-crop-n.png'
         enabled: hasClipOrTrackSelected
-        onTriggered: timeline.addCropFilter()
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.addCropFilter()
+        }
     }
 
     /*
@@ -625,7 +689,11 @@ ToolBar {
         //iconName: 'posAndSize'
         //iconSource: 'qrc:///timeline/timeline-toolbar-volume-n.png'
         enabled: hasClipOrTrackSelected
-        onTriggered: timeline.addVolumeFilter()
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.addVolumeFilter()
+        }
     }
 
     Action {
@@ -660,7 +728,11 @@ ToolBar {
         id: addTextAction
         tooltip:qsTr('Add text to video')
         enabled: hasClipOrTrackSelected
-        onTriggered:timeline.addTextFilter()
+        onTriggered: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.addTextFilter()
+        }
     }
 
     // Add -添加滤镜按钮
@@ -669,8 +741,11 @@ ToolBar {
         tooltip: qsTr("Add filter to video")
         enabled: hasClipOrTrackSelected
         onTriggered: {
-            timeline.emitShowFilterDock();
-            filterMenu.popup(filterButton, timeline.dockPosition);
+            console.assert(timeline);
+            if(timeline){
+                timeline.emitShowFilterDock();
+                filterMenu.popup(filterButton, timeline.dockPosition);
+            }
         }
     }
     // Add -End
@@ -681,8 +756,9 @@ ToolBar {
         tooltip: qsTr("Set the transition property")
         enabled: hasClipOrTrackSelected
         onTriggered: {
+            console.assert(timeline);
             // 只有点击转场才会弹出转场设置（属性）框，普通clip不弹属性框
-            if(tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition){
+            if(timeline && tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]).isTransition){
                 timeline.onShowProperties(currentTrack, timeline.selection[0])
             }
         }

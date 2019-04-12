@@ -22,6 +22,9 @@ var SNAP = 10
 
 function snapClip(clip, repeater) {
     // clip.x = left edge
+    console.assert(clip);
+    console.assert(repeater);
+    if(!clip || !repeater) return;
     var right = clip.x + clip.width
     if (clip.x > -SNAP && clip.x < SNAP) {
         // Snap around origin.
@@ -52,6 +55,9 @@ function snapClip(clip, repeater) {
 }
 
 function snapTrimIn(clip, delta) {
+    console.assert(clip);
+    console.assert(scrollView);
+    if(!clip || !scrollView) return;
     var x = clip.x + delta
     var cursorX = scrollView.flickableItem.contentX + cursor.x
     if (false) {
@@ -78,6 +84,10 @@ function snapTrimIn(clip, delta) {
 }
 
 function snapTrimOut(clip, delta) {
+    console.assert(clip);
+    console.assert(scrollView);
+    console.assert(repeater);
+    if(!clip || !scrollView || !repeater) return delta;
     var rightEdge = clip.x + clip.width
     var x = rightEdge - delta
     var cursorX = scrollView.flickableItem.contentX + cursor.x
@@ -102,6 +112,9 @@ function snapTrimOut(clip, delta) {
 }
 
 function snapDrop(pos, repeater) {
+    console.assert(repeater);
+    console.assert(scrollView);
+    if(!repeater || !scrollView) return;
     var left = scrollView.flickableItem.contentX + pos.x - headerWidth
     var right = left + dropTarget.width
     if (left > -SNAP && left < SNAP) {

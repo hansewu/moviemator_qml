@@ -108,11 +108,8 @@ Rectangle {
                 x: markStartX + index * stepSize * stepRatio + 2
                 // text: timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))    // timeline.timecode(index * stepSize * 4 / timeScale)
                 // 只有显示出来的才转换
-                text: {
-                    if(visible){
-                        convertTimeValue(timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale)))
-                    }
-                }
+                // ''：消除“Unable to assign [undefined] to QString”警告，这里就是 if...else...不完整时导致的警告
+                text: (visible && timeline) ? convertTimeValue(timeline.timecode(Math.round((startX + markStartX + index * stepSize * stepRatio) / timeScale))) : ''
                 font.pointSize: 7.5
                 visible: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval) == 0
             }

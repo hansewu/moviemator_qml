@@ -101,6 +101,8 @@ Rectangle {
     }
 
     function reparent(track) {
+        console.assert(track);
+        if(!track) return;
         Drag.active = false
         parent = track
         isAudio = track.isAudio
@@ -115,13 +117,19 @@ Rectangle {
     function generateWaveform() {
         // This is needed to make the model have the correct count.
         // Model as a property expression is not working in all cases.
-        waveformRepeater.model = Math.ceil(waveform.innerWidth / waveform.maxWidth)
+        console.assert(waveform.maxWidth>0);
+        if(waveform.maxWidth>0)
+            waveformRepeater.model = Math.ceil(waveform.innerWidth / waveform.maxWidth)
 //        for (var i = 0; i < waveformRepeater.count; i++)
+        // console.assert(waveformRepeater.count>0);   // waveformRepeater.count可以为 0
+        // console.assert(waveformRepeater.itemAt(0));  // waveformRepeater可以没有元素
+        if(waveformRepeater.count>0 && waveformRepeater.itemAt(0))
             waveformRepeater.itemAt(0).update()
     }
 
     function imagePath(time) {
-        if (isAudio || isBlank || isTransition) {
+        // 当 hash、mltService、clipResource都没有有效值时不应该有缩略图，消除警告
+        if (isAudio || isBlank || isTransition || (hash=='' && mltService=='' && clipResource=='')) {
             return ''
         } else {
             return 'image://thumbnail/' + hash + '/' + mltService + '/' + clipResource + '#' + time
@@ -346,7 +354,8 @@ Rectangle {
         onPositionChanged: {
             if (!isTransition)
             {
-                if (originalTrackIndex == trackIndex && originalClipIndex == index)
+                console.assert(timeline);
+                if (originalTrackIndex == trackIndex && originalClipIndex == index && timeline)
                     originalClipIndex = timeline.removeTransitionOnClipWithUndo(trackIndex, index)
                 //console.log("clip onPositionChanged")
                 if (mouse.y < 0 && trackIndex > 0)
@@ -373,8 +382,16 @@ Rectangle {
             }
 
         }
-        onDoubleClicked: timeline.position = clipRoot.x / multitrack.scaleFactor
-        onClicked: mainwindow.setMultitrackAsCurrentProducer()
+        onDoubleClicked: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.position = clipRoot.x / multitrack.scaleFactor
+        }
+        onClicked: {
+            console.assert(mainwindow);
+            if(mainwindow)
+                mainwindow.setMultitrackAsCurrentProducer()
+        }
     }
     MouseArea {
         anchors.fill: parent
@@ -390,7 +407,10 @@ Rectangle {
                 clipRoot.forceActiveFocus();
                 clipRoot.clicked(clipRoot)
             }
-            mainwindow.setMultitrackAsCurrentProducer()
+            console.assert(mainwindow);
+            if(mainwindow){
+                mainwindow.setMultitrackAsCurrentProducer()
+            }
             menu.popup()
         }
     }
@@ -809,7 +829,8 @@ Rectangle {
 
         Repeater {
             id: keyFrameRepeater
-            model: currentFilter ? currentFilter.keyframeNumber : 0
+            // 只有 Rectangle显示时才有 model，消除 currentFilter的 Reference Error警告
+            model: (parent.visible && currentFilter) ? currentFilter.keyframeNumber : 0
             anchors.verticalCenter: parent.verticalCenter
 
 
@@ -864,7 +885,8 @@ Rectangle {
             visible: !isBlank && !isTransition
             text: qsTr('Cut')
             onTriggered: {
-                if (!trackRoot.isLocked) {
+                console.assert(timeline);
+                if (!trackRoot.isLocked && timeline) {
                     timeline.copyClip(trackIndex, index)
 //                    timeline.remove(trackIndex, index)
                     timeline.lift(trackIndex, index)
@@ -876,7 +898,11 @@ Rectangle {
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Copy')
-            onTriggered: timeline.copyClip(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.copyClip(trackIndex, index)
+            }
         }
         MenuSeparator {
             visible: !isBlank && !isTransition
@@ -884,12 +910,20 @@ Rectangle {
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Remove')
-            onTriggered: timeline.lift(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.lift(trackIndex, index)
+            }
         }
         MenuItem {
             visible: !isTransition
             text: qsTr('Ripple Delete')
-            onTriggered: timeline.remove(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.remove(trackIndex, index)
+            }
         }
 
         MenuSeparator {
@@ -898,7 +932,11 @@ Rectangle {
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Split At Playhead (S)')
-            onTriggered: timeline.splitClip(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.splitClip(trackIndex, index)
+            }
         }
         //MenuItem {
         //    visible: !isBlank && !isTransition
@@ -918,21 +956,31 @@ Rectangle {
 //            text: qsTr(!isTransition ? 'Properties' : 'Transition Settings')     // qsTr('Properties')
             text: !isTransition ? qsTr('Properties') : qsTr('Transition Settings')
             visible: !isText && !isBlank
-            onTriggered:
-                timeline.onShowProperties(trackIndex, index)
-
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.onShowProperties(trackIndex, index)
             }
+        }
         MenuItem {
             visible: isTransition
             text:qsTr('Remove')
-            onTriggered: timeline.removeTransition(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.removeTransition(trackIndex, index)
+            }
         }
 
 
        MenuItem {
            visible: isText
             text:qsTr('Text Settings')
-            onTriggered: timeline.onTextSettings(trackIndex, index)
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.onTextSettings(trackIndex, index)
+            }
        }
 
 //       MenuItem {

@@ -49,8 +49,13 @@ Rectangle {
         toolbar.scaleSliderValue = toolbar.scaleCopy + 0.0625
         toolbar.scaleCopy = toolbar.scaleSliderValue
 
-        for (var i = 0; i < tracksRepeater.count; i++)
-            tracksRepeater.itemAt(i).redrawWaveforms()
+        console.assert(tracksRepeater);
+        if(!tracksRepeater) return;
+        for (var i = 0; i < tracksRepeater.count; i++){
+            console.assert(tracksRepeater.itemAt(i));
+            if(tracksRepeater.itemAt(i))
+                tracksRepeater.itemAt(i).redrawWaveforms()
+        }
     }
 
     function zoomOut(wheelx) {
@@ -65,15 +70,26 @@ Rectangle {
             toolbar.scaleSliderValue = toolbar.scaleCopy - 0.0625
             toolbar.scaleCopy = toolbar.scaleSliderValue
         }
-        for (var i = 0; i < tracksRepeater.count; i++)
-            tracksRepeater.itemAt(i).redrawWaveforms()
+
+        console.assert(tracksRepeater);
+        if(!tracksRepeater) return;
+        for (var i = 0; i < tracksRepeater.count; i++){
+            console.assert(tracksRepeater.itemAt(i));
+            if(tracksRepeater.itemAt(i))
+                tracksRepeater.itemAt(i).redrawWaveforms()
+        }
     }
 
     function resetZoom() {
 //        scaleSlider.value = 1.0
         toolbar.scaleSliderValue = 1.0
-        for (var i = 0; i < tracksRepeater.count; i++)
-            tracksRepeater.itemAt(i).redrawWaveforms()
+        console.assert(tracksRepeater);
+        if(!tracksRepeater) return;
+        for (var i = 0; i < tracksRepeater.count; i++){
+            console.assert(tracksRepeater.itemAt(i));
+            if(tracksRepeater.itemAt(i))
+                tracksRepeater.itemAt(i).redrawWaveforms()
+        }
     }
 
     function makeTracksTaller() {
@@ -85,12 +101,19 @@ Rectangle {
     }
 
     function pulseLockButtonOnTrack(index) {
-        trackHeaderRepeater.itemAt(index).pulseLockButton()
+        console.assert(trackHeaderRepeater.itemAt(index));
+        if(trackHeaderRepeater.itemAt(index))
+            trackHeaderRepeater.itemAt(index).pulseLockButton()
     }
 
     function selectMultitrack() {
-        for (var i = 0; i < trackHeaderRepeater.count; i++)
-            trackHeaderRepeater.itemAt(i).selected = false
+        console.assert(trackHeaderRepeater);
+        if(!trackHeaderRepeater) return;
+        for (var i = 0; i < trackHeaderRepeater.count; i++){
+            console.assert(trackHeaderRepeater.itemAt(i));
+            if(trackHeaderRepeater.itemAt(i))
+                trackHeaderRepeater.itemAt(i).selected = false
+        }
         cornerstone.selected = true
     }
 
@@ -107,7 +130,11 @@ Rectangle {
 //    property var selection: []
     property alias ripple: toolbar.ripple
 
-    onCurrentTrackChanged: timeline.selection = []
+    onCurrentTrackChanged: {
+        console.assert(timeline);
+        if(timeline)
+            timeline.selection = []
+    }
 
     MouseArea {
         anchors.fill: parent
@@ -281,7 +308,10 @@ Rectangle {
                             onClicked: {
 //                                timeline.selection = []
                                 currentTrack = index
-                                timeline.selectTrackHead(currentTrack)
+                                console.assert(timeline);
+                                if(timeline){
+                                    timeline.selectTrackHead(currentTrack)
+                                }
                                 toolbar.hasClipOrTrackSelected = true
 //                                cornerstone.selected = false
 //                                for (var i = 0; i < trackHeaderRepeater.count; i++)
@@ -314,12 +344,17 @@ Rectangle {
             // This provides continuous scrubbing and scimming at the left/right edges.
             focus: true
             hoverEnabled: true
-            onClicked: timeline.position = (scrollView.flickableItem.contentX + mouse.x) / multitrack.scaleFactor
+            onClicked: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.position = (scrollView.flickableItem.contentX + mouse.x) / multitrack.scaleFactor
+            }
             property bool scim: false
             onReleased: scim = false
             onExited: scim = false
             onPositionChanged: {
-                if (mouse.modifiers === Qt.ShiftModifier || mouse.buttons === Qt.LeftButton) {
+                console.assert(timeline);
+                if ((mouse.modifiers === Qt.ShiftModifier || mouse.buttons === Qt.LeftButton) && timeline) {
                     timeline.position = (scrollView.flickableItem.contentX + mouse.x) / multitrack.scaleFactor
                     scim = true
                 }
@@ -333,6 +368,9 @@ Rectangle {
                 repeat: true
                 running: parent.scim && parent.containsMouse && (parent.mouseX < 50 || parent.mouseX > parent.width - 50)
                 onTriggered: {
+                    console.assert(timeline);
+                    if(!timeline)
+                        return;
                     if (parent.mouseX < 50)
                         timeline.position -= 10
                     else
@@ -415,7 +453,7 @@ Rectangle {
                     }
 
                     Item {
-                        width: ((tracksContainer.width + headerWidth) < width) ? width : (tracksContainer.width + headerWidth)
+                        width: ((tracksContainer.width + headerWidth) < scrollView.width) ? scrollView.width : (tracksContainer.width + headerWidth)
                         height: trackHeaders.height + 30 // 30 is padding
 
                         MouseArea
@@ -450,7 +488,7 @@ Rectangle {
                             Repeater {
                                 model: multitrack
                                 delegate: Rectangle {
-                                    width: (tracksContainer.width < width) ? width : tracksContainer.width
+                                    width: (tracksContainer.width < scrollView.width) ? scrollView.width : tracksContainer.width
                                     color: (index === currentTrack)? selectedTrackColor : normalColor//(index % 2)? activePalette.alternateBase : activePalette.base
                                     height: Logic.trackHeight(video)
                                 }
@@ -467,14 +505,14 @@ Rectangle {
 
             CornerSelectionShadow {
                 y: tracksRepeater.count ? tracksRepeater.itemAt(currentTrack).y + ruler.height - scrollView.flickableItem.contentY : 0
-                clip: timeline.selection.length ?
+                clip: (timeline && timeline.selection.length) ?
                         tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]) : null
                 opacity: clip && clip.x + clip.width < scrollView.flickableItem.contentX ? 1 : 0
             }
 
             CornerSelectionShadow {
                 y: tracksRepeater.count ? tracksRepeater.itemAt(currentTrack).y + ruler.height - scrollView.flickableItem.contentY : 0
-                clip: timeline.selection.length ?
+                clip: (timeline && timeline.selection.length) ?
                         tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[timeline.selection.length - 1]) : null
                 opacity: clip && clip.x > scrollView.flickableItem.contentX + scrollView.width ? 1 : 0
                 anchors.right: parent.right
@@ -487,13 +525,13 @@ Rectangle {
                 color: "#C0482C"    // activePalette.text
                 width: 1
                 height: root.height - scrollView.__horizontalScrollBar.height - toolbar.height
-                x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX
+                x: timeline ? timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX : 0
                 y: 0
             }
             TimelinePlayhead {
                 id: playhead
                 visible: x >= -5        // timeline.position > -1
-                x: timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX - 5
+                x: timeline ? timeline.position * multitrack.scaleFactor - scrollView.flickableItem.contentX - 5 : 0
                 y: 0
                 width: 11
                 height: 5
@@ -549,6 +587,8 @@ Rectangle {
             anchors.centerIn: parent
         }
         function show(x, y, text) {
+            console.assert(scrollView);
+            if(!scrollView) return;
             bubbleHelp.x = x + tracksArea.x - scrollView.flickableItem.contentX - bubbleHelpLabel.width
             bubbleHelp.y = y + tracksArea.y - scrollView.flickableItem.contentY - bubbleHelpLabel.height+18
             bubbleHelp.text = text
@@ -577,21 +617,37 @@ Rectangle {
         MenuItem {
             text: qsTr('Add Audio Track')
             shortcut: 'Ctrl+U'
-            onTriggered: timeline.addAudioTrack()
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addAudioTrack()
+            }
         }
         MenuItem {
             text: qsTr('Add Video Track')
             shortcut: 'Ctrl+Y'
-            onTriggered: timeline.addVideoTrack()
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addVideoTrack()
+            }
         }
         MenuItem {
             text: qsTr('Insert Track')
-            onTriggered: timeline.insertTrack()
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.insertTrack()
+            }
         }
         MenuItem {
             enabled: !multitrack.defaultTrack
             text: qsTr('Remove Track')
-            onTriggered: timeline.removeTrack()
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.removeTrack()
+            }
         }
 
     }
@@ -607,10 +663,13 @@ Rectangle {
             isAudio: audio
             isCurrentTrack: currentTrack === index
             timeScale: multitrack.scaleFactor
-            selection: timeline.selection
+            selection: timeline ? timeline.selection : 0
             onClipClicked: {
                 currentTrack = track.DelegateModel.itemsIndex
-                timeline.selection = [ clip.DelegateModel.itemsIndex ]
+                console.assert(timeline);
+                if(timeline){
+                    timeline.selection = [ clip.DelegateModel.itemsIndex ]
+                }
                 root.clipClicked()
                 toolbar.hasClipOrTrackSelected = true
 
@@ -618,6 +677,8 @@ Rectangle {
 
             onClipDragged: {
                 // This provides continuous scrolling at the left/right edges.
+                console.assert(scrollView);
+                if(!scrollView) return;
                 if (x > scrollView.flickableItem.contentX + scrollView.width - 50) {
                     scrollTimer.item = clip
                     scrollTimer.backwards = false
@@ -635,7 +696,7 @@ Rectangle {
                 // Show distance moved as time in a "bubble" help.
                 var track = tracksRepeater.itemAt(clip.trackIndex)
                 var delta = Math.round((clip.x - clip.originalX) / multitrack.scaleFactor)
-                var s = timeline.timecode(Math.abs(delta))
+                var s = timeline ? timeline.timecode(Math.abs(delta)) : ''
                 // remove leading zeroes
                 if (s.substring(0, 3) === '00:')
                     s = s.substring(3)
@@ -648,15 +709,21 @@ Rectangle {
             }
             onClipDraggedToTrack: {
                 var i = clip.trackIndex + direction
-                if (i >= 0  && i < tracksRepeater.count) {
+                console.assert(tracksRepeater);
+                if (tracksRepeater && i >= 0  && i < tracksRepeater.count) {
                     var track = tracksRepeater.itemAt(i)
                     clip.reparent(track)
                     clip.trackIndex = track.DelegateModel.itemsIndex
                 }
             }
             onCheckSnap: {
-                for (var i = 0; i < tracksRepeater.count; i++)
-                    tracksRepeater.itemAt(i).snapClip(clip)
+                console.assert(tracksRepeater);
+                if(!tracksRepeater) return;
+                for (var i = 0; i < tracksRepeater.count; i++){
+                    console.assert(tracksRepeater.itemAt(i));
+                    if(tracksRepeater)
+                        tracksRepeater.itemAt(i).snapClip(clip)
+                }
             }
             Image {
                 anchors.fill: parent
@@ -669,7 +736,9 @@ Rectangle {
                     anchors.fill: parent
                     onPressed: {
                         mouse.accepted = true
-                        trackHeaderRepeater.itemAt(index).pulseLockButton()
+                        console.assert(trackHeaderRepeater.itemAt(index));
+                        if(trackHeaderRepeater.itemAt(index))
+                            trackHeaderRepeater.itemAt(index).pulseLockButton()
                     }
                 }
             }
@@ -683,6 +752,8 @@ Rectangle {
         onDropped: Logic.dropped()
         onDropAccepted: Logic.acceptDrop(xml)
         onSelectionChanged: {
+            console.assert(timeline);
+            if(!timeline)   return;
             cornerstone.selected = timeline.isMultitrackSelected()
             var selectedTrack = timeline.selectedTrack()
             for (var i = 0; i < trackHeaderRepeater.count; i++)
@@ -703,7 +774,9 @@ Rectangle {
         target: scrollView.flickableItem
         onContentYChanged:
         {
-            headerScrollView.flickableItem.contentY = scrollView.flickableItem.contentY
+            console.assert(headerScrollView);
+            if(headerScrollView)
+                headerScrollView.flickableItem.contentY = scrollView.flickableItem.contentY
         }
         onContentXChanged:
         {
@@ -715,7 +788,9 @@ Rectangle {
         target: headerScrollView.flickableItem
         onContentYChanged:
         {
-            scrollView.flickableItem.contentY = headerScrollView.flickableItem.contentY
+            console.assert(scrollView);
+            if(scrollView)
+                scrollView.flickableItem.contentY = headerScrollView.flickableItem.contentY
         }
     }
 
@@ -731,6 +806,8 @@ Rectangle {
         onTriggered: {
             var delta = backwards? -10 : 10
             if (item) item.x += delta
+            console.assert(scrollView);
+            if(!scrollView) return;
             scrollView.flickableItem.contentX += delta
             if (scrollView.flickableItem.contentX <= 0)
                 stop()

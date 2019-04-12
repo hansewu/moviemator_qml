@@ -259,7 +259,11 @@ Rectangle {
                     }
                 }
 
-                onClicked: timeline.toggleTrackMute(index)
+                onClicked: {
+                    console.assert(timeline);
+                    if(timeline)
+                        timeline.toggleTrackMute(index)
+                }
                 MovieMator.ToolTip { text: qsTr('Mute') }
             }
 
@@ -293,7 +297,11 @@ Rectangle {
                     }
 
 
-                   onClicked: timeline.toggleTrackHidden(index)
+                   onClicked: {
+                        console.assert(timeline);
+                        if(timeline)
+                            timeline.toggleTrackHidden(index)
+                   }
                    MovieMator.ToolTip { text: qsTr('Hide') }
             }
 
@@ -342,7 +350,11 @@ Rectangle {
                     }
                 }
 
-                onClicked: timeline.setTrackLock(index, !isLocked)
+                onClicked: {
+                    console.assert(timeline);
+                    if(timeline)
+                        timeline.setTrackLock(index, !isLocked)
+                }
                 MovieMator.ToolTip { text: qsTr('Lock track') }
             }
 

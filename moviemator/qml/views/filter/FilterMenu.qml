@@ -146,7 +146,7 @@ Window {
                     }
 
                     anchors.fill: parent
-                    model: metadatamodel
+                    model: filterWindow.visible ? metadatamodel : 0 // 消除 metadatamodel未定义的警告
                     delegate: FilterMenuDelegate{}
                     section.property: vidButton.checked ? "filterTypeDisplay" : ""
                     section.delegate: sectionDelegate

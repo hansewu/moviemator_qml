@@ -31,7 +31,11 @@ Rectangle{
         hoverEnabled: true
         cursorShape: Qt.ArrowCursor
         acceptedButtons: Qt.LeftButton
-        onClicked: timeline.seekToKeyFrame(frameNumber)
+        onClicked: {
+            console.assert(timeline);
+            if(timeline)
+                timeline.seekToKeyFrame(frameNumber)
+        }
     }
 
     SequentialAnimation on scale {

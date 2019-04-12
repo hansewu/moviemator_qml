@@ -21,6 +21,9 @@
  */
 
 function scrollIfNeeded() {
+    console.assert(timeline);
+    console.assert(scrollView);
+    if(!timeline) return;
     var x = timeline.position * multitrack.scaleFactor;
     if (!scrollView) return;
     if (x > scrollView.flickableItem.contentX + scrollView.width - 50)
@@ -37,6 +40,7 @@ function scrollIfZoomNeeded(wheelx, scaleValue) {
     // scrollView以鼠标为中心向两边缩放，使scrollView的左边界与鼠标位置的距离按比例缩放
     // wheelx：鼠标（滚轮）位置
     // scaleValue：缩放前的缩放系数
+    console.assert(scrollView);
     if (!scrollView) return;
     scrollView.flickableItem.contentX = (wheelx+scrollView.flickableItem.contentX)*multitrack.scaleFactor/scaleValue - wheelx;
 
@@ -57,12 +61,18 @@ function scrollIfZoomNeeded(wheelx, scaleValue) {
 }
 
 function dragging(pos, duration) {
+    console.assert(tracksRepeater);
+    console.assert(scrollView);
+    console.assert(timeline);
+    if(!tracksRepeater || !scrollView || !timeline) return;
     if (tracksRepeater.count > 0) {
         var headerHeight = ruler.height + toolbar.height
         dropTarget.x = pos.x
         dropTarget.width = duration * multitrack.scaleFactor
-
+        
         for (var i = 0; i < tracksRepeater.count; i++) {
+            console.assert(tracksRepeater.itemAt(i));
+            if(!tracksRepeater.itemAt(i)) continue;
             var trackY = tracksRepeater.itemAt(i).y + headerHeight - scrollView.flickableItem.contentY
             var trackH = tracksRepeater.itemAt(i).height
             if (pos.y >= trackY && pos.y < trackY + trackH) {
@@ -115,8 +125,12 @@ function dropped() {
 }
 
 function acceptDrop(xml) {
+    console.assert(scrollView);
+    if(!scrollView) return;
     var position = Math.round((dropTarget.x + scrollView.flickableItem.contentX - headerWidth) / multitrack.scaleFactor)
 //    if (toolbar.ripple)
+    console.assert(timeline);
+    if(timeline)
         timeline.insert(currentTrack, position, xml)
 //    else
 //        timeline.overwrite(currentTrack, position, xml)
@@ -124,12 +138,16 @@ function acceptDrop(xml) {
 
 function acceptDropUrls(urls)
 {
-    timeline.appendFromUrls(currentTrack, urls);
+    console.assert(timeline);
+    if(timeline)
+        timeline.appendFromUrls(currentTrack, urls);
 }
 
 function acceptDropListItem(items)
 {
-    timeline.appendFromAbstractModelItemDataList(currentTrack, items);
+    console.assert(timeline);
+    if(timeline)
+        timeline.appendFromAbstractModelItemDataList(currentTrack, items);
 }
 
 function trackHeight(isVideo) {
