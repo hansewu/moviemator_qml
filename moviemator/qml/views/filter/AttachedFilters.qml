@@ -83,7 +83,7 @@ Rectangle {
         }
     }
     function switchFilterType(){
-        if(typeof attachedfiltersmodel == 'undefined'){
+        if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
             throw new Error("attachedfiltersmodel is undefined")
         }
 
@@ -107,7 +107,7 @@ Rectangle {
     }
 
     function isFilterVisible(index){
-        if(typeof attachedfiltersmodel == 'undefined'){
+        if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
             throw new Error("attachedfiltersmodel is undefined")
         }
         var rt = false
@@ -119,7 +119,7 @@ Rectangle {
         return rt
     }
     function refreshGridModel(){
-        if(typeof attachedfiltersmodel == 'undefined'){
+        if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
             throw new Error("attachedfiltersmodel is undefined")
         }
         if(visualModel.groups[3].count > 0)
@@ -153,7 +153,7 @@ Rectangle {
         }
     }
     function changeFilters(){
-        if(typeof attachedfiltersmodel == 'undefined'){
+        if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
             throw new Error("attachedfiltersmodel is undefined")
         }
         attachedFilters.oldFiltersNum = attachedfiltersmodel.rowCount()
@@ -513,7 +513,7 @@ Rectangle {
                     DropArea {
                         anchors { fill: parent; margins: 15 }
                         onEntered: {
-                            if(typeof attachedfiltersmodel == 'undefined'){
+                            if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
                                 throw new Error("attachedfiltersmodel is undefined")
                             }
                             // visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)

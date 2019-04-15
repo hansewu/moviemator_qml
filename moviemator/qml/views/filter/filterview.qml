@@ -71,10 +71,10 @@ Rectangle {
 
         height: 400
         onFilterSelected: {
-            if(typeof attachedfiltersmodel == 'undefined'){
+            if((typeof attachedfiltersmodel == 'undefined')||(attachedfiltersmodel == null)){
                 throw new Error("attachedfiltersmodel is undefined")
             }
-            if(typeof metadatamodel == 'undefined'){
+            if((typeof metadatamodel == 'undefined')||(metadatamodel == null)){
                 throw new Error("metadatamodel is undefined")
             }
             attachedfiltersmodel.add(metadatamodel.get(index))
