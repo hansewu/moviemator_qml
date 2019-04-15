@@ -131,7 +131,6 @@ Item {
             decimals: 1
             spinnerWidth: 80
             label: qsTr('Wet')
-            color: '#ffffff'
             suffix: ' %'
             value: filter.getDouble('wetness') * maximumValue
             onValueChanged: {

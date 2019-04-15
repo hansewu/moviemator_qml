@@ -53,7 +53,7 @@ Rectangle {
     }
 
     function addFilter(index){
-        if(typeof filtersResDock == 'undefined'){
+        if(filtersResDock == null){
             throw new Error("filtersResDock is undefined")
         }
 
@@ -62,8 +62,8 @@ Rectangle {
 
     function updateData()
     {
-        if(typeof filtersInfo == 'undefined'){
-            throw new Error("filtersInfo is undefined")
+        if(filtersInfo == null){
+            return;
         }
         var num = filtersInfo.rowCount();
         for(var i=0;i< filtersInfo.rowCount();i++){
@@ -135,7 +135,9 @@ Rectangle {
             }
             Component.onCompleted: {
                 refreshFilters()
-                currentChoosed = filters.get(0).index
+                if(filters.count > 0){
+                    currentChoosed = filters.get(0).index
+                }
             }
             Rectangle{
                 id:filterhead
@@ -146,7 +148,7 @@ Rectangle {
                     width: contentWidth
                     height: parent.height
                     id: catName
-                    text: typename
+                    text: (typeof typename == 'undefined')? '':typename
                     color: '#ffffff'
                     font.pixelSize: 13
                     z:2

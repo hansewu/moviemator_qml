@@ -40,6 +40,28 @@ Rectangle {
     property int oldFiltersNum:0
     property bool translate2CH: ("zh_CN" == Qt.locale().name)
 
+    property var filterType: qsTr("Video")
+    SystemPalette { id: activePalette }
+    Timer {
+        id: indexDelay
+        property int index: 0
+        interval: 1
+        onTriggered: {
+            // Delay the index setting to allow model updates to complete
+            attachedFiltersView.currentIndex = index
+            if(isFilterVisible(attachedFiltersView.currentIndex)){
+                chooseAudioFilter.checked = false
+                chooseVideoFilter.checked = true
+                filterType = qsTr("Video")
+                visualModel.filterOnGroup = "video"
+            }else{
+                chooseVideoFilter.checked = false
+                chooseAudioFilter.checked = true
+                filterType = qsTr("Audio")
+                visualModel.filterOnGroup = "audio"
+            }
+        }
+    }
     function setCurrentFilter(index) {
         indexDelay.index = index
         indexDelay.running = true
@@ -54,7 +76,7 @@ Rectangle {
         }
     }
 
-    Connections {
+    Connections { 
         target: attachedfiltersmodel
         onIsProducerSelectedChanged: {
             switchFilterType()
@@ -122,17 +144,7 @@ Rectangle {
             filterClicked(index)
         }
     }
-    property var filterType: qsTr("Video")
-    SystemPalette { id: activePalette }
-    Timer {
-        id: indexDelay
-        property int index: 0
-        interval: 1
-        onTriggered: {
-            // Delay the index setting to allow model updates to complete
-            attachedFiltersView.currentIndex = index
-        }
-    }
+    
 
     Connections {
         target: attachedfiltersmodel

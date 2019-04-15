@@ -50,7 +50,7 @@ Rectangle {
     }
 
     function addFilter(index){
-        if(typeof AudioFiltersResDock == 'undefined'){
+        if(AudioFiltersResDock == null){
             throw new Error("AudioFiltersResDock is undefined")
         }
 
@@ -59,8 +59,8 @@ Rectangle {
 
     function updateData()
     {
-        if(typeof AudioFiltersInfo == 'undefined'){
-            throw new Error("AudioFiltersInfo is undefined")
+        if(AudioFiltersInfo == null){
+            return ;
         }
         var num = AudioFiltersInfo.rowCount();
        for(var i=0;i< AudioFiltersInfo.rowCount();i++){
@@ -132,7 +132,9 @@ Rectangle {
             }
             Component.onCompleted: {
                 refreshFilters()
-                currentChoosed = filters.get(0).index
+                if(filters.count > 0){
+                    currentChoosed = filters.get(0).index
+                }
             }
             
             Flow {

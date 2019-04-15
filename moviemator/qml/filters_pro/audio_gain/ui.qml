@@ -63,7 +63,6 @@ Item {
                 suffix: 'dB'
                 decimals: 1
                 spinnerWidth: 80
-                value: toDb(filter.getDouble(gainParameter))
                 onValueChanged: {
                     keyFrame.controlValueChanged(slider)
                 }

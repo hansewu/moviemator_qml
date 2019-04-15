@@ -95,7 +95,6 @@ Item {
             decimals: 1
             spinnerWidth: 80
             label: qsTr('Peak')
-            color: '#ffffff'
             suffix: ' %'
             value: filter.getDouble('0') * maximumValue
             onValueChanged: {

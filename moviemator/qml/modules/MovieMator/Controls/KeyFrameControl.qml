@@ -339,7 +339,6 @@ Rectangle {
         target: filterDock
         onCurrentFilterChanged: {
             enableKeyFrameCheckBox.checked = ( filter && filter.getKeyFrameNumber() > 0)
-
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }
@@ -348,7 +347,6 @@ Rectangle {
         target: filter
         onChanged: {
             enableKeyFrameCheckBox.checked = (filter && filter.getKeyFrameNumber() > 0)
-
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }
