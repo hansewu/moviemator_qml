@@ -129,7 +129,7 @@ Rectangle {
         if((sourceIndex < 0)||(destinationIndex < 0)){
             return
         }
-        attachedfiltersmodel.move(sourceIndex, destinationIndex)
+        dataView.model.model.move(sourceIndex, destinationIndex)
     }
     function switchFilterType(filtertype){
         filterType = filtertype
