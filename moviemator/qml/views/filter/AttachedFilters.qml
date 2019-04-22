@@ -49,9 +49,12 @@ Rectangle {
     Timer {
         id: indexDelay
         property int index: 0
-        interval: 100
+        interval: 1
         onTriggered: {
             // Delay the index setting to allow model updates to complete
+            if(index >= videoFiltersList.count){
+                index = index - videoFiltersList.count
+            }
             attachedFiltersView.currentIndex = index
         }
     }
@@ -77,7 +80,6 @@ Rectangle {
             }
         }
     }
-
     function updateModelData(){
         if((typeof attachedfiltersmodel != 'undefined')&&(attachedfiltersmodel != null)&&(typeof attachedfiltersmodel.rowCount() != 'undefined')){
             var filtersNumber = visualModel0.items.count
@@ -118,6 +120,14 @@ Rectangle {
     function removeFilter(index){
         var modelIndex = getModelIndex(index)
         if(modelIndex < 0){
+            return
+        }
+        if((typeof attachedFiltersView.model.model == 'undefined')||(attachedFiltersView.model.model == null)||(attachedFiltersView.model.model.count < index+1)){
+            throw new Error("attachedFiltersView.model.model is abnormal")
+            return
+        }
+        if((typeof dataView.model.model == 'undefined')||(dataView.model.model == null)||(dataView.model.model.rowCount() < modelIndex+1)){
+            throw new Error("attachedFiltersView.model.model is abnormal")
             return
         }
         attachedFiltersView.model.model.remove(index)
@@ -179,14 +189,16 @@ Rectangle {
     function chooseFilter(index){
         attachedFiltersView.currentIndex = index
         if(filterType == videoType){
-            if((videoFiltersList.count <= 0)||(index >= videoFiltersList.count)){
+            if(videoFiltersList.count <= 0) return
+            if(index >= videoFiltersList.count){
                 throw new Error("chosed filter index error:"+ index + ' '+videoFiltersList.count) 
             }
             var modelIndex = videoFiltersList.get(index).modelIndex
             filterClicked(modelIndex)
             oldVideoId = videoFiltersList.get(index).id
         }else{
-            if((audioFiltersList.count <= 0)||(index >= audioFiltersList.count)){
+            if(audioFiltersList.count <= 0) return
+            if(index >= audioFiltersList.count){
                 throw new Error("chosed filter index error:"+ index + ' '+audioFiltersList.count) 
             }
             var modelIndex = audioFiltersList.get(index).modelIndex
@@ -224,7 +236,7 @@ Rectangle {
                 chooseFilter(index)
             }
             for(var j=0;j<removed.length;j++){
-                var index = removed[i].index
+                var index = removed[j].index
                 if(filterType == audioType)
                     index = index - videoFiltersList.count
                 updateModelData()
@@ -502,8 +514,8 @@ Rectangle {
                                 }
                                 AnchorChanges {
                                     target: icon;
-                                    anchors.horizontalCenter: 'undefined';
-                                    anchors.verticalCenter: 'undefined'
+                                    anchors.horizontalCenter: undefined
+                                    anchors.verticalCenter: undefined
                                 }
                             }
                         ]
