@@ -15,21 +15,21 @@ Metadata {
     mlt_service: "loudness"
     qml: "ui.qml"
     isClipOnly: true
-    keyframes {
-        allowAnimateIn: true
-        allowAnimateOut: true
-        simpleProperties: ['program']
-        parameters: [
-            Parameter {
-                name: qsTr('program')
-                property: 'program'
-                objectName: 'programSlider'
-                controlType: 'SliderSpinner'
-                paraType: 'double'
-                defaultValue: '-0.23'
-                value: '0'
-                factorFunc:  []
-            }
-        ]
-    }
+//    keyframes {
+//        allowAnimateIn: true
+//        allowAnimateOut: true
+//        simpleProperties: ['program']
+//        parameters: [
+//            Parameter {
+//                name: qsTr('program')
+//                property: 'program'
+//                objectName: 'programSlider'
+//                controlType: 'SliderSpinner'
+//                paraType: 'double'
+//                defaultValue: '-0.23'
+//                value: '0'
+//                factorFunc:  []
+//            }
+//        ]
+//    }
 }
