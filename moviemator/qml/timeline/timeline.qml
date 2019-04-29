@@ -313,6 +313,10 @@ Rectangle {
                                     timeline.selectTrackHead(currentTrack)
                                 }
                                 toolbar.hasClipOrTrackSelected = true
+                                for (var i = 0; i < trackHeaderRepeater.count; i++) {//设置当前选中trackhead的选中状态
+                                    trackHeaderRepeater.itemAt(i).selected = (i == currentTrack)
+                                }
+
 //                                cornerstone.selected = false
 //                                for (var i = 0; i < trackHeaderRepeater.count; i++)
 //                                    trackHeaderRepeater.itemAt(i).selected = false
@@ -755,11 +759,16 @@ Rectangle {
             console.assert(timeline);
             if(!timeline)   return;
             cornerstone.selected = timeline.isMultitrackSelected()
-            var selectedTrack = timeline.selectedTrack()
-            for (var i = 0; i < trackHeaderRepeater.count; i++)
-                trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
+            // var selectedTrack = timeline.selectedTrack()
+            // for (var i = 0; i < trackHeaderRepeater.count; i++)
+            //     trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
 
             var selectedAClip = timeline.selectedAClip()
+            if (selectedAClip === true) {//如果选中clip则清除trackhead的选中状态
+                for (var i = 0; i < trackHeaderRepeater.count; i++) {
+                    trackHeaderRepeater.itemAt(i).selected = false
+                }
+            }
             if (selectedAClip === false)
                 toolbar.hasClipOrTrackSelected = false
         }
