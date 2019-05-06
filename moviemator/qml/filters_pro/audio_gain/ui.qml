@@ -30,43 +30,39 @@ Item {
     height: 250
     property string gainParameter: 'gain'
     Component.onCompleted: {
-        keyFrame.initFilter(layoutRoot)
+        if (filter.isNew) {
+            // Set default parameter values
+            filter.set(gainParameter, 1.0)
+            slider.value = toDb(filter.getDouble(gainParameter))
+        }
+    }
+
+    function toDb(value) {
+        return 20 * Math.log(value) / Math.LN10
+    }
+
+    function fromDb(value) {
+        return Math.pow(10, value / 20);
     }
 
     ColumnLayout {
-        
         anchors.fill: parent
         anchors.margins: 8
 
-        YFKeyFrame{
-            id: keyFrame
-            Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
-            }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
-            }
-        }
-
         RowLayout {
-            id: layoutRoot
             Label {
                 text: qsTr('Gain')
                 color: '#ffffff'
             }
             SliderSpinner {
-                objectName: 'slider'
                 id: slider
                 minimumValue: -50
                 maximumValue: 24
                 suffix: 'dB'
                 decimals: 1
                 spinnerWidth: 80
-                onValueChanged: {
-                    keyFrame.controlValueChanged(slider)
-                }
-                
+                value: toDb(filter.getDouble(gainParameter))
+                onValueChanged: filter.set(gainParameter, fromDb(value))
             }
             UndoButton {
                 onClicked: slider.value = 0

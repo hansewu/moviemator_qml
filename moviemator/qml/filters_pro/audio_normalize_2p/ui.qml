@@ -51,32 +51,16 @@ Item {
         }
     }
 
-    Component.onCompleted: {
-        keyFrame.initFilter(layoutRoot)
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
 
-        YFKeyFrame{
-            id: keyFrame
-            Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
-            }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
-            }
-        }
         RowLayout {
-            id: layoutRoot
             Label {
                 text: qsTr('Target Loudness')
                 color: '#ffffff'
             }
             SliderSpinner {
-                objectName: 'programSlider'
                 id: programSlider
                 minimumValue: -50.0
                 maximumValue: -10.0
@@ -84,9 +68,7 @@ Item {
                 suffix: ' LUFS'
                 spinnerWidth: 100
                 value: filter.getDouble('program')
-                onValueChanged: {
-                    keyFrame.controlValueChanged(programSlider)
-                }
+                onValueChanged: filter.set('program', value)
             }
             UndoButton {
                 onClicked: programSlider.value = -23.0
@@ -116,3 +98,4 @@ Item {
         }
     }
 }
+

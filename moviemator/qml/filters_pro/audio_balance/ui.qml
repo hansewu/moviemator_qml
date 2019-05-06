@@ -29,43 +29,32 @@ Item {
     width: 300
     height: 250
     Component.onCompleted: {
-        keyFrame.initFilter(layoutRoot)
+        if (filter.isNew) {
+            // Set default parameter values
+            filter.set('start', 0.5)
+            slider.value = filter.getDouble('start') * 1000
+        }
     }
 
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 8
 
-        YFKeyFrame{
-            id: keyFrame
-            Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
-            }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
-            }
-        }
-
         RowLayout {
-            id: layoutRoot
             Label {
                 text: qsTr('Left')
                 color: '#ffffff'
             }
             SliderSpinner {
-                objectName: 'slider'
                 id: slider
                 minimumValue: 0
                 maximumValue: 1000
                 ratio: 1000
                 decimals: 2
                 label: qsTr('Right')
+//color: '#ffffff'
                 value: filter.getDouble('start') * maximumValue
-                onValueChanged: {
-                    keyFrame.controlValueChanged(slider)
-                }
-                
+                onValueChanged: filter.set('start', value / maximumValue)
             }
             UndoButton {
                 onClicked: slider.value = 500
