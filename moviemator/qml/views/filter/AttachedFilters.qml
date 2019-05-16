@@ -41,7 +41,8 @@ Rectangle {
     property bool translate2CH: ("zh_CN" == Qt.locale().name)
     // property bool translate2CH: false
    
-    property var filterType: qsTr("Video")
+    property bool isvideo:true
+    property var filterType: isvideo?qsTr("Video"):qsTr("Audio")
     property var videoType: qsTr("Video")
     property var audioType: qsTr("Audio")
     SystemPalette { id: activePalette }
@@ -72,14 +73,7 @@ Rectangle {
             indexDelay.running = true
         }
     }
-    Connections { 
-        target: attachedfiltersmodel
-        onIsProducerSelectedChanged: {
-            if(updateModelData() == 0){
-                chooseFilter(0)
-            }
-        }
-    }
+    
     function updateModelData(){
         if((typeof attachedfiltersmodel != 'undefined')&&(attachedfiltersmodel != null)&&(typeof attachedfiltersmodel.rowCount() != 'undefined')){
             var filtersNumber = visualModel0.items.count
@@ -142,8 +136,8 @@ Rectangle {
         dataView.model.model.move(sourceIndex, destinationIndex)
     }
     function switchFilterType(filtertype){
-        filterType = filtertype
-        chooseFilter(getCurrentFilterIndex())
+        // filterType = filtertype
+        // chooseFilter(getCurrentFilterIndex())
     }
     function findFilterIndex(id,list){
         var rt = 0
@@ -227,123 +221,40 @@ Rectangle {
             for(var i=0;i < inserted.length;i++){
                 var index = inserted[i].index
                 updateModelData()
-                if(attachedfiltersmodel.isVisible(index)){
-                    filterType = videoType
+                if(attachedfiltersmodel.isVisible(index) == isvideo){
+                    if(!attachedfiltersmodel.isVisible(index)){
+                        index = index - videoFiltersList.count
+                    }
+                    chooseFilter(index)
                 }else{
-                    filterType = audioType
-                    index = index - videoFiltersList.count
+                    attachedFiltersView.currentIndex = getCurrentFilterIndex()
                 }
-                chooseFilter(index)
             }
             for(var j=0;j<removed.length;j++){
                 var index = removed[j].index
                 if(filterType == audioType)
                     index = index - videoFiltersList.count
                 updateModelData()
-                if(index == attachedFiltersView.currentIndex){
-                    if(visualModel.model.count > 0){
-                        if(index >= visualModel.model.count)
-                            chooseFilter(index-1)
-                        else
-                            chooseFilter(index)
+                if(attachedfiltersmodel.isVisible(index) == isvideo){
+                    if(index == attachedFiltersView.currentIndex){
+                        if(visualModel.model.count > 0){
+                            if(index >= visualModel.model.count)
+                                chooseFilter(index-1)
+                            else
+                                chooseFilter(index)
+                        }else{
+                            switchFilterType((filterType==videoType)?audioType:videoType)
+                        }
                     }else{
-                        switchFilterType((filterType==videoType)?audioType:videoType)
+                        chooseFilter(getCurrentFilterIndex())
                     }
                 }else{
-                    chooseFilter(getCurrentFilterIndex())
+                    attachedFiltersView.currentIndex = getCurrentFilterIndex()
                 }
             }
         }
     }
 
-    Rectangle{
-        id:videoBtnBack
-        color: 'transparent'
-        z:4
-        width:50
-        height:28
-        //radius: 4
-        anchors{
-            bottom:parent.top
-            topMargin:0
-            left:parent.left
-            leftMargin:-2
-        }
-        Button{
-            id: chooseVideoFilter
-            width:parent.width
-            height:parent.height - 1
-            z:5
-            anchors{
-                left:parent.left
-                leftMargin:0
-                bottom:parent.bottom
-                bottomMargin:-1
-            }
-            Text{
-                text:qsTr("Video")
-                color: chooseVideoFilter.checked ? activePalette.highlight : 'white'
-                anchors.centerIn: parent
-            }
-            checked:filterType == videoType
-            style: ButtonStyle {
-                background: Rectangle {
-                    color:'transparent'
-                    Image{
-                        anchors.centerIn: parent
-                        width:parent.width
-                        height:parent.height-4
-                        source:chooseVideoFilter.checked ? 'qrc:///icons/filters/icon/tab_btn-a.png' : 'qrc:///icons/filters/icon/tab_btn.png'
-                    }
-                }
-            }
-            onClicked:{
-                switchFilterType(videoType)
-            }
-        }
-    }
-    Rectangle{
-        color: 'transparent'
-        z:4
-        width:50
-        height:28
-        anchors{
-            bottom:videoBtnBack.bottom
-            left:videoBtnBack.right
-        }
-        Button{
-            id: chooseAudioFilter
-            width:parent.width - 4
-            height:parent.height - 1
-            z:5
-            anchors{
-                left:parent.left
-                leftMargin:-1
-                bottom:parent.bottom
-                bottomMargin:-1
-            }
-            Text{
-                text:qsTr("Audio")
-                color: chooseAudioFilter.checked ? activePalette.highlight : 'white'
-                anchors.centerIn: parent
-            }
-            checked:filterType == audioType
-            style: ButtonStyle {
-                background: Rectangle {
-                    color:'transparent'
-                    Image{
-                        anchors.centerIn: parent
-                        width:parent.width
-                        height:parent.height-4
-                        source:chooseAudioFilter.checked ? 'qrc:///icons/filters/icon/tab_btn-a.png' : 'qrc:///icons/filters/icon/tab_btn.png'
-                    }
-                }
-            }
-            onClicked:{
-                switchFilterType(audioType)
-            }
-        }
-    }
     ListModel {
         id:videoFiltersList
     }
@@ -383,15 +294,16 @@ Rectangle {
         GridView {
             id: attachedFiltersView
             anchors.fill: parent
-            cellHeight:82
-            cellWidth:85
+            cellHeight:50
+            cellWidth:64
             flow:GridView.FlowTopToBottom
+            topMargin:2
             displaced: Transition {
                 NumberAnimation { properties: "x,y"; easing.type: Easing.OutQuad }
             }
             model: DelegateModel {
                 id: visualModel
-                model: (filterType == qsTr("Video"))?videoFiltersList:audioFiltersList
+                model: isvideo?videoFiltersList:audioFiltersList
                 delegate: MouseArea {
                     id: delegateRoot
                     property int visualIndex: DelegateModel.itemsIndex
@@ -418,22 +330,22 @@ Rectangle {
                     Rectangle {
                         id: icon
                         z:2
-                        width: 80
-                        height: 60
+                        height: attachedFiltersView.cellHeight-8
+                        width: attachedFiltersView.cellWidth-8
                         anchors {
                             horizontalCenter: parent.horizontalCenter;
                             verticalCenter: parent.verticalCenter
                         }
-                        color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'#787878'
-                        radius: 2
+                        color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'transparent'
+                        // radius: 3
                         CheckBox {
                             id: filterDelegateCheck
                             z:4
                             anchors{
                                 top:filterDelegateImage.top
-                                topMargin:-2
+                                topMargin:-4
                                 left:filterDelegateImage.left
-                                leftMargin:-2
+                                leftMargin:-1
                             }
                             checkedState: model.checkState
                             onClicked: {
@@ -443,8 +355,8 @@ Rectangle {
                             style: CheckBoxStyle {
                                 indicator: Rectangle {
                                     color:'transparent'
-                                    implicitWidth: 15
-                                    implicitHeight: 15
+                                    implicitWidth: 10
+                                    implicitHeight: 10
                                     radius: 3
                                     border.width: 0
                                     Image {
@@ -462,8 +374,8 @@ Rectangle {
                             }
                             tooltip: qsTr('Remove selected filter')
                             z:4
-                            width:15
-                            height:15
+                            width:10
+                            height:10
                             style: ButtonStyle {
                                 background: Rectangle {
                                     color:'transparent'
@@ -478,25 +390,29 @@ Rectangle {
                                 removeFilter(index)
                             }
                         }
-                        Label {
-                            id:filterDelegateName
-                            z:3
-                            text: translate2CH?Trans.transEn2Ch(model.display):model.display
-                            verticalAlignment:Text.AlignBottom
-                            wrapMode: Text.Wrap
-                            anchors.fill: parent
-                            anchors.leftMargin:2
-                        }
                         Image {
                             id:filterDelegateImage
                             z:2
                             source: model.thumbnail
-                            width: 76
-                            height: 40
+                            width: parent.width
+                            height: 28
                             anchors {
                                 horizontalCenter: parent.horizontalCenter;
                                 top:parent.top
-                                topMargin:2
+                                topMargin:0
+                            }
+                        }
+                        Label {
+                            id:filterDelegateName
+                            z:3
+                            text: translate2CH?Trans.transEn2Ch(model.display):model.display
+                            verticalAlignment:Text.AlignHCenter
+                            wrapMode: Text.Wrap
+                            font.pixelSize: 11
+                            horizontalAlignment:Text.AlignRight
+                            anchors {
+                                top:filterDelegateImage.bottom
+                                topMargin:0
                             }
                         }
 
@@ -521,7 +437,7 @@ Rectangle {
                         ]
                     }
                     DropArea {
-                        anchors { fill: parent;margins: 15}
+                        anchors { fill: parent}
                         onEntered: {
                             visualModel.items.move(drag.source.visualIndex, delegateRoot.visualIndex)
                             changeOrder(drag.source.visualIndex, delegateRoot.visualIndex)

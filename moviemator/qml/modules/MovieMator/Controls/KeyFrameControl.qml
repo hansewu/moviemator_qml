@@ -30,7 +30,7 @@ import QtQuick.Dialogs 1.1
 Rectangle {
     id:keyFrame
 
-    color: 'transparent'//activePalette.window
+    color: 'transparent'
     width: parent.width
     height: 90
 
@@ -41,6 +41,9 @@ Rectangle {
     signal frameChanged(double keyFrameNum)
     signal removeKeyFrame()
     signal removeAllKeyFrame()
+
+    signal swichFoldStat(bool bChecked)
+    
 
     function refreshFrameButtonsEnable()
     {
@@ -67,23 +70,76 @@ Rectangle {
         }
     }
 
-    GroupBox{
+    Rectangle{
+        id:header
+        color: '#555555'
         width: parent.width
-        height: parent.height
-        title: " " + qsTr('Key Frame') + " "
-        //font.pixelSize: 15
-        flat:true
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            topMargin: 0
-            leftMargin: 10
-            rightMargin: 10
-            bottomMargin: 8
-        }
+        height: 30
         
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.topMargin:-10
+        
+        Button{
+            id: foldBtn
+            checkable:true
+            checked:false
+            width:15
+            height:15
+            anchors.right: parent.right
+            anchors.rightMargin:5
+            
+            anchors.verticalCenter: parent.verticalCenter
+            
+            style: ButtonStyle {
+                background: Rectangle {
+                    color: 'transparent'
+                }  
+            }
+            Image {
+                id:keyIcon
+                fillMode: Image.PreserveAspectCrop
+                anchors.fill: parent
+                source: "qrc:///icons/light/32x32/next_keyframe.png"
+                rotation:foldBtn.checked?90:270
+            }
+            onClicked: {
+                swichFoldStat(checked)
+            }
+        }
+        Rectangle{
+            id:headerRect
+            width: parent.width - foldBtn.width
+            height: parent.height
+            color: 'transparent'
+            
+            anchors.left: parent.left
+            anchors.leftMargin:5
+            anchors.top:parent.top
+            anchors.topMargin:7
+            Text {
+                width: contentWidth
+                height: parent.height
+                id: catName
+                text: qsTr("KeyFrame")
+                color: '#ffffff'
+                font.pixelSize: 14
+                z:2
+                anchors{
+                    left: parent.left
+                }
+            }
+        }
+    }
+
+    Rectangle{
+        id:body
+        color: 'transparent'
+        width: parent.width
+        height: 70
+        anchors.top: header.bottom
+        anchors.topMargin:0
+        visible:foldBtn.checked?true:false
         GridLayout {
             columns: 4
             CheckBox {
@@ -92,7 +148,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.leftMargin: 20
                 anchors.top: parent.top
-                anchors.topMargin: -5
+                anchors.topMargin: 5
                 text: qsTr('Enable Key Frames')
                 checked: (filter && filter.getKeyFrameNumber() > 0)
                 style: CheckBoxStyle {
@@ -169,11 +225,11 @@ Rectangle {
                 anchors {
                     top: autoAddKeyFrameCheckBox.bottom
                     left: parent.left
-                    leftMargin: 15
+                    leftMargin: 20
                     topMargin: 7
                 }
-                implicitWidth: 25
-                implicitHeight: 25
+                implicitWidth: 18
+                implicitHeight: 18
 
                 enabled: refreshFrameButtonsEnable() 
                 opacity: enabled ? 1.0 : 0.5
@@ -206,8 +262,8 @@ Rectangle {
                     leftMargin: 30
                     topMargin: 1
                 }
-                implicitWidth: 25
-                implicitHeight: 25
+                implicitWidth: 18
+                implicitHeight: 18
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Remove key frame')
@@ -249,8 +305,8 @@ Rectangle {
                     leftMargin: 30
                     topMargin: 1
                 }
-                implicitWidth: 25
-                implicitHeight: 25
+                implicitWidth: 18
+                implicitHeight: 18
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Prev key frame')
@@ -285,8 +341,8 @@ Rectangle {
                     leftMargin: 30
                     topMargin: 1
                 }
-                implicitWidth: 25
-                implicitHeight: 25
+                implicitWidth: 18
+                implicitHeight: 18
 
                 opacity: enabled ? 1.0 : 0.5
                 tooltip: qsTr('Next key frame')
@@ -314,9 +370,7 @@ Rectangle {
                 }
             }
         }
-
     }
-
     MessageDialog {
         id: removeKeyFrameWarning
         visible: false
@@ -332,9 +386,6 @@ Rectangle {
             enableKeyFrameCheckBox.checked = true  
         
     }
-
-
-
     Connections {
         target: filterDock
         onCurrentFilterChanged: {
@@ -350,44 +401,4 @@ Rectangle {
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }
-/*
-    Label {
-        text: qsTr('Key Frame :')
-        Layout.alignment: Qt.AlignRight
-        color: '#ffffff'
-        anchors {
-            left: parent.left
-            leftMargin: 5
-            bottom :addKeyFrameButton.bottom
-            bottomMargin: 9
-        }
-    }
-
-   
-
-    CustomFilterButton {
-        id:removeAllKeyFrameButton
-        anchors {
-            top: addKeyFrameButton.top
-            left: nextKeyFrameButton.right
-            leftMargin: 30
-            topMargin: 0
-        }
-        implicitWidth: 32
-        implicitHeight: 32
-
-        visible: false
-        enabled: filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip()) || filter.bHasNextKeyFrame(timeline.getPositionInCurrentClip())
-        opacity: enabled ? 1.0 : 0.5
-        tooltip: qsTr('Remove all key frame')
-        customIconSource: 'qrc:///icons/light/32x32/bg.png'
-        //customIconSource: enabled?'qrc:///icons/light/32x32/next_keyframe.png':'qrc:///icons/light/32x32/next_keyframe_disable.png'
-        customText: qsTr('Remove all')
-        buttonWidth : 100
-        onClicked: {
-            removeAllKeyFrame()
-        }
-    }
-    
-*/
 }

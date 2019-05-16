@@ -32,22 +32,24 @@ import Qt.labs.controls 1.0
 
 Rectangle {
     id: root
-
     
     signal currentFilterRequested(int attachedIndex)
     
-    function clearCurrentFilter() {
-        if (filterConfig.item) {
-            filterConfig.item.width = 1
-            filterConfig.item.height = 1
+    function clearCurrentFilter(index) {
+        if((attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo)||(index<0)){
+            if (filterConfig.item) {
+                filterConfig.item.width = 1
+                filterConfig.item.height = 1
+            }
+            filterConfig.source = ""
         }
-        filterConfig.source = ""
     }
     
     function setCurrentFilter(index) {
-        attachedFilters.setCurrentFilter(index)
-        // removeButton.selectedIndex = index
-        filterConfig.source = metadata ? metadata.qmlFilePath : ""
+        if(attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo){
+            attachedFilters.setCurrentFilter(index)
+            filterConfig.source = metadata ? metadata.qmlFilePath : ""
+        }
     }
 
     color: '#353535'//activePalette.window
@@ -81,69 +83,42 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: titleBackground
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            bottom: titleLabel.bottom
-            topMargin: 10
-            leftMargin: 10
-            rightMargin: 10
-        }
-        color: '#535353'
-        visible: attachedfiltersmodel.producerTitle != ""
-    }
-
-    Label {
-        id: titleLabel
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            topMargin: 10
-            leftMargin: 10
-            rightMargin: 10
-        }
-        text: attachedfiltersmodel.producerTitle
-        elide: Text.ElideLeft
-        color: activePalette.highlightedText
-        font.bold: true
-        horizontalAlignment: Text.AlignHCenter
+    Component.onCompleted: {
+        if(isVideo)
+            attachedFilters.isvideo = true
+        else
+            attachedFilters.isvideo = false
     }
 
     GridLayout {
         id: attachedContainer
         columns: 3
         // width: titleBackground.width
-        height: 100
+        height: 52
         anchors {
-            top: titleBackground.bottom
-            topMargin: 20
+            top: parent.top
+            topMargin: 2
             left: parent.left
-            leftMargin: 10
+            leftMargin: 2
             right:parent.right
-            rightMargin: 10
+            rightMargin: 2
         }
         Rectangle{
-            color: '#353535'
-            border.color: "black"
-            border.width: 1
+            color: 'transparent'
             anchors.fill: parent
-            anchors.topMargin: 5
             AttachedFilters {
                 id: attachedFilters
-                color:'transparent'
+                color:'#000000'
                 Layout.columnSpan: 3
-                height:parent.height - 4
+                height:parent.height
+                isvideo:isVideo
                 anchors {
                     top: parent.top
-                    topMargin: 2
+                    topMargin: 4
                     left: parent.left
-                    leftMargin: 2
+                    leftMargin: 3
                     right:parent.right
-                    rightMargin: 2
+                    rightMargin: 3
                 }
                 onFilterClicked: {
                     root.currentFilterRequested(index)
@@ -217,18 +192,19 @@ Rectangle {
             }
         }
     }
+
     Rectangle{
         id:keyFrameControlContainer
         color: '#353535'
         border.color: "black"
-        border.width: 1
-        height: 90
+        border.width: 0
+        height: 15
         // width:parent.width -10
         anchors {
             bottom: parent.bottom
             left: parent.left
             right: parent.right
-            leftMargin:10
+            leftMargin:0
             rightMargin:10
             bottomMargin:5
         }
@@ -237,50 +213,19 @@ Rectangle {
 
         KeyFrameControl {
             id: keyFrameControl
-            width:parent.width-4
-            height:parent.height+10
+            width:parent.width
+            height:parent.height
             anchors {
                 horizontalCenter: parent.horizontalCenter;
                 bottom: parent.bottom
             }
+            onSwichFoldStat: {
+                if(bChecked){
+                    keyFrameControlContainer.height = 90
+                }else{
+                    keyFrameControlContainer.height = 15
+                }
+            }
         }
     }
-    
-
-
-    // states: [
-    //     State {
-    //         name: "landscape"  // 左右结构
-    //         AnchorChanges {
-    //             target: filterConfigScrollView
-    //             anchors {
-    //                 top: titleBackground.bottom
-    //                 bottom: attachedContainer.bottom //root.bottom
-    //                 left: attachedContainer.right
-    //                 right: root.right
-    //             }
-    //         }
-    //         PropertyChanges {
-    //             target: attachedContainer; width: 120
-    //             height: root.height
-    //         }
-    //     },
-    //     State {
-    //         name: "portrait"  //上下结构
-    //         AnchorChanges {
-    //             target: filterConfigScrollView
-    //             anchors {
-    //                 top: attachedContainer.bottom
-    //                 bottom: keyFrameControl.top
-    //                 left: root.left
-    //                 right: root.right
-    //             }
-    //         }
-    //         PropertyChanges {
-    //             target: attachedContainer
-    //             width: titleBackground.width
-    //             height: 100
-    //         }
-    //     }
-    // ]
 }
