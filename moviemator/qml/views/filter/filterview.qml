@@ -94,7 +94,7 @@ Rectangle {
         id: attachedContainer
         columns: 3
         // width: titleBackground.width
-        height: 52
+        height: 72
         anchors {
             top: parent.top
             topMargin: 2
@@ -108,7 +108,7 @@ Rectangle {
             anchors.fill: parent
             AttachedFilters {
                 id: attachedFilters
-                color:'#000000'
+                color:'#464646'
                 Layout.columnSpan: 3
                 height:parent.height
                 isvideo:isVideo
@@ -123,11 +123,72 @@ Rectangle {
                 onFilterClicked: {
                     root.currentFilterRequested(index)
                 }
-                Label {
-                    anchors.centerIn: parent
-                    text: qsTr("Nothing selected")
-                    color: activePalette.text
+                ScrollView{
                     visible: !attachedfiltersmodel.isProducerSelected
+                    anchors.fill: parent
+                    horizontalScrollBarPolicy:Qt.ScrollBarAlwaysOn
+                    style: ScrollViewStyle {
+                        transientScrollBars: false
+                        minimumHandleLength:90
+                        handle: Item {
+                            implicitWidth: 14
+                            implicitHeight: 14
+                            Rectangle {
+                                color: "#787878"
+                                anchors.fill: parent
+                                anchors.margins: 3
+                                radius: 4
+                            }
+                        }
+                        scrollBarBackground: Item {
+                            implicitWidth: 14
+                            implicitHeight: 14
+                        }
+                        decrementControl: Rectangle {
+                                    implicitWidth: 0
+                                    implicitHeight: 0
+                        }
+                        incrementControl: Rectangle {
+                                    implicitWidth: 0
+                                    implicitHeight: 0
+                        }
+                        corner: Item {
+                            implicitWidth: 14
+                            implicitHeight: 14
+                        }
+                    }
+                    Rectangle{
+                        id:icon
+                        width:57
+                        height:parent.height
+                        anchors {
+                            left: parent.left
+                            leftMargin: 4
+                        }
+                        Image{
+                            id:emptyImg
+                            anchors.horizontalCenter : parent.horizontalCenter
+                            width: 57
+                            height: 30
+                            source: 'qrc:///icons/light/32x32/icon.jpg'
+                            anchors {
+                                top: parent.top
+                                topMargin: 4
+                            }
+                        }
+                        Text {
+                            height: 20
+                            anchors {
+                                top: emptyImg.bottom
+                                topMargin: 4
+                                left: emptyImg.left
+                                leftMargin: 0
+                            }
+                            text: qsTr("Nothing selected")
+                            color: '#ffffff'
+                            font.pixelSize: 12
+                        }
+                    }
                 }
             }
         }
@@ -171,7 +232,6 @@ Rectangle {
                     implicitWidth: 14
                     implicitHeight: 14
                 }
-
             }
 
         function expandWidth() {
@@ -199,7 +259,6 @@ Rectangle {
         border.color: "black"
         border.width: 0
         height: 15
-        // width:parent.width -10
         anchors {
             bottom: parent.bottom
             left: parent.left
@@ -210,7 +269,6 @@ Rectangle {
         }
         radius: 2//圆角
         visible: metadata && (metadata.keyframes.parameterCount > 0)
-
         KeyFrameControl {
             id: keyFrameControl
             width:parent.width
@@ -219,7 +277,7 @@ Rectangle {
                 horizontalCenter: parent.horizontalCenter;
                 bottom: parent.bottom
             }
-            onSwichFoldStat: {
+            onSwitchFoldStat: {
                 if(bChecked){
                     keyFrameControlContainer.height = 90
                 }else{

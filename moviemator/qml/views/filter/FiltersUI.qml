@@ -223,7 +223,7 @@ Rectangle {
                             height: 80
                             z:1
                             radius: 3 
-                            color: checked ? '#C0482C':'transparent'
+                            color: hoverStat?'#C0482C':'transparent'
                             property bool checked: (objectName == currentChoosed)?true:false
                             property bool hoverStat:false
                             Image {

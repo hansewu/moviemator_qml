@@ -264,6 +264,7 @@ Rectangle {
     
     ScrollView {
         anchors.fill: parent
+        horizontalScrollBarPolicy:Qt.ScrollBarAlwaysOn
         style: ScrollViewStyle {
             transientScrollBars: false
             //  scrollToClickedPosition:true
@@ -294,8 +295,8 @@ Rectangle {
         GridView {
             id: attachedFiltersView
             anchors.fill: parent
-            cellHeight:50
-            cellWidth:64
+            cellHeight:53
+            cellWidth:65
             flow:GridView.FlowTopToBottom
             topMargin:2
             displaced: Transition {
@@ -330,8 +331,8 @@ Rectangle {
                     Rectangle {
                         id: icon
                         z:2
-                        height: attachedFiltersView.cellHeight-8
-                        width: attachedFiltersView.cellWidth-8
+                        height: 46
+                        width: 57
                         anchors {
                             horizontalCenter: parent.horizontalCenter;
                             verticalCenter: parent.verticalCenter
@@ -343,7 +344,7 @@ Rectangle {
                             z:4
                             anchors{
                                 top:filterDelegateImage.top
-                                topMargin:-4
+                                topMargin:-2
                                 left:filterDelegateImage.left
                                 leftMargin:-1
                             }
@@ -355,8 +356,8 @@ Rectangle {
                             style: CheckBoxStyle {
                                 indicator: Rectangle {
                                     color:'transparent'
-                                    implicitWidth: 10
-                                    implicitHeight: 10
+                                    implicitWidth: 15
+                                    implicitHeight: 15
                                     radius: 3
                                     border.width: 0
                                     Image {
@@ -374,8 +375,8 @@ Rectangle {
                             }
                             tooltip: qsTr('Remove selected filter')
                             z:4
-                            width:10
-                            height:10
+                            width:15
+                            height:15
                             style: ButtonStyle {
                                 background: Rectangle {
                                     color:'transparent'
@@ -394,8 +395,8 @@ Rectangle {
                             id:filterDelegateImage
                             z:2
                             source: model.thumbnail
-                            width: parent.width
-                            height: 28
+                            width: 57
+                            height: 30
                             anchors {
                                 horizontalCenter: parent.horizontalCenter;
                                 top:parent.top
@@ -412,7 +413,7 @@ Rectangle {
                             horizontalAlignment:Text.AlignRight
                             anchors {
                                 top:filterDelegateImage.bottom
-                                topMargin:0
+                                topMargin:3
                             }
                         }
 

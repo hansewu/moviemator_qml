@@ -42,7 +42,7 @@ Rectangle {
     signal removeKeyFrame()
     signal removeAllKeyFrame()
 
-    signal swichFoldStat(bool bChecked)
+    signal switchFoldStat(bool bChecked)
     
 
     function refreshFrameButtonsEnable()
@@ -73,7 +73,7 @@ Rectangle {
     Rectangle{
         id:header
         color: '#555555'
-        width: parent.width
+        width: parent.width+10
         height: 30
         
         anchors.left: parent.left
@@ -86,9 +86,8 @@ Rectangle {
             checked:false
             width:15
             height:15
-            anchors.right: parent.right
-            anchors.rightMargin:5
-            
+            anchors.left: parent.left
+            anchors.leftMargin:11
             anchors.verticalCenter: parent.verticalCenter
             
             style: ButtonStyle {
@@ -100,36 +99,25 @@ Rectangle {
                 id:keyIcon
                 fillMode: Image.PreserveAspectCrop
                 anchors.fill: parent
-                source: "qrc:///icons/light/32x32/next_keyframe.png"
-                rotation:foldBtn.checked?90:270
+                source: foldBtn.checked?"qrc:///icons/light/32x32/arrow_1.png":"qrc:///icons/light/32x32/arrow_2.png"
             }
             onClicked: {
-                swichFoldStat(checked)
+                switchFoldStat(checked)
             }
         }
-        Rectangle{
-            id:headerRect
-            width: parent.width - foldBtn.width
-            height: parent.height
-            color: 'transparent'
-            
-            anchors.left: parent.left
-            anchors.leftMargin:5
-            anchors.top:parent.top
-            anchors.topMargin:7
-            Text {
-                width: contentWidth
-                height: parent.height
-                id: catName
-                text: qsTr("KeyFrame")
-                color: '#ffffff'
-                font.pixelSize: 14
-                z:2
-                anchors{
-                    left: parent.left
-                }
+        Text {
+            id: catName
+            text: qsTr("KeyFrame")
+            color: '#ffffff'
+            font.pixelSize: 14
+            z:2
+            anchors{
+                left: foldBtn.right
+                leftMargin:4
+                verticalCenter: parent.verticalCenter
             }
         }
+        
     }
 
     Rectangle{
@@ -146,9 +134,9 @@ Rectangle {
                 id: enableKeyFrameCheckBox
                 Layout.columnSpan: 4
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 24
                 anchors.top: parent.top
-                anchors.topMargin: 5
+                anchors.topMargin: 4
                 text: qsTr('Enable Key Frames')
                 checked: (filter && filter.getKeyFrameNumber() > 0)
                 style: CheckBoxStyle {
@@ -190,9 +178,9 @@ Rectangle {
                 id: autoAddKeyFrameCheckBox
                 Layout.columnSpan: 4
                 anchors.left: parent.left
-                anchors.leftMargin: 20
+                anchors.leftMargin: 24
                 anchors.top: enableKeyFrameCheckBox.bottom
-                anchors.topMargin: 0
+                anchors.topMargin: 4
                 text: qsTr('Auto Add Key Frames')
                 checked: true
                 opacity: enableKeyFrameCheckBox.checked ? 1.0 : 0.5
@@ -223,10 +211,10 @@ Rectangle {
             Button {
                 id:addKeyFrameButton
                 anchors {
-                    top: autoAddKeyFrameCheckBox.bottom
                     left: parent.left
-                    leftMargin: 20
-                    topMargin: 7
+                    leftMargin: 24
+                    top: autoAddKeyFrameCheckBox.bottom
+                    topMargin: 8
                 }
                 implicitWidth: 18
                 implicitHeight: 18
@@ -257,10 +245,10 @@ Rectangle {
             Button {
                 id:removeKeyFrameButton
                 anchors {
-                    top: addKeyFrameButton.top
                     left: addKeyFrameButton.right
-                    leftMargin: 30
-                    topMargin: 1
+                    leftMargin: 24
+                    top: addKeyFrameButton.top
+                    topMargin: 0
                 }
                 implicitWidth: 18
                 implicitHeight: 18
@@ -301,9 +289,9 @@ Rectangle {
                 id:preKeyFrameButton
                 anchors {
                     top: addKeyFrameButton.top
+                    topMargin: 0
                     left: removeKeyFrameButton.right
-                    leftMargin: 30
-                    topMargin: 1
+                    leftMargin: 24
                 }
                 implicitWidth: 18
                 implicitHeight: 18
@@ -337,9 +325,9 @@ Rectangle {
                 id:nextKeyFrameButton
                 anchors {
                     top: addKeyFrameButton.top
+                    topMargin: 0
                     left: preKeyFrameButton.right
-                    leftMargin: 30
-                    topMargin: 1
+                    leftMargin: 24
                 }
                 implicitWidth: 18
                 implicitHeight: 18
