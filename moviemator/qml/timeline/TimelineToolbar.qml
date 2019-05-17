@@ -494,7 +494,6 @@ ToolBar {
     // Add -滤镜菜单
     FilterMenu {
         id: filterMenu
-
         height: 400
         onFilterSelected: {
             var model = metadatamodel.get(index)
@@ -629,8 +628,10 @@ ToolBar {
         //iconSource: 'qrc:///timeline/timeline-toolbar-size-n.png'
         onTriggered: {
             console.assert(timeline);
-            if(timeline)
+            if(timeline){
                 timeline.addPositionAndSizeFilter()
+                mainwindow.onShowFilterDock()
+            }
         }
     }
 
@@ -642,21 +643,22 @@ ToolBar {
         enabled: hasClipOrTrackSelected
         onTriggered: {
             console.assert(timeline);
-            if(timeline)
+            if(timeline){
                 timeline.addRotateFilter()
+                mainwindow.onShowFilterDock()
+            }
         }
     }
 
     Action {
         id: cropAction
-   //     tooltip: qsTr('Change clip\'s position and size')
-        //iconName: 'posAndSize'
-        //iconSource: 'qrc:///timeline/timeline-toolbar-crop-n.png'
         enabled: hasClipOrTrackSelected
         onTriggered: {
             console.assert(timeline);
-            if(timeline)
+            if(timeline){
                 timeline.addCropFilter()
+                mainwindow.onShowFilterDock()
+            }
         }
     }
 
@@ -690,22 +692,19 @@ ToolBar {
 
     Action {
         id: volumeAction
-   //     tooltip: qsTr('Change clip\'s position and size')
-        //iconName: 'posAndSize'
-        //iconSource: 'qrc:///timeline/timeline-toolbar-volume-n.png'
         enabled: hasClipOrTrackSelected
         onTriggered: {
             console.assert(timeline);
-            if(timeline)
+            if(timeline){
                 timeline.addVolumeFilter()
+                mainwindow.onShowAudioFilterDock()
+            }
         }
     }
 
     Action {
         id: zoomOutAction
         tooltip: qsTr('Zoom out timeline')
-        //iconName: 'posAndSize'
-//        iconSource: 'qrc:///timeline/timeline-toolbar-zoomout.png'
         onTriggered: {
             flag = false
             // scaleSlider.value -= 0.1
@@ -735,8 +734,10 @@ ToolBar {
         enabled: hasClipOrTrackSelected
         onTriggered: {
             console.assert(timeline);
-            if(timeline)
+            if(timeline){
                 timeline.addTextFilter()
+                mainwindow.onShowFilterDock()
+            }
         }
     }
 
