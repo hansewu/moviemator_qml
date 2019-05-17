@@ -99,7 +99,7 @@ Rectangle {
                 id:keyIcon
                 fillMode: Image.PreserveAspectCrop
                 anchors.fill: parent
-                source: foldBtn.checked?"qrc:///icons/light/32x32/arrow_1.png":"qrc:///icons/light/32x32/arrow_2.png"
+                source: foldBtn.checked?"qrc:///icons/light/32x32/arrow_2.png":"qrc:///icons/light/32x32/arrow_1.png"
             }
             onClicked: {
                 switchFoldStat(checked)

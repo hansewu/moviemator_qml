@@ -81,7 +81,7 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 text: name
-                color: !freeVersion && !filterDock.proVersion ? activePalette.dark : '#ffffff' //activePalette.text//'#ffffff'//activePalette.text
+                // color: !freeVersion && !filterDock.proVersion ? activePalette.dark : '#ffffff' //activePalette.text//'#ffffff'//activePalette.text
                 verticalAlignment: Text.AlignVCenter
             }
             

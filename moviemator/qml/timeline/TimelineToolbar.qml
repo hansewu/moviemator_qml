@@ -497,7 +497,12 @@ ToolBar {
 
         height: 400
         onFilterSelected: {
-            attachedfiltersmodel.add(metadatamodel.get(index))
+            var model = metadatamodel.get(index)
+            if(model.isAudio)
+                mainwindow.onShowAudioFilterDock()
+            else
+                mainwindow.onShowFilterDock()
+            attachedfiltersmodel.add(model)
         }
     }
     // Add -end
@@ -743,7 +748,6 @@ ToolBar {
         onTriggered: {
             console.assert(timeline);
             if(timeline){
-                timeline.emitShowFilterDock();
                 filterMenu.popup(filterButton, timeline.dockPosition);
             }
         }

@@ -264,7 +264,6 @@ Rectangle {
     
     ScrollView {
         anchors.fill: parent
-        horizontalScrollBarPolicy:Qt.ScrollBarAlwaysOn
         style: ScrollViewStyle {
             transientScrollBars: false
             //  scrollToClickedPosition:true

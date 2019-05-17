@@ -108,7 +108,7 @@ Rectangle {
             anchors.fill: parent
             AttachedFilters {
                 id: attachedFilters
-                color:'#464646'
+                color:'#2e2e2e'
                 Layout.columnSpan: 3
                 height:parent.height
                 isvideo:isVideo
