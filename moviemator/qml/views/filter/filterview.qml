@@ -28,7 +28,7 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
 import QtQuick.Controls.Styles 1.4
-import Qt.labs.controls 1.0
+//import Qt.labs.controls 1.0
 
 Rectangle {
     id: root
