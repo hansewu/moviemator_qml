@@ -204,6 +204,9 @@ Rectangle {
             oldAudioId = audioFiltersList.get(index).id
         }
     }
+    function reLoadFilter(){
+        chooseFilter(getCurrentFilterIndex())
+    }
     
     GridView {
         id: dataView

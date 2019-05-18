@@ -52,6 +52,10 @@ Rectangle {
         }
     }
 
+    function reChooseFilter(){
+        attachedFilters.reLoadFilter()
+    }
+
     color: '#353535'//activePalette.window
     width: 400
 
