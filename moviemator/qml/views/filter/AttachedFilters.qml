@@ -35,6 +35,8 @@ Rectangle {
     id: attachedFilters
     color: '#353535'
     signal filterClicked(int index)
+    signal removeLastFilter(int index)
+    
     property var oldVideoId:''
     property var oldAudioId:''
     property bool draged: false
@@ -126,6 +128,8 @@ Rectangle {
         }
         attachedFiltersView.model.model.remove(index)
         dataView.model.model.remove(modelIndex)
+        if(attachedFiltersView.model.model.count <= 0)
+            removeLastFilter(modelIndex)
     }
     function changeOrder(sourceIndex,destinationIndex){
         sourceIndex = getModelIndex(sourceIndex)

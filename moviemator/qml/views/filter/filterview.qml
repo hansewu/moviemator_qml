@@ -123,6 +123,9 @@ Rectangle {
                 onFilterClicked: {
                     root.currentFilterRequested(index)
                 }
+                onRemoveLastFilter:{
+                    clearCurrentFilter(-1)
+                }
                 ScrollView{
                     visible: !attachedfiltersmodel.isProducerSelected
                     anchors.fill: parent
