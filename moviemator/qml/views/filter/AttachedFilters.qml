@@ -301,8 +301,8 @@ Rectangle {
         GridView {
             id: attachedFiltersView
             anchors.fill: parent
-            cellHeight:53
-            cellWidth:65
+            cellHeight:65
+            cellWidth:88
             flow:GridView.FlowTopToBottom
             topMargin:2
             displaced: Transition {
@@ -337,22 +337,22 @@ Rectangle {
                     Rectangle {
                         id: icon
                         z:2
-                        height: 46
-                        width: 57
+                        width: 80
+                        height: 61
                         anchors {
                             horizontalCenter: parent.horizontalCenter;
                             verticalCenter: parent.verticalCenter
                         }
-                        color: (attachedFiltersView.currentIndex == index)? activePalette.highlight :'transparent'
+                        color: 'transparent'
                         // radius: 3
                         CheckBox {
                             id: filterDelegateCheck
                             z:4
                             anchors{
-                                top:filterDelegateImage.top
-                                topMargin:-2
-                                left:filterDelegateImage.left
-                                leftMargin:-1
+                                bottom:filterDelegateImage.bottom
+                                bottomMargin:-2
+                                right:filterDelegateImage.right
+                                rightMargin:-8
                             }
                             checkedState: model.checkState
                             onClicked: {
@@ -368,7 +368,7 @@ Rectangle {
                                     border.width: 0
                                     Image {
                                         anchors.fill: parent
-                                        source:(icon.color==activePalette.highlight) ? (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select2-a.png' : 'qrc:///icons/filters/icon/filter_select2.png') : (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select-a.png' : 'qrc:///icons/filters/icon/filter_select.png')
+                                        source:(attachedFiltersView.currentIndex == index) ? (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select2-a.png' : 'qrc:///icons/filters/icon/filter_select2.png') : (filterDelegateCheck.checkedState ? 'qrc:///icons/filters/icon/filter_select-a.png' : 'qrc:///icons/filters/icon/filter_select.png')
                                     }
                                 }
                             }
@@ -377,7 +377,9 @@ Rectangle {
                             id:filterDelegateDelete
                             anchors{
                                 top:parent.top
+                                topMargin:-1
                                 right:parent.right
+                                rightMargin:-2
                             }
                             tooltip: qsTr('Remove selected filter')
                             z:4
@@ -389,7 +391,7 @@ Rectangle {
                                     anchors.fill: parent
                                     Image{
                                         anchors.fill: parent
-                                        source: filterDelegateDelete.pressed ? 'qrc:///icons/filters/icon/filter_remove-on.png' : 'qrc:///icons/filters/icon/filter_remove.png'
+                                        source: (attachedFiltersView.currentIndex == index)?(filterDelegateDelete.pressed ? 'qrc:///icons/filters/icon/filter_remove-on.png' : 'qrc:///icons/filters/icon/filter_remove.png'):''
                                     }
                                 }
                             }
@@ -401,8 +403,8 @@ Rectangle {
                             id:filterDelegateImage
                             z:2
                             source: model.thumbnail
-                            width: 57
-                            height: 30
+                            width: 80
+                            height: 45
                             anchors {
                                 horizontalCenter: parent.horizontalCenter;
                                 top:parent.top
@@ -419,10 +421,10 @@ Rectangle {
                             horizontalAlignment:Text.AlignRight
                             anchors {
                                 top:filterDelegateImage.bottom
-                                topMargin:3
+                                topMargin:0
                             }
                         }
-
+                        
                         Drag.active: delegateRoot.drag.active
                         Drag.source: delegateRoot
                         Drag.hotSpot.x: 36

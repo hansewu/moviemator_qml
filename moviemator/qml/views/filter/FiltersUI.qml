@@ -220,7 +220,7 @@ Rectangle {
                             id:id
                             objectName:index
                             width: 110
-                            height: 80
+                            height: 64
                             z:1
                             radius: 3 
                             color: hoverStat?'#C0482C':'transparent'
@@ -237,20 +237,19 @@ Rectangle {
                                     topMargin: 2
                                 }
                             }
-                            Text {
-                                height: 20
-                                anchors {
-                                    top: myIcon.bottom
-                                    topMargin: 3
-                                    left: myIcon.left
-                                    leftMargin: 5
-                                    horizontalCenter: parent.horizontalLeft
-                                }
-                                text: translate2CH?Trans.transEn2Ch(name):name
-                                color: '#ffffff'
-                                font.pixelSize: 9
+                        }
+                        Text {
+                            height: 20
+                            anchors {
+                                top: id.bottom
+                                topMargin: 3
+                                left: id.left
+                                leftMargin: 5
+                                horizontalCenter: parent.horizontalLeft
                             }
-                            
+                            text: translate2CH?Trans.transEn2Ch(name):name
+                            color: '#ffffff'
+                            font.pixelSize: 9
                         }
                         MouseArea {
                             anchors.fill: parent
