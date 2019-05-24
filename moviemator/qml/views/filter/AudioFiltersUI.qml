@@ -214,7 +214,7 @@ Rectangle {
                             }
                             text: name
                             color: '#ffffff'
-                            font.pixelSize: 9
+                            font.pixelSize: 12
                         }
                         MouseArea {
                             id:mouseArea

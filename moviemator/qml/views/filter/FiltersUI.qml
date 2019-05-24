@@ -193,12 +193,12 @@ Rectangle {
                             z:2
                             anchors{
                                 top:parent.top
-                                topMargin:2
+                                topMargin:1
                                 right:parent.right
-                                rightMargin:22
+                                rightMargin:21
                             }
                             // visible:id.checked ? true : false
-                            visible:id.hoverStat ? true : (id.checked ? true : false)
+                            visible:id.hoverStat ? true : false
                             checkable : true
                             onClicked:{
                                 addFilter(index)
@@ -249,7 +249,7 @@ Rectangle {
                             }
                             text: translate2CH?Trans.transEn2Ch(name):name
                             color: '#ffffff'
-                            font.pixelSize: 9
+                            font.pixelSize: 12
                         }
                         MouseArea {
                             anchors.fill: parent
