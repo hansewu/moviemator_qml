@@ -27,7 +27,7 @@ import MovieMator.Controls 1.0
 Rectangle {
     id: root
     color: "transparent"
-    property int repeaterItemWidth: 130
+    property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
 
@@ -158,9 +158,9 @@ Rectangle {
                             z:2
                             anchors{
                                 top:parent.top
-                                topMargin:2
+                                topMargin:1
                                 right:parent.right
-                                rightMargin:22
+                                rightMargin:21
                             }
                             // visible:id.checked ? true : false
                             visible:id.hoverStat ? true : (id.checked ? true : false)
@@ -184,7 +184,7 @@ Rectangle {
                         Rectangle{
                             id:id
                             objectName:index
-                            width: 110
+                            width: 94
                             height: 64
                             z:1
                             radius: 3 
@@ -194,7 +194,7 @@ Rectangle {
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
-                                width: 106
+                                width: 90
                                 height: 60
                                 source: imageSourcePath
                                 anchors {

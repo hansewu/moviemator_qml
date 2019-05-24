@@ -29,10 +29,11 @@ import 'translateTool.js' as Trans
 Rectangle {
     id: root
     color: "transparent"
-    property int repeaterItemWidth: 130
+    property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
-    property bool translate2CH: ("zh_CN" == Qt.locale().name)
+    // property bool translate2CH: ("zh_CN" == Qt.locale().name)
+    property bool translate2CH:false
     
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
@@ -183,8 +184,8 @@ Rectangle {
                     }
 
                     Rectangle{
-                        width: repeaterItemWidth
-                        height: repeaterItemHeight
+                        width: repeaterItemWidth//130
+                        height: repeaterItemHeight//96
                         color: 'transparent'
 
                         Button { 
@@ -219,7 +220,7 @@ Rectangle {
                         Rectangle{
                             id:id
                             objectName:index
-                            width: 110
+                            width: 94
                             height: 64
                             z:1
                             radius: 3 
@@ -229,7 +230,7 @@ Rectangle {
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
-                                width: 106
+                                width: 90
                                 height: 60
                                 source: imageSourcePath
                                 anchors {
