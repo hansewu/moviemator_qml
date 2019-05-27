@@ -939,11 +939,16 @@ RowLayout{
         filter.combineAllKeyFramePara();
         while(true) 
         {  
-            position = filter.getPreKeyFrameNum(position)
+//            position = filter.getPreKeyFrameNum(position)
+//            if(position == -1) break;
+//            
+//            filter.removeKeyFrameParaValue(position);
 
-            if(position == -1) break;
-            
-            filter.removeKeyFrameParaValue(position);
+            var frameCount = filter.getKeyFrameNumber()
+            if(frameCount <= 0) break;
+
+            filter.removeAllKeyFrame()
+
             filter.combineAllKeyFramePara();
             synchroData()
         }
