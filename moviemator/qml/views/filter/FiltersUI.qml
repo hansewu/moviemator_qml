@@ -32,8 +32,8 @@ Rectangle {
     property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
-    // property bool translate2CH: ("zh_CN" == Qt.locale().name)
-    property bool translate2CH:false
+    property bool translate2CH: ("zh_CN" == Qt.locale().name)
+    //property bool translate2CH:false
     
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
