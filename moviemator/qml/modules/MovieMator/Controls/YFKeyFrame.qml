@@ -78,7 +78,7 @@ RowLayout{
         }
 
         if(metadata.keyframes.parameters.length == 1)
-            filter.setInAndOut(0, timeline.getCurrentClipParentLength())
+            filter.setInAndOut(0, timeline.getCurrentClipParentLength()-1)
 
         //导入上次工程保存的关键帧
         //bBlockSignal = true
