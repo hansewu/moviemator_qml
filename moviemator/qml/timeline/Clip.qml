@@ -668,13 +668,14 @@ Rectangle {
         }
     }
 
+    // 显示左边裁剪的边界
     function showTrimInBracket(){
         trimInBracket.visible = true
         trimInBracket.z = 1
         trimInBracketTop.z = 1
         trimInBracketBottom.z = 1
     }
-
+    // 隐藏左边裁剪的边界
     function hideTrimInBracket(){
         trimInBracket.visible = false
         trimInBracket.z = 0
@@ -711,13 +712,14 @@ Rectangle {
         }
     }
 
+    // 显示右边裁剪的边界
     function showTrimOutBracket(){
         trimOutBracket.visible = true
         trimOutBracket.z = 1
         trimOutBracketTop.z = 1
         trimOutBracketBottom.z = 1
     }
-
+    // 隐藏右边裁剪的边界
     function hideTrimOutBracket(){
         trimOutBracket.visible = false
         trimOutBracket.z = 0

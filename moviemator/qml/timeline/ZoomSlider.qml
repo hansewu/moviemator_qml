@@ -41,7 +41,7 @@ Rectangle {
     // 滑动条
     Slider {
         id: slider
-        // 水平方向华东
+        // 水平方向滑动
         orientation: Qt.Horizontal
         // 样式
         style: SliderStyle {

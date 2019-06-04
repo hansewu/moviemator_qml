@@ -41,6 +41,7 @@ Rectangle{
         }
     }
 
+    // 关键帧指示图标缩放动画
     SequentialAnimation on scale {
         loops: 1//Animation.Infinite
         running: keyFrameMouseArea.containsMouse
@@ -57,7 +58,7 @@ Rectangle{
 //            easing.type: Easing.InOutQuad
 //        }
     }
-
+    // 关键帧指示图标缩放动画
     SequentialAnimation on scale {
         loops: 1//Animation.Infinite
         running: !keyFrameMouseArea.containsMouse

@@ -780,13 +780,13 @@ Rectangle {
             // for (var i = 0; i < trackHeaderRepeater.count; i++)
             //     trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
 
-            var selectedAClip = timeline.selectedAClip()
-            if (selectedAClip === true) {//如果选中clip则清除trackhead的选中状态
+            var isAClipSelected = timeline.isAClipSelected()
+            if (isAClipSelected === true) {//如果选中clip则清除trackhead的选中状态
                 for (var i = 0; i < trackHeaderRepeater.count; i++) {
                     trackHeaderRepeater.itemAt(i).selected = false
                 }
             }
-            if (selectedAClip === false)
+            if (isAClipSelected === false)
                 toolbar.hasClipOrTrackSelected = false
         }
     }
