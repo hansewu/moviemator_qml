@@ -18,6 +18,7 @@
 
 import QtQuick 2.2
 
+// CornerSelectionShadow的播放动画
 SequentialAnimation {
     property alias target: firstAnim.target
 

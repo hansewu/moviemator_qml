@@ -29,13 +29,19 @@ import 'Timeline.js' as Logic
 
 import "../views/filter"
 
+// 时间线工具栏菜单
 ToolBar {
+    // ？？？？
     property alias ripple: rippleButton.checked
+    // ？？？？
     property alias scrub: scrubButton.checked
+    // ？？？？
     property alias snap: snapButton.checked
+    // checkBox被选中的颜色？？？
     property color checkedColor: Qt.rgba(activePalette.highlight.r, activePalette.highlight.g, activePalette.highlight.b, 0.3)
+    // 时间线缩放的系数
     property alias scaleSliderValue: scaleSlider.value
-
+    // 是否有轨道或者剪辑被选中
     property bool hasClipOrTrackSelected:false
 
     // Add -时间线以鼠标为中心缩放，参数传递给 scaleSlider
@@ -106,6 +112,7 @@ ToolBar {
                 }
             }
 
+            // 增加（添加 clip到轨道上）
             CustomToolbutton {
                 customText: qsTr('Append')
                 action: appendAction
@@ -116,7 +123,7 @@ ToolBar {
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-append-p.png'
                 disabledIconSource: 'qrc:///timeline/timeline-toolbar-append-d.png'
             }
-
+            // 插入 clip到轨道上
             CustomToolbutton {
                 customText:qsTr('Insert')
                 action: insertAction
@@ -128,6 +135,7 @@ ToolBar {
                 disabledIconSource: 'qrc:///timeline/timeline-toolbar-insert-d.png'
             }
 
+            // 删除当前的 clip
             CustomToolbutton {
                 customText: qsTr('Delete')
                 action: deleteAction
@@ -140,6 +148,7 @@ ToolBar {
             }
 
 
+            // 在播放游标处切分 clip
             CustomToolbutton {
                 customText:qsTr('Split')
                 action: splitAction
@@ -161,6 +170,7 @@ ToolBar {
                 }
             }
 
+            // ？？？
             ToolButton {
                 id: snapButton
                 visible: false
@@ -194,6 +204,7 @@ ToolBar {
                 tooltip: qsTr('Ripple trim and drop')
                 text: qsTr('Ripple')
             }
+            // 添加改变大小滤镜
             CustomToolbutton {
                 id: posAndSizeButton
                 action: positionAndSizeAction
@@ -211,6 +222,7 @@ ToolBar {
                 disabledIconSource: 'qrc:///timeline/timeline-toolbar-size-d.png'
             }
 
+            // 添加旋转滤镜
             CustomToolbutton {
                 id: rotateButton
                 action: rotateAction
@@ -229,6 +241,7 @@ ToolBar {
                 disabledIconSource:'qrc:///timeline/timeline-toolbar-rotate-d.png'
             }
 
+            // 添加裁剪滤镜
             CustomToolbutton {
                 id: cropButton
                 action: cropAction
@@ -283,7 +296,7 @@ ToolBar {
                 pressedIconSource: 'qrc:///timeline/timeline-toolbar-fade-out-p.png'
             }
             */
-
+            // 添加音量滤镜
             CustomToolbutton {
                 id: volumeButton
                 action: volumeAction
@@ -301,6 +314,7 @@ ToolBar {
                 disabledIconSource:'qrc:///timeline/timeline-toolbar-volume-d.png'
             }
 
+            // 添加文字滤镜
             CustomToolbutton {
                 id: textButton
                 action: addTextAction
@@ -449,6 +463,7 @@ ToolBar {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 1
 
+        // 缩小时间线按钮
         Button {
             id: zoomOutButton
             style: ButtonStyle {
@@ -464,7 +479,7 @@ ToolBar {
             action: zoomOutAction
         }
 
-
+        // 放大时间线按钮
         Button {
             id: zoomInButton
             style: ButtonStyle {
@@ -480,6 +495,8 @@ ToolBar {
         }
     }
 
+    // 缩放时间线的滑动条
+    // 被隐藏了
     ZoomSlider {
         id: scaleSlider
         visible: false
@@ -506,6 +523,7 @@ ToolBar {
     }
     // Add -end
 
+    // 各个按钮功能
     Action {
         id: menuAction
         tooltip: qsTr('Display a menu of additional actions')
@@ -772,6 +790,7 @@ ToolBar {
 
     // Add -显示所有 Clips
     // 长度超过 scrollView就直接铺满整个 scrollView
+    // 名称是否要保持一致：zoomToFitAction
     Action {
         id: showAllClipsAction
         tooltip: qsTr("Show all clips")

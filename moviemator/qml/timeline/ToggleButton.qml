@@ -24,9 +24,15 @@ import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
 import MovieMator.Controls 1.0 as MovieMator
 
+// ？？？？
+// 没有地方用到
+// 切换什么功能的按钮
 CheckBox {
+    // 复选框名称
     property string iconName
+    // 复选框图标
     property url iconSource
+    // 复选框的小提示
     property alias tooltip: tooltip.text
 
     anchors.verticalCenter: parent.verticalCenter

@@ -25,22 +25,38 @@ import QtQuick.Controls.Styles 1.0
 import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0 as MovieMator
 
+// 轨道头
 Rectangle {
     id: trackHeadRoot
+    // 显示轨道的名称
     property string trackName: ''
+    // 轨道是否静音
     property bool isMute
+    // 轨道是否隐藏
     property bool isHidden
+    // 轨道的复合模式
     property int isComposite
+    // 轨道是否锁定
     property bool isLocked
+    // 轨道是否是视频轨道
     property bool isVideo
+    // 轨道是否是音频轨道
     property bool isAudio
+    // 轨道是否是文本轨道
     property bool isText
+    // 轨道的类型？？？
     property int trackType
+    // 轨道是否是滤镜轨道？
     property bool isFilter
+    // 轨道是否被选中
     property bool selected: false
+    // 轨道是否是当前轨道
     property bool current: false
+
+    // 轨道头被单击时发出的信号
     signal clicked()
 
+    // 点击被锁定的轨道时播放轨道头锁定按钮的缩放动画
     function pulseLockButton() {
         lockButtonAnim.restart();
     }
@@ -84,6 +100,7 @@ Rectangle {
         }
     ]
 
+    // 轨道头鼠标可以操作的区域
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
@@ -94,6 +111,7 @@ Rectangle {
                 menu.popup()
         }
     }
+    // 每一列轨道的轨道头
     Column {
         id: trackHeadColumn
         spacing: (trackHeadRoot.height < 60)? 0 : 6
@@ -229,7 +247,7 @@ Rectangle {
                 horizontalAlignment: Text.AlignHCenter
                 Layout.preferredWidth: 22
             }
-
+            // 静音按钮
             CheckBox {
                 id: muteButton
                 checked: isMute
@@ -266,7 +284,7 @@ Rectangle {
                 }
                 MovieMator.ToolTip { text: qsTr('Mute') }
             }
-
+            // 隐藏按钮
             CheckBox {
                     id: hideButton
                     visible: isVideo
@@ -304,7 +322,7 @@ Rectangle {
                    }
                    MovieMator.ToolTip { text: qsTr('Hide') }
             }
-
+            // 锁定按钮
             CheckBox {
                 id: lockButton
                 checked: isLocked

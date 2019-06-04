@@ -31,41 +31,74 @@ import 'Track.js' as Logic
 
 Rectangle {
     id: clipRoot
+    // clip名称
     property string clipName: ''
+    // clip的资源
     property string clipResource: ''
+    // mltService？？？
     property string mltService: ''
+    // 入点
     property int inPoint: 0
+    // 出点
     property int outPoint: 0
+    // clip的持续时间（时长）
     property int clipDuration: 0
+    // clip是否为空白
     property bool isBlank: false
+    // clip是否为音频
     property bool isAudio: false
+    // clip是否为转场
     property bool isTransition: false
+    // clip是否为文本
     property bool isText: false
+    // 文本缩略图？
     property string textThumbnail: ''
+    // 音量高低？
     property var audioLevels
+    // 淡入时长
     property int fadeIn: 0
+    // 淡出时长
     property int fadeOut: 0
+    // clip所在的轨道序号
     property int trackIndex
+    // clip所在的原始轨道序号
     property int originalTrackIndex: trackIndex
+    // clip的原始剪辑 clip序号
     property int originalClipIndex: index
+    // clip的原始位置（x坐标）
     property int originalX: x
+    // clip是否被选中
     property bool selected: false
+    // clip的 hash码
     property string hash: ''
+    // clip播放速度
     property double speed: 1.0
+    // clip上是否有滤镜
     property bool hasFilter: false
+    // clip是否为动画标签？？？？？
     property bool isAnimSticker: false
 
 
+    // clip单击信号
     signal clicked(var clip)
+    // clip移动信号
     signal moved(var clip)
+    // clip被拖动信号
     signal dragged(var clip, var mouse)
+    // clip被放置信号
     signal clipdropped(var clip)
+    // clip被拖放到轨道信号
     signal draggedToTrack(var clip, int direction)
+    // 修剪？？？
     signal trimmingIn(var clip, real delta, var mouse)
+    // 修剪？？？
     signal trimmedIn(var clip)
+    // 修剪？？？
     signal trimmingOut(var clip, real delta, var mouse)
+    // 修剪？？？
     signal trimmedOut(var clip)
 
+    // 调色板
     SystemPalette { id: activePalette }
     gradient: Gradient {
         GradientStop {
@@ -82,6 +115,9 @@ Rectangle {
     }
 
 
+    /*
+     * clip背景框
+     */
     border.color: selected? 'white' : backgroundColor // 'transparent'
     border.width: isBlank? 0 : selected ? 2 : 1
     clip: true
@@ -89,17 +125,20 @@ Rectangle {
     Drag.proposedAction: Qt.MoveAction
     opacity: Drag.active? 0.5 : 1.0
 
+    // clip的背景色
     function getColor() {
 //        return isBlank? 'transparent' : isTransition? 'mediumpurple' : isAudio? 'darkseagreen' : root.moviematorBlue
         // return isBlank? 'transparent' : isTransition? '#8c953f' : isAudio? '#2a5733' : '#2f798f'
         return isBlank? 'transparent' : isTransition? '#8c953f' : '#0F7267'
     }
 
+    // clip被选中时的背景色
     function getSelectedColor() {
         // return isBlank? 'transparent' : isTransition? '#8c953f': isAudio? '#419f51' : '#2eb9df'
         return isBlank? 'transparent' : isTransition? '#8c953f': '#C0482C'
     }
 
+    // 重定位所在轨道为轨道 track
     function reparent(track) {
         console.assert(track);
         if(!track) return;
@@ -110,10 +149,12 @@ Rectangle {
      //   generateWaveform()
     }
 
+    // 终止拖动
     function cancelDrag() {
         Drag.active = false
     }
 
+    // 生成 clip的波形
     function generateWaveform() {
         // This is needed to make the model have the correct count.
         // Model as a property expression is not working in all cases.
@@ -127,6 +168,8 @@ Rectangle {
             waveformRepeater.itemAt(0).update()
     }
 
+    // clip的缩略图
+    // 传递 time调用C++函数生成缩略图缓存
     function imagePath(time) {
         // 当 hash、mltService、clipResource都没有有效值时不应该有缩略图，消除警告
         if (isAudio || isBlank || isTransition || (hash=='' && mltService=='' && clipResource=='')) {
@@ -136,8 +179,10 @@ Rectangle {
         }
     }
 
+    // 响应音量调整信号的槽函数
     onAudioLevelsChanged: generateWaveform()
 
+    // 出点位置的 clip缩略图
     Image {
         id: outThumbnail
         visible: settings.timelineShowThumbnails
@@ -153,6 +198,7 @@ Rectangle {
         source: isText ? textThumbnail : imagePath(outPoint)
     }
 
+    // 入点位置的 clip缩略图
     Image {
         id: inThumbnail
         visible: settings.timelineShowThumbnails
@@ -168,6 +214,7 @@ Rectangle {
         source: isText ? textThumbnail : imagePath(inPoint)
     }
 
+    // clip中间位置的缩略图
     Image {
         id: centerThumbnail
         visible: settings.timelineShowThumbnails
@@ -184,6 +231,7 @@ Rectangle {
         source: isText ? textThumbnail : imagePath((outPoint+inPoint)/2)
     }
 
+    // 转场
     TimelineTransition {
         visible: isTransition
         anchors.fill: parent
@@ -192,6 +240,7 @@ Rectangle {
         colorB: color//clipRoot.selected ? Qt.darker(color) : Qt.lighter(color)
     }
 
+    // clip被选中时的矩形边框
     Rectangle { // selected border
         z: 1
         visible: selected && !isBlank
@@ -201,6 +250,7 @@ Rectangle {
         border.color: '#DE9690'  // 'white'
     }
 
+    // clip的矩形边框
     Rectangle { // border
         z: 1
         visible: !selected && !isBlank
@@ -210,7 +260,7 @@ Rectangle {
         border.color: '#1A4540'     // backgroundColor
     }
 
-
+    // 波形
     Row {
         id: waveform
         visible: !isBlank && settings.timelineShowWaveforms
@@ -279,6 +329,7 @@ Rectangle {
 //        source: 'qrc:///icons/light/32x32/show-filters.png'
 //    }
 
+    // 显示 clip名称的文本框
     Text {
         id: label
         text: clipName
@@ -329,6 +380,7 @@ Rectangle {
     ]
 
 
+    // clip的左键选中用的 MouseArea
     MouseArea {
         id: mouseArea
         anchors.fill: parent
@@ -393,6 +445,8 @@ Rectangle {
                 mainwindow.setMultitrackAsCurrentProducer()
         }
     }
+
+    // Clip的右键操作用的 MouseArea
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
@@ -415,6 +469,7 @@ Rectangle {
         }
     }
 
+    // 使用的地方都已经被注释了
     TimelineTriangle {
         id: fadeInTriangle
         visible: !isBlank && !isTransition
@@ -498,6 +553,7 @@ Rectangle {
 //        }
 //    }
 
+    // 使用的地方也被注释了
     TimelineTriangle {
         id: fadeOutCanvas
         visible: !isBlank && !isTransition
@@ -670,6 +726,7 @@ Rectangle {
     }
     // Add -End
 
+    // 左侧入点的裁剪框框
     Rectangle {
         id: trimIn
         enabled: !isBlank && !isTransition
@@ -731,6 +788,7 @@ Rectangle {
         }
     }
 
+    // 右侧出点的裁剪框框
     Rectangle {
         id: trimOut
         enabled: !isBlank && !isTransition
@@ -789,6 +847,7 @@ Rectangle {
         }
     }
 
+    // clip如果有滤镜的话，在 clip左上角显示的 fx图标的黑色图片
     Rectangle {
         id :showFilter
         visible: !isBlank && hasFilter
@@ -801,6 +860,7 @@ Rectangle {
         color: 'black'
         radius: 3
 
+        // fx图标
         Image {
             id: filterImage
             source: 'qrc:///icons/light/32x32/show-filters.png'
@@ -811,6 +871,7 @@ Rectangle {
 
     }
 
+    // 在 clip下方显示关键帧的灰色背景
     Rectangle {
         visible: !isBlank && selected && currentFilter && currentFilter.keyframeNumber > 0
         height: parent.height / 2
@@ -874,6 +935,7 @@ Rectangle {
 
 //    }
 
+    // 右键 clip弹出的菜单
     Menu {
         id: menu
 //        MenuItem {
@@ -881,6 +943,7 @@ Rectangle {
 //            text: qsTr('Remove')
 //            onTriggered: timeline.remove(trackIndex, index)
 //        }
+        // 裁剪菜单
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Cut')
@@ -895,6 +958,7 @@ Rectangle {
                 }
             }
         }
+        // 复制菜单
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Copy')
@@ -904,9 +968,11 @@ Rectangle {
                     timeline.copyClip(trackIndex, index)
             }
         }
+        // 菜单分割线
         MenuSeparator {
             visible: !isBlank && !isTransition
         }
+        // 移除菜单
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Remove')
@@ -916,6 +982,8 @@ Rectangle {
                     timeline.lift(trackIndex, index)
             }
         }
+        // 波纹删除菜单
+        // 删除非转场的 clip（包括空白的）
         MenuItem {
             visible: !isTransition
             text: qsTr('Ripple Delete')
@@ -926,9 +994,11 @@ Rectangle {
             }
         }
 
+        // 菜单分割线
         MenuSeparator {
             visible: !isBlank && !isTransition
         }
+        // 在播放游标处切分菜单
         MenuItem {
             visible: !isBlank && !isTransition
             text: qsTr('Split At Playhead (S)')
@@ -962,6 +1032,7 @@ Rectangle {
                     timeline.onShowProperties(trackIndex, index)
             }
         }
+        // 移除菜单（只对转场有效）
         MenuItem {
             visible: isTransition
             text:qsTr('Remove')
@@ -973,6 +1044,8 @@ Rectangle {
         }
 
 
+       // 文本设置菜单？？？
+       // 文本文件？？？
        MenuItem {
            visible: isText
             text:qsTr('Text Settings')

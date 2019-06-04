@@ -23,12 +23,17 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 
+// 时间线上方的刻度尺
 Rectangle {
     //property int stepSize: 34
+    // 显示的时间线最左边的位置
     property real startX: 0
+    // 时间线缩放因子
     property real timeScale: 1.0
 
+    // MovieMator当前的帧数值
     property real frames: profile.fps
+
 
     property real minimalStepSize: 25   //50 // 太小了刷新比较卡
     property real stepSize: frames * timeScale
@@ -83,6 +88,7 @@ Rectangle {
     }
     */
     // 把 Repeater改成ListView
+    // 显示刻度值和刻度线
     ListView {
         anchors.fill: parent
         anchors.bottom: parent.bottom
@@ -93,6 +99,7 @@ Rectangle {
         delegate: Item {
             height: parent.height
             //anchors.bottom: parent.bottom
+            // 刻度线
             Rectangle {
                 anchors.bottom: parent.bottom
                 height: (Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % timecodeInterval)? ((Math.round(( startX + markStartX + index * stepSize * stepRatio) / (stepSize * stepRatio)) % 2) ? 3 : 7) : 14
@@ -101,6 +108,7 @@ Rectangle {
                 x: markStartX + index * stepSize * stepRatio//index * frames * timeScale * factor/interval // index * stepSize
             }
 
+            // 刻度值
             Label {
                 anchors.top: parent.top
                 anchors.topMargin: 5
@@ -115,6 +123,7 @@ Rectangle {
             }
 
             // 把帧数不为 0的强制显示成 0
+            // 刻度值取整
             function convertTimeValue(str){
                 if(Math.floor(frames)==frames){
                     return str;
