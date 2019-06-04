@@ -515,9 +515,9 @@ ToolBar {
         onFilterSelected: {
             var model = metadatamodel.get(index)
             if(model.isAudio)
-                mainwindow.onShowAudioFilterDock()
+                mainwindow.onShowPropertiesAudioFilterDock()
             else
-                mainwindow.onShowFilterDock()
+                mainwindow.onShowPropertiesVideoFilterDock()
             attachedfiltersmodel.add(model)
         }
     }
@@ -648,7 +648,7 @@ ToolBar {
             console.assert(timeline);
             if(timeline){
                 timeline.addPositionAndSizeFilter()
-                mainwindow.onShowFilterDock()
+                mainwindow.onShowPropertiesVideoFilterDock()
             }
         }
     }
@@ -663,7 +663,7 @@ ToolBar {
             console.assert(timeline);
             if(timeline){
                 timeline.addRotateFilter()
-                mainwindow.onShowFilterDock()
+                mainwindow.onShowPropertiesVideoFilterDock()
             }
         }
     }
@@ -675,7 +675,7 @@ ToolBar {
             console.assert(timeline);
             if(timeline){
                 timeline.addCropFilter()
-                mainwindow.onShowFilterDock()
+                mainwindow.onShowPropertiesVideoFilterDock()
             }
         }
     }
@@ -715,7 +715,7 @@ ToolBar {
             console.assert(timeline);
             if(timeline){
                 timeline.addVolumeFilter()
-                mainwindow.onShowAudioFilterDock()
+                mainwindow.onShowPropertiesAudioFilterDock()
             }
         }
     }
@@ -754,7 +754,7 @@ ToolBar {
             console.assert(timeline);
             if(timeline){
                 timeline.addTextFilter()
-                mainwindow.onShowFilterDock()
+                mainwindow.onShowPropertiesVideoFilterDock()
             }
         }
     }
