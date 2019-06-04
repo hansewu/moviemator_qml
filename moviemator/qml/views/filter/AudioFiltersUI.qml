@@ -27,7 +27,7 @@ import MovieMator.Controls 1.0
 Rectangle {
     id: root
     color: "transparent"
-    property int repeaterItemWidth: 130
+    property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
 
@@ -158,9 +158,9 @@ Rectangle {
                             z:2
                             anchors{
                                 top:parent.top
-                                topMargin:2
+                                topMargin:1
                                 right:parent.right
-                                rightMargin:22
+                                rightMargin:21
                             }
                             // visible:id.checked ? true : false
                             visible:id.hoverStat ? true : (id.checked ? true : false)
@@ -175,7 +175,7 @@ Rectangle {
                                     color: "transparent" 
                                     Image{ 
                                         anchors.fill: parent 
-                                        source: control.hovered ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : 'qrc:///icons/light/32x32/filter_add.png' ; 
+                                        source: id.hoverStat ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : '' ; 
                                     } 
                                 } 
                             } 
@@ -184,8 +184,8 @@ Rectangle {
                         Rectangle{
                             id:id
                             objectName:index
-                            width: 110
-                            height: 80
+                            width: 94
+                            height: 64
                             z:1
                             radius: 3 
                             color: hoverStat ? '#C0482C':'transparent'
@@ -194,7 +194,7 @@ Rectangle {
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
-                                width: 106
+                                width: 90
                                 height: 60
                                 source: imageSourcePath
                                 anchors {
@@ -202,22 +202,22 @@ Rectangle {
                                     topMargin: 2
                                 }
                             }
-                            Text {
-                                height: 20
-                                anchors {
-                                    top: myIcon.bottom
-                                    topMargin: 3
-                                    left: myIcon.left
-                                    leftMargin: 5
-                                    horizontalCenter: parent.horizontalLeft
-                                }
-                                text: name
-                                color: '#ffffff'
-                                font.pixelSize: 9
+                        }
+                        Text {
+                            height: 20
+                            anchors {
+                                top: id.bottom
+                                topMargin: 3
+                                left: id.left
+                                leftMargin: 5
+                                horizontalCenter: parent.horizontalLeft
                             }
-                            
+                            text: name
+                            color: '#ffffff'
+                            font.pixelSize: 12
                         }
                         MouseArea {
+                            id:mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
                             preventStealing:true

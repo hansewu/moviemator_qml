@@ -29,10 +29,11 @@ import 'translateTool.js' as Trans
 Rectangle {
     id: root
     color: "transparent"
-    property int repeaterItemWidth: 130
+    property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property var currentChoosed : 0
     property bool translate2CH: ("zh_CN" == Qt.locale().name)
+    //property bool translate2CH:false
     
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
@@ -183,8 +184,8 @@ Rectangle {
                     }
 
                     Rectangle{
-                        width: repeaterItemWidth
-                        height: repeaterItemHeight
+                        width: repeaterItemWidth//130
+                        height: repeaterItemHeight//96
                         color: 'transparent'
 
                         Button { 
@@ -193,12 +194,12 @@ Rectangle {
                             z:2
                             anchors{
                                 top:parent.top
-                                topMargin:2
+                                topMargin:1
                                 right:parent.right
-                                rightMargin:22
+                                rightMargin:21
                             }
                             // visible:id.checked ? true : false
-                            visible:id.hoverStat ? true : (id.checked ? true : false)
+                            visible:id.hoverStat ? true : false
                             checkable : true
                             onClicked:{
                                 addFilter(index)
@@ -219,8 +220,8 @@ Rectangle {
                         Rectangle{
                             id:id
                             objectName:index
-                            width: 110
-                            height: 80
+                            width: 94
+                            height: 64
                             z:1
                             radius: 3 
                             color: hoverStat?'#C0482C':'transparent'
@@ -229,7 +230,7 @@ Rectangle {
                             Image {
                                 id: myIcon
                                 anchors.horizontalCenter : parent.horizontalCenter
-                                width: 106
+                                width: 90
                                 height: 60
                                 source: imageSourcePath
                                 anchors {
@@ -237,20 +238,19 @@ Rectangle {
                                     topMargin: 2
                                 }
                             }
-                            Text {
-                                height: 20
-                                anchors {
-                                    top: myIcon.bottom
-                                    topMargin: 3
-                                    left: myIcon.left
-                                    leftMargin: 5
-                                    horizontalCenter: parent.horizontalLeft
-                                }
-                                text: translate2CH?Trans.transEn2Ch(name):name
-                                color: '#ffffff'
-                                font.pixelSize: 9
+                        }
+                        Text {
+                            height: 20
+                            anchors {
+                                top: id.bottom
+                                topMargin: 3
+                                left: id.left
+                                leftMargin: 5
+                                horizontalCenter: parent.horizontalLeft
                             }
-                            
+                            text: translate2CH?Trans.transEn2Ch(name):name
+                            color: '#ffffff'
+                            font.pixelSize: 12
                         }
                         MouseArea {
                             anchors.fill: parent

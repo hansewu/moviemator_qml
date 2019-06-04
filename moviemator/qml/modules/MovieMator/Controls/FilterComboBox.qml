@@ -53,7 +53,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 // font.family: "Courier"
                 // font.capitalization: Font.SmallCaps
-                font.pixelSize: 10
+                font.pixelSize: 12
                 color: "white"
                 text: comboButton.text
             }
@@ -84,7 +84,7 @@ Item {
                 renderType: Text.NativeRendering
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-                font.pixelSize: 10
+                font.pixelSize: 12
                 color: "white"
                 elide: Text.ElideMiddle
                 text: typename

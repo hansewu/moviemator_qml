@@ -10,7 +10,7 @@ var EN_CH_list = [
     ,{"English":"c0rners","Chinese":"四角几何引擎落"}
     ,{"English":"cairogradient","Chinese":"图像渐变"}
     ,{"English":"cairoimagegrid","Chinese":"图像网格"}
-    ,{"English":"Cartoon","Chinese":"动画"}
+    ,{"English":"Cartoon","Chinese":"卡通"}
     ,{"English":"Color Distance","Chinese":"色彩距离"}
     ,{"English":"coloradj_RGB","Chinese":"RGB颜色"}
     ,{"English":"colorhalftone","Chinese":"颜色半色调"}

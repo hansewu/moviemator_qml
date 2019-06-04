@@ -29,6 +29,12 @@ RowLayout{
     id: keyFrame
     visible: false
     
+    /** the animation’s enable state to the value specified by bEnable. 
+     * 更新关键帧功能是否开启bEnable，同时向QmlFilter对象中保存了当前动画功能是否激活。当动画激活时，可以增加关键帧设置动画，当动画没有激活时，不可以添加关键帧，不能给滤镜添加动画效果。
+     *
+     * \param bEnable the animation is enable or not
+     * \return the animation's enable state
+     */
     function updateEnableKeyFrame(bEnable)
     {
         bEnableKeyFrame = bEnable
@@ -38,6 +44,12 @@ RowLayout{
         return bEnableKeyFrame
     }
 
+    /** update the Auto add keyframes function’s enable state to the value specified by bEnable.
+     * 更新自动设置关键帧功能为bEnable，同时向QmlFilter对象中保存了当前自动更新关键帧的功能是否激活
+     *
+     * \param bEnable enables the Auto add keyframes function or not
+     * \return the Auto add keyframes function’s enable state
+     */
     function updateAutoSetAsKeyFrame(bEnable)
     {
         bAutoSetAsKeyFrame = bEnable
@@ -47,18 +59,31 @@ RowLayout{
         return bAutoSetAsKeyFrame
     }
 
+    // A Boolean value that indicates whether the animation is enable state.
     property bool bEnableKeyFrame: updateEnableKeyFrame((filter.getKeyFrameNumber() > 0))
+    
+    // A Boolean value that indicates whether the auto add keyframes function is on.
     property bool bAutoSetAsKeyFrame: updateAutoSetAsKeyFrame(true)
     
+    // The current frame number. 当前的帧数
     property double currentFrame: 0
+
+    // A Boolean value that indicates whether the frame is the key frame. 当前帧是否是关键帧
     property bool bKeyFrame: false
 
+    // 屏蔽信号，主要用到当一个filter 有几个参数时，当一个参数set时，可能会出现加载更新界面，或获取所有参数，还未来得及设置的参数出现了获取新的值，改变了参数。filter的几个参数set的过程中，屏蔽信号，不调用loadframe，等加载完了，再处理。
     property bool bBlockSignal: false
 
+    //存rect 变量，应该可以不用作为成员变量，可以在使用的地方使用局部变量
     property rect colorRect
 
+    //同步数据信号，这里这个信号的响应主要是同步界面数值到project中，mlt底层
     signal synchroData()
+
+    //加载keyframe信号，这里主要用到的是同步数据值到界面中
     signal loadKeyFrame()
+
+    // 目前只有string 类型的参数用到
     function findDefaultIndex(strValue,modelList){
         if(modelList.length <= 0){
             return 0
@@ -71,7 +96,8 @@ RowLayout{
         }
         return 0
     }
-    // 滤镜初始化
+
+    // 滤镜初始化，正常是滤镜参数界面加载完调用，更新滤镜参数界面的初始化显示
     function initFilter(layoutRoot){
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
             throw new Error("metadata is abnormal")
@@ -175,7 +201,7 @@ RowLayout{
         loadKeyFrame()
     }
 
-    // 控件发生修改时反应
+    // 控件发生修改时响应的函数，更新filter的某个参数值，主要调用filter.setKeyFrame 和 filter.set
     function controlValueChanged(id){
         if(typeof id == 'undefined'){
             throw new Error("id is undefined:"+id)
@@ -336,6 +362,7 @@ RowLayout{
         property int position: 0 
     }
 
+    //弹出 显示自动增加关键信息的提示界面
     function showAddFrameInfo(position)
     {
         if (bAutoSetAsKeyFrame == false) return
@@ -345,7 +372,7 @@ RowLayout{
         addFrameInfoDialog.position = position
     }
 
-    // 添加为关键帧
+    // 在当前浮标尺所在位置添加为关键帧，如果添加的是第一帧，自动在首尾位置添加关键帧
     function addKeyFrameValue(){
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
             throw new Error("metadata is abnormal")
@@ -428,7 +455,7 @@ RowLayout{
         showAddFrameInfo(position)
     }
 
-    //帧位置改变时加载控件参数
+    //帧位置改变时加载控件参数，从mlt底层读取数据更新到界面上
     function loadFrameValue(layoutRoot){
         if(typeof layoutRoot == 'undefined'){
             throw new Error("layoutRoot is undefined:"+layoutRoot)
@@ -479,7 +506,7 @@ RowLayout{
             paramIndex = paramIndex + paramList.length -1
         }
     }
-    // 数据写入，将控件的数值set到filter里面
+    // 数据写入，将控件的数值set到filter里面，将界面参数值更新到project中
     function setDatas(layoutRoot){
         if(typeof layoutRoot == 'undefined'){
             throw new Error("layoutRoot is undefined:"+layoutRoot)
@@ -543,6 +570,7 @@ RowLayout{
         bBlockSignal = false
     }
 
+    // 清除filter的动画状态，当没有keyframe时处理所有的filter 属性参数reset 清空  更改成切换动画非动画更好。
     function clearAllFilterAnimationStatus() {
         if(filter.getKeyFrameNumber() > 0) return 
 
@@ -557,6 +585,7 @@ RowLayout{
         }
     }
 
+    //弃用的函数
     function resetAnim2No(layoutRoot){
         if(typeof layoutRoot == 'undefined'){
             throw new Error("layoutRoot is undefined:"+layoutRoot)
@@ -601,7 +630,7 @@ RowLayout{
         }
     }
     //加减乘除 分别用 + - x c 被除b，对数log，指数pow
-    // 控件到程序的写入保存计算
+    // 控件到project mlt底层的写入保存计算
     function saveValueCalc(value,factorFunc){
         var rt = value
         for(var i=0;i<factorFunc.length;i++){
@@ -646,7 +675,7 @@ RowLayout{
         }
         return rt;
     }
-    // 程序到控件参数的加载计算，刚好与写入保存相反
+    // project mlt底层到控件参数的加载计算，刚好与写入保存相反
     function loadValueCalc(value,factorFunc){
         var rt = value
         for(var i=factorFunc.length-1;i>=0;i--){
@@ -690,7 +719,7 @@ RowLayout{
         }
         return rt;
     }
-    // 根据objectName和root节点查找子节点
+    // 根据objectName和root节点查找root的孩子节点中objectName为objectName的子节点
     function findControl(objectName,root){
         if((typeof root == 'undefined')||(typeof root.children == 'undefined')){
             throw new Error("root is abnormal:"+root)
@@ -714,13 +743,14 @@ RowLayout{
         }
         return null;
     }
+    // 对象是否有children，此函数命名不合理
     function isEmptyObject(obj) {
       for (var key in obj) {
         return false;
       }
       return true;
     }
-    // 根据控件id查找配置项
+    // 根据控件id查找配置项，查找对应哪几个参数，因为会有一个控件对应几个参数
     function findParameter(id){
         if((typeof id == 'undefined')||(typeof id.objectName == 'undefined')){
             throw new Error("id is abnormal:"+id)
@@ -788,6 +818,8 @@ RowLayout{
             }
         }
     }
+
+    // 加载Checkbox数据，从mlt读取数据更新到界面
     function loadControlCheckbox(control,paramIndex){
         if((typeof control == 'undefined')||(typeof control.checked == 'undefined')){
             throw new Error("control is abnormal:"+control)
@@ -815,6 +847,8 @@ RowLayout{
             control.checked = parameter.value = Boolean(tempValue)
         }
     }
+
+    // 加载ColorWheel数据，从mlt读取数据更新到界面
     function loadControlColorWheel(control,paramIndex1,paramIndex2,paramIndex3){
         if((typeof control == 'undefined')||(typeof control.color == 'undefined')){
             throw new Error("control is abnormal:"+control)
@@ -857,6 +891,8 @@ RowLayout{
         
         
     }
+
+    // 加载ColorPicker数据，从mlt读取数据更新到界面
     function loadColorPicker(control,paramIndex){
         if((typeof control == 'undefined')||(typeof control.value == 'undefined')){
             throw new Error("control is abnormal:"+control)
@@ -878,6 +914,8 @@ RowLayout{
         control.value = parameter.value
         
     }
+
+    // 加载Slider数据，从mlt读取数据更新到界面
     function loadSlider(control,paramIndex){
         if((typeof control == 'undefined')||(typeof control.value == 'undefined')){
             throw new Error("control is abnormal:"+control)
@@ -909,6 +947,8 @@ RowLayout{
             control.value = parameter.value
         }
     }
+
+    // 加载String数据，从mlt读取数据更新到界面
     function loadStringCtr(control,paramIndex){
         if((typeof control == 'undefined')||(typeof control.currentIndex == 'undefined')){
             throw new Error("control is abnormal:"+control)
@@ -930,9 +970,13 @@ RowLayout{
             }
         }
     }
+
+    //获取当前帧
     function getCurrentFrame(){
         return currentFrame;
     }
+
+    // 删除所有关键帧，包括首尾帧
     function removeAllKeyFrame(){
         var position        = timeline.getCurrentClipLength() //filter.producerOut - filter.producerIn + 1
         

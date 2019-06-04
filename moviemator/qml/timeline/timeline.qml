@@ -330,7 +330,6 @@ Rectangle {
                             current: index === currentTrack
                             onIsLockedChanged: tracksRepeater.itemAt(index).isLocked = isLocked
                             onClicked: {
-//                                timeline.selection = []
                                 currentTrack = index
                                 console.assert(timeline);
                                 if(timeline){
@@ -340,11 +339,12 @@ Rectangle {
                                 for (var i = 0; i < trackHeaderRepeater.count; i++) {//设置当前选中trackhead的选中状态
                                     trackHeaderRepeater.itemAt(i).selected = (i == currentTrack)
                                 }
-
-//                                cornerstone.selected = false
-//                                for (var i = 0; i < trackHeaderRepeater.count; i++)
-//                                    trackHeaderRepeater.itemAt(i).selected = false
-//                                selected = true
+                            }
+                            Connections {
+                                target: multitrack
+                                onModified:{
+                                    trackName = model.name
+                                }
                             }
                         }
                     }
@@ -437,10 +437,7 @@ Rectangle {
                             Rectangle {
                                 implicitWidth: 14
                                 implicitHeight: 14
-//                                border.width: 3
-//                                border.color:'transparent'// activePalette.window
                                 color: 'transparent'//'#989898'
-//                                radius: 7
                                 Rectangle {
                                     anchors.margins: 3
                                     anchors.fill: parent
@@ -452,23 +449,15 @@ Rectangle {
                         scrollBarBackground: Rectangle {
                             implicitWidth: 14
                             implicitHeight: 14
-                       //     border.width: 2
-                       //     border.color: normalColor//activePalette.window
                             color: 'transparent'//'#505050'//normalColor
                         }
                         decrementControl: Rectangle {
                             implicitWidth: 0
                             implicitHeight: 0
-
-//                            border.width: 2
-//                            border.color: activePalette.window
-
                         }
                         incrementControl: Rectangle {
                             implicitWidth: 0
                             implicitHeight: 0
-//                            border.width: 2
-//                            border.color: activePalette.window
                         }
                         corner: Rectangle {
                             implicitWidth: 14
@@ -477,7 +466,6 @@ Rectangle {
                             border.width: 0
                             color: 'transparent'//normalColor
                         }
-
                     }
 
                     Item {
@@ -486,26 +474,24 @@ Rectangle {
 
                         MouseArea
                         {
-                                                   anchors.fill: parent
-                                                   propagateComposedEvents: true
-                                                   onPressed: mouse.accepted = false
-                                                   onReleased: mouse.accepted = false
-                                                   onClicked: mouse.accepted = false
-                                                   onDoubleClicked: mouse.accepted = false
-                                                   onPressAndHold: mouse.accepted = false
-                                                   onWheel:
-                                                   {
-                                                       if (wheel.angleDelta.y < 0)
-                                                       {
-                                                            root.zoomIn(tracksArea.mouseX)
-                                                       }
-                                                       else if(wheel.angleDelta.y > 0)
-                                                       {
-                                                           root.zoomOut(tracksArea.mouseX)
-                                                        }
-
-                                                   }
-
+                            anchors.fill: parent
+                            propagateComposedEvents: true
+                            onPressed: mouse.accepted = false
+                            onReleased: mouse.accepted = false
+                            onClicked: mouse.accepted = false
+                            onDoubleClicked: mouse.accepted = false
+                            onPressAndHold: mouse.accepted = false
+                            onWheel:
+                            {
+                                if (wheel.angleDelta.y < 0)
+                                {
+                                    root.zoomIn(tracksArea.mouseX)
+                                }
+                                else if(wheel.angleDelta.y > 0)
+                                {
+                                    root.zoomOut(tracksArea.mouseX)
+                                }
+                            }
                         }
 
                         Column {
