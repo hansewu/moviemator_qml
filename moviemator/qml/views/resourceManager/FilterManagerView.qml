@@ -49,7 +49,7 @@ Rectangle {
                             if((typeof metadatamodel == 'undefined')||(metadatamodel == null)){
                                 throw new Error("metadatamodel is undefined")
                             }
-                            metadatamodel.filter = MovieMator.MetadataModel.FavoritesFilter
+                            metadatamodel.metadataFilterType = MovieMator.MetadataModel.FavoritesFilter
                         }
                     }
                 }
@@ -64,7 +64,7 @@ Rectangle {
                     exclusiveGroup: typeGroup
                     onCheckedChanged: {
                         if (checked) {
-                            metadatamodel.filter = MovieMator.MetadataModel.VideoFilter
+                            metadatamodel.metadataFilterType = MovieMator.MetadataModel.VideoFilter
                         }
                     }
                 }
@@ -79,7 +79,7 @@ Rectangle {
                     exclusiveGroup: typeGroup
                     onCheckedChanged: {
                         if (checked) {
-                            metadatamodel.filter = MovieMator.MetadataModel.AudioFilter
+                            metadatamodel.metadataFilterType = MovieMator.MetadataModel.AudioFilter
                         }
                     }
                 }
