@@ -25,24 +25,42 @@ import 'Track.js' as Logic
 
 Rectangle {
     id: trackRoot
+    // 轨道模型
     property alias model: trackModel.model
+    // 轨道模型中轨道的序号
     property alias rootIndex: trackModel.rootIndex
+    // 轨道是否是音频轨道
     property bool isAudio
+    // 轨道是否是视频轨道
     property bool isVideo
+    // 轨道是否是滤镜轨道
     property bool isFilter
+    // 轨道类型？？？
+    // 没有地方用到？？？
     property int trackType
+    // 时间线缩放因子
     property real timeScale: 1.0
+    // 添加的占位符？？？
     property bool placeHolderAdded: false
+    // 是否是当前轨道
     property bool isCurrentTrack: false
+    // 轨道是否被锁定
     property bool isLocked: false
+    // 选中的各个 clip（选中的多个剪辑）
     property var selection
 
+    // 轨道上的clip被点击时发出的信号
     signal clipClicked(var clip, var track)
+    // clip从轨道被拖动时发出的信号
     signal clipDragged(var clip, int x, int y)
+    // clip被放置到轨道上时发出的信号
     signal clipDropped(var clip)
+    // 轨道上的 clip被放置到其他轨道上时发出的信号
     signal clipDraggedToTrack(var clip, int direction)
+    // ？？？snap？
     signal checkSnap(var clip)
 
+    // 重画轨道上的波形
     function redrawWaveforms() {
         console.assert(repeater);
         if(!repeater) return;
@@ -53,14 +71,17 @@ Rectangle {
         }
     }
 
+    // ？？？
     function snapClip(clip) {
         Logic.snapClip(clip, repeater)
     }
 
+    // ？？？
     function snapDrop(clip) {
         Logic.snapDrop(clip, repeater)
     }
 
+    // 轨道 index上的 clip
     function clipAt(index) {
         console.assert(repeater);
         if(!repeater) return;
@@ -70,6 +91,7 @@ Rectangle {
     color: 'transparent'
     width: clipRow.width
 
+    // 轨道上的 Clip模型
     DelegateModel {
         id: trackModel
         Clip {
@@ -211,6 +233,7 @@ Rectangle {
         }
     }
 
+    // 显示轨道上的 clip
     Row {
         id: clipRow
         Repeater { id: repeater; model: trackModel }

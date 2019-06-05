@@ -30,11 +30,14 @@ import MovieMator.Controls 1.0
 import QtQuick.Controls.Styles 1.4
 //import Qt.labs.controls 1.0
 
+//主界面右侧属性界面中的滤镜dock界面
 Rectangle {
     id: root
     
+    //当选中应用已添加列表中的第attachedIndex个滤镜时发出此信号
     signal currentFilterRequested(int attachedIndex)
     
+    //清除当前滤镜的参数显示界面
     function clearCurrentFilter(index) {
         if((attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo)||(index<0)){
             if (filterConfig.item) {
@@ -45,6 +48,7 @@ Rectangle {
         }
     }
     
+    //设置当前选中滤镜为列表中的第index个滤镜，并显示对应参数界面
     function setCurrentFilter(index) {
         if(attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo){
             attachedFilters.setCurrentFilter(index)
@@ -52,6 +56,7 @@ Rectangle {
         }
     }
 
+    //重新加载已选择滤镜
     function reChooseFilter(){
         attachedFilters.reLoadFilter()
     }
@@ -72,6 +77,7 @@ Rectangle {
     
     SystemPalette { id: activePalette }
     
+    //添加滤镜菜单
     FilterMenu {
         id: filterMenu
 
@@ -94,6 +100,7 @@ Rectangle {
             attachedFilters.isvideo = false
     }
 
+    //已添加到producer上的滤镜列表界面
     GridLayout {
         id: attachedContainer
         columns: 3
@@ -201,6 +208,7 @@ Rectangle {
         }
     }
 
+    //动态滤镜参数界面
     ScrollView {
         id: filterConfigScrollView
         anchors {
@@ -241,6 +249,7 @@ Rectangle {
                 }
             }
 
+        //根据动态滤镜参数调节参数界面宽
         function expandWidth() {
 
             if (filterConfig.item) {
@@ -250,6 +259,7 @@ Rectangle {
             }
         }
         onWidthChanged: expandWidth()
+        //动态加载滤镜参数界面qml的加载器
         Loader {
             id: filterConfig
             property int minimumWidth: 0
@@ -260,6 +270,7 @@ Rectangle {
         }
     }
 
+    //关键帧界面
     Rectangle{
         id:keyFrameControlContainer
         color: '#353535'

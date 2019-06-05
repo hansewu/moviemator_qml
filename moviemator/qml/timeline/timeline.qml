@@ -36,8 +36,10 @@ Rectangle {
     //color: activePalette.window
     color: backgroundColor
 
+    // 单击轨道上 clip的信号
     signal clipClicked()
 
+    // 时间线滚轮缩放之放大
     function zoomIn(wheelx) {
 //        scaleSlider.value += 0.0625
 
@@ -58,6 +60,7 @@ Rectangle {
         }
     }
 
+    // 时间线滚轮缩放之缩小
     function zoomOut(wheelx) {
 //        scaleSlider.value -= 0.0625
 
@@ -80,6 +83,7 @@ Rectangle {
         }
     }
 
+    // 把时间线重置为原来大小
     function resetZoom() {
 //        scaleSlider.value = 1.0
         toolbar.scaleSliderValue = 1.0
@@ -92,20 +96,25 @@ Rectangle {
         }
     }
 
+    // 增加时间线轨道的高度
     function makeTracksTaller() {
         multitrack.trackHeight += 20
     }
 
+    // 降低时间线轨道的高度
     function makeTracksShorter() {
         multitrack.trackHeight = Math.max(30, multitrack.trackHeight - 20)
     }
 
+    // 当操作被锁定的轨道时播放轨道头的锁定按钮缩放动画
+    // timelinedock.cpp/clip.qml调用
     function pulseLockButtonOnTrack(index) {
         console.assert(trackHeaderRepeater.itemAt(index));
         if(trackHeaderRepeater.itemAt(index))
             trackHeaderRepeater.itemAt(index).pulseLockButton()
     }
 
+    // 选择多个轨道
     function selectMultitrack() {
         console.assert(trackHeaderRepeater);
         if(!trackHeaderRepeater) return;
@@ -117,38 +126,51 @@ Rectangle {
         cornerstone.selected = true
     }
 
+    // 轨道头的宽度（定值）
     property int headerWidth: 92
+    // 当前（选中）轨道的序号
     property int currentTrack: 0
+    // 被选中的轨道的背景颜色
     property color selectedTrackColor: Qt.rgba(80/255, 81/255, 82/255, 1.0)
+    // 轨道的普通状态下的颜色
     property color normalColor: Qt.rgba(49/255, 50/255, 52/255, 1.0)
+    // ？？？
     property color handleColor: Qt.rgba(92/255, 93/255, 94/255, 1.0)
+    // 背景色？？？
     property color backgroundColor: Qt.rgba(37/255, 38/255, 39/255, 1.0)
+    // 轨道数量
     property alias trackCount: tracksRepeater.count
+    // 禁用鼠标滚动（滚动条/缩放功能）
     property bool stopScrolling: false
 
+    // MovieMator的主题色（蓝色）
     property color moviematorBlue: Qt.rgba(153/255, 216/255, 234/255, 1.0)//Qt.rgba(23/255, 92/255, 118/255, 1.0)
 //    property var selection: []
+    // 波纹
     property alias ripple: toolbar.ripple
 
+    // 当前轨道发生变化时响应的函数
     onCurrentTrackChanged: {
         console.assert(timeline);
         if(timeline)
             timeline.selection = []
     }
 
+    // 时间线右键时弹出菜单
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: menu.popup()
     }
 
+    // 时间线可接收拖放内容的区域
     DropArea {
         id: dropArea
         property bool hasUrls
         property bool hasAbstractItem
         property string teststring: 'dropArea'
         anchors.fill: parent
-
+        // 取消拖放
         function endDrop()
         {
             Drag.cancel()
@@ -218,6 +240,7 @@ Rectangle {
 
 
 
+    // 时间线上方的工具栏菜单
     TimelineToolbar {
         id: toolbar
         width: parent.width - 2
@@ -235,6 +258,7 @@ Rectangle {
         z: 0
     }
 
+    // 刻度尺 Ruler
     Row {
         anchors {
             top: toolbar.bottom
@@ -530,6 +554,8 @@ Rectangle {
     }
 
 
+    // 拖放时在轨道上显示 clip的占用区域
+    // （会显示 append和 insert文字）
     Rectangle {
         id: dropTarget
         height: multitrack.trackHeight
@@ -547,6 +573,7 @@ Rectangle {
         }
     }
 
+    // 显示（延迟或超前）时间的小气泡
     Rectangle {
         id: bubbleHelp
         property alias text: bubbleHelpLabel.text
@@ -602,6 +629,7 @@ Rectangle {
         fast: true
     }
 
+    // 右键的菜单
     Menu {
         id: menu
         MenuItem {
@@ -643,6 +671,7 @@ Rectangle {
     }
 
 
+    // 轨道模型
     DelegateModel {
         id: trackDelegateModel
         model: multitrack
@@ -715,6 +744,7 @@ Rectangle {
                         tracksRepeater.itemAt(i).snapClip(clip)
                 }
             }
+            // 轨道被锁定时显示的图片
             Image {
                 anchors.fill: parent
                 source: "qrc:///icons/light/16x16/track-locked.png"
@@ -735,6 +765,7 @@ Rectangle {
         }
     }
 
+    // 连接 timelineDock.cpp的槽函数
     Connections {
         target: timeline
         onPositionChanged: if (!stopScrolling) Logic.scrollIfNeeded()
@@ -749,13 +780,13 @@ Rectangle {
             // for (var i = 0; i < trackHeaderRepeater.count; i++)
             //     trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
 
-            var selectedAClip = timeline.selectedAClip()
-            if (selectedAClip === true) {//如果选中clip则清除trackhead的选中状态
+            var isAClipSelected = timeline.isAClipSelected()
+            if (isAClipSelected === true) {//如果选中clip则清除trackhead的选中状态
                 for (var i = 0; i < trackHeaderRepeater.count; i++) {
                     trackHeaderRepeater.itemAt(i).selected = false
                 }
             }
-            if (selectedAClip === false)
+            if (isAClipSelected === false)
                 toolbar.hasClipOrTrackSelected = false
         }
     }
@@ -791,6 +822,7 @@ Rectangle {
 
 
     // This provides continuous scrolling at the left/right edges.
+    // 拖放 clip时滚动条的定时器
     Timer {
         id: scrollTimer
         interval: 25

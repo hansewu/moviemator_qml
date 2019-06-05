@@ -18,12 +18,15 @@
 
 import QtQuick 2.0
 
+// 关键帧指示图标
 Rectangle{
     property int frameNumber
     //width: 12
     //height: 12
     color:'red'
 
+    // 关键帧指示图标的左键操作
+    // 时间线播放游标定位到这个关键帧位置
     MouseArea {
         id:keyFrameMouseArea
         anchors.fill: parent
@@ -38,6 +41,7 @@ Rectangle{
         }
     }
 
+    // 关键帧指示图标缩放动画
     SequentialAnimation on scale {
         loops: 1//Animation.Infinite
         running: keyFrameMouseArea.containsMouse
@@ -54,7 +58,7 @@ Rectangle{
 //            easing.type: Easing.InOutQuad
 //        }
     }
-
+    // 关键帧指示图标缩放动画
     SequentialAnimation on scale {
         loops: 1//Animation.Infinite
         running: !keyFrameMouseArea.containsMouse

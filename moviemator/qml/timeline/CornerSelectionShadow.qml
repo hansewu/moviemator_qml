@@ -18,6 +18,7 @@
 
 import QtQuick 2.2
 
+// 时间线轨道左侧的闪现样式
 Item {
     id: root
 

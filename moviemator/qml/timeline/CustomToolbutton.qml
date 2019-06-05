@@ -22,19 +22,28 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
+
+// 自定义的时间线工具栏菜单
 ToolButton
 {
+    // 普通状态下的图标
     property url customIconSource
+    // 按下状态的图标
     property url pressedIconSource
+    // 禁用状态下的图标
     property url disabledIconSource
+    // 按钮标题
     property string customText
+    // 按钮是否可用
     property bool bEnabled:true
 
+    // 按钮背景样式
     style: ButtonStyle {
             background: Rectangle {
                 color: 'transparent'
             }
     }
+    // 按钮图标
     Image {
         source: bEnabled ? (parent.pressed ? parent.pressedIconSource : parent.customIconSource) : parent.disabledIconSource
         fillMode: Image.PreserveAspectFit // For not stretching image (optional)
@@ -43,6 +52,7 @@ ToolButton
         anchors.topMargin: 6 // Leaving space between image and borders (optional)
         anchors.bottomMargin:20 // Leaving space for text in bottom
     }
+    // 按钮标题
     Text {
         text: parent.customText
         color: bEnabled?'white':'grey'

@@ -28,12 +28,14 @@ import QtQuick.Layouts 1.0
 import MovieMator.Controls 1.0
 import QtQuick.Controls.Styles 1.4
 
+//旧的滤镜dock界面，目前已经不使用
 Rectangle {
     id: root
 
-    
+    //选中filter列表中的第attachedIndex时发出此信号
     signal currentFilterRequested(int attachedIndex)
     
+    //清除当前的filter 参数显示界面
     function clearCurrentFilter() {
         if (filterConfig.item) {
             filterConfig.item.width = 1
@@ -42,6 +44,7 @@ Rectangle {
         filterConfig.source = ""
     }
     
+    //设置当前的filter为列表中的第index个滤镜，并显示滤镜参数界面
     function setCurrentFilter(index) {
         attachedFilters.setCurrentFilter(index)
         removeButton.selectedIndex = index
@@ -64,6 +67,7 @@ Rectangle {
     
     SystemPalette { id: activePalette }
     
+    //添加滤镜菜单界面
     FilterMenu {
         id: filterMenu
 
@@ -73,6 +77,7 @@ Rectangle {
         }
     }
 
+    //滤镜属性dock的标题背景
     Rectangle {
         id: titleBackground
         anchors {
@@ -88,6 +93,7 @@ Rectangle {
         visible: attachedfiltersmodel.producerTitle != ""
     }
 
+    //滤镜属性dock的标题
     Label {
         id: titleLabel
         anchors {
@@ -105,7 +111,7 @@ Rectangle {
         horizontalAlignment: Text.AlignHCenter
     }
 
-
+    //已添加到producer上的滤镜的列表界面
     GridLayout {
         id: attachedContainer
         columns: 3
@@ -135,6 +141,7 @@ Rectangle {
             }
         }
 
+        //添加滤镜的按钮
         CustomFilterButton {
             id:addButton
 
@@ -152,6 +159,7 @@ Rectangle {
             }
         }
 
+        //删除滤镜的按钮
         CustomFilterButton {
             id:removeButton
             property int selectedIndex: -1
@@ -173,6 +181,7 @@ Rectangle {
         }
     }
 
+    //滤镜参数界面
     ScrollView {
         id: filterConfigScrollView
 
@@ -217,6 +226,7 @@ Rectangle {
             }
         }
         onWidthChanged: expandWidth()
+        //动态加载滤镜参数界面qml的加载器
         Loader {
             id: filterConfig
             property int minimumWidth: 0
@@ -227,6 +237,7 @@ Rectangle {
         }
     }
 
+    //关键帧界面
    KeyFrameControl {
        id: keyFrameControl
        anchors {
@@ -238,7 +249,7 @@ Rectangle {
        }
    }
 
-
+    //滤镜dock的横竖布局
     states: [
         State {
             name: "landscape"  // 左右结构
