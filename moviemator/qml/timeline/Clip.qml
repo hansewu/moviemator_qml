@@ -849,7 +849,7 @@ Rectangle {
 //    Connections{
 //        target: currentFilter
 //        onKeyFrameChanged:{
-////            var  frameNumber = currentFilter.getKeyFrameNumber()
+////            var  frameNumber = currentFilter.cache_getKeyFrameNumber()
 ////            firstKeyFrameRect.visible = !isBlank && frameNumber
 ////            if(frameNumber)
 ////            {
@@ -863,12 +863,12 @@ Rectangle {
 
 //        }
 //        onAddKeyFrame:{
-//            var keyNumber = currentFilter.getKeyFrameNumber()
+//            var keyNumber = currentFilter.cache_getKeyFrameNumber()
 //            keyFrameRepeater.model = keyNumber
 //        }
 
 //        onRemoveKeyFrame:{
-//            var keyNumber = currentFilter.getKeyFrameNumber()
+//            var keyNumber = currentFilter.cache_getKeyFrameNumber()
 //            keyFrameRepeater.model = keyNumber
 //        }
 

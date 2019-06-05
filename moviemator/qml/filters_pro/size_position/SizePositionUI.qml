@@ -60,10 +60,10 @@ Item {
             for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
                 var prop = metaParamList[paramIndex].property
                 var keyValue = filter.getAnimRectValue(nFrame, prop)
-                filter.setKeyFrameParaRectValue(nFrame, prop, keyValue)
+                filter.cache_setKeyFrameParaRectValue(nFrame, prop, keyValue)
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
 
         if (filter.isNew) {
             filter.set(fillProperty, 1)
@@ -143,15 +143,15 @@ Item {
         filter.set(rectProperty, filterRect)
 
 
-        if ((keyFrame.bEnableKeyFrame && keyFrame.bAutoSetAsKeyFrame) || filter.bKeyFrame(keyFrame.getCurrentFrame()))
+        if ((keyFrame.bEnableKeyFrame && keyFrame.bAutoSetAsKeyFrame) || filter.cache_bKeyFrame(keyFrame.getCurrentFrame()))
         {
             var nFrame = keyFrame.getCurrentFrame()
             
-            if (!filter.bKeyFrame(nFrame)) keyFrame.showAddFrameInfo(nFrame)
+            if (!filter.cache_bKeyFrame(nFrame)) keyFrame.showAddFrameInfo(nFrame)
 
             var rectValue = filter.getRect(rectProperty)
-            filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
-            filter.combineAllKeyFramePara();
+            filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
+            filter.syncCacheToProject();
         }
     }
 
@@ -344,8 +344,8 @@ Item {
         KeyFrame{
             id: keyFrame
             Layout.columnSpan:5
-            onSynchroData:{
-                if(filter.getKeyFrameNumber() <= 0){
+            onSyncUIDataToProject:{
+                if(filter.cache_getKeyFrameNumber() <= 0){
                     filter.resetProperty(rectProperty)
 
                     var x = parseFloat(rectX.text) / profile.width
@@ -369,22 +369,22 @@ Item {
                 saveValues()
             
                 var rectValue = filter.getRect(rectProperty)
-                if (filter.getKeyFrameNumber() <= 0)
+                if (filter.cache_getKeyFrameNumber() <= 0)
                 {
                     var position2 = (timeline.getCurrentClipLength() - 1) //filter.producerOut - filter.producerIn + 1
-                    filter.setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
-                    filter.setKeyFrameParaRectValue(0, rectProperty, rectValue)
-                    filter.combineAllKeyFramePara();
+                    filter.cache_setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
+                    filter.cache_setKeyFrameParaRectValue(0, rectProperty, rectValue)
+                    filter.syncCacheToProject();
                 }
-                filter.setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
-                filter.combineAllKeyFramePara();
+                filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
+                filter.syncCacheToProject();
 
                 setControls()
             }
-            onLoadKeyFrame:
+            onRefreshUI:
             {   
                 var nFrame = keyFrame.getCurrentFrame()
-                if (filter.bKeyFrame(nFrame)) filter.combineAllKeyFramePara()
+                if (filter.cache_bKeyFrame(nFrame)) filter.syncCacheToProject()
 
                 var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
 
@@ -429,7 +429,7 @@ Item {
             visible:false
             exclusiveGroup: sizeGroup
             onClicked: {
-                if(filter.getKeyFrameNumber() > 0){
+                if(filter.cache_getKeyFrameNumber() > 0){
                     sizeKeyFrameWarning.visible = true
                 }
                 else{
@@ -447,7 +447,7 @@ Item {
             text: qsTr('Fill')
             exclusiveGroup: sizeGroup
             onClicked: {
-                if(filter.getKeyFrameNumber() > 0){
+                if(filter.cache_getKeyFrameNumber() > 0){
                     sizeKeyFrameWarning.visible = true
                 }
                 else{
@@ -461,7 +461,7 @@ Item {
             text: qsTr('Distort')
             exclusiveGroup: sizeGroup
             onClicked: {
-                if(filter.getKeyFrameNumber() > 0){
+                if(filter.cache_getKeyFrameNumber() > 0){
                     sizeKeyFrameWarning.visible = true
                 }
                 else{
@@ -543,7 +543,7 @@ Item {
             onClicked: {
                 bFitNoScale = true
 
-                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                if(filter.cache_getKeyFrameNumber() > 0)   // 关键帧
                 {   
                     if(fillRadioButton.checked)   //填配模式
                     {
@@ -581,7 +581,7 @@ Item {
             onClicked: {
                 bFit = true
 
-                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                if(filter.cache_getKeyFrameNumber() > 0)   // 关键帧
                 {   
                     if(fillRadioButton.checked)   //填配模式
                     {
@@ -619,7 +619,7 @@ Item {
             onClicked: {
                 bFitCrop = true
 
-                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                if(filter.cache_getKeyFrameNumber() > 0)   // 关键帧
                 {   
                     if(fillRadioButton.checked)   //填配模式
                     {
@@ -657,7 +657,7 @@ Item {
             onClicked: {
                 bTile = true
 
-                if(filter.getKeyFrameNumber() > 0)   // 关键帧
+                if(filter.cache_getKeyFrameNumber() > 0)   // 关键帧
                 {   
                     if(distortRadioButton.checked)   //变形模式
                     {
@@ -690,7 +690,7 @@ Item {
 
     Connections {
         target: filter
-        onChanged: {
+        onFilterPropertyValueChanged: {
             var keyFrameNum = timeline.getPositionInCurrentClip()
             var newValue = filter.getRect(rectProperty)
             if (filterRect !== newValue)

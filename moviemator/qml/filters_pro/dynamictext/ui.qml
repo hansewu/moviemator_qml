@@ -39,7 +39,7 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: true  
-    property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
+    property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property var  m_lastFrameNum: -1 
@@ -111,13 +111,13 @@ Item {
             var paraType = metadata.keyframes.parameters[i].paraType
             if (paraType === "rect") {
                 var rectValue = filter.getAnimRectValue(nFrame, property)
-                filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
             } else {
                 var valueStr = filter.getAnimIntValue(nFrame, property)
-                filter.setKeyFrameParaValue(nFrame, property, valueStr.toString());
+                filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
     }
 
     function setKeyFrameParaValue (nFrame, currentPropert, value) {
@@ -127,21 +127,21 @@ Item {
             var paraType = metadata.keyframes.parameters[i].paraType
             if (property === currentPropert) {
                 if (paraType === "rect") {
-                    filter.setKeyFrameParaRectValue(nFrame, property, value, 1.0)
+                    filter.cache_setKeyFrameParaRectValue(nFrame, property, value, 1.0)
                 } else {
-                    filter.setKeyFrameParaValue(nFrame, property, value);
+                    filter.cache_setKeyFrameParaValue(nFrame, property, value);
                 }
             } else {
                 if (paraType === "rect") {
                     var rectValue = filter.getAnimRectValue(nFrame, property)
-                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                    filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
-                    filter.setKeyFrameParaValue(nFrame, property, valueStr.toString());
+                    filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
                 }
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
     }
 
     function setInAndOutKeyFrame () {
@@ -154,15 +154,15 @@ Item {
             var paraType = metadata.keyframes.parameters[i].paraType
             if (paraType === "rect") {
                 var rectValue = filter.getRectOfTextFilter(property)
-                filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
-                filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
+                filter.cache_setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
+                filter.cache_setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
             } else {
                 var valueStr = filter.getInt(property)
-                filter.setKeyFrameParaValue(positionStart, property, valueStr);
-                filter.setKeyFrameParaValue(positionEnd, property, valueStr);
+                filter.cache_setKeyFrameParaValue(positionStart, property, valueStr);
+                filter.cache_setKeyFrameParaValue(positionEnd, property, valueStr);
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
     }
 
     function getMaxKeyFrameCountInfo() {
@@ -201,14 +201,14 @@ Item {
                     if (strValue.indexOf("#") !== -1) {
                         rectValue = getRectColor(strValue)
                     }
-                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                    filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
-                    filter.setKeyFrameParaValue(nFrame, property, valueStr.toString());
+                    filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
                 }
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
     }
 
     function loadSavedKeyFrame () {
@@ -216,30 +216,30 @@ Item {
         for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++) {
             var property = metadata.keyframes.parameters[paramIndex].property
             var paraType = metadata.keyframes.parameters[paramIndex].paraType
-            var keyFrameCount = filter.getKeyFrameNumber()
+            var keyFrameCount = filter.cache_getKeyFrameNumber()
             for(var keyIndex = 0; keyIndex < keyFrameCount; keyIndex++) {
                 var nFrame = filter.getKeyFrame(keyIndex)
                 if (paraType === "rect") {
-                    var rectValue = filter.getKeyFrameParaRectValue(nFrame, property)
-                    filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
+                    var rectValue = filter.cache_getKeyFrameParaRectValue(nFrame, property)
+                    filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } else {
                     filter.resetProperty(property)
-                    var valueStr = filter.getKeyFrameParaDoubleValue(nFrame, property);
-                    filter.setKeyFrameParaValue(nFrame, property, valueStr);
+                    var valueStr = filter.cache_getKeyFrameParaDoubleValue(nFrame, property);
+                    filter.cache_setKeyFrameParaValue(nFrame, property, valueStr);
                 }
             }
         }
-        filter.combineAllKeyFramePara()
+        filter.syncCacheToProject()
     }
 
 
     function removeAllKeyFrame () {
-        if (filter.getKeyFrameNumber() > 0) {
+        if (filter.cache_getKeyFrameNumber() > 0) {
             var metaParamList = metadata.keyframes.parameters
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++){
                 var prop = metaParamList[paramIndex].property
                 filter.removeAllKeyFrame(prop)
-                filter.combineAllKeyFramePara();
+                filter.syncCacheToProject();
                 filter.resetProperty(prop)
             }
         }
@@ -269,12 +269,12 @@ Item {
             
             var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) {
-                if (!filter.bKeyFrame(nFrame)) {
+                if (!filter.cache_bKeyFrame(nFrame)) {
                     showAddFrameInfo(nFrame)
                 }
                 setKeyFrameParaValue(nFrame, currentProperty, value)
             } else {
-                if (filter.bKeyFrame(nFrame)) {
+                if (filter.cache_bKeyFrame(nFrame)) {
                     setKeyFrameParaValue(nFrame, currentProperty, value)
                 } else {
                     filter.set(currentProperty, value)
@@ -286,7 +286,7 @@ Item {
 
         if(m_bLastEnableKeyFrame != bEnableKeyFrame) //未知原因  否则关键帧的值设置不进去
         {    
-            //filter.combineAllKeyFramePara()
+            //filter.syncCacheToProject()
             loadSavedKeyFrame()
         }
         m_bLastEnableKeyFrame = bEnableKeyFrame
@@ -299,12 +299,12 @@ Item {
         if (bEnableKeyFrame) {
             var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) {
-                if (!filter.bKeyFrame(nFrame)) {
+                if (!filter.cache_bKeyFrame(nFrame)) {
                     bTemporaryKeyFrame = true
                 }
                 setKeyFrameParaValue(nFrame, currentProperty, value)
             } else {
-                if (filter.bKeyFrame(nFrame)) {
+                if (filter.cache_bKeyFrame(nFrame)) {
                     setKeyFrameParaValue(nFrame, currentProperty, value)
                 } else {
                     filter.set(currentProperty, value)
@@ -322,9 +322,9 @@ Item {
         if (bEnableKeyFrame) {
             if (bAutoSetAsKeyFrame) {
                 var nFrame = timeline.getPositionInCurrentClip()
-                if (filter.bKeyFrame(nFrame) && bTemporaryKeyFrame) {
+                if (filter.cache_bKeyFrame(nFrame) && bTemporaryKeyFrame) {
                     filter.removeKeyFrameParaValue(nFrame);
-                    filter.combineAllKeyFramePara();
+                    filter.syncCacheToProject();
 
                     setKeyframedControls()
 
@@ -406,7 +406,7 @@ Item {
     }
 
     function setKeyframedControls() {
-        if (filter.getKeyFrameNumber() > 0) {
+        if (filter.cache_getKeyFrameNumber() > 0) {
 //            var nFrame = keyFrame.getCurrentFrame()
             var nFrame = timeline.getPositionInCurrentClip()
 
@@ -441,7 +441,7 @@ Item {
 
             updateFilter(rectProperty, getRelativeRect(filterRect))
 //            var nFrame = keyFrame.getCurrentFrame();
-//            if (filter.getKeyFrameNumber() > 0) {
+//            if (filter.cache_getKeyFrameNumber() > 0) {
 //                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
 //            } else {
 //                filter.set(rectProperty, getRelativeRect(filterRect))
@@ -456,7 +456,7 @@ Item {
 //            if (bAutoSetAsKeyFrame) {
 //                setKeyFrameParaValue(nFrame, currentProperty, value)
 //            } else {
-//                if (filter.bKeyFrame(nFrame)) {
+//                if (filter.cache_bKeyFrame(nFrame)) {
 //                    setKeyFrameParaValue(nFrame, currentProperty, value)
 //                } else {
 //                    filter.set(currentProperty, value)
@@ -483,7 +483,7 @@ Item {
 //            onSetAsKeyFrame: {
 //                console.log("sll---------onSetAsKeyFrame---------")
 //                //如果没有关键帧，先创建头尾两个关键帧
-//                if (filter.getKeyFrameNumber() <= 0) {
+//                if (filter.cache_getKeyFrameNumber() <= 0) {
 //                    setInAndOutKeyFrame()
 //                }
 
@@ -512,8 +512,8 @@ Item {
 //                filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
 //                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
 //            }
-//            onLoadKeyFrame: {
-////                console.log("sll-------onLoadKeyFrame----")
+//            onRefreshUI: {
+////                console.log("sll-------onRefreshUI----")
 ////                console.log("sll------111111111111111111111111111111111111-------")
 ////                if (blockUpdate === true) {
 ////                    return
@@ -523,7 +523,7 @@ Item {
 //                    console.log("sll------3333333333333333333333333333333333-------")
 //                    var nFrame = keyFrame.getCurrentFrame()
 //                    if (bAutoSetAsKeyFrame === false) {
-//                        if (filter.bKeyFrame(nFrame)) {
+//                        if (filter.cache_bKeyFrame(nFrame)) {
 //                            console.log("sll------4444444444444444444444444444-------")
 //                            loadSavedKeyFrame()
 //                        }
@@ -533,7 +533,7 @@ Item {
 ////                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toSttoString())
 //                    }
 ////                    else {
-////                        if (filter.bKeyFrame(nFrame)) {
+////                        if (filter.cache_bKeyFrame(nFrame)) {
 ////                            console.log("sll------4444444444444444444444444444-------")
 ////                            loadSavedKeyFrame()
 ////                        } else {
@@ -699,7 +699,7 @@ Item {
 //                        return
 //                    }
 //                    var nFrame = keyFrame.getCurrentFrame();
-//                    if (filter.getKeyFrameNumber() > 0) {
+//                    if (filter.cache_getKeyFrameNumber() > 0) {
 //                        setKeyFrameParaValue(nFrame, fgcolourProperty, getRectColor(value))
 //                    } else {
 //                       filter.set(fgcolourProperty, getRectColor(value))
@@ -798,7 +798,7 @@ Item {
 //                    if (bAutoSetAsKeyFrame) {
 //                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
 //                    } else {
-//                        if (filter.bKeyFrame(nFrame)) {
+//                        if (filter.cache_bKeyFrame(nFrame)) {
 //                            setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
 //                        } else {
 //                            filter.set(letterSpaceingProperty, value)
@@ -813,7 +813,7 @@ Item {
 //                    return
 //                }
 //                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.getKeyFrameNumber() > 0) {
+//                if (filter.cache_getKeyFrameNumber() > 0) {
 //                    setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
 //                } else {
 //                    filter.set(letterSpaceingProperty, value)
@@ -843,7 +843,7 @@ Item {
 //                    return
 //                }
 //                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.getKeyFrameNumber() > 0) {
+//                if (filter.cache_getKeyFrameNumber() > 0) {
 //                    setKeyFrameParaValue(nFrame, olcolourProperty, getRectColor(value))
 //                } else {
 //                   filter.set(olcolourProperty, getRectColor(value))
@@ -870,7 +870,7 @@ Item {
 //                    return
 //                }
 //                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.getKeyFrameNumber() > 0) {
+//                if (filter.cache_getKeyFrameNumber() > 0) {
 //                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
 //                } else {
 //                    filter.set(outlineProperty, value)
@@ -900,7 +900,7 @@ Item {
 //                    return
 //                }
 //                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.getKeyFrameNumber() > 0) {
+//                if (filter.cache_getKeyFrameNumber() > 0) {
 //                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
 //                } else {
 //                   filter.set(bgcolourProperty, getRectColor(value))
@@ -927,7 +927,7 @@ Item {
 //                    return
 //                }
 //                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.getKeyFrameNumber() > 0) {
+//                if (filter.cache_getKeyFrameNumber() > 0) {
 //                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
 //                } else {
 //                    filter.set(padProperty, value)
@@ -1074,7 +1074,7 @@ Item {
 
     Connections {
         target: filter
-        onChanged: {
+        onFilterPropertyValueChanged: {
             var position        = timeline.getPositionInCurrentClip()
             var newRect         = getAbsoluteRect(-1)
             var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty);
@@ -1113,7 +1113,7 @@ Item {
         target: keyFrameControl
         onAddFrameChanged: {
              //如果没有关键帧，先创建头尾两个关键帧
-             if (filter.getKeyFrameNumber() <= 0) {
+             if (filter.cache_getKeyFrameNumber() <= 0) {
                  setInAndOutKeyFrame()
              }
 
@@ -1136,7 +1136,7 @@ Item {
                 console.log("sll------3333333333333333333333333333333333----nFrame---", nFrame)
                 if (bAutoSetAsKeyFrame === false) 
                 {
-                    if (filter.bKeyFrame(nFrame)) 
+                    if (filter.cache_bKeyFrame(nFrame)) 
                     {
                         console.log("sll------4444444444444444444444444444-------")
                         loadSavedKeyFrame()  //此处作用，需要再考虑
@@ -1159,7 +1159,7 @@ Item {
         onRemoveKeyFrame: {
             var nFrame = timeline.getPositionInCurrentClip()
             filter.removeKeyFrameParaValue(nFrame);
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
 
             setKeyframedControls()
         }

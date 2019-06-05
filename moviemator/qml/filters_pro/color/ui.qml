@@ -54,21 +54,21 @@ Item {
                 var gainGkeyValue = filter.getStringKeyValueOnProjectOnIndex(index, "gain_g");
                 var gainBkeyValue = filter.getStringKeyValueOnProjectOnIndex(index, "gain_b");
 
-                filter.setKeyFrameParaValue(nFrame, "lift_r", liftRkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "lift_g", liftGkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "lift_b", liftBkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "lift_r", liftRkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "lift_g", liftGkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "lift_b", liftBkeyValue.toString())
 
-                filter.setKeyFrameParaValue(nFrame, "gamma_r", gammaRkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "gamma_g", gammaGkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "gamma_b", gammaBkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gamma_r", gammaRkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gamma_g", gammaGkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gamma_b", gammaBkeyValue.toString())
 
-                filter.setKeyFrameParaValue(nFrame, "gain_r", gainRkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "gain_g", gainGkeyValue.toString())
-                filter.setKeyFrameParaValue(nFrame, "gain_b", gainBkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gain_r", gainRkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gain_g", gainGkeyValue.toString())
+                filter.cache_setKeyFrameParaValue(nFrame, "gain_b", gainBkeyValue.toString())
 
             }
 
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
 
             liftwheel.color = Qt.rgba( filter.getKeyFrameOnProjectOnIndex(0, "lift_r"),
                                    filter.getKeyFrameOnProjectOnIndex(0, "lift_g"),
@@ -117,11 +117,11 @@ Item {
         YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
             }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
             }
         }
         // Row 1

@@ -43,16 +43,16 @@ Item {
                 var gammaValue = (1.0 - sliderValue/100.0) * gammaFactor;
                 var gainValue = sliderValue/100.0 * gainFactor;
 
-                filter.setKeyFrameParaValue(nFrame,"gamma_r", gammaValue.toString() );
-                filter.setKeyFrameParaValue(nFrame,"gamma_g", gammaValue.toString() )
-                filter.setKeyFrameParaValue(nFrame,"gamma_b", gammaValue.toString() )
+                filter.cache_setKeyFrameParaValue(nFrame,"gamma_r", gammaValue.toString() );
+                filter.cache_setKeyFrameParaValue(nFrame,"gamma_g", gammaValue.toString() )
+                filter.cache_setKeyFrameParaValue(nFrame,"gamma_b", gammaValue.toString() )
 
-                filter.setKeyFrameParaValue(nFrame,"gain_r", gainValue.toString() )
-                filter.setKeyFrameParaValue(nFrame,"gain_g", gainValue.toString() )
-                filter.setKeyFrameParaValue(nFrame,"gain_b", gainValue.toString() )
+                filter.cache_setKeyFrameParaValue(nFrame,"gain_r", gainValue.toString() )
+                filter.cache_setKeyFrameParaValue(nFrame,"gain_g", gainValue.toString() )
+                filter.cache_setKeyFrameParaValue(nFrame,"gain_b", gainValue.toString() )
 
             }
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
 
             contrastSlider.value = filter.getKeyValueOnProjectOnIndex(0, "gamma_r") / gammaFactor * 100.0
         }
@@ -77,11 +77,11 @@ Item {
         YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
             }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
             }
         }
 

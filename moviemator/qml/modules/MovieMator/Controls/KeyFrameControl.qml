@@ -55,7 +55,7 @@ Rectangle {
 
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bKeyFrame(position) && (position != 0) && (position != (timeline.getCurrentClipLength() - 1))
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.cache_bKeyFrame(position) && (position != 0) && (position != (timeline.getCurrentClipLength() - 1))
 
         autoAddKeyFrameCheckBox.enabled = enableKeyFrameCheckBox.checked
     }
@@ -138,7 +138,7 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 4
                 text: qsTr('Enable Key Frames')
-                checked: (filter && filter.getKeyFrameNumber() > 0)
+                checked: (filter && filter.cache_getKeyFrameNumber() > 0)
                 style: CheckBoxStyle {
                     indicator: Rectangle {
                         color:'transparent'
@@ -165,7 +165,7 @@ Rectangle {
                     }
                     else
                     {  
-                        if(filter.getKeyFrameNumber() > 0)
+                        if(filter.cache_getKeyFrameNumber() > 0)
                             removeKeyFrameWarning.visible = true
                     }
                 }
@@ -276,7 +276,7 @@ Rectangle {
                     if((position == 0) || (position == (timeline.getCurrentClipLength() - 1))) 
                         return   //首尾帧无法删除
 
-                    var bKeyFrame       = filter.bKeyFrame(position)
+                    var bKeyFrame       = filter.cache_bKeyFrame(position)
                     if (bKeyFrame)
                         filter.removeKeyFrameParaValue(position)
                         removeKeyFrame()
@@ -302,7 +302,7 @@ Rectangle {
                 //customText: qsTr('<<')
                 //buttonWidth : 85
                 onClicked: {
-                    var nFrame = filter.getPreKeyFrameNum(timeline.getPositionInCurrentClip())
+                    var nFrame = filter.cache_getPreKeyFrameNum(timeline.getPositionInCurrentClip())
                     if(nFrame != -1)
                     {
                         filterDock.position = nFrame
@@ -339,7 +339,7 @@ Rectangle {
                 //customText: qsTr('>>')
                 //buttonWidth : 85
                 onClicked: {
-                    var nFrame = filter.getNextKeyFrameNum(timeline.getPositionInCurrentClip())
+                    var nFrame = filter.cache_getNextKeyFrameNum(timeline.getPositionInCurrentClip())
                     if(nFrame != -1)
                     {
                         filterDock.position = nFrame
@@ -377,15 +377,15 @@ Rectangle {
     Connections {
         target: filterDock
         onCurrentFilterChanged: {
-            enableKeyFrameCheckBox.checked = ( filter && filter.getKeyFrameNumber() > 0)
+            enableKeyFrameCheckBox.checked = ( filter && filter.cache_getKeyFrameNumber() > 0)
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }
 
     Connections {
         target: filter
-        onChanged: {
-            enableKeyFrameCheckBox.checked = (filter && filter.getKeyFrameNumber() > 0)
+        onFilterPropertyValueChanged: {
+            enableKeyFrameCheckBox.checked = (filter && filter.cache_getKeyFrameNumber() > 0)
             autoAddKeyFrameChanged(autoAddKeyFrameCheckBox.checked)
         }
     }

@@ -59,7 +59,7 @@ Flickable {
     {
         var rect = filter.getRect(rectProperty)
 
-        if (filter.getKeyFrameNumber() > 0)
+        if (filter.cache_getKeyFrameNumber() > 0)
         {   
             var position        = timeline.getPositionInCurrentClip()
             rect = filter.getAnimRectValue(position, rectProperty)
@@ -87,7 +87,7 @@ Flickable {
     Component.onCompleted: {
 
         var rectT = filter.getRect(rectProperty)
-        if (filter.getKeyFrameNumber() > 0) {
+        if (filter.cache_getKeyFrameNumber() > 0) {
             var position = timeline.getPositionInCurrentClip()
             filterRect = filter.getAnimRectValue(position, rectProperty)
         } else {
@@ -160,7 +160,7 @@ Flickable {
     }
     Connections {
         target: filter
-        onChanged: {
+        onFilterPropertyValueChanged: {
             vuiTimer3.restart()
         }
     }
@@ -180,7 +180,7 @@ Flickable {
         var rectTmp = filter.getRect(rectProperty)
         var newRect = rectTmp
         var position = timeline.getPositionInCurrentClip()
-        var bKeyFrame = filter.bKeyFrame(position)
+        var bKeyFrame = filter.cache_bKeyFrame(position)
         if (bKeyFrame) {
             filter.get(rectProperty)
             rectTmp = filter.getAnimRectValue(position, rectProperty)
@@ -204,11 +204,11 @@ Flickable {
             //filter.set(rectProperty, rectCtr)
 
             var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.bKeyFrame(position)
+            var bKeyFrame       = filter.cache_bKeyFrame(position)
             if (bKeyFrame)
             {
-                filter.setKeyFrameParaRectValue(position, rectProperty, rectCtr, 1.0)
-                filter.combineAllKeyFramePara();
+                filter.cache_setKeyFrameParaRectValue(position, rectProperty, rectCtr, 1.0)
+                filter.syncCacheToProject();
             } else {
                 filter.resetProperty(rectProperty)
                 filter.set(rectProperty, rectCtr)
@@ -249,13 +249,13 @@ Flickable {
             //filter.set(rectProperty, filterRect)
 
             var position = timeline.getPositionInCurrentClip()
-            if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.bKeyFrame(position))
+            if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.cache_bKeyFrame(position))
             {
-                if (!filter.bKeyFrame(position)) showAddFrameInfo(position)
+                if (!filter.cache_bKeyFrame(position)) showAddFrameInfo(position)
                 
                 var rectValue = filter.getRect(rectProperty)
-                filter.setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
-                filter.combineAllKeyFramePara();
+                filter.cache_setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
+                filter.syncCacheToProject();
             }
         }
     }

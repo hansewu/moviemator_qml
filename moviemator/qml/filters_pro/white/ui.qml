@@ -65,19 +65,19 @@ Item {
             {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(index, tempParam);
                 var keyValue = filter.getKeyValueOnProjectOnIndex(index, tempParam);
-                filter.setKeyFrameParaValue(nFrame, tempParam, keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, tempParam, keyValue)
 
                 keyValue = filter.getStringKeyValueOnProjectOnIndex(index, neutralParam);
-                filter.setKeyFrameParaValue(nFrame,neutralParam, keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame,neutralParam, keyValue)
 
             }
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
 
             var frame = filter.getKeyFrameOnProjectOnIndex(0, tempParam);
 
             tempslider.value = parseFloat(filter.getKeyFrameOnProjectOnIndex(0, tempParam) * tempScale)
             tempspinner.value = parseFloat(filter.getKeyValueOnProjectOnIndex(0, neutralParam) * tempScale)
-            colorPicker.value = filter.getKeyFrameParaValue(frame, neutralParam)//filter.getKeyValueOnProjectOnIndex(0, ""+neutralParam)
+            colorPicker.value = filter.cache_getKeyFrameParaValue(frame, neutralParam)//filter.getKeyValueOnProjectOnIndex(0, ""+neutralParam)
         }
         else
         {

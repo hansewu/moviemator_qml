@@ -31,7 +31,7 @@ Item {
     height: 250
     Component.onCompleted: {
         if (filter.isNew) {
-            filter.set('resource', filter.path + 'threejs_text.html')
+            filter.set('resource', filter.resourcePath + 'threejs_text.html')
             // Set default parameter values
             textField.text = qsTr('3D Text')
             filter.set('text', textField.text)

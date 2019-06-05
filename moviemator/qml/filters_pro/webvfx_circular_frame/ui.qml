@@ -33,7 +33,7 @@ Rectangle {
     color: 'transparent'
     Component.onCompleted: {
         if (filter.isNew) {
-            filter.set('resource', filter.path + 'filter-demo.html')
+            filter.set('resource', filter.resourcePath + 'filter-demo.html')
             // Set default parameter values
             colorSwatch.value = 'black'
             filter.set('radius', 0.5)
@@ -51,11 +51,11 @@ Rectangle {
         YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
             }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
             }
         }
 

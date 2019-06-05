@@ -54,25 +54,25 @@ Item {
             {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "av.luma_radius");
                 var keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.luma_radius");
-                filter.setKeyFrameParaValue(nFrame, "av.luma_radius", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.luma_radius", keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.chroma_radius");
-                filter.setKeyFrameParaValue(nFrame, "av.chroma_radius", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_radius", keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.luma_strength");
-                filter.setKeyFrameParaValue(nFrame, "av.luma_strength", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.luma_strength", keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.chroma_strength");
-                filter.setKeyFrameParaValue(nFrame, "av.chroma_strength", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_strength", keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.luma_threshold");
-                filter.setKeyFrameParaValue(nFrame, "av.luma_threshold",  keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.luma_threshold",  keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "av.chroma_threshold");
-                filter.setKeyFrameParaValue(nFrame, "av.chroma_threshold", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_threshold", keyValue)
             }
 
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
 
             radiusSlider.value = filter.getKeyValueOnProjectOnIndex(0, "av.luma_radius")
             strengthSlider.value = filter.getKeyValueOnProjectOnIndex(0, "av.luma_strength")
@@ -98,22 +98,22 @@ Item {
         KeyFrame{
              id: keyFrame
              Layout.columnSpan:3
-             onLoadKeyFrame:
+             onRefreshUI:
              {
-                 var blurValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_radius");
+                 var blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_radius");
                  if(blurValue != -1.0)
                  {
                      radiusSlider.value = blurValue
                  }
 
-                 blurValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_threshold");
+                 blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_threshold");
                  if(blurValue != -1.0)
                  {
                      thresholdSlider.value = blurValue
 
                  }
 
-                 blurValue = filter.getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_strength");
+                 blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_strength");
                  if(blurValue != -1.0)
                  {
                      strengthSlider.value = blurValue
@@ -150,9 +150,9 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "av.luma_radius", value)
-                    filter.setKeyFrameParaValue(nFrame, "av.chroma_radius", value)
-                    filter.combineAllKeyFramePara()
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.luma_radius", value)
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_radius", value)
+                    filter.syncCacheToProject()
                 }
                 else{
                     filter.set("av.luma_radius", value)
@@ -180,9 +180,9 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "av.luma_radius", value)
-                    filter.setKeyFrameParaValue(nFrame, "av.chroma_radius", value)
-                    filter.combineAllKeyFramePara()
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.luma_radius", value)
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_radius", value)
+                    filter.syncCacheToProject()
                 }
                 else{
                     filter.set("av.luma_strength", value)
@@ -211,9 +211,9 @@ Item {
                 if(keyFrame.bKeyFrame)
                 {
                     var nFrame = keyFrame.getCurrentFrame();
-                    filter.setKeyFrameParaValue(nFrame, "av.luma_threshold", value)
-                    filter.setKeyFrameParaValue(nFrame, "av.chroma_threshold", value)
-                    filter.combineAllKeyFramePara()
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.luma_threshold", value)
+                    filter.cache_setKeyFrameParaValue(nFrame, "av.chroma_threshold", value)
+                    filter.syncCacheToProject()
                 }
                 else{
                     filter.set("av.luma_threshold", value)

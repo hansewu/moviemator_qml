@@ -29,7 +29,7 @@ Item {
     height: 250
     Component.onCompleted: {
         if (filter.isNew) {
-            filter.set('resource', filter.path + 'ruttetraizer.html')
+            filter.set('resource', filter.resourcePath + 'ruttetraizer.html')
             // Set default parameter values
             filter.set('opacity', 1.0)
             filter.set('thickness', 3.0)

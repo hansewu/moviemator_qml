@@ -26,8 +26,8 @@ function createKeyFrame(){
         +   'import MovieMator.Controls 1.0;'
         +   'YFKeyFrame{'
         +       'objectName: "keyFrame";'
-        +       'onSynchroData:{keyFrameSynchroData();}'
-        +       'onLoadKeyFrame:{keyFrameLoad();}'
+        +       'onSyncUIDataToProject:{keyFrameSynchroData();}'
+        +       'onRefreshUI:{keyFrameLoad();}'
         +   '}'
     Qt.createQmlObject(str,layoutRoot, "dynamicSnippet1");
 }

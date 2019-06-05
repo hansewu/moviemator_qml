@@ -41,11 +41,11 @@ Item {
         YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
             }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
             }
         }
         Label {

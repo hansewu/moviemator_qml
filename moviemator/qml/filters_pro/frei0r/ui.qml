@@ -24,7 +24,7 @@ Item {
         }
         return null;
     }
-    function findParameter(id){
+    function ParamsAssociatedWithControl(id){
         var rt = [];
         for(var i=0;i<metadata.keyframes.parameters.length;i++){
             if(id.objectName == metadata.keyframes.parameters[i].objectName)
@@ -45,7 +45,7 @@ Item {
     // 滑条还原函数
     function sliderUndoClicked(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = findParameter(ctr)
+        var paramIndexList = ParamsAssociatedWithControl(ctr)
         ctr.value = parseFloat(Handdle.metaParamList[paramIndexList[0]].defaultValue) * 100
     }
     // 颜色响应函数
@@ -56,16 +56,16 @@ Item {
 
     function colorUndoClicked(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = findParameter(ctr)
+        var paramIndexList = ParamsAssociatedWithControl(ctr)
         var rgb = Handdle.metaParamList[paramIndexList[0]].defaultValue.split(" ")
         ctr.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
     }
     // 位置响应函数
     function positionChanged(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = keyFrame.findParameter(ctr)
+        var paramIndexList = keyFrame.ParamsAssociatedWithControl(ctr)
         if(paramIndexList.length != 2){
-            console.log("findParameter Error: "+paramIndexList.length)
+            console.log("ParamsAssociatedWithControl Error: "+paramIndexList.length)
             return;
         }
         filter.set(filter.set(Handdle.metaParamList[paramIndexList[0]].property,(ctr.children)[0].text))
@@ -89,11 +89,11 @@ Item {
     }
     // 关键帧操作——同步数据响应
     function keyFrameSynchroData(){
-        keyFrame.setDatas(layoutRoot)
+        keyFrame.syncDataToProject(layoutRoot)
     }
     // 关键帧操作——时间线改变之后加载数据
     function keyFrameLoad(){
-        keyFrame.loadFrameValue(layoutRoot)
+        keyFrame.updateParamsUI(layoutRoot)
     }
     // 初始化所有控件的值并将默认值写入滤镜中
     function initFilter(){

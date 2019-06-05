@@ -42,13 +42,13 @@ Item {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(index, "noise");
                 var keyValue = filter.getKeyValueOnProjectOnIndex(index, "noise");
 
-                filter.setKeyFrameParaValue(nFrame, "noise", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "noise", keyValue)
 
                 keyValue = filter.getKeyValueOnProjectOnIndex(index, "brightness");
-                filter.setKeyFrameParaValue(nFrame, "brightness", keyValue)
+                filter.cache_setKeyFrameParaValue(nFrame, "brightness", keyValue)
             }
 
-            filter.combineAllKeyFramePara();
+            filter.syncCacheToProject();
             noiseSlider.value = filter.getKeyValueOnProjectOnIndex(0, "noise")
             brightnessSlider.value = filter.getKeyValueOnProjectOnIndex(0, "brightness")
         }
@@ -67,11 +67,11 @@ Item {
         YFKeyFrame{
             id: keyFrame
             Layout.columnSpan:3
-            onSynchroData:{
-                keyFrame.setDatas(layoutRoot)
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
             }
-            onLoadKeyFrame:{
-                keyFrame.loadFrameValue(layoutRoot)
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
             }
         }
 

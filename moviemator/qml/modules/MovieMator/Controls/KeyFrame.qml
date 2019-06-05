@@ -46,20 +46,20 @@ RowLayout{
         return bAutoSetAsKeyFrame
     }
 
-    property bool bEnableKeyFrame: updateEnableKeyFrame((filter.getKeyFrameNumber() > 0))
+    property bool bEnableKeyFrame: updateEnableKeyFrame((filter.cache_getKeyFrameNumber() > 0))
     property bool bAutoSetAsKeyFrame: updateAutoSetAsKeyFrame(true)
     
     property double currentFrame: 0
     property bool bKeyFrame: false
     
-    signal synchroData()
+    signal syncUIDataToProject()
     signal setAsKeyFrame()
-    signal loadKeyFrame(double keyFrameNum)
+    signal refreshUI(double keyFrameNum)
     signal removedAllKeyFrame()
 
     function initFilter(){
         var currentFrame = timeline.getPositionInCurrentClip()
-        loadKeyFrame(currentFrame)
+        refreshUI(currentFrame)
     }
 
     function getCurrentFrame(){
@@ -81,14 +81,14 @@ RowLayout{
         addFrameInfoDialog.position = position
     }
 
-    function addKeyFrameValue()
+    function addKeyFrame()
     {
         
         var position = timeline.getPositionInCurrentClip()
         if (position < 0) return
 
         //添加首尾关键帧
-        if (filter.getKeyFrameNumber() <= 0)
+        if (filter.cache_getKeyFrameNumber() <= 0)
         {
             var paramCount = metadata.keyframes.parameterCount
             for(var i = 0; i < paramCount; i++)
@@ -98,8 +98,8 @@ RowLayout{
 
                 var position2 = (timeline.getCurrentClipLength() - 1) // filter.producerOut - filter.producerIn + 1
                 
-                filter.setKeyFrameParaValue(position2, key, value.toString() );
-                filter.setKeyFrameParaValue(0, key, value.toString() );
+                filter.cache_setKeyFrameParaValue(position2, key, value.toString() );
+                filter.cache_setKeyFrameParaValue(0, key, value.toString() );
             }
         }
 
@@ -111,13 +111,13 @@ RowLayout{
             var paraType = metadata.keyframes.parameters[i].paraType
             if (paraType === "rect") {
                 var rect = filter.getAnimRectValue(position, key)
-                filter.setKeyFrameParaRectValue(position, key, rect, 1.0)
+                filter.cache_setKeyFrameParaRectValue(position, key, rect, 1.0)
             } else {
                 var value = filter.get(key)
-                filter.setKeyFrameParaValue(position, key, value.toString() );
+                filter.cache_setKeyFrameParaValue(position, key, value.toString() );
             }
         }
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
         
         showAddFrameInfo(position)
     }
@@ -125,15 +125,15 @@ RowLayout{
     function removeAllKeyFrame(){
         var position        = timeline.getCurrentClipLength() //filter.producerOut - filter.producerIn + 1
         
-        filter.combineAllKeyFramePara();
+        filter.syncCacheToProject();
         while(true) 
         {  
-            position = filter.getPreKeyFrameNum(position)
+            position = filter.cache_getPreKeyFrameNum(position)
             if(position == -1) break;
  
             filter.removeKeyFrameParaValue(position);
-            filter.combineAllKeyFramePara();
-            synchroData()
+            filter.syncCacheToProject();
+            syncUIDataToProject()
         }
     }
 
@@ -171,17 +171,17 @@ RowLayout{
                 if(bKeyFrame)
                     return
                 bKeyFrame = true
-                synchroData()
+                syncUIDataToProject()
                 setAsKeyFrame()
-                // addKeyFrameValue()
+                // addKeyFrame()
             }
    }
    Connections {
             target: keyFrameControl
             onFrameChanged: {
                 currentFrame = keyFrameNum
-                bKeyFrame = filter.bKeyFrame(currentFrame)
-                loadKeyFrame(keyFrameNum)
+                bKeyFrame = filter.cache_bKeyFrame(currentFrame)
+                refreshUI(keyFrameNum)
             }
    }
    Connections {
@@ -189,12 +189,12 @@ RowLayout{
             onRemoveKeyFrame: {
                 bKeyFrame = false
                 var nFrame = keyFrame.getCurrentFrame();
-                synchroData()
+                syncUIDataToProject()
                 filter.removeKeyFrameParaValue(nFrame);
-                if (filter.getKeyFrameNumber() <= 0) {
+                if (filter.cache_getKeyFrameNumber() <= 0) {
                     removedAllKeyFrame()
                 }
-                synchroData()
+                syncUIDataToProject()
             }
    }
 
