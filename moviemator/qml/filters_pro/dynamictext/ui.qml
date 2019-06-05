@@ -38,12 +38,14 @@ Item {
     property string letterSpaceingProperty: "letter_spaceing"
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
-    property bool blockUpdate: true
+    property bool blockUpdate: false
     property bool bEnableKeyFrame: (filter.getKeyFrameNumber() > 0)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property var  m_lastFrameNum: -1 
     property bool m_bLastEnableKeyFrame: false
+//    property var  m_parameterValue: new Array()
+    property bool  m_refreshedUI:false
 
     width: 500
     height: 950
@@ -66,13 +68,54 @@ Item {
         return colorStr
     }
 
+    function isRectPosValid(rect)
+    {
+        if(rect.x == 2.22507e-308 || rect.y == 2.22507e-308 || rect.width == 2.22507e-308 || rect.height == 2.22507e-308)
+            return false
+       
+        if(rect.x*10000 < -100 || rect.x > 0.8)
+            return false
+        if(rect.y*10000 < -100 || rect.y > 0.8)
+            return false
+
+        if(rect.width < 0.0001 || rect.width > 2)
+            return false
+        if(rect.height < 0.0001 || rect.height > 2)
+            return false
+    
+        return true
+    }
+
+    function isColorRectValid(rect)
+    {
+        if(rect.x == 2.22507e-308 || rect.y == 2.22507e-308 || rect.width == 2.22507e-308 || rect.height == 2.22507e-308)
+            return false
+        if(rect.toString() === "QRectF(0, 0, 0, 2.22507e-308)")
+            return false
+        if(rect.x > 0 && rect.x < 0.00001)
+            return false
+        if(rect.y > 0 && rect.y < 0.00001)
+            return false
+        if(rect.width > 0 && rect.width < 0.00001)
+            return false
+        if(rect.height > 0 && rect.height < 0.00001)
+            return false
+    
+        return true
+    }
     function getHexStrColor(position, propertyName) 
     {
         var colorRect = filter.getRectOfTextFilter(propertyName)
+
+        console.log("propertyName = ", propertyName, " colorRect =", colorRect)
+
         if (position >= 0) 
         {
             colorRect = filter.getAnimRectValue(position, propertyName)
         }
+
+        if(isColorRectValid(colorRect) === false)
+            return "invalid"
 
         var aStr = getColorStr(colorRect.x)
         var rStr = getColorStr(colorRect.y)
@@ -137,6 +180,59 @@ Item {
         filter.combineAllKeyFramePara()
     }
 
+    function getResetValue(property)
+    {
+        if(property == fgcolourProperty) return  Qt.rect(255.0, 255.0, 255.0, 255.0)
+        if(property == bgcolourProperty) return  Qt.rect(0.0, 0.0, 0.0, 0.0)
+        if(property == olcolourProperty) return  Qt.rect(255.0, 0.0, 0.0, 0.0)
+        if(property == rectProperty)      return Qt.rect(0.0148437, 0.441667, 0.948438, 0.195833)
+
+        return 0
+    }
+
+    function getNormalVaue(propertyGet) 
+    {
+        var paramCount = metadata.keyframes.parameterCount
+
+        var propertyValue = ""
+
+        for(var i = 0; i < paramCount; i++) 
+        {
+            var property = metadata.keyframes.parameters[i].property
+            var paraType = metadata.keyframes.parameters[i].paraType
+
+            if(propertyGet === property)
+            {
+                if (paraType === "rect") 
+                {
+                    propertyValue = filter.getRectOfTextFilter(property)
+                    if(property == rectProperty)
+                    {
+                        if(isRectPosValid(propertyValue) == false)
+                            propertyValue = getResetValue(property)
+                    }
+                    else if(isColorRectValid(propertyValue) == false)
+                    {
+                        propertyValue = getResetValue(property)
+                    }
+                }
+                else if (paraType === "double") 
+                {
+                    propertyValue = filter.getDouble(property)
+                }
+                else if (paraType === "int") 
+                {
+                    propertyValue = filter.getInt(property)
+                }
+                else
+                {
+                    propertyValue = filter.get(property)
+                }
+            }
+        }    
+
+        return propertyValue
+    }
 
     function setKeyFrameOfFrame (nFrame) 
     {
@@ -202,24 +298,30 @@ Item {
             var property = metadata.keyframes.parameters[i].property
             var paraType = metadata.keyframes.parameters[i].paraType
 
+            
             if (paraType === "rect") {
                 var rectValue = filter.getRectOfTextFilter(property)
+              //  m_parameterValue[property] = rectValue
+                
                 filter.setKeyFrameParaRectValue(positionStart, property, rectValue, 1.0)
                 filter.setKeyFrameParaRectValue(positionEnd, property, rectValue, 1.0)
+                console.log("paraType = ", paraType, " property = ", property, " valueStr = ", rectValue )
             } 
             else if (paraType === "double") 
             {
                 var valueStr = filter.getDouble(property)
+             //   m_parameterValue[property] = valueStr
                 filter.setKeyFrameParaValue(positionStart, property, valueStr.toString());
                 filter.setKeyFrameParaValue(positionEnd, property, valueStr.toString());
-                console.log("property = ", property, " valueStr = ", valueStr )
+                console.log("paraType = ", paraType, " property = ", property, " valueStr = ", valueStr )
             }
             else 
             {
                 var valueStr = filter.getInt(property)
+              //  m_parameterValue[property] = valueStr
                 filter.setKeyFrameParaValue(positionStart, property, valueStr.toString());
                 filter.setKeyFrameParaValue(positionEnd, property, valueStr.toString());
-                console.log("property = ", property, " valueStr = ", valueStr )
+                console.log("paraType = ", paraType, " property = ", property, " valueStr = ", valueStr )
             }
            // filter.resetProperty(property)  //wzq
         }
@@ -269,11 +371,11 @@ Item {
                     }
                     filter.setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 } 
-            /*    else if (paraType === "double")
+               else if (paraType === "double")
                 {
                     var valueStr = filter.getAnimDoubleValue(nFrame, property)
                     filter.setKeyFrameParaValue(nFrame, property, valueStr.toString());
-                }*/
+                }
                 else 
                 {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
@@ -293,9 +395,6 @@ Item {
         for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++) 
         {
             var property = metadata.keyframes.parameters[paramIndex].property
-            
-    	    
-	    
             var paraType = metadata.keyframes.parameters[paramIndex].paraType
             var keyFrameCount = filter.getKeyFrameNumber()
             for(var keyIndex = 0; keyIndex < keyFrameCount; keyIndex++) 
@@ -323,17 +422,61 @@ Item {
     {
         if (filter.getKeyFrameNumber() > 0) 
         {
+        
             var metaParamList = metadata.keyframes.parameters
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++)
             {
                 var prop = metaParamList[paramIndex].property
+
+                var valueNormal = getNormalVaue(prop)
                 filter.removeAllKeyFrame(prop)
-                combineAllKeyFramePara();
                 filter.resetProperty(prop)
+                filter.set(prop, valueNormal)
             }
+
+            combineAllKeyFramePara();
         }
     }
 
+    
+  /*  function restoreFilterPara()
+    {
+        for(var key in m_parameterValue) 
+        {
+            console.log("m_parameterValue key = ", key, "value = ", m_parameterValue[key])
+            
+            var metaParamList = metadata.keyframes.parameters
+            for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++) 
+            {
+                
+                var property = metadata.keyframes.parameters[paramIndex].property
+                if(property === key)
+                {
+                    var paraType = metadata.keyframes.parameters[paramIndex].paraType
+                    if (paraType === "rect") 
+                    {
+                     //   if(key === fgcolourProperty)
+                     //       filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
+                     //   else
+                        {
+                      //      filter.resetProperty(key)
+                            filter.set(key, m_parameterValue[key])
+                        }
+                    }
+                    else 
+                    {
+                    //    filter.resetProperty(key)
+                        filter.set(key, m_parameterValue[key])
+                    }
+                }
+            }
+	    
+        }
+    
+        
+    }
+
+    */
     function resetFilterPara () 
     {
         filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
@@ -355,6 +498,30 @@ Item {
         filter.set('trans_oy', 0)
         filter.set('trans_fix_shear_x', 0)
         
+    }
+
+    function  testNormalKeyFrameState()
+    {
+        var fgcolourNormalOld = filter.getRectOfTextFilter(fgcolourProperty)
+
+        filter.set(fgcolourProperty, Qt.rect(254.0, 254.0, 254.0, 254.0))
+
+        filter.setEnableAnimation(true)
+
+        filter.setKeyFrameParaRectValue(0, fgcolourProperty, Qt.rect(250.0, 250.0, 250.0, 250.0), 1.0)
+        filter.setKeyFrameParaRectValue(2, fgcolourProperty, Qt.rect(25.0, 25.0, 250.0, 250.0), 1.0)
+
+        var fgcolourNormalAfterKeyFrame = filter.getRectOfTextFilter(fgcolourProperty)
+
+        removeAllKeyFrame()
+
+        var fgcolourNormalAfterRemoveKeyFrame = filter.getRectOfTextFilter(fgcolourProperty)
+
+        filter.set(fgcolourProperty, fgcolourNormalOld)
+
+        var fgcolourNormalRestore = filter.getRectOfTextFilter(fgcolourProperty)
+
+        console.log("testNormalKeyFrameState fgcolourProperty 1 ", fgcolourNormalOld, " 2 ", fgcolourNormalAfterKeyFrame, " 3 ", fgcolourNormalAfterRemoveKeyFrame, " 4 ", fgcolourNormalRestore )
     }
 
     function isKeyFramePropterty(property)
@@ -390,7 +557,6 @@ Item {
                 }
                 console.log("updateFilter currentPropert: ", currentProperty, "value: ", value)
                 setKeyFrameParaValue(nFrame, currentProperty, value);
-                //setKeyFrameParaValue(nFrame, currentProperty, value)
                 combineAllKeyFramePara()
             } 
             else 
@@ -398,7 +564,7 @@ Item {
                 if (filter.bKeyFrame(nFrame)) 
                 {
                     setKeyFrameParaValue(nFrame, currentProperty, value);
-                    //setKeyFrameParaValue(nFrame, currentProperty, value)
+                    
                     combineAllKeyFramePara()
 
                 } 
@@ -488,6 +654,9 @@ Item {
     }
 
     Component.onCompleted: {
+        console.log("Component.onCompleted")
+     //   testNormalKeyFrameState()
+
         filter.setEnableAnimation(bEnableKeyFrame)
         filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
 
@@ -496,13 +665,12 @@ Item {
         //导入上次工程保存的关键帧
         loadSavedKeyFrameNew()
 
-
-
         if (filter.isNew) {
             if (application.OS === 'Windows')
                 filter.set('family', 'Verdana')
 
-            resetFilterPara()
+            //resetFilterPara()
+            console.log("Component.onCompleted filter.isNew")
         }
 
         setControls()
@@ -723,10 +891,10 @@ Item {
             parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
             'trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy', 'trans_fix_shear_x']
-            onBeforePresetLoaded: {
+            onBeforePresetLoaded: 
+            {
                 removeAllKeyFrame()
-
-                resetFilterPara()
+                //resetFilterPara()
             }
             onPresetSelected: {
                 //加載關鍵幀
@@ -1439,7 +1607,9 @@ Item {
         onAddFrameChanged: {
             console.log("---onAddFrameChanged---")
              //如果没有关键帧，先创建头尾两个关键帧
-             if (filter.getKeyFrameNumber() <= 0) {
+             if (filter.getKeyFrameNumber() <= 0) 
+             {
+
                  setInAndOutKeyFrame()
              }
 
@@ -1494,7 +1664,8 @@ Item {
         target: keyFrameControl
         onRemoveAllKeyFrame: {
             removeAllKeyFrame()
-            resetFilterPara()
+        //    restoreFilterPara()
+        //    resetFilterPara()
 
             setControls()
             setKeyframedControls()
@@ -1502,158 +1673,3 @@ Item {
     }
 }
 
-
-//test 
-
-//        if (filter.isNew) {
-//            if (application.OS === 'Windows')
-//                filter.set('family', 'Verdana')
-//            filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
-//            filter.set(bgcolourProperty, Qt.rect(0.0, 0.0, 0.0, 0.0))
-//            filter.set(olcolourProperty, Qt.rect(255.0, 0.0, 0.0, 0.0))
-//            filter.set('weight', 500)
-//            filter.set('argument', 'welcome!')
-
-//            //静态预设
-//            filter.set(rectProperty, Qt.rect(0.0, 0.5, 0.5, 0.5))
-//            filter.set(valignProperty, 'bottom')
-//            filter.set(halignProperty, 'left')
-//            filter.savePreset(preset.parameters, qsTr('Bottom Left'))
-
-//            filter.set(rectProperty, Qt.rect(0.5, 0.5, 0.5, 0.5))
-//            filter.set(valignProperty, 'bottom')
-//            filter.set(halignProperty, 'right')
-//            filter.savePreset(preset.parameters, qsTr('Bottom Right'))
-
-//            filter.set(rectProperty, Qt.rect(0.0, 0.0, 0.5, 0.5))
-//            filter.set(valignProperty, 'top')
-//            filter.set(halignProperty, 'left')
-//            filter.savePreset(preset.parameters, qsTr('Top Left'))
-
-//            filter.set(rectProperty, Qt.rect(0.5, 0.0, 0.5, 0.5))
-//            filter.set(valignProperty, 'top')
-//            filter.set(halignProperty, 'right')
-//            filter.savePreset(preset.parameters, qsTr('Top Right'))
-
-//            filter.set(rectProperty, Qt.rect(0.0, 0.76, 1.0, 0.14))
-//            filter.set(valignProperty, 'bottom')
-//            filter.set(halignProperty, 'center')
-//            filter.savePreset(preset.parameters, qsTr('Lower Third'))
-
-
-//            //动画预设
-//            var totalFrame = filter.producerOut - filter.producerIn + 1
-//            var oneSeconds2Frame = parseInt(profile.fps)
-//            var startFrame = 0.0
-//            var middleFrame = oneSeconds2Frame
-//            var endFrame = totalFrame
-//            var startValue = "-1.0 0.0 1.0 1.0 1.0"
-//            var middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            var endValue = "0.0 0.0 1.0 1.0 1.0"
-
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Left'))
-
-//            startValue = "1.0 0.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Right'))
-
-//            startValue = "0.0 -1.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Top'))
-
-//            startValue = "0.0 1.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + middleFrame + "|=" + middleValue  + ";" + endFrame + "|=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide In From Bottom'))
-
-//            middleFrame = totalFrame - oneSeconds2Frame
-//            if (middleFrame <= 24) {
-//                middleFrame = totalFrame / 2
-//            }
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "-1.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Left'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "1.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Right'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 -1.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Top'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            middleValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 1.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "|=" + startValue + ";" + middleFrame + "~=" + middleValue  + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slide Out Bottom'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In'))
-
-//            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out'))
-
-//            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            endValue = "-0.1 -0.05 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Left'))
-
-//            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            endValue = "0.0 -0.05 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Right'))
-
-//            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            endValue = "-0.05 -0.1 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Up'))
-
-//            startValue = "-0.05 -0.05 1.1 1.1 1.0"
-//            endValue = "-0.05 0.0 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Pan Down'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "-0.1 -0.1 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Up Left'))
-
-//            startValue = "0.0 0.0 1.0 1.0 1.0"
-//            endValue = "0.0 0.0 1.1 1.1 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom In, Pan Down Right'))
-
-//            startValue = "-0.1 0.0 1.1 1.1 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Up Right'))
-
-//            startValue = "0.0 -0.1 1.1 1.1 1.0"
-//            endValue = "0.0 0.0 1.0 1.0 1.0"
-//            filter.set(rectProperty, startFrame + "~=" + startValue + ";" + endFrame + "~=" + endValue)
-//            filter.savePreset(preset.parameters, qsTr('Slow Zoom Out, Pan Down Left'))
-
-//            filter.removeAllKeyFrame(rectProperty)
-
-//            filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
-//            filter.set(valignProperty, 'bottom')
-//            filter.set(halignProperty, 'center')
-//            filter.savePreset(preset.parameters)
-//        }
