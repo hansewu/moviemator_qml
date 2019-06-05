@@ -169,10 +169,10 @@ RowLayout{
                 case "ColorWheelItem":
                     var parameter2 = metaParamList[paramIndex+1]
                     var parameter3 = metaParamList[paramIndex+2]
-                    control.color = Qt.rgba(CalcProjValByUIVal(parameter.defaultValue,parameter.factorFunc), CalcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc), CalcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc), 1.0 )
-                    filter.set(parameter.property,CalcProjValByUIVal(parameter.defaultValue,parameter.factorFunc))
-                    filter.set(parameter2.property,CalcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc))
-                    filter.set(parameter3.property,CalcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc))
+                    control.color = Qt.rgba(calcProjValByUIVal(parameter.defaultValue,parameter.factorFunc), calcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc), calcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc), 1.0 )
+                    filter.set(parameter.property,calcProjValByUIVal(parameter.defaultValue,parameter.factorFunc))
+                    filter.set(parameter2.property,calcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc))
+                    filter.set(parameter3.property,calcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc))
                     paramIndex = paramIndex+2
                 
                     break;
@@ -211,7 +211,7 @@ RowLayout{
 
         bBlockSignal = true
         // 可能一个控件对应几个配置项
-        var parameterList = ParamsAssociatedWithControl(id)
+        var parameterList = getParamsAssociatedWithControl(id)
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
             throw new Error("metadata is abnormal")
         }
@@ -225,7 +225,7 @@ RowLayout{
             case "SliderSpinner":
                 if(filter.cache_bKeyFrame(currentFrame))
                 {
-                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, CalcProjValByUIVal(id.value,parameter.factorFunc).toString())
+                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc).toString())
                     filter.syncCacheToProject()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
@@ -234,7 +234,7 @@ RowLayout{
                     valueChange = true
 
                 }else{
-                    filter.set(parameter.property, CalcProjValByUIVal(id.value,parameter.factorFunc))
+                    filter.set(parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc))
                     userChange = true
                 }
                 break;
@@ -268,16 +268,16 @@ RowLayout{
 
                 if(filter.cache_bKeyFrame(currentFrame))
                 {
-                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, CalcProjValByUIVal(id.red,parameter.factorFunc).toString())
-                    filter.cache_setKeyFrameParaValue(currentFrame, parameter2.property, CalcProjValByUIVal(id.green,parameter2.factorFunc).toString())
-                    filter.cache_setKeyFrameParaValue(currentFrame, parameter3.property, CalcProjValByUIVal(id.blue,parameter3.factorFunc).toString())
+                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(id.red,parameter.factorFunc).toString())
+                    filter.cache_setKeyFrameParaValue(currentFrame, parameter2.property, calcProjValByUIVal(id.green,parameter2.factorFunc).toString())
+                    filter.cache_setKeyFrameParaValue(currentFrame, parameter3.property, calcProjValByUIVal(id.blue,parameter3.factorFunc).toString())
                     filter.syncCacheToProject()
                 }else if((value10 - value20 <= 1)&&(value11 - value21 <= 1)&&(value12 - value22 <= 1)){
                     userChange = false
                 }else{
-                    filter.set(parameter.property,CalcProjValByUIVal(id.red,parameter.factorFunc))
-                    filter.set(parameter2.property,CalcProjValByUIVal(id.green,parameter2.factorFunc))
-                    filter.set(parameter3.property,CalcProjValByUIVal(id.blue,parameter3.factorFunc))
+                    filter.set(parameter.property,calcProjValByUIVal(id.red,parameter.factorFunc))
+                    filter.set(parameter2.property,calcProjValByUIVal(id.green,parameter2.factorFunc))
+                    filter.set(parameter3.property,calcProjValByUIVal(id.blue,parameter3.factorFunc))
                     userChange = true
                 }
                 paramIndex = paramIndex+2
@@ -287,9 +287,9 @@ RowLayout{
                 var rv = parseInt("0x" + id.value.slice(1, 3))
                 var gv = parseInt("0x" + id.value.slice(3, 5))
                 var bv = parseInt("0x" + id.value.slice(5, 7))
-                colorRect.x = CalcProjValByUIVal(rv,parameter.factorFunc)
-                colorRect.y = CalcProjValByUIVal(gv,parameter.factorFunc)
-                colorRect.width = CalcProjValByUIVal(bv,parameter.factorFunc)
+                colorRect.x = calcProjValByUIVal(rv,parameter.factorFunc)
+                colorRect.y = calcProjValByUIVal(gv,parameter.factorFunc)
+                colorRect.width = calcProjValByUIVal(bv,parameter.factorFunc)
 
                 var rp = parseInt("0x" + parameter.value.slice(1, 3))
                 var gp = parseInt("0x" + parameter.value.slice(3, 5))
@@ -311,13 +311,13 @@ RowLayout{
             case "Slider":
                 if(filter.cache_bKeyFrame(currentFrame))
                 {
-                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, CalcProjValByUIVal(id.value,parameter.factorFunc).toString())
+                    filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc).toString())
                     filter.syncCacheToProject()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((id.value == parameter.value)||(Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
 
                 }else{
-                    filter.set(parameter.property, CalcProjValByUIVal(id.value,parameter.factorFunc))
+                    filter.set(parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc))
                     userChange = true
                 }
                 break;
@@ -502,7 +502,7 @@ RowLayout{
                 break;
             }
             // 一个控件对应几个参数的，取一次就可以反算出来了
-            var paramList = ParamsAssociatedWithControl(control)
+            var paramList = getParamsAssociatedWithControl(control)
             paramIndex = paramIndex + paramList.length -1
         }
     }
@@ -528,7 +528,7 @@ RowLayout{
             switch(parameter.controlType)
             {
             case "SliderSpinner":
-                filter.set(parameter.property,CalcProjValByUIVal(control.value,parameter.factorFunc))
+                filter.set(parameter.property,calcProjValByUIVal(control.value,parameter.factorFunc))
                 break;
 
             case "CheckBox":
@@ -538,21 +538,21 @@ RowLayout{
             case "ColorWheelItem":
                 var parameter2 = metaParamList[paramIndex+1]
                 var parameter3 = metaParamList[paramIndex+2]
-                filter.set(parameter.property,CalcProjValByUIVal(control.red,parameter.factorFunc))
-                filter.set(parameter2.property,CalcProjValByUIVal(control.green,parameter2.factorFunc))
-                filter.set(parameter3.property,CalcProjValByUIVal(control.blue,parameter3.factorFunc))
+                filter.set(parameter.property,calcProjValByUIVal(control.red,parameter.factorFunc))
+                filter.set(parameter2.property,calcProjValByUIVal(control.green,parameter2.factorFunc))
+                filter.set(parameter3.property,calcProjValByUIVal(control.blue,parameter3.factorFunc))
                 paramIndex = paramIndex+2
                 break;
 
             case "ColorPicker":
-                colorRect.x = CalcProjValByUIVal(parseInt("0x" + control.value.slice(1, 3)),parameter.factorFunc)
-                colorRect.y = CalcProjValByUIVal(parseInt("0x" + control.value.slice(3, 5)),parameter.factorFunc)
-                colorRect.width = CalcProjValByUIVal(parseInt("0x" + control.value.slice(5, 7)),parameter.factorFunc)
+                colorRect.x = calcProjValByUIVal(parseInt("0x" + control.value.slice(1, 3)),parameter.factorFunc)
+                colorRect.y = calcProjValByUIVal(parseInt("0x" + control.value.slice(3, 5)),parameter.factorFunc)
+                colorRect.width = calcProjValByUIVal(parseInt("0x" + control.value.slice(5, 7)),parameter.factorFunc)
                 filter.set(parameter.property,colorRect)
                 break;
 
             case "Slider":
-                filter.set(parameter.property,CalcProjValByUIVal(control.value,parameter.factorFunc))
+                filter.set(parameter.property,calcProjValByUIVal(control.value,parameter.factorFunc))
                 break;
 
             case "StringCtr":
@@ -631,7 +631,7 @@ RowLayout{
     }
     //加减乘除 分别用 + - x c 被除b，对数log，指数pow
     // 控件到project mlt底层的写入保存计算
-    function CalcProjValByUIVal(value,factorFunc){
+    function calcProjValByUIVal(value,factorFunc){
         var rt = value
         for(var i=0;i<factorFunc.length;i++){
             var calc = factorFunc[i]
@@ -676,7 +676,7 @@ RowLayout{
         return rt;
     }
     // project mlt底层到控件参数的加载计算，刚好与写入保存相反
-    function CalcUIValByProjVal(value,factorFunc){
+    function calcUIValByProjVal(value,factorFunc){
         var rt = value
         for(var i=factorFunc.length-1;i>=0;i--){
             var calc = factorFunc[i]
@@ -751,7 +751,7 @@ RowLayout{
       return true;
     }
     // 根据控件id查找配置项，查找对应哪几个参数，因为会有一个控件对应几个参数
-    function ParamsAssociatedWithControl(id){
+    function getParamsAssociatedWithControl(id){
         if((typeof id == 'undefined')||(typeof id.objectName == 'undefined')){
             throw new Error("id is abnormal:"+id)
         }
@@ -783,7 +783,7 @@ RowLayout{
             var tempValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter.property);
             if(tempValue != -1.0)
             {
-                control.value = CalcUIValByProjVal(tempValue,parameter.factorFunc)
+                control.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
                 
             }
         }else{
@@ -791,10 +791,10 @@ RowLayout{
             //filter.syncCacheToProject();
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            parameter.value = CalcUIValByProjVal(tempValue,parameter.factorFunc)
+            parameter.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
             
             // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
-            var parameterList = ParamsAssociatedWithControl(control)
+            var parameterList = getParamsAssociatedWithControl(control)
             for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
                 metadata.keyframes.parameters[parameterList[i]].value = parameter.value
             }
@@ -812,8 +812,8 @@ RowLayout{
             if(changeValue){
                 for(var i=0;i< parameterList.length;i++){
                     parameter = metadata.keyframes.parameters[parameterList[i]]
-                    filter.set(parameter.property,CalcProjValByUIVal(control.value,parameter.factorFunc))
-                    // filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, CalcProjValByUIVal(control.value,parameter.factorFunc).toString());
+                    filter.set(parameter.property,calcProjValByUIVal(control.value,parameter.factorFunc))
+                    // filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(control.value,parameter.factorFunc).toString());
                 }
             }
         }
@@ -877,9 +877,9 @@ RowLayout{
             bValue = filter.getAnimDoubleValue(currentFrame, parameter3.property);
             filter.get(parameter3.property)
         }
-        var tempRed = CalcUIValByProjVal(rValue,parameter1.factorFunc)
-        var tempGreen = CalcUIValByProjVal(gValue,parameter2.factorFunc)
-        var tempBlue = CalcUIValByProjVal(bValue,parameter3.factorFunc)
+        var tempRed = calcUIValByProjVal(rValue,parameter1.factorFunc)
+        var tempGreen = calcUIValByProjVal(gValue,parameter2.factorFunc)
+        var tempBlue = calcUIValByProjVal(bValue,parameter3.factorFunc)
         // 一定要先改参数值，再改control值
         if(!bKeyFrame){
             parameter1.value = parameter2.value = parameter3.value = Qt.rgba( tempRed / 255.0, tempGreen / 255.0, tempBlue / 255.0, 1.0 )
@@ -932,15 +932,15 @@ RowLayout{
             var tempValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter.property);
             if(tempValue != -1.0)
             {
-                control.value = CalcUIValByProjVal(tempValue,parameter.factorFunc)
+                control.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
             }
         }else{
             filter.get(parameter.property)
             var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            parameter.value = CalcUIValByProjVal(tempValue,parameter.factorFunc)
+            parameter.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
             // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
-            var parameterList = ParamsAssociatedWithControl(control)
+            var parameterList = getParamsAssociatedWithControl(control)
             for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
                 metadata.keyframes.parameters[parameterList[i]].value = parameter.value
             }

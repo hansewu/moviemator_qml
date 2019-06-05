@@ -24,7 +24,7 @@ Item {
         }
         return null;
     }
-    function ParamsAssociatedWithControl(id){
+    function getParamsAssociatedWithControl(id){
         var rt = [];
         for(var i=0;i<metadata.keyframes.parameters.length;i++){
             if(id.objectName == metadata.keyframes.parameters[i].objectName)
@@ -45,7 +45,7 @@ Item {
     // 滑条还原函数
     function sliderUndoClicked(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = ParamsAssociatedWithControl(ctr)
+        var paramIndexList = getParamsAssociatedWithControl(ctr)
         ctr.value = parseFloat(Handdle.metaParamList[paramIndexList[0]].defaultValue) * 100
     }
     // 颜色响应函数
@@ -56,16 +56,16 @@ Item {
 
     function colorUndoClicked(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = ParamsAssociatedWithControl(ctr)
+        var paramIndexList = getParamsAssociatedWithControl(ctr)
         var rgb = Handdle.metaParamList[paramIndexList[0]].defaultValue.split(" ")
         ctr.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
     }
     // 位置响应函数
     function positionChanged(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
-        var paramIndexList = keyFrame.ParamsAssociatedWithControl(ctr)
+        var paramIndexList = keyFrame.getParamsAssociatedWithControl(ctr)
         if(paramIndexList.length != 2){
-            console.log("ParamsAssociatedWithControl Error: "+paramIndexList.length)
+            console.log("getParamsAssociatedWithControl Error: "+paramIndexList.length)
             return;
         }
         filter.set(filter.set(Handdle.metaParamList[paramIndexList[0]].property,(ctr.children)[0].text))
