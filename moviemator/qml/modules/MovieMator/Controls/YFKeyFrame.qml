@@ -72,7 +72,7 @@ RowLayout{
     property bool bKeyFrame: false
 
     // 屏蔽信号，主要用到当一个filter 有几个参数时，当一个参数set时，可能会出现加载更新界面，或获取所有参数，还未来得及设置的参数出现了获取新的值，改变了参数。filter的几个参数set的过程中，屏蔽信号，不调用loadframe，等加载完了，再处理。
-    property bool bBlockSignal: false
+    property bool bBlockUpdateUI: false
 
     //存rect 变量，应该可以不用作为成员变量，可以在使用的地方使用局部变量
     property rect colorRect
@@ -107,7 +107,7 @@ RowLayout{
             filter.setInAndOut(0, timeline.getCurrentClipParentLength())
 
         //导入上次工程保存的关键帧
-        //bBlockSignal = true
+        //bBlockUpdateUI = true
         var metaParamList = metadata.keyframes.parameters
         if((typeof metaParamList == 'undefined')||(metaParamList.length <= 0)) return
         // 由于string没有关键帧，所以通过string类型的参数获取关键帧个数会出错，因此不能用string类型的参数去获取关键帧个数和关键帧位置
@@ -125,7 +125,7 @@ RowLayout{
                 keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[keyParam].property);
             }
             
-            bBlockSignal = true
+            bBlockUpdateUI = true
             for(var keyIndex=0; keyIndex<keyFrameCount;keyIndex++)
             {
                 var nFrame = filter.getKeyFrameOnProjectOnIndex(keyIndex, metaParamList[keyParam].property);
@@ -141,7 +141,7 @@ RowLayout{
                     }
                 }
             }
-            bBlockSignal = false
+            bBlockUpdateUI = false
             filter.syncCacheToProject();
             if(keyFrameCount > 0){
                 refreshUI()
@@ -209,7 +209,7 @@ RowLayout{
         var userChange = false
         var valueChange = false
 
-        bBlockSignal = true
+        bBlockUpdateUI = true
         // 可能一个控件对应几个配置项
         var parameterList = getParamsAssociatedWithControl(id)
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
@@ -340,7 +340,7 @@ RowLayout{
                 break;
             }
         }
-        bBlockSignal = false
+        bBlockUpdateUI = false
         
         // 添加关键帧
         if ((filter.cache_getKeyFrameNumber() > 0)&&(userChange))
@@ -380,7 +380,7 @@ RowLayout{
         var position = timeline.getPositionInCurrentClip()
         if (position < 0) return
 
-        bBlockSignal = true
+        bBlockUpdateUI = true
         //添加首尾关键帧
         if (filter.cache_getKeyFrameNumber() <= 0)
         {
@@ -403,13 +403,13 @@ RowLayout{
             }
         }
 
-        bBlockSignal = false
+        bBlockUpdateUI = false
 
         //重复点击不生效
         var bKeyFrame = filter.cache_bKeyFrame(position)
         if (bKeyFrame)
             return
-        bBlockSignal = true
+        bBlockUpdateUI = true
         //插入关键帧
         var paramCount = metadata.keyframes.parameterCount
         for(var i = 0; i < paramCount; i++)
@@ -443,7 +443,7 @@ RowLayout{
         filter.syncCacheToProject();
         bKeyFrame = true
 
-        bBlockSignal = false
+        bBlockUpdateUI = false
 
 
         for(var j = 0; j < paramCount; j++)
@@ -461,7 +461,7 @@ RowLayout{
             throw new Error("layoutRoot is undefined:"+layoutRoot)
         }
 
-        if(bBlockSignal == true) return
+        if(bBlockUpdateUI == true) return
         currentFrame = timeline.getPositionInCurrentClip()
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
             throw new Error("metadata is abnormal")
@@ -514,7 +514,7 @@ RowLayout{
         clearAllFilterAnimationStatus()
         //resetAnim2No(layoutRoot)
 
-        bBlockSignal = true
+        bBlockUpdateUI = true
         if((typeof metadata == 'undefined')||(typeof metadata.keyframes == 'undefined')||(typeof metadata.keyframes.parameters == 'undefined')){
             throw new Error("metadata is abnormal")
         }
@@ -567,7 +567,7 @@ RowLayout{
 
         }
 
-        bBlockSignal = false
+        bBlockUpdateUI = false
     }
 
     // 清除filter的动画状态，当没有keyframe时处理所有的filter 属性参数reset 清空  更改成切换动画非动画更好。
