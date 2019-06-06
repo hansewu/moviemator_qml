@@ -250,12 +250,12 @@ Item {
         filter.set(distortProperty, 0)
 
         var scale = 1
-        if(filter.producerAspect > profile.width/profile.height) 
+        if(filter.producerAspect() > profile.width/profile.height) 
         {
             if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
                 scale = filter.mediaWidth/profile.width
 
-            filterRect.height   = 1.0/filter.producerAspect * profile.width/profile.height * scale
+            filterRect.height   = 1.0/filter.producerAspect() * profile.width/profile.height * scale
             filterRect.width    = 1 * scale
         }
         else
@@ -263,7 +263,7 @@ Item {
             if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
                 scale = filter.mediaHeight/profile.height
 
-            filterRect.width    = filter.producerAspect * profile.height/profile.width * scale
+            filterRect.width    = filter.producerAspect() * profile.height/profile.width * scale
             filterRect.height   = 1 * scale
         }
         filterRect.x        = (1.0 - filterRect.width)/2.0
@@ -283,14 +283,14 @@ Item {
         filter.set(fillProperty, 1)
         filter.set(distortProperty, 0)
 
-        if(filter.producerAspect > profile.width/profile.height) 
+        if(filter.producerAspect() > profile.width/profile.height) 
         {
-            filterRect.height   = 1.0/filter.producerAspect * profile.width/profile.height
+            filterRect.height   = 1.0/filter.producerAspect() * profile.width/profile.height
             filterRect.width    = 1
         }
         else
         {
-            filterRect.width    = filter.producerAspect * profile.height/profile.width
+            filterRect.width    = filter.producerAspect() * profile.height/profile.width
             filterRect.height   = 1
         }
         filterRect.x        = (1.0 - filterRect.width)/2.0
@@ -312,15 +312,15 @@ Item {
         filter.set(distortProperty, 0)
 
 
-        if(filter.producerAspect > profile.width/profile.height) 
+        if(filter.producerAspect() > profile.width/profile.height) 
         {
             filterRect.height   = 1.0 
-            filterRect.width    = 1.0/(1.0/filter.producerAspect * profile.width/profile.height)
+            filterRect.width    = 1.0/(1.0/filter.producerAspect() * profile.width/profile.height)
         }
         else
         {
             filterRect.width    = 1.0
-            filterRect.height   = 1/(filter.producerAspect * profile.height/profile.width)
+            filterRect.height   = 1/(filter.producerAspect() * profile.height/profile.width)
         }
         filterRect.x        = (1.0 - filterRect.width)/2.0
         filterRect.y        = (1.0 - filterRect.height)/2.0

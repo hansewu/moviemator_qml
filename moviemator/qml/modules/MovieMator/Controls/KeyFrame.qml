@@ -33,7 +33,9 @@ RowLayout{
     function updateEnableKeyFrame(bEnable)
     {
         bEnableKeyFrame = bEnable
-        filter.setEnableAnimation(bEnableKeyFrame)
+
+        if(filter)
+            filter.setEnableAnimation(bEnableKeyFrame)
 
         return bEnableKeyFrame
     }
@@ -41,7 +43,9 @@ RowLayout{
     function updateAutoSetAsKeyFrame(bEnable)
     {
         bAutoSetAsKeyFrame = bEnable
-        filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+
+        if(filter)
+            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
 
         return bAutoSetAsKeyFrame
     }

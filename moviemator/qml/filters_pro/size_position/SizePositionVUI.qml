@@ -35,10 +35,10 @@ Flickable {
     property rect rectCtr2
     property string metaValue: ''
 
-    property var fillStat:filter.get(fillProperty)
-    property var distortStat:filter.get(distortProperty)
-    property var valignStat:filter.get(valignProperty)
-    property var halignStat:filter.get(halignProperty)
+    property var fillStat: filter ? filter.get(fillProperty) : ''
+    property var distortStat: filter ? filter.get(distortProperty) : ''
+    property var valignStat: filter ? filter.get(valignProperty) : ''
+    property var halignStat: filter ? filter.get(halignProperty) : ''
 
     width: 400
     height: 200
@@ -52,7 +52,9 @@ Flickable {
     contentY: video.offset.y
 
     function getAspectRatio() {
-        return (filter.get(fillProperty) === '1' && filter.get(distortProperty) === '0')? filter.producerAspect : 0.0
+        if (!filter) return 0.0
+
+        return (filter.get(fillProperty) === '1' && filter.get(distortProperty) === '0')? filter.producerAspect() : 0.0
     }
 
     function updateRectangleUI()

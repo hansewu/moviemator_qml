@@ -42,7 +42,7 @@ Flickable {
     contentY: video.offset.y
 
     function getAspectRatio() {
-        return (filter.get(fillProperty) === '1')? filter.producerAspect : 0.0
+        return (filter.get(fillProperty) === '1')? filter.producerAspect() : 0.0
     }
 
     function getAbsoluteRect(position) {
