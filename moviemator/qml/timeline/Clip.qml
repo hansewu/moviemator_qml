@@ -235,7 +235,7 @@ Rectangle {
     TimelineTransition {
         visible: isTransition
         anchors.fill: parent
-        property var color: '#c3c998'//isAudio? 'darkseagreen' : root.moviematorBlue
+        property string color: '#c3c998'//isAudio? 'darkseagreen' : root.moviematorBlue
         colorA: color
         colorB: color//clipRoot.selected ? Qt.darker(color) : Qt.lighter(color)
     }
@@ -780,7 +780,7 @@ Rectangle {
                         if (clipDuration + originalX + delta > 0)
                             originalX += delta
                         clipRoot.trimmingIn(clipRoot, delta, mouse)
-                        if (Logic.snapTrimIn(clipRoot, delta) != 0)
+                        if (Logic.snapTrimIn(clipRoot, delta) !== 0)
                             startX = newX
                     }
                 }
@@ -901,7 +901,7 @@ Rectangle {
                 height: parent.height / 2
                 width: height
                 anchors.verticalCenter: parent.verticalCenter
-                visible: !isBlank && selected &&currentFilter && (currentFilter.getKeyFrame(index) != -1)
+                visible: !isBlank && selected &&currentFilter && (currentFilter.getKeyFrame(index) !== -1)
                 x: (currentFilter?currentFilter.getKeyFrame(index):0) *multitrack.scaleFactor - width/2
                 frameNumber: currentFilter ? currentFilter.getKeyFrame(index) : -1
                 rotation: 45

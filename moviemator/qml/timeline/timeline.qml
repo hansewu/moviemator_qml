@@ -518,14 +518,14 @@ Rectangle {
             }
 
             CornerSelectionShadow {
-                y: tracksRepeater.count ? tracksRepeater.itemAt(currentTrack).y + ruler.height - scrollView.flickableItem.contentY : 0
+                y: tracksRepeater.count ? (tracksRepeater.itemAt(currentTrack) ? tracksRepeater.itemAt(currentTrack).y : 0) + ruler.height - scrollView.flickableItem.contentY : 0
                 clip: (timeline && timeline.selection.length) ?
                         tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[0]) : null
                 opacity: clip && clip.x + clip.width < scrollView.flickableItem.contentX ? 1 : 0
             }
 
             CornerSelectionShadow {
-                y: tracksRepeater.count ? tracksRepeater.itemAt(currentTrack).y + ruler.height - scrollView.flickableItem.contentY : 0
+                y: tracksRepeater.count ? (tracksRepeater.itemAt(currentTrack) ? tracksRepeater.itemAt(currentTrack).y : 0) + ruler.height - scrollView.flickableItem.contentY : 0
                 clip: (timeline && timeline.selection.length) ?
                         tracksRepeater.itemAt(currentTrack).clipAt(timeline.selection[timeline.selection.length - 1]) : null
                 opacity: clip && clip.x > scrollView.flickableItem.contentX + scrollView.width ? 1 : 0
@@ -776,7 +776,7 @@ Rectangle {
             console.assert(timeline);
             if(!timeline)   return;
             cornerstone.selected = timeline.isMultitrackSelected()
-            // var selectedTrack = timeline.selectedTrack()
+            // var selectedTrack = timeline.selectedTrackIndex()
             // for (var i = 0; i < trackHeaderRepeater.count; i++)
             //     trackHeaderRepeater.itemAt(i).selected = (i === selectedTrack)
 

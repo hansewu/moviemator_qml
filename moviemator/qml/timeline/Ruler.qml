@@ -130,7 +130,7 @@ Rectangle {
                 }
                 var len = str.length;
                 var sub_frames = str.substr(len-2);
-                if(sub_frames == "00"){
+                if(sub_frames === "00"){
                     return str;
                 }
                 var num_sub_frames = Number(sub_frames);
@@ -142,12 +142,12 @@ Rectangle {
                     var sub_second = str.substr(len-5, 2);
                     sub_second = Number(sub_second) + 1;
                     sub_second = Number(sub_second<10) ? "0"+sub_second : sub_second;
-                    if(sub_second == "60"){
+                    if(sub_second === "60"){
                         sub_second = "00";
                         var sub_minute = str.substr(len-8, 2);
                         sub_minute = Number(sub_minute) + 1;
                         sub_minute = Number(sub_minute)<10 ? "0"+sub_minute : sub_minute;
-                        if(sub_minute == "60"){
+                        if(sub_minute === "60"){
                             sub_minute = "00";
                             var sub_hour = str.substring(0, str.indexOf(":"));
                             sub_hour = Number(sub_hour) + 1;
