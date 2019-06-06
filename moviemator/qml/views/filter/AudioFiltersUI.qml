@@ -29,11 +29,11 @@ Rectangle {
     color: "transparent"
     property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
-    property var currentChoosed : 0
+    property int currentChoosed : 0
 
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
-            if(name == filtersInfoList.get(i).name){
+            if(name === filtersInfoList.get(i).name){
                 return filtersInfoList.get(i)
             }
         }
@@ -42,7 +42,7 @@ Rectangle {
 
     function findFilterType(type){
         for(var i=0;i<catListAll.count;i++){
-            if(type == catListAll.get(i).typename){
+            if(type === catListAll.get(i).typename){
                 return catListAll.get(i)
             }
         }
@@ -78,11 +78,11 @@ Rectangle {
         catList.clear()
         catListAll.clear()
         catListAll.append({"typename":qsTr('All')})
-        for(var i=0;i<filtersInfoList.count;i++){
-            if('' != filtersInfoList.get(i).filterType) continue;
-            if(null == findFilterType(filtersInfoList.get(i).filterType)){
-                catList.append({"typename":filtersInfoList.get(i).filterType})
-                catListAll.append({"typename":filtersInfoList.get(i).filterType})
+        for(var j=0;j<filtersInfoList.count;j++){
+            if('' !== filtersInfoList.get(j).filterType) continue;
+            if(null === findFilterType(filtersInfoList.get(j).filterType)){
+                catList.append({"typename":filtersInfoList.get(j).filterType})
+                catListAll.append({"typename":filtersInfoList.get(j).filterType})
             }
         }
     }
@@ -123,7 +123,7 @@ Rectangle {
                 filters.clear()
                 for(var i=0;i<filtersInfoList.count;i++){
                     if(typename === filtersInfoList.get(i).filterType){
-                        if(filtersInfoList.get(i).visible == false){
+                        if(filtersInfoList.get(i).visible === false){
                             continue;
                         }
                         filters.append(filtersInfoList.get(i))
@@ -189,7 +189,7 @@ Rectangle {
                             z:1
                             radius: 3 
                             color: hoverStat ? '#C0482C':'transparent'
-                            property bool checked: (objectName == currentChoosed)?true:false
+                            property bool checked: (objectName === currentChoosed)?true:false
                             property bool hoverStat:false
                             Image {
                                 id: myIcon

@@ -39,7 +39,7 @@ Rectangle {
     
     //清除当前滤镜的参数显示界面
     function clearCurrentFilter(index) {
-        if((attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo)||(index<0)){
+        if((attachedfiltersmodel.isVisible(index) === attachedFilters.isvideo)||(index<0)){
             if (filterConfig.item) {
                 filterConfig.item.width = 1
                 filterConfig.item.height = 1
@@ -50,7 +50,7 @@ Rectangle {
     
     //设置当前选中滤镜为列表中的第index个滤镜，并显示对应参数界面
     function setCurrentFilter(index) {
-        if(attachedfiltersmodel.isVisible(index)==attachedFilters.isvideo){
+        if(attachedfiltersmodel.isVisible(index) === attachedFilters.isvideo){
             attachedFilters.setCurrentFilter(index)
             filterConfig.source = metadata ? metadata.qmlFilePath : ""
         }

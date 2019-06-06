@@ -120,7 +120,7 @@ Rectangle {
                 //                }
                 onReleased: {
                     console.log("******** onReleased is called");
-                    if(parent.Drag.supportedActions == Qt.CopyAction){
+                    if(parent.Drag.supportedActions === Qt.CopyAction){
                         container.x = 0;
                         container.y = 0;
                     }
