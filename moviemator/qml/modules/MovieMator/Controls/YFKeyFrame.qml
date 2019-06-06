@@ -83,14 +83,14 @@ RowLayout{
     //加载keyframe信号，这里主要用到的是同步数据值到界面中
     signal refreshUI()
 
-    // 目前只有string 类型的参数用到
+    // 目前只有string 类型的参数用到
     function findDefaultIndex(strValue,modelList){
         if(modelList.length <= 0){
             return 0
         }
         for(var i=0;i<modelList.length;i++){
 
-            if(strValue == modelList[i]){
+            if(strValue === modelList[i]){
                 return i
             }
         }
@@ -103,7 +103,7 @@ RowLayout{
             throw new Error("metadata is abnormal")
         }
 
-        if(metadata.keyframes.parameters.length == 1)
+        if(metadata.keyframes.parameters.length === 1)
             filter.setInAndOut(0, timeline.getCurrentClipParentLength())
 
         //导入上次工程保存的关键帧
@@ -113,7 +113,7 @@ RowLayout{
         // 由于string没有关键帧，所以通过string类型的参数获取关键帧个数会出错，因此不能用string类型的参数去获取关键帧个数和关键帧位置
         var keyParam = 0
         for(keyParam=0;keyParam<metaParamList.length;keyParam++){
-            if(metaParamList[keyParam].paraType != 'string'){
+            if(metaParamList[keyParam].paraType !== 'string'){
                 break;
             }
         }
@@ -132,7 +132,7 @@ RowLayout{
                 for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
                     var prop = metaParamList[paramIndex].property
                     var keyValue = '';
-                    if(metaParamList[paramIndex].paraType == 'rect'){
+                    if(metaParamList[paramIndex].paraType === 'rect'){
                         keyValue = filter.getAnimRectValue(nFrame, prop);
                         filter.cache_setKeyFrameParaRectValue(nFrame, prop, keyValue)
                     }else{
@@ -154,7 +154,7 @@ RowLayout{
                 var parameter = metaParamList[paramIndex]
                 parameter.value = parameter.defaultValue
                 var control = findControl(parameter.objectName,layoutRoot)
-                if(control == null)
+                if(control === null)
                     continue;
                 switch(parameter.controlType)
                 {
@@ -230,7 +230,7 @@ RowLayout{
                 //如果这次的改变是程序往里面写值，则不做处理，下同
                 }else if((Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
                     
-                }else if((parameter.value > id.value)&&(id.value == id.maximumValue)){
+                }else if((parameter.value > id.value)&&(id.value === id.maximumValue)){
                     valueChange = true
 
                 }else{
@@ -244,7 +244,7 @@ RowLayout{
                 {
                     filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, Number(id.checked).toString())
                     filter.syncCacheToProject()
-                }else if((id.checked == parameter.value)||(Math.abs(id.checked - parameter.value) < 1)){
+                }else if((id.checked === parameter.value)||(Math.abs(id.checked - parameter.value) < 1)){
                     
                 }else{
                     filter.set(parameter.property, Number(id.checked))
@@ -300,7 +300,7 @@ RowLayout{
                     filter.cache_setKeyFrameParaRectValue(currentFrame, parameter.property, colorRect)
                     filter.syncCacheToProject()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
-                }else if((id.value == parameter.value)||(Math.abs(rv+gv+bv - rp - gp - bp) < 8)){
+                }else if((id.value === parameter.value)||(Math.abs(rv+gv+bv - rp - gp - bp) < 8)){
 
                 }else{
                     filter.set(parameter.property, colorRect)
@@ -314,7 +314,7 @@ RowLayout{
                     filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc).toString())
                     filter.syncCacheToProject()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
-                }else if((id.value == parameter.value)||(Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
+                }else if((id.value === parameter.value)||(Math.abs((id.value - parameter.value) / (id.maximumValue - id.minimumValue)) < 0.01)||(Math.abs(id.value - parameter.value) < 1)){
 
                 }else{
                     filter.set(parameter.property, calcProjValByUIVal(id.value,parameter.factorFunc))
@@ -328,7 +328,7 @@ RowLayout{
                     filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, id.currentText)
                     filter.syncCacheToProject()
                 //如果这次的改变是程序往里面写值，则不做处理，下同
-                }else if(id.currentText == parameter.value){
+                }else if(id.currentText === parameter.value){
 
                 }else{
                     filter.set(parameter.property, id.currentText)
@@ -391,7 +391,7 @@ RowLayout{
                 var paraType = metadata.keyframes.parameters[i].paraType
                 var value = ''
                 var position2 = timeline.getCurrentClipLength() - 1//filter.producerOut - filter.producerIn + 1
-                if(paraType == 'rect'){
+                if(paraType === 'rect'){
                     value = filter.getAnimRectValue(position,key)
                     filter.cache_setKeyFrameParaRectValue(position2, key, value)
                     filter.cache_setKeyFrameParaRectValue(0, key, value)
@@ -470,7 +470,7 @@ RowLayout{
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
             var control = findControl(parameter.objectName,layoutRoot)
-            if(control == null)
+            if(control === null)
                 continue;
             switch(parameter.controlType)
             {
@@ -495,8 +495,10 @@ RowLayout{
 
             case "Slider":
                 loadSlider(control,paramIndex)
+                break;
             case "StringCtr":
                 loadStringCtr(control,paramIndex)
+                break;
 
             default :
                 break;
@@ -522,7 +524,7 @@ RowLayout{
         for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
             var parameter = metaParamList[paramIndex]
             var control = findControl(parameter.objectName,layoutRoot)
-            if(control == null)
+            if(control === null)
                 continue;
             
             switch(parameter.controlType)
@@ -608,10 +610,10 @@ RowLayout{
             break;
 
             case "CheckBox":
-                var tmp = control.value
+                var tmp1 = control.value
                 control.value = Number(parameter.defaultValue) / 2
                 control.value = Number(parameter.defaultValue) * 2
-                control.value = tmp
+                control.value = tmp1
                 break;
 
             case "ColorWheelItem":
@@ -656,7 +658,7 @@ RowLayout{
                 break;
             
             case 'b':
-                if (rt == 0)
+                if (rt === 0)
                    rt = 1
                 else
                    rt = calcValue / rt
@@ -701,7 +703,7 @@ RowLayout{
                 break;
 
             case 'b':
-                if (rt == 0)
+                if (rt === 0)
                    rt = 1
                 else
                    rt = calcValue / rt
@@ -781,7 +783,7 @@ RowLayout{
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.cache_bKeyFrame(currentFrame)){
             var tempValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter.property);
-            if(tempValue != -1.0)
+            if(tempValue !== -1.0)
             {
                 control.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
                 
@@ -789,9 +791,9 @@ RowLayout{
         }else{
             filter.get(parameter.property)
             //filter.syncCacheToProject();
-            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
+            var tempValue1 = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            parameter.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
+            parameter.value = calcUIValByProjVal(tempValue1,parameter.factorFunc)
             
             // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
             var parameterList = getParamsAssociatedWithControl(control)
@@ -835,16 +837,16 @@ RowLayout{
         if(filter.cache_bKeyFrame(currentFrame)){
             var test = filter.get(parameter.property)
             var tempValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter.property);
-            if(tempValue != -1.0)
+            if(tempValue !== -1.0)
             {
                 control.checked = Boolean(tempValue)
             }
         }
         else{
             filter.get(parameter.property)
-            var tempValue = filter.getAnimIntValue(currentFrame, parameter.property)
+            var tempValue1 = filter.getAnimIntValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            control.checked = parameter.value = Boolean(tempValue)
+            control.checked = parameter.value = Boolean(tempValue1)
         }
     }
 
@@ -865,7 +867,7 @@ RowLayout{
         var rValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter1.property);
         var gValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter2.property);
         var bValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter3.property);
-        if(rValue == -1.0)
+        if(rValue === -1.0)
         {
             filter.get(parameter1.property)
             rValue = filter.getAnimDoubleValue(currentFrame, parameter1.property);
@@ -930,15 +932,15 @@ RowLayout{
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.cache_bKeyFrame(currentFrame)){
             var tempValue = filter.cache_getKeyFrameParaDoubleValue(currentFrame, parameter.property);
-            if(tempValue != -1.0)
+            if(tempValue !== -1.0)
             {
                 control.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
             }
         }else{
             filter.get(parameter.property)
-            var tempValue = filter.getAnimDoubleValue(currentFrame, parameter.property)
+            var tempValue1 = filter.getAnimDoubleValue(currentFrame, parameter.property)
             filter.get(parameter.property)
-            parameter.value = calcUIValByProjVal(tempValue,parameter.factorFunc)
+            parameter.value = calcUIValByProjVal(tempValue1,parameter.factorFunc)
             // 一定要先设配置参数，再设control的value，不然control的value一旦改变，就会触发新的动作，而那里面会用到parameter的value
             var parameterList = getParamsAssociatedWithControl(control)
             for(var i=0;i< parameterList.length;i++){ //所有参数的value都要设，不然后面比较的时候会有问题
@@ -963,7 +965,7 @@ RowLayout{
         var parameter = metadata.keyframes.parameters[paramIndex]
         if(filter.cache_bKeyFrame(currentFrame)){
             var tempValue = filter.cache_getKeyFrameParaValue(currentFrame, parameter.property);
-            if(tempValue != -1.0)
+            if(tempValue !== -1.0)
             {
                 var index0 = findDefaultIndex(tempValue,control.model)
                 control.currentIndex = index0
