@@ -97,8 +97,26 @@ Flickable {
         }
     }
 
+
+    function isKeyFramePropterty(property)
+    {
+        var metaParamList = metadata.keyframes.parameters
+        for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++)
+         {
+                var prop = metaParamList[paramIndex].property
+                if(prop === property) 
+                {
+                    return true
+                }
+         }
+
+         return false
+    }
+
+
     function updateFilter(currentProperty, value) {
-        if (filter.enableAnimation()) {
+        if (filter.enableAnimation() && isKeyFramePropterty(currentProperty === true)) 
+        {
             var nFrame = timeline.getPositionInCurrentClip()
             if (filter.autoAddKeyFrame()) {
                 if (!filter.cache_bKeyFrame(nFrame)) {

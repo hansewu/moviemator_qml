@@ -21,14 +21,16 @@ Metadata {
      keyframes {
          allowAnimateIn: true
          allowAnimateOut: true
-         simpleProperties: ['geometry', 'fgcolour', 'olcolour', 'outline', 'bgcolour', 'pad', 'letter_spaceing']
+//         simpleProperties: ['geometry', 'fgcolour', 'olcolour', 'outline', 'bgcolour', 'pad', 'letter_spaceing', 'trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy']
+         simpleProperties: ['fgcolour', 'olcolour', 'outline', 'bgcolour', 'pad', 'letter_spaceing', 'trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy']
+
          parameters: [
-             Parameter {
+        /*     Parameter {
                  name: qsTr('Position / Size')
                  property: 'geometry'
                  isSimple: true
                  paraType: "rect"
-             },
+             }, */
              Parameter {
                  name: qsTr('Text Color')
                  property: 'fgcolour'
@@ -64,7 +66,39 @@ Metadata {
                  property: 'letter_spaceing'
                  isSimple: true
                  paraType: "int"
+             },
+
+             Parameter {
+                 name: qsTr('transition fix_rotate_x')
+                 property: 'trans_fix_rotate_x'
+                 isSimple: true
+                 paraType: "double"
+             },
+             Parameter {
+                 name: qsTr('transition scale_x')
+                 property: 'trans_scale_x'
+                 isSimple: true
+                 paraType: "double"
+             },
+             Parameter {
+                 name: qsTr('transition ox')
+                 property: 'trans_ox'
+                 isSimple: true
+                 paraType: "double"
+             },
+             Parameter {
+                 name: qsTr('transition oy')
+                 property: 'trans_oy'
+                 isSimple: true
+                 paraType: "double"
+             },
+             Parameter {
+                 name: qsTr('transition fix_shear_x')
+                 property: 'trans_fix_shear_x'
+                 isSimple: true
+                 paraType: "double"
              }
+             
          ]
      }
 }
