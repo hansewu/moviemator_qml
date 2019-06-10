@@ -563,7 +563,7 @@ Item {
             {
                 if (filter.cache_bKeyFrame(nFrame)) 
                 {
-                    cache_setKeyFrameParaValue(nFrame, currentProperty, value);
+                    setKeyFrameParaValue(nFrame, currentProperty, value);
                     
                     combineAllKeyFramePara()
 
@@ -593,13 +593,13 @@ Item {
                 {
                     bTemporaryKeyFrame = true
                 }
-                cache_setKeyFrameParaValue(nFrame, currentProperty, value)
+                setKeyFrameParaValue(nFrame, currentProperty, value)
             } 
             else 
             {
                 if (filter.cache_bKeyFrame(nFrame)) 
                 {
-                    cache_setKeyFrameParaValue(nFrame, currentProperty, value)
+                    setKeyFrameParaValue(nFrame, currentProperty, value)
                 } 
                 else 
                 {
@@ -772,7 +772,7 @@ Item {
             updateFilter(rectProperty, getRelativeRect(filterRect))
 //            var nFrame = keyFrame.getCurrentFrame();
 //            if (filter.cache_getKeyFrameNumber() > 0) {
-//                cache_setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
+//                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
 //            } else {
 //                filter.set(rectProperty, getRelativeRect(filterRect))
 //            }
@@ -784,10 +784,10 @@ Item {
 //        if (bEnableKeyFrame) {
 //            var nFrame = keyFrame.getCurrentFrame()
 //            if (bAutoSetAsKeyFrame) {
-//                cache_setKeyFrameParaValue(nFrame, currentProperty, value)
+//                setKeyFrameParaValue(nFrame, currentProperty, value)
 //            } else {
 //                if (filter.cache_bKeyFrame(nFrame)) {
-//                    cache_setKeyFrameParaValue(nFrame, currentProperty, value)
+//                    setKeyFrameParaValue(nFrame, currentProperty, value)
 //                } else {
 //                    filter.set(currentProperty, value)
 //                }
