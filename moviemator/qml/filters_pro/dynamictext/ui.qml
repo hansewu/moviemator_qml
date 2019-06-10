@@ -556,7 +556,7 @@ Item {
                     showAddFrameInfo(nFrame)
                 }
                 console.log("updateFilter currentPropert: ", currentProperty, "value: ", value)
-                cache_setKeyFrameParaValue(nFrame, currentProperty, value);
+                setKeyFrameParaValue(nFrame, currentProperty, value);
                 combineAllKeyFramePara()
             } 
             else 
