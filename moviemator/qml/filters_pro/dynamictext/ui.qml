@@ -888,12 +888,14 @@ Item {
         Preset {
             id: preset
             Layout.columnSpan: 4
-            parameters: [rectProperty, halignProperty, valignProperty, 'argument', 'size',
+            parameters: [rectProperty, halignProperty, valignProperty, 'size', //'argument', 
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
             'trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy', 'trans_fix_shear_x']
+            m_strType: "tst"
             onBeforePresetLoaded: 
             {
                 removeAllKeyFrame()
+              
                 //resetFilterPara()
             }
             onPresetSelected: {
@@ -906,7 +908,7 @@ Item {
 
                 if (filter.isNew) {
                     filter.set('size', filterRect.height)
-                }
+                } 
             }
         }
 
@@ -1027,6 +1029,7 @@ Item {
                     console.log("fgcolourProperty = ", value, "rectcolor=", getRectColor(value))
                     updateFilter(fgcolourProperty, getRectColor(value))
                     bTemporaryKeyFrame = false
+                    
 
 //                    if (blockUpdate === true) {
 //                        return
@@ -1408,6 +1411,34 @@ Item {
         }
 
 
+        Label {
+            text: qsTr('Position Animation')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Preset {
+            id: presetPositionAnimation
+            Layout.columnSpan: 4
+            parameters: ['trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy', 'trans_fix_shear_x']
+            m_strType: "pan"
+            onBeforePresetLoaded: 
+            {
+                removeAllKeyFrame()
+                //resetFilterPara()
+            }
+            onPresetSelected: {
+                //加載關鍵幀
+                loadSavedKeyFrameNew()
+
+                //更新界面
+                setControls()
+                setKeyframedControls()
+
+                if (filter.isNew) {
+                    filter.set('size', filterRect.height)
+                }
+            } 
+        } 
  
         Label {
             Layout.columnSpan: 1
@@ -1559,11 +1590,12 @@ Item {
                 newRect = getAbsoluteRect(position)
             }
 
-            if (filterRect !== newRect) 
+            if (isRectPosValid(newRect) && filterRect !== newRect) 
             {
                 filterRect = newRect
                 filter.set('size', filterRect.height)
             }
+            
         }
     }
 
@@ -1634,6 +1666,7 @@ Item {
                 filter.set('size', filterRect.height)
                 m_lastFrameNum = keyFrameNum
             }
+            
         }
     }
 

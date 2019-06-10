@@ -27,6 +27,7 @@ import QtQuick.Window 2.1
 RowLayout {
     property var parameters: []
     property ListModel listMode: ListModel {}
+    property string m_strType: ""
 
     // Tell the parent QML page to update its controls.
     signal beforePresetLoaded()
@@ -37,7 +38,13 @@ RowLayout {
         var count = filter.presetCount()
         for (var i = 0; i < count; i++) {
             var presetStr = filter.getPresetWithIndex(i)
-            listMode.append({name: presetStr})
+                var presetLowCaseName = (presetStr.toString()).toLowerCase()
+                console.log("Preset presetStr: ", presetStr)
+                var strType = "." + m_strType
+                strType.toLowerCase()
+
+                if(presetLowCaseName === " " ||  (m_strType === "") || presetLowCaseName.indexOf(strType) > 0)
+                    listMode.append({name: presetStr})
         }
     }
 
@@ -111,7 +118,10 @@ RowLayout {
         height: 90
 
         function acceptName() {
-            presetCombo.currentIndex = filter.savePreset(parameters, nameField.text)
+            var fileName = nameField.text
+            if(m_strType != "")
+                fileName = fileName + "." + m_strType
+            presetCombo.currentIndex = filter.savePreset(parameters, fileName)
             nameDialog.close()
         }
 
