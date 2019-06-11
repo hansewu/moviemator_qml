@@ -127,7 +127,7 @@ Rectangle {
     }
 
     // 轨道头的宽度（定值）
-    property int headerWidth: 92
+    property int headerWidth: 108    //92
     // 当前（选中）轨道的序号
     property int currentTrack: 0
     // 被选中的轨道的背景颜色

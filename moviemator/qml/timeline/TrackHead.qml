@@ -122,13 +122,34 @@ Rectangle {
         RowLayout {
             x:0
             spacing: 0
+            // Label改成图片
+//            Label {
+//                text: trackName
+//                color: activePalette.windowText
+//                elide: Qt.ElideRight
+//                width: 22
+//                horizontalAlignment: Text.AlignHCenter
+//                Layout.preferredWidth: 22
+//            }
+            Rectangle {
+                width: 20
+                height: 20
+                color: "transparent"
+                Image {
+                    sourceSize.width: 18
+                    sourceSize.height: 18
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    source: isVideo ? 'qrc:///icons/light/32x32/track-video.png' : 'qrc:///icons/light/32x32/track-audio.png'
+                }
+            }
             Label {
-                text: trackName
+                text: trackName.substring(1)
                 color: activePalette.windowText
                 elide: Qt.ElideRight
-                width: 22
-                horizontalAlignment: Text.AlignHCenter
-                Layout.preferredWidth: 22
+                width: 20
+                horizontalAlignment: Text.AlignLeft
+                Layout.preferredWidth: 20
             }
             // 静音按钮
             CheckBox {
