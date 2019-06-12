@@ -330,7 +330,7 @@ Rectangle {
     ScrollView{
         id: scrollView
         width: parent.width
-        height: parent.height - filterHead.height
+        height: parent.height - filterHead.height - 10
         anchors{
             top : filterHead.bottom
             topMargin: 10
@@ -373,12 +373,24 @@ Rectangle {
             }
 
         }
-        ListView{ 
-            width:parent.width;
-            height:parent.height
-            model:catList 
-            delegate:delegate 
-            focus:true 
+//        ListView{
+//            width:parent.width;
+//            height:parent.height
+//            model:catList
+//            delegate:delegate
+//            focus:true
+//        }
+
+        /*
+         * 使用 Repeater代替 ListView
+         * 一次性加载完所有 model
+         * 使 view得到准确的高度
+         */
+        Column {
+            Repeater{
+                model:catList
+                delegate:delegate
+            }
         }
     }
 }
