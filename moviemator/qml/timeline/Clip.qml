@@ -938,6 +938,7 @@ Rectangle {
 //    }
 
     // 右键 clip弹出的菜单
+    /*
     Menu {
         id: menu
 //        MenuItem {
@@ -1064,5 +1065,208 @@ Rectangle {
 //            onTriggered: timeline.exportAsTemplate(trackIndex, index)
 //       }
 
+    }
+*/
+    Menu {
+        id: menu
+        // 切割
+        MenuItem {
+            visible: !isTransition
+            text: qsTr('Split')
+            shortcut: 'S'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.splitClip(currentTrack)
+            }
+        }
+        // 插入资源
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr("Insert");
+            shortcut: 'V'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.insert(currentTrack)
+            }
+        }
+        // 追加资源
+        MenuItem {
+            visible: isBlank
+            text: qsTr('Append');
+            shortcut: 'A'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.append(currentTrack)
+            }
+        }
+        MenuSeparator {
+            visible: !isTransition
+        }
+        // 删除
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr('Delete')
+            shortcut: 'delete'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.lift(currentTrack, timeline.selection[0])//timeline.remove(currentTrack, selection[0])
+            }
+        }
+        // 删除并关闭空隙
+        MenuItem {
+            visible: !isTransition
+            text: qsTr('Ripple Delete')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline) {
+                    timeline.remove(trackIndex, index)
+                }
+            }
+        }
+        MenuSeparator {
+            visible: !isTransition
+        }
+        // 剪切
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr('Cut')
+            shortcut: 'Ctrl+X'
+            onTriggered: {
+                console.assert(timeline);
+                if (!trackRoot.isLocked && timeline) {
+                    timeline.copyClip(trackIndex, index)
+//                    timeline.remove(trackIndex, index)
+                    timeline.lift(trackIndex, index)
+                } else {
+                    root.pulseLockButtonOnTrack(currentTrack)
+                }
+            }
+        }
+        // 复制
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr('Copy')
+            shortcut: 'Ctrl+C'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.copyClip(trackIndex, index)
+            }
+        }
+        // 粘贴
+        MenuItem {
+            visible: !isTransition
+            text: qsTr('Paste')
+            shortcut: 'Ctrl+V'
+            onTriggered: {
+                console.assert(mainwindow);
+                if(mainwindow)
+                    mainwindow.on_actionPaste_triggered()
+            }
+        }
+
+        MenuSeparator {
+            visible: isBlank
+        }
+        // 增加视频轨道
+        MenuItem {
+            visible: isBlank
+            text: qsTr('New Video Track')
+            shortcut: 'Ctrl+U'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addVideoTrack()
+            }
+        }
+        // 增加音频轨道
+        MenuItem {
+            visible: isBlank
+            text: qsTr('New Audio Track')
+            shortcut: 'Ctrl+Y'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addAudioTrack()
+            }
+        }
+        // 删除轨道
+        MenuItem {
+            visible: isBlank
+            text: qsTr('Delete Track')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.removeTrack()
+            }
+        }
+
+        MenuSeparator {
+            visible: !isTransition
+        }
+        // 缩放到合适
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr('Zoom to Fit')
+            onTriggered: {
+                toolbar.actionShowAllClips.trigger()
+            }
+        }
+        // 添加滤镜
+        MenuItem {
+            visible: !isBlank && !isTransition
+            text: qsTr('Add Filter')
+            onTriggered: {
+                toolbar.actionAddFilter.trigger()
+            }
+        }
+
+        // 轨道关闭视频
+        MenuItem {
+            visible: isBlank
+            text: qsTr('Hide')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.toggleTrackHidden(trackIndex)
+            }
+        }
+        // 轨道关闭音频
+        MenuItem {
+            visible: isBlank
+            text: qsTr('Mute')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.toggleTrackMute(trackIndex)
+            }
+        }
+
+
+        //转场菜单
+        MenuItem {
+//            text: qsTr(!isTransition ? 'Properties' : 'Transition Settings')     // qsTr('Properties')
+            text: !isTransition ? qsTr('Properties') : qsTr('Transition Settings')
+            visible: isTransition
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.onShowProperties(trackIndex, index)
+            }
+        }
+        // 移除菜单（只对转场有效）
+        MenuItem {
+            visible: isTransition
+            text:qsTr('Remove')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.removeTransition(trackIndex, index)
+            }
+        }
     }
 }

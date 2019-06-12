@@ -57,6 +57,9 @@ ToolBar {
     property real scaleCopy: scaleSliderValue
     // Add -End
 
+    property alias actionAddFilter: addFilterAction
+    property alias actionShowAllClips: showAllClipsAction
+
     id: root
     SystemPalette { id: activePalette }
     width: 200

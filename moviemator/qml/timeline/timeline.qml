@@ -160,7 +160,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        onClicked: menu.popup()
+        onClicked: trackmenu.popup()    // menu.popup()
     }
 
     // 时间线可接收拖放内容的区域
@@ -256,6 +256,12 @@ Rectangle {
             rightMargin: 1
         }
         z: 0
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: menu.popup()
+        }
     }
 
     // 刻度尺 Ruler
@@ -668,6 +674,91 @@ Rectangle {
             }
         }
 
+    }
+
+    // 轨道菜单
+    Menu {
+        id: trackmenu
+        // 切割
+        MenuItem {
+            text: qsTr('Split')
+            shortcut: 'S'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.splitClip(currentTrack)
+            }
+        }
+        // 追加资源
+        MenuItem {
+            text: qsTr('Append');
+            shortcut: 'A'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.append(currentTrack)
+            }
+        }
+        MenuSeparator { }
+        // 粘贴
+        MenuItem {
+            text: qsTr('Paste')
+            shortcut: 'Ctrl+V'
+            onTriggered: {
+                console.assert(mainwindow);
+                if(mainwindow)
+                    mainwindow.on_actionPaste_triggered()
+            }
+        }
+        MenuSeparator { }
+        // 增加视频轨道
+        MenuItem {
+            text: qsTr('New Video Track')
+            shortcut: 'Ctrl+U'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addVideoTrack()
+            }
+        }
+        // 增加音频轨道
+        MenuItem {
+            text: qsTr('New Audio Track')
+            shortcut: 'Ctrl+Y'
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.addAudioTrack()
+            }
+        }
+        // 删除轨道
+        MenuItem {
+            text: qsTr('Delete Track')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.removeTrack()
+            }
+        }
+        MenuSeparator { }
+        // 轨道关闭视频
+        MenuItem {
+            text: qsTr('Hide')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.toggleTrackHidden(currentTrack)
+            }
+        }
+        // 轨道关闭音频
+        MenuItem {
+            text: qsTr('Mute')
+            onTriggered: {
+                console.assert(timeline);
+                if(timeline)
+                    timeline.toggleTrackMute(currentTrack)
+            }
+        }
     }
 
 
