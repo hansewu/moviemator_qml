@@ -30,7 +30,7 @@ Metadata {
                  property: 'geometry'
                  isSimple: true
                  paraType: "rect"
-             }, */
+             }, 
              Parameter {
                  name: qsTr('Text Color')
                  property: 'fgcolour'
@@ -60,7 +60,7 @@ Metadata {
                  property: 'pad'
                  isSimple: true
                  paraType: "int"
-             },
+             },*/
              Parameter {
                  name: qsTr('Letter Spaceing')
                  property: 'letter_spaceing'
@@ -81,6 +81,13 @@ Metadata {
                  paraType: "double"
              },
              Parameter {
+                 name: qsTr('transition scale_aspect_ratio')
+                 property: 'trans_scale_aspect_ratio'
+                 isSimple: true
+                 paraType: "double"
+             },
+
+             Parameter {
                  name: qsTr('transition ox')
                  property: 'trans_ox'
                  isSimple: true
@@ -93,8 +100,8 @@ Metadata {
                  paraType: "double"
              },
              Parameter {
-                 name: qsTr('transition fix_shear_x')
-                 property: 'trans_fix_shear_x'
+                 name: qsTr('transparent alpha')
+                 property: 'transparent_alpha'
                  isSimple: true
                  paraType: "double"
              }

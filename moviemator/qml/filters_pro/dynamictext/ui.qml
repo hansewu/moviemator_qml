@@ -47,8 +47,8 @@ Item {
 //    property var  m_parameterValue: new Array()
     property bool  m_refreshedUI:false
 
-    width: 500
-    height: 950
+    width: 550
+    height: 1150
 
     function getColorStr(colorValue)
     {
@@ -187,14 +187,22 @@ Item {
         if(property == olcolourProperty) return  Qt.rect(255.0, 0.0, 0.0, 0.0)
         if(property == rectProperty)      return Qt.rect(0.0148437, 0.441667, 0.948438, 0.195833)
 
+        if(property == 'trans_fix_rotate_x')        return  0.0
+        if(property == 'trans_scale_x')             return  1.0
+        if(property == 'trans_scale_aspect_ratio')  return  1.0
+        if(property == 'trans_ox')                  return  0.0
+        if(property == 'trans_oy')                  return  0.0
+        if(property == 'transparent_alpha')         return  1.0
+
         return 0
     }
 
-    function getNormalVaue(propertyGet) 
+    function getNormalValue(propertyGet) 
     {
         var paramCount = metadata.keyframes.parameterCount
 
         var propertyValue = ""
+        var nFrame = timeline.getPositionInCurrentClip()
 
         for(var i = 0; i < paramCount; i++) 
         {
@@ -218,11 +226,13 @@ Item {
                 }
                 else if (paraType === "double") 
                 {
-                    propertyValue = filter.getDouble(property)
+                    propertyValue = filter.getAnimDoubleValue(nFrame, property)
+                    //propertyValue = filter.getDouble(property)
                 }
                 else if (paraType === "int") 
                 {
-                    propertyValue = filter.getInt(property)
+                    propertyValue = filter.getAnimIntValue(nFrame, property)
+                    //propertyValue = filter.getInt(property)
                 }
                 else
                 {
@@ -423,12 +433,13 @@ Item {
     {
         if (filter.cache_getKeyFrameNumber() > 0) 
         {
+        
             var metaParamList = metadata.keyframes.parameters
             for(var paramIndex = 0; paramIndex < metaParamList.length; paramIndex++)
             {
                 var prop = metaParamList[paramIndex].property
 
-                var valueNormal = getNormalVaue(prop)
+                var valueNormal = getResetValue(prop)
                 filter.removeAllKeyFrame(prop)
                 filter.resetProperty(prop)
                 filter.set(prop, valueNormal)
@@ -695,11 +706,16 @@ Item {
         bgColor.value = getHexStrColor(-1, bgcolourProperty)
         padSpinner.value = filter.getDouble(padProperty)
 
-        rotationSlider.value = filter.getDouble('trans_fix_rotate_x')
-        scaleSlider.value =  100.0/filter.getDouble('trans_scale_x')
-        xOffsetSlider.value = filter.getDouble('trans_ox') * -1
-        yOffsetSlider.value = filter.getDouble('trans_oy') * -1
-        xShareSlider.value =  filter.getDouble('trans_fix_shear_x')
+        idShearX.value          = filter.getDouble('shear_x')
+        idShadowDistance.value  = filter.getDouble('shadow_distance')
+        idShadowAngle.value     = filter.getDouble('shadow_angle')
+
+        rotationSlider.value            = filter.getDouble('trans_fix_rotate_x')
+        scaleSlider.value               =  100.0/filter.getDouble('trans_scale_x')
+        xOffsetSlider.value             = filter.getDouble('trans_ox') * -1
+        yOffsetSlider.value             = filter.getDouble('trans_oy') * -1
+        scaleAspectRatioSlider.value    =  filter.getDouble('trans_scale_aspect_ratio')
+        transparentAlphaSlider.value    =  filter.getDouble('transparent_alpha')
 
         blockUpdate = false
         var align = filter.get(halignProperty)
@@ -729,6 +745,7 @@ Item {
             var nFrame = timeline.getPositionInCurrentClip()
 
             blockUpdate = true
+/*
             filterRect = getAbsoluteRect(nFrame)
             fgColor.value = getHexStrColor(nFrame, fgcolourProperty)
             outlineColor.value = getHexStrColor(nFrame, olcolourProperty)
@@ -736,14 +753,15 @@ Item {
             letterSpaceing.value = filter.getAnimDoubleValue(nFrame, letterSpaceingProperty)
             bgColor.value = getHexStrColor(nFrame, bgcolourProperty)
             padSpinner.value = filter.getAnimDoubleValue(nFrame, padProperty)
-            
+  */          
 
             rotationSlider.value = filter.getAnimDoubleValue(nFrame, 'trans_fix_rotate_x')
             scaleSlider.value =  100.0/filter.getAnimDoubleValue(nFrame, 'trans_scale_x')
             xOffsetSlider.value = filter.getAnimDoubleValue(nFrame, 'trans_ox') * -1
             yOffsetSlider.value = filter.getAnimDoubleValue(nFrame, 'trans_oy') * -1
-            xShareSlider.value =  filter.getAnimDoubleValue(nFrame, 'trans_fix_shear_x')
-            console.log("xOffsetSlider.value = ", xOffsetSlider.value, "yOffsetSlider.value", yOffsetSlider.value)
+            scaleAspectRatioSlider.value    =  filter.getAnimDoubleValue(nFrame, 'trans_scale_aspect_ratio')
+            transparentAlphaSlider.value    =  filter.getAnimDoubleValue(nFrame, 'transparent_alpha')
+            //console.log("xOffsetSlider.value = ", xOffsetSlider.value, "yOffsetSlider.value", yOffsetSlider.value)
 
             blockUpdate = false
         }
@@ -807,78 +825,6 @@ Item {
         anchors.margins: 8
         rowSpacing : 25
 
-//        KeyFrame {
-//            id: keyFrame
-//            Layout.columnSpan:5
-//            onSetAsKeyFrame: {
-//                console.log("sll---------onSetAsKeyFrame---------")
-//                //如果没有关键帧，先创建头尾两个关键帧
-//                if (filter.cache_getKeyFrameNumber() <= 0) {
-//                    setInAndOutKeyFrame()
-//                }
-
-//                //插入新的关键帧
-//                var nFrame = keyFrame.getCurrentFrame()
-//                setKeyFrameOfFrame(nFrame)
-
-//                //更新关键帧相关控件
-//                setKeyframedControls()
-//            }
-//            onRemovedAllKeyFrame: {
-//                var keyFrameCount   = filter.getKeyFrameCountOnProject(rectProperty)
-//                if (keyFrameCount > 0) {
-//                    filter.removeAllKeyFrame(rectProperty)
-//                    keyFrameCount = -1
-//                }
-//                keyFrameCount   = filter.getKeyFrameCountOnProject(fgcolourProperty)
-//                if (keyFrameCount > 0) {
-//                    filter.removeAllKeyFrame(fgcolourProperty)
-//                    keyFrameCount = -1
-//                }
-//                filter.resetProperty(fgcolourProperty)
-//                filter.resetProperty(rectProperty)
-
-//                //重置带有动画的属性的属性值
-//                filter.set(fgcolourProperty, Qt.rect(255.0, 255.0, 255.0, 255.0))
-//                filter.set(rectProperty, Qt.rect(0.0, 0.0, 1.0, 1.0))
-//            }
-//            onRefreshUI: {
-////                console.log("sll-------onRefreshUI----")
-////                console.log("sll------111111111111111111111111111111111111-------")
-////                if (blockUpdate === true) {
-////                    return
-////                }
-////                console.log("sll------222222222222222222222222222222222222-------")
-//                if (bEnableKeyFrame) {
-//                    console.log("sll------3333333333333333333333333333333333-------")
-//                    var nFrame = keyFrame.getCurrentFrame()
-//                    if (bAutoSetAsKeyFrame === false) {
-//                        if (filter.cache_bKeyFrame(nFrame)) {
-//                            console.log("sll------4444444444444444444444444444-------")
-//                            loadSavedKeyFrame()
-//                        }
-////                        else {
-////                            filter.set(letterSpaceingProperty, value)
-////                        }
-////                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-//                    }
-////                    else {
-////                        if (filter.cache_bKeyFrame(nFrame)) {
-////                            console.log("sll------4444444444444444444444444444-------")
-////                            loadSavedKeyFrame()
-////                        } else {
-////                            filter.set(letterSpaceingProperty, value)
-////                        }
-////                    }
-//                }
-////                else {
-////                    filter.set(letterSpaceingProperty, value)
-////                }
-
-
-//                setKeyframedControls()
-//            }
-//        }
 
         Label {
             text: qsTr('Preset')
@@ -888,13 +834,14 @@ Item {
         Preset {
             id: preset
             Layout.columnSpan: 4
-            parameters: [rectProperty, halignProperty, valignProperty, 'size', //'argument', 
+            parameters: [rectProperty, 'shear_x', halignProperty, valignProperty, 'size', //'argument', 
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
-            'trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy', 'trans_fix_shear_x']
+            'shadow_distance', 'shadow_angle']
+          
             m_strType: "tst"
             onBeforePresetLoaded: 
             {
-                removeAllKeyFrame()
+                //removeAllKeyFrame()
               
                 //resetFilterPara()
             }
@@ -1029,17 +976,6 @@ Item {
                     console.log("fgcolourProperty = ", value, "rectcolor=", getRectColor(value))
                     updateFilter(fgcolourProperty, getRectColor(value))
                     bTemporaryKeyFrame = false
-                    
-
-//                    if (blockUpdate === true) {
-//                        return
-//                    }
-//                    var nFrame = keyFrame.getCurrentFrame();
-//                    if (filter.cache_getKeyFrameNumber() > 0) {
-//                        setKeyFrameParaValue(nFrame, fgcolourProperty, getRectColor(value))
-//                    } else {
-//                       filter.set(fgcolourProperty, getRectColor(value))
-//                    }
                 }
             }
 
@@ -1109,6 +1045,83 @@ Item {
            }
         }
 
+        Label 
+        {
+            text: qsTr('Shear X')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SliderSpinner {
+            Layout.columnSpan: 3
+            objectName: 'shearXSlider'
+            id: idShearX
+            minimumValue: -1
+            maximumValue: 1
+            decimals: 1
+            spinnerWidth: 80
+            
+            onValueChanged:{
+                updateFilter('shear_x', value.toString())
+            }
+        }
+         UndoButton 
+         {
+            Layout.columnSpan: 1
+            onClicked: idShearX.value = 0  
+        }
+        
+
+        Label 
+        {
+            text: qsTr('Shadow')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Label 
+        {
+            text: qsTr('Distance')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowDistance
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 30
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_distance', value.toString())
+           }
+        }
+
+        Label 
+        {
+            text: qsTr('Angle')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowAngle
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 360
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_angle', value.toString())
+           }
+        }
+
+
         Label {
             text: qsTr('Letter Spaceing')
             Layout.alignment: Qt.AlignLeft
@@ -1125,34 +1138,7 @@ Item {
             decimals: 0
             onValueChanged: {
                 updateFilter(letterSpaceingProperty, value.toString())
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                if (bEnableKeyFrame) {
-//                    var nFrame = keyFrame.getCurrentFrame()
-//                    if (bAutoSetAsKeyFrame) {
-//                        setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-//                    } else {
-//                        if (filter.cache_bKeyFrame(nFrame)) {
-//                            setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-//                        } else {
-//                            filter.set(letterSpaceingProperty, value)
-//                        }
-//                    }
-//                } else {
-//                    filter.set(letterSpaceingProperty, value)
-//                }
 
-
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, letterSpaceingProperty, value.toString())
-//                } else {
-//                    filter.set(letterSpaceingProperty, value)
-//                }
             }
         }
 
@@ -1174,15 +1160,6 @@ Item {
             onValueChanged: {
                 updateFilter(olcolourProperty, getRectColor(value))
                 bTemporaryKeyFrame = false
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, olcolourProperty, getRectColor(value))
-//                } else {
-//                   filter.set(olcolourProperty, getRectColor(value))
-//                }
             }
         }
         Label {
@@ -1419,7 +1396,7 @@ Item {
         Preset {
             id: presetPositionAnimation
             Layout.columnSpan: 4
-            parameters: ['trans_fix_rotate_x', 'trans_scale_x', 'trans_ox', 'trans_oy', 'trans_fix_shear_x']
+            parameters: [  'trans_fix_rotate_x', 'trans_scale_x', 'trans_scale_aspect_ratio', 'trans_ox', 'trans_oy', 'transparent_alpha']
             m_strType: "pan"
             onBeforePresetLoaded: 
             {
@@ -1437,6 +1414,7 @@ Item {
                 if (filter.isNew) {
                     filter.set('size', filterRect.height)
                 }
+                presetPositionAnimation.presetCombo.currentIndex = 0 
             } 
         } 
  
@@ -1461,7 +1439,7 @@ Item {
         }
         UndoButton {
             //Layout.columnSpan: 1
-            onClicked: rotationSlider.value = 0  // 360 <-> 7200
+            onClicked: rotationSlider.value = 0  
         }
 
         Label {
@@ -1493,8 +1471,35 @@ Item {
             onClicked: scaleSlider.value = 100 // 
         }
 
+        Label 
+        {
+            Layout.columnSpan: 1
+            Layout.alignment: Qt.AlignLeft
+            text: qsTr('Aspect')
+            color: '#ffffff'
+        }
+        SliderSpinner 
+        {
+            Layout.columnSpan: 3
+            objectName: 'scaleAspectRatioSlider'
+            id: scaleAspectRatioSlider
+            minimumValue: 0.2
+            maximumValue: 5
+            decimals: 1
+            spinnerWidth: 80
+            
+            onValueChanged:
+            {
+                updateFilter("trans_scale_aspect_ratio", value.toString())
+            }
+        }
+        UndoButton 
+        {
+            onClicked: scaleAspectRatioSlider.value = 1  
+        }
 
-        Label {
+        Label 
+        {
             Layout.columnSpan: 1
             Layout.alignment: Qt.AlignLeft
             text: qsTr('X offset')
@@ -1511,7 +1516,6 @@ Item {
             onValueChanged:{
                 var valuestr = -value;
                 updateFilter("trans_ox", valuestr.toString())
-             //   keyFrame.controlValueChanged(xOffsetSlider) 
             }
         }
         UndoButton {
@@ -1544,28 +1548,31 @@ Item {
         }
 
 
-       Label {
+       Label 
+        {
             Layout.columnSpan: 1
             Layout.alignment: Qt.AlignLeft
-            text: qsTr('X shear')
+            text: qsTr('Transparent')
             color: '#ffffff'
         }
-        SliderSpinner {
+        SliderSpinner 
+        {
             Layout.columnSpan: 3
-            objectName: 'xShareSlider'
-            id: xShareSlider
-            minimumValue: -360
-            maximumValue: 360
-          //  decimals: 1
+            objectName: 'transparentAlphaSlider'
+            id: transparentAlphaSlider
+            minimumValue: 0
+            maximumValue: 1
+            decimals: 2
             spinnerWidth: 80
-            suffix: qsTr(' °')//qsTr(' degree')
-            onValueChanged:{
-                updateFilter("trans_fix_shear_x", value.toString())
+            
+            onValueChanged:
+            {
+                updateFilter("transparent_alpha", value.toString())
             }
         }
-        UndoButton {
-            //Layout.columnSpan: 1
-            onClicked: xShareSlider.value = 0  // 360 <-> 7200
+        UndoButton 
+        {
+            onClicked: transparentAlphaSlider.value = 1  
         }
     
 
