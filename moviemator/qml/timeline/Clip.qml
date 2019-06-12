@@ -1176,7 +1176,7 @@ Rectangle {
         MenuItem {
             visible: isBlank
             text: qsTr('New Video Track')
-            shortcut: 'Ctrl+U'
+            shortcut: 'Ctrl+Y'
             onTriggered: {
                 console.assert(timeline);
                 if(timeline)
@@ -1187,7 +1187,7 @@ Rectangle {
         MenuItem {
             visible: isBlank
             text: qsTr('New Audio Track')
-            shortcut: 'Ctrl+Y'
+            shortcut: 'Ctrl+U'
             onTriggered: {
                 console.assert(timeline);
                 if(timeline)
