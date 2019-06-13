@@ -349,7 +349,8 @@ Rectangle {
                             Connections {
                                 target: multitrack
                                 onModified:{
-                                    trackName = model.name
+                                    if(needRefresh)
+                                        trackName = model.name
                                 }
                             }
                         }
