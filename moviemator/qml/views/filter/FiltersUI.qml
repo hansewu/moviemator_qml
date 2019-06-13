@@ -61,6 +61,13 @@ Rectangle {
         filtersResDock.addFilterItem(index)
     }
 
+    function previewFilter(index){
+        if(filtersResDock == null){
+            throw new Error("filtersResDock is undefined")
+        }
+        filtersResDock.previewFilter(index)
+    }
+
     function updateData()
     {
         if(filtersInfo == null){
@@ -258,6 +265,7 @@ Rectangle {
                             preventStealing:true
                             onClicked: {
                                 currentChoosed = id.objectName
+                                previewFilter(index)
                             }
                             onDoubleClicked:{
                                 currentChoosed = id.objectName
