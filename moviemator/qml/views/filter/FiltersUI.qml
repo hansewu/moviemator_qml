@@ -196,6 +196,7 @@ Rectangle {
                         color: 'transparent'
 
                         Button { 
+                            id: button
                             width:20
                             height:20
                             z:2
@@ -206,7 +207,7 @@ Rectangle {
                                 rightMargin:21
                             }
                             // visible:id.checked ? true : false
-                            visible:id.hoverStat ? true : false
+                            visible:(id.hoverStat || hovered) ? true : false
                             checkable : true
                             onClicked:{
                                 addFilter(index)
@@ -218,10 +219,10 @@ Rectangle {
                                     color: "transparent" 
                                     Image{ 
                                         anchors.fill: parent 
-                                        source: control.hovered ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : 'qrc:///icons/light/32x32/filter_add.png' ; 
+                                        source: (control.hovered && control.pressed) ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png';
                                     } 
                                 } 
-                            } 
+                            }
                         }
 
                         Rectangle{
@@ -231,7 +232,7 @@ Rectangle {
                             height: 64
                             z:1
                             radius: 3 
-                            color: hoverStat?'#C0482C':'transparent'
+                            color: (hoverStat || button.hovered)?'#C0482C':'transparent'
                             property bool checked: (objectName === currentChoosed)?true:false
                             property bool hoverStat:false
                             Image {
