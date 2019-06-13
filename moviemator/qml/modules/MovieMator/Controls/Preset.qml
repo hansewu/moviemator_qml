@@ -114,15 +114,31 @@ RowLayout {
         color: dialogPalette.window
         modality: Qt.ApplicationModal
         title: qsTr('Save Preset')
-        width: 200
+        width: 300
         height: 90
 
         function acceptName() {
             var fileName = nameField.text
             if(m_strType != "")
                 fileName = fileName + "." + m_strType
-            presetCombo.currentIndex = filter.savePreset(parameters, fileName)
+           // presetCombo.currentIndex = 
+	        filter.savePreset(parameters, fileName)
             nameDialog.close()
+
+            var nameUsed = false
+            for(var index =0; index < listMode.count; index++)
+            {
+                if(listMode.get(index).name  == fileName)
+                {
+                    nameUsed = true
+                }
+            }
+
+            if(nameUsed == false)
+                listMode.append({name: fileName})
+
+            presetCombo.currentText = fileName
+            
         }
 
         ColumnLayout {
@@ -192,7 +208,10 @@ RowLayout {
                     onClicked: {
                         if (presetCombo.currentText !== ' ') {
                             filter.deletePreset(presetCombo.currentText)
-                            presetCombo.currentIndex = 0
+                            
+                            listMode.remove(presetCombo.currentIndex)
+                           //presetCombo.currentIndex = 0
+                            presetCombo.currentText  = ' '
                         }
                         confirmDialog.close()
                     }
