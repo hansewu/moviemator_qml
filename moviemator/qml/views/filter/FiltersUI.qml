@@ -261,16 +261,22 @@ Rectangle {
                             font.pixelSize: 12
                         }
                         MouseArea {
+                            id:mouseArea
                             anchors.fill: parent
                             hoverEnabled: true
                             preventStealing:true
+                            property var clickNum:0
                             onClicked: {
-                                currentChoosed = id.objectName
-                                previewFilter(index)
-                            }
-                            onDoubleClicked:{
-                                currentChoosed = id.objectName
-                                addFilter(index)
+                                clickNum ++
+                                if(clickNum == 1) { 
+                                    clickTimer.start() 
+                                } 
+                                if(clickNum == 2) { 
+                                    clickNum = 0 
+                                    clickTimer.stop() 
+                                    currentChoosed = id.objectName
+                                    addFilter(index) 
+                                }
                             }
                             onEntered:{
                                 id.hoverStat = true
@@ -279,7 +285,17 @@ Rectangle {
                                 if(!containsMouse){
                                     id.hoverStat = false
                                 }
-
+                            }
+                            Timer{ 
+                                id: clickTimer 
+                                //超过300ms还没有触发第二次点击证明时单击（并不一定非要用300ms延时，不过300ms是经典延时时间） 
+                                interval: 300;
+                                onTriggered: { 
+                                    mouseArea.clickNum = 0 
+                                    clickTimer.stop() 
+                                    currentChoosed = id.objectName
+                                    previewFilter(index)
+                                } 
                             }
                         }
                     }
