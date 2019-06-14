@@ -1,0 +1,15 @@
+geometry=0.0148437 0.441667 0.948438 0.1958 1
+shear_x=0
+halign=center
+valign=bottom
+size=140.976
+fgcolour=255 255 255 255 1
+family=Verdana
+weight=400
+olcolour=255 0 0 0 1
+outline=0
+bgcolour=0 0 255 255 1
+pad=0
+letter_spaceing=0
+shadow_distance=0
+shadow_angle=45

@@ -1,0 +1,15 @@
+geometry=0.0304687 0.290278 0.947656 0.231944 1
+shear_x=-0.2
+halign=center
+valign=bottom
+size=414
+fgcolour=255 32 255 255 1
+family=Impact
+weight=500
+olcolour=255 0 0 0 1
+outline=0
+bgcolour=0 0 0 0 1
+pad=0
+letter_spaceing=0
+shadow_distance=21
+shadow_angle=45
