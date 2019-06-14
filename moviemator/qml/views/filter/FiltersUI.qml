@@ -33,7 +33,7 @@ Rectangle {
     property int repeaterItemHeight: 96
     property int currentChoosed : 0
     property bool translate2CH: ("zh_CN" === Qt.locale().name)
-    //property bool translate2CH:false
+    // property bool translate2CH:false
     
     function findFilterModel(name){
         for(var i=0;i<filtersInfoList.count;i++){
@@ -196,7 +196,6 @@ Rectangle {
                         color: 'transparent'
 
                         Button { 
-                            id: button
                             width:20
                             height:20
                             z:2
@@ -207,7 +206,7 @@ Rectangle {
                                 rightMargin:21
                             }
                             // visible:id.checked ? true : false
-                            visible:(id.hoverStat || hovered) ? true : false
+                            visible:id.hoverStat ? true : false
                             checkable : true
                             onClicked:{
                                 addFilter(index)
@@ -219,10 +218,10 @@ Rectangle {
                                     color: "transparent" 
                                     Image{ 
                                         anchors.fill: parent 
-                                        source: (control.hovered && control.pressed) ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png';
+                                        source: control.hovered ? (control.pressed ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png' ) : 'qrc:///icons/light/32x32/filter_add.png' ; 
                                     } 
                                 } 
-                            }
+                            } 
                         }
 
                         Rectangle{
@@ -232,7 +231,7 @@ Rectangle {
                             height: 64
                             z:1
                             radius: 3 
-                            color: (hoverStat || button.hovered)?'#C0482C':'transparent'
+                            color: hoverStat?'#C0482C':'transparent'
                             property bool checked: (objectName === currentChoosed)?true:false
                             property bool hoverStat:false
                             Image {
