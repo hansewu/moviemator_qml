@@ -140,8 +140,8 @@ Flickable {
                 //filter.resetProperty(rectProperty)
                 //filter.set(rectProperty, rectCtr)
                 
-                filter.resetProperty(rectProperty)
-                filter.set(rectProperty, filterRect)
+                //filter.resetProperty(rectProperty)
+                //filter.set(rectProperty, filterRect)
                 vuiTimer1.restart()
             }
         
@@ -251,12 +251,17 @@ Flickable {
             //filter.set(rectProperty, filterRect)
 
             var position = timeline.getPositionInCurrentClip()
-            if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.cache_bKeyFrame(position))
+            if (!filter.enableAnimation())
+            {   
+                 filter.resetProperty(rectProperty)
+                 filter.set(rectProperty, filterRect)
+            }
+            else if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.cache_bKeyFrame(position))
             {
                 if (!filter.cache_bKeyFrame(position)) showAddFrameInfo(position)
                 
-                var rectValue = filter.getRect(rectProperty)
-                filter.cache_setKeyFrameParaRectValue(position, rectProperty, rectValue,1.0)
+                //var rectValue = filter.getRect(rectProperty)
+                filter.cache_setKeyFrameParaRectValue(position, rectProperty, filterRect,1.0)
                 filter.syncCacheToProject();
             }
         }

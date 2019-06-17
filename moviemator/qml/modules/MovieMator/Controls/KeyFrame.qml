@@ -175,7 +175,7 @@ RowLayout{
                 if(bKeyFrame)
                     return
                 bKeyFrame = true
-                syncUIDataToProject()
+                //syncUIDataToProject()
                 setAsKeyFrame()
                 // addKeyFrame()
             }
@@ -193,21 +193,25 @@ RowLayout{
             onRemoveKeyFrame: {
                 bKeyFrame = false
                 var nFrame = keyFrame.getCurrentFrame();
-                syncUIDataToProject()
+                //syncUIDataToProject()
                 filter.removeKeyFrameParaValue(nFrame);
-                if (filter.cache_getKeyFrameNumber() <= 0) {
-                    removedAllKeyFrame()
-                }
-                syncUIDataToProject()
+                //if (filter.cache_getKeyFrameNumber() <= 0) {
+                //    removedAllKeyFrame()
+                //}
+                //syncUIDataToProject()
             }
    }
+
 
    // 移除所有关键帧信号
     Connections {
              target: keyFrameControl
              onRemoveAllKeyFrame: {
                 bKeyFrame = false
-                removeAllKeyFrame()
+                //removeAllKeyFrame()
+                filter.removeAllKeyFrame()
+                filter.syncCacheToProject();
+                syncUIDataToProject()
              }
     }
 

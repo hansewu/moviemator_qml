@@ -49,7 +49,7 @@ Item {
         filter.setInAndOut(0, timeline.getCurrentClipParentLength() - 1)
         //导入上次工程保存的关键帧
         var metaParamList = metadata.keyframes.parameters
-        
+        /*
         var keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
         if(keyFrameCount < 0){
                 keyFrameCount = filter.getKeyFrameCountOnProject(metaParamList[0].property);
@@ -64,7 +64,7 @@ Item {
             }
         }
         filter.syncCacheToProject();
-
+        */
         if (filter.isNew) {
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
@@ -139,20 +139,26 @@ Item {
         rectTmp.height = h / profile.height
         */
 
-        filter.resetProperty(rectProperty)
-        filter.set(rectProperty, filterRect)
+        //filter.resetProperty(rectProperty)
+        //filter.set(rectProperty, filterRect)
 
 
-        if ((keyFrame.bEnableKeyFrame && keyFrame.bAutoSetAsKeyFrame) || filter.cache_bKeyFrame(keyFrame.getCurrentFrame()))
+        if(!keyFrame.bEnableKeyFrame)  //没有关键帧
+        {   
+            filter.resetProperty(rectProperty)
+            filter.set(rectProperty, filterRect)
+        }
+        else if ((keyFrame.bEnableKeyFrame && keyFrame.bAutoSetAsKeyFrame) || filter.cache_bKeyFrame(keyFrame.getCurrentFrame()))
         {
             var nFrame = keyFrame.getCurrentFrame()
             
             if (!filter.cache_bKeyFrame(nFrame)) keyFrame.showAddFrameInfo(nFrame)
 
-            var rectValue = filter.getRect(rectProperty)
-            filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
+            //var rectValue = filter.getRect(rectProperty)
+            filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, filterRect,1.0)
             filter.syncCacheToProject();
-        }
+        } 
+               
     }
 
     function saveValues() {
@@ -366,14 +372,15 @@ Item {
             }
             onSetAsKeyFrame:{
                 var nFrame = keyFrame.getCurrentFrame()
-                saveValues()
+                //saveValues()
             
-                var rectValue = filter.getRect(rectProperty)
+                //var rectValue = filter.getRect(rectProperty)
+                var rectValue = filter.getAnimRectValue(nFrame, rectProperty)
                 if (filter.cache_getKeyFrameNumber() <= 0)
                 {
                     var position2 = (timeline.getCurrentClipLength() - 1) //filter.producerOut - filter.producerIn + 1
-                    filter.cache_setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
                     filter.cache_setKeyFrameParaRectValue(0, rectProperty, rectValue)
+                    filter.cache_setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
                     filter.syncCacheToProject();
                 }
                 filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
@@ -396,6 +403,7 @@ Item {
                 metadata.keyframes.parameters[0].value = 'X'+ rect.x +'Y'+rect.y+'W'+rect.width+'H'+rect.height 
 
                 setControls()
+    
             }
         }
 
