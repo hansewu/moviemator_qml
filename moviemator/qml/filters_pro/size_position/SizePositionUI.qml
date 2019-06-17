@@ -716,7 +716,9 @@ Item {
             filter.get(rectProperty)
             var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
             var rect3 = filter.get(rectProperty)
-            keyFrame.removeAllKeyFrame()
+            //keyFrame.removeAllKeyFrame()
+            filter.removeAllKeyFrame()
+                
             filter.set(rectProperty,rect)
             changeMode()
             
