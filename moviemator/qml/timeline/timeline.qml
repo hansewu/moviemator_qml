@@ -349,7 +349,15 @@ Rectangle {
                             Connections {
                                 target: multitrack
                                 onModified:{
-                                    trackName = model.name
+                                    refrenshIndex.restart()
+                                }
+                            }
+                            Timer {
+                                id: refrenshIndex
+                                interval: 200; 
+                                onTriggered: {
+                                    if((!model.video)&&(trackName != model.name))
+                                        trackName = model.name
                                 }
                             }
                         }
