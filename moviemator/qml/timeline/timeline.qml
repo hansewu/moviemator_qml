@@ -346,12 +346,6 @@ Rectangle {
                                     trackHeaderRepeater.itemAt(i).selected = (i == currentTrack)
                                 }
                             }
-                            Connections {
-                                target: multitrack
-                                onModified:{
-                                    trackName = model.name
-                                }
-                            }
                         }
                     }
                 }
