@@ -35,6 +35,7 @@ Item {
     property var _locale: Qt.locale(application.numericLocale)
     property rect filterRect : filter.getRect(rectProperty)
     property rect rectTmp
+    property rect rectOld  //保存了当前的rect值，这样remove all keyframes之后（底层数据清空），可以将此值用于更新底层。不然也可以直接将界面的控件值设置到底层，不过此时这个滤镜需要使用rectangle.rect 
     property var clickedButton
     property bool bTile: false
     property bool bFit: false
@@ -353,7 +354,8 @@ Item {
             onSyncUIDataToProject:{
                 if(filter.cache_getKeyFrameNumber() <= 0){
                     filter.resetProperty(rectProperty)
-
+                    filter.set(rectProperty, rectOld)
+                    /*
                     var x = parseFloat(rectX.text) / profile.width
                     var y = parseFloat(rectY.text) / profile.height
                     var w = parseFloat(rectW.text) / profile.width
@@ -364,10 +366,11 @@ Item {
                     rectTmp.width = w
                     rectTmp.height = h
                     filter.set(rectProperty, rectTmp)
+                    */
                 }
                 else
-                {
-
+                {   
+                    
                 }
             }
             onSetAsKeyFrame:{
@@ -394,7 +397,7 @@ Item {
                 if (filter.cache_bKeyFrame(nFrame)) filter.syncCacheToProject()
 
                 var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
-
+                rectOld  = filter.getAnimRectValue(keyFrameNum, rectProperty)
                 filterRect.x = rect.x
                 filterRect.y = rect.y
                 filterRect.width = rect.width
