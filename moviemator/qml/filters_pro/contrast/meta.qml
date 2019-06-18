@@ -58,7 +58,7 @@ Metadata {
                 objectName: 'contrastSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.25'
+                defaultValue: '0.75'
                 value: '0'
                 factorFunc:  ['c:50.0']
             },
@@ -68,7 +68,7 @@ Metadata {
                 objectName: 'contrastSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.25'
+                defaultValue: '0.75'
                 value: '0'
                 factorFunc:  ['c:50.0']
             },
@@ -78,7 +78,7 @@ Metadata {
                 objectName: 'contrastSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.25'
+                defaultValue: '0.75'
                 value: '0'
                 factorFunc:  ['c:50.0']
             }

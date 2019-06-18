@@ -24,7 +24,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '60'
+                defaultValue: '0.6'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -34,7 +34,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.2'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -44,7 +44,7 @@ Metadata {
                 objectName: 'liftwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.2'
                 value: '0'
                 factorFunc:  ['c:255.0']
             },
@@ -54,7 +54,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '60'
+                defaultValue: '0.6'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -64,7 +64,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.2'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -74,7 +74,7 @@ Metadata {
                 objectName: 'gammawheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.2'
                 value: '0'
                 factorFunc:  ['c:127.5']
             },
@@ -84,7 +84,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '60'
+                defaultValue: '0.6'
                 value: '0'
                 factorFunc:  ['c:63.75']
             },
@@ -94,7 +94,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.6'
                 value: '0'
                 factorFunc:  ['c:63.75']
             },
@@ -104,7 +104,7 @@ Metadata {
                 objectName: 'gainwheel'
                 controlType: 'ColorWheelItem'
                 paraType: 'double'
-                defaultValue: '20'
+                defaultValue: '0.2'
                 value: '0'
                 factorFunc:  ['c:63.75']
             }

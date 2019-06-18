@@ -174,10 +174,10 @@ RowLayout{
                 case "ColorWheelItem":
                     var parameter2 = metaParamList[paramIndex+1]
                     var parameter3 = metaParamList[paramIndex+2]
-                    control.color = Qt.rgba(calcProjValByUIVal(parameter.defaultValue,parameter.factorFunc), calcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc), calcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc), 1.0 )
-                    filter.set(parameter.property,calcProjValByUIVal(parameter.defaultValue,parameter.factorFunc))
-                    filter.set(parameter2.property,calcProjValByUIVal(parameter2.defaultValue,parameter2.factorFunc))
-                    filter.set(parameter3.property,calcProjValByUIVal(parameter3.defaultValue,parameter3.factorFunc))
+                    control.color = Qt.rgba(calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc), calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc), calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc), 1.0 )
+                    filter.set(parameter.property,calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc))
+                    filter.set(parameter2.property,calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc))
+                    filter.set(parameter3.property,calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc))
                     paramIndex = paramIndex+2
                 
                     break;

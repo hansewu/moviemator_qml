@@ -25,7 +25,12 @@ Metadata {
             Parameter {
                 name: qsTr('Level')
                 property: 'gain_r'
-                isSimple: true
+                objectName: 'contrastSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0.24'
+                value: '0'
+                factorFunc:  ['c:100.0']
             }
         ]
     }

@@ -21,6 +21,16 @@ Metadata {
         simpleProperties: ['radius']
         parameters: [
             Parameter {
+                name: qsTr('resource')
+                property: 'resource'
+                objectName: '*'
+                controlType: ''
+                paraType: 'string'
+                defaultValue: 'filter-demo.html'
+                value: '0'
+                factorFunc:  []
+            },
+            Parameter {
                 name: qsTr('Radius')
                 property: 'radius'
                 objectName: 'slider'
@@ -36,10 +46,21 @@ Metadata {
                 property: 'color'
                 objectName: '*'
                 controlType: 'ColorPicker'
-                paraType: 'rect'
-                defaultValue: '0.5 0.5 0.5'
+                paraType: 'string'
+                defaultValue: '#CCCCCC'
                 value: '#000000'
-                factorFunc:  ['c:255.0']
+                factorFunc:  []
+            }
+            ,
+            Parameter {
+                name: qsTr('disable')
+                property: 'disable'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '0'
+                value: ''
+                factorFunc:  []
             }
         ]
     }

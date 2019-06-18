@@ -15,4 +15,21 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     filterType: qsTr('Effect')
+    keyframes {
+        allowAnimateIn: true
+        allowAnimateOut: true
+        simpleProperties: ['disable']
+        parameters: [
+            Parameter {
+                name: qsTr('disable')
+                property: 'disable'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '1'
+                value: ''
+                factorFunc:  []
+            }
+        ]
+    }
 }

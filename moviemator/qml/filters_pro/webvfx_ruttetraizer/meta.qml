@@ -15,4 +15,31 @@ Metadata {
     mlt_service: "webvfx"
     qml: "ui.qml"
     filterType: qsTr('Effect')
+    keyframes {
+        allowAnimateIn: true
+        allowAnimateOut: true
+        simpleProperties: ['disable']
+        parameters: [
+            Parameter {
+                name: qsTr('resource')
+                property: 'resource'
+                objectName: '*'
+                controlType: ''
+                paraType: 'string'
+                defaultValue: 'ruttetraizer.html'
+                value: '0'
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('disable')
+                property: 'disable'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '0'
+                value: ''
+                factorFunc:  []
+            }
+        ]
+    }
 }

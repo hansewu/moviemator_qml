@@ -26,7 +26,7 @@ Metadata {
                 property: 'hori'
                 objectName: 'wslider'
                 controlType: 'SliderSpinner'
-                paraType: 'int'
+                paraType: 'double'
                 defaultValue: '0.02'
                 value: '0'
                 factorFunc:  []
@@ -36,7 +36,7 @@ Metadata {
                 property: 'vert'
                 objectName: 'hslider'
                 controlType: 'SliderSpinner'
-                paraType: 'int'
+                paraType: 'double'
                 defaultValue: '0.02'
                 value: '0'
                 factorFunc:  []
