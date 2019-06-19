@@ -197,8 +197,8 @@ Rectangle {
 
                         Button { 
                             id: button
-                            width:20
-                            height:20
+                            width:27
+                            height:27
                             z:2
                             anchors{
                                 top:parent.top
@@ -218,7 +218,7 @@ Rectangle {
                                     implicitWidth: parent.width 
                                     color: "transparent" 
                                     Image{ 
-                                        anchors.fill: parent 
+                                        anchors.fill: parent
                                         source: (control.hovered && control.pressed) ? 'qrc:///icons/light/32x32/filter_add-a.png' : 'qrc:///icons/light/32x32/filter_add.png';
                                     } 
                                 } 

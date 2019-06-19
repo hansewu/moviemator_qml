@@ -399,19 +399,20 @@ Rectangle {
                             id:filterDelegateDelete
                             anchors{
                                 top:parent.top
-                                topMargin:-1
+                                topMargin:-2
                                 right:parent.right
-                                rightMargin:-2
+                                rightMargin:-1
                             }
                             tooltip: qsTr('Remove selected filter')
                             z:4
-                            width:15
-                            height:15
+                            width: 21
+                            height: 23
                             style: ButtonStyle {
                                 background: Rectangle {
                                     color:'transparent'
                                     anchors.fill: parent
                                     Image{
+                                        id: image
                                         anchors.fill: parent
                                         source: (attachedFiltersView.currentIndex == index)?(filterDelegateDelete.pressed ? 'qrc:///icons/filters/icon/filter_remove-on.png' : 'qrc:///icons/filters/icon/filter_remove.png'):''
                                     }

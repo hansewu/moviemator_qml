@@ -154,8 +154,8 @@ Rectangle {
 
                         Button { 
                             id: button
-                            width:20
-                            height:20
+                            width:27
+                            height:27
                             z:2
                             anchors{
                                 top:parent.top
