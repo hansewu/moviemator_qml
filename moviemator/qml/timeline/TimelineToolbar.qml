@@ -569,7 +569,8 @@ ToolBar {
         onTriggered: {
             console.assert(timeline);
             if(timeline)
-                timeline.insert(currentTrack)
+//                timeline.insert(currentTrack)
+                timeline.paste()        // 粘贴
         }
     }
 
