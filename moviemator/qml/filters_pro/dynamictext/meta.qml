@@ -60,13 +60,13 @@ Metadata {
                  property: 'pad'
                  isSimple: true
                  paraType: "int"
-             },*/
+             },
              Parameter {
                  name: qsTr('Letter Spaceing')
                  property: 'letter_spaceing'
                  isSimple: true
                  paraType: "int"
-             },
+             },*/
 
              Parameter {
                  name: qsTr('transition fix_rotate_x')

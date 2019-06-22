@@ -579,10 +579,10 @@ Item {
                     combineAllKeyFramePara()
 
                 } 
-                else 
-                {
-                    filter.set(currentProperty, value)
-                }
+              //  else 
+              //  {
+              //      filter.set(currentProperty, value)
+              //  }
             }
         } 
         else 
