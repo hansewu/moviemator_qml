@@ -195,6 +195,7 @@ RowLayout{
                 case "StringCtr":
                     var index0 = findDefaultIndex(parameter.defaultValue,control.model)
                     control.currentIndex = index0
+                    break
                 
                 default :
                     break;
@@ -469,12 +470,12 @@ RowLayout{
             return
         bBlockUpdateUI = true
         //插入关键帧
-        var paramCount = metadata.keyframes.parameterCount
-        for(var i = 0; i < paramCount; i++)
+        paramCount = metadata.keyframes.parameterCount
+        for(i = 0; i < paramCount; i++)
         {
             
-            var key = metadata.keyframes.parameters[i].property
-            var paraType = metadata.keyframes.parameters[i].paraType
+            key = metadata.keyframes.parameters[i].property
+            paraType = metadata.keyframes.parameters[i].paraType
             var value ;
             switch(paraType){
             case 'int':
@@ -506,7 +507,7 @@ RowLayout{
 
         for(var j = 0; j < paramCount; j++)
         {
-            var key = metadata.keyframes.parameters[j].property
+            key = metadata.keyframes.parameters[j].property
             var t = filter.get(key)
         }
 
@@ -797,7 +798,7 @@ RowLayout{
                 return controlList[i]
             }
         }
-        for(var i=0;i<controlList.length;i++){
+        for(i=0;i<controlList.length;i++){
             if(!isEmptyObject(controlList[i].children)){
                 var controlList1 = controlList[i].children
                 for(var j=0;j<controlList1.length;j++){
@@ -876,7 +877,7 @@ RowLayout{
                 control.value = parameter.value
             }
             if(changeValue){
-                for(var i=0;i< parameterList.length;i++){
+                for(i=0;i< parameterList.length;i++){
                     parameter = metadata.keyframes.parameters[parameterList[i]]
                     filter.set(parameter.property,calcProjValByUIVal(control.value,parameter.factorFunc))
                     // filter.cache_setKeyFrameParaValue(currentFrame, parameter.property, calcProjValByUIVal(control.value,parameter.factorFunc).toString());

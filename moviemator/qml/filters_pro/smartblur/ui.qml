@@ -101,20 +101,20 @@ Item {
              onRefreshUI:
              {
                  var blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_radius");
-                 if(blurValue != -1.0)
+                 if(blurValue !== -1.0)
                  {
                      radiusSlider.value = blurValue
                  }
 
                  blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_threshold");
-                 if(blurValue != -1.0)
+                 if(blurValue !== -1.0)
                  {
                      thresholdSlider.value = blurValue
 
                  }
 
                  blurValue = filter.cache_getKeyFrameParaDoubleValue(keyFrameNum, "av.luma_strength");
-                 if(blurValue != -1.0)
+                 if(blurValue !== -1.0)
                  {
                      strengthSlider.value = blurValue
 

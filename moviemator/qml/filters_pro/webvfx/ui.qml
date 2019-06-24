@@ -59,7 +59,7 @@ Item {
 
     Component.onCompleted: {
         var resource = filter.get('resource')
-        if (resource.substring(0,6) == "plain:") {
+        if (resource.substring(0,6) === "plain:") {
             resource = resource.substring(6)
             webvfxCheckBox.checked = false
         } else if (resource) {

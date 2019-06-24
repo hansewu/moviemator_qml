@@ -64,7 +64,7 @@ Item {
         onTriggered: {
             loudnessGauge.value = filter.get('in_loudness')
             gainGauge.value = filter.get('out_gain')
-            if( filter.get('reset_count') != _prevResetVal ) {
+            if( filter.get('reset_count') !== _prevResetVal ) {
                 _prevResetVal = filter.get('reset_count')
                 _resetCountDown = 1000 / timer.interval
                 resetIndicator.active = true

@@ -133,7 +133,7 @@ Rectangle {
             throw new Error("attachedFiltersView.model.model is abnormal")
             return
         }
-        if((typeof dataView.model.model == 'undefined')||(dataView.model.model == null)||(dataView.model.model.rowCount() < modelIndex+1)){
+        if((typeof dataView.model.model === 'undefined')||(dataView.model.model === null)||(dataView.model.model.rowCount() < modelIndex+1)){
             throw new Error("attachedFiltersView.model.model is abnormal")
             return
         }

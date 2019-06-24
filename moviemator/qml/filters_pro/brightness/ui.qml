@@ -28,7 +28,7 @@ Item {
     width: 300
     height: 250
 
-    property var levelValue: 100
+    property double levelValue: 100
 
     function testSetAnimationValueAndSetValue()
     {
@@ -49,8 +49,8 @@ Item {
         filter.cache_setKeyFrameParaValue(10, "level", 0.88)
         filter.syncCacheToProject()
 
-        var double_level = filter.getDouble("level")  //0.55
-        var anim_double_level = filter.getAnimDoubleValue(10, "level") //0.88
+        double_level = filter.getDouble("level")  //0.55
+        anim_double_level = filter.getAnimDoubleValue(10, "level") //0.88
         console.log("test2 level get ", double_level)
         console.log("test2 level get anim", anim_double_level)
 
@@ -60,8 +60,8 @@ Item {
         //获取动画数据，如果当前有动画数据存储，就获取动画数据，如果没有就获取非动画数据 。
         filter.set("level", 0.22)
 
-        var double_level = filter.getDouble("level")   //0.22
-        var anim_double_level = filter.getAnimDoubleValue(10, "level")  //0.22
+        double_level = filter.getDouble("level")   //0.22
+        anim_double_level = filter.getAnimDoubleValue(10, "level")  //0.22
         console.log("test3 level get ", double_level)
         console.log("test3 level get anim", anim_double_level)
 

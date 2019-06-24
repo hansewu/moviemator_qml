@@ -79,7 +79,7 @@ Flickable {
 
     function showAddFrameInfo(position)
     {
-        if (filter.autoAddKeyFrame() == false) return
+        if (filter.autoAddKeyFrame() === false) return
 
         addFrameInfoDialog.show     = false
         addFrameInfoDialog.show     = true
@@ -150,7 +150,7 @@ Flickable {
 
 
     function isModeChanged(){
-        if((fillStat != filter.get(fillProperty))||(distortStat != filter.get(distortProperty))||(fillStat != filter.get(valignProperty))||(halignStat != filter.get(halignProperty))){
+        if((fillStat !== filter.get(fillProperty))||(distortStat !== filter.get(distortProperty))||(fillStat !== filter.get(valignProperty))||(halignStat !== filter.get(halignProperty))){
             fillStat = filter.get(fillProperty)
             distortStat = filter.get(distortProperty)
             valignStat = filter.get(valignProperty)
@@ -205,8 +205,8 @@ Flickable {
              rectCtr.height = rect.height / profile.height / rectangle.heightScale
             //filter.set(rectProperty, rectCtr)
 
-            var position        = timeline.getPositionInCurrentClip()
-            var bKeyFrame       = filter.cache_bKeyFrame(position)
+            position        = timeline.getPositionInCurrentClip()
+            bKeyFrame       = filter.cache_bKeyFrame(position)
             if (bKeyFrame)
             {
                 filter.cache_setKeyFrameParaRectValue(position, rectProperty, rectCtr, 1.0)
@@ -222,7 +222,7 @@ Flickable {
         target: filterDock
         onPositionChanged: {
             
-            if(metaValue != metadata.keyframes.parameters[0].value){
+            if(metaValue !== metadata.keyframes.parameters[0].value){
                 metaValue = metadata.keyframes.parameters[0].value
                 var x = metaValue.substring(1,metaValue.indexOf('Y'))
                 var y = metaValue.substring(metaValue.indexOf('Y')+1,metaValue.indexOf('W'))

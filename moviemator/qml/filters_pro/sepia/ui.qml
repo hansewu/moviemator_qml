@@ -73,7 +73,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
-            property var lastValue:75
+            property double lastValue:75
             id: sliderBlue
             objectName: 'sliderBlue'
             minimumValue: 0
@@ -95,7 +95,7 @@ Item {
             color: '#ffffff'
         }
         SliderSpinner {
-            property var lastValue:150
+            property double lastValue:150
             id: sliderRed
             objectName:'sliderRed'
             minimumValue: 0

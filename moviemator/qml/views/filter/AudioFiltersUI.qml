@@ -228,7 +228,7 @@ Rectangle {
                             anchors.fill: parent
                             hoverEnabled: true
                             preventStealing:true
-                            property var clickNum:0
+                            property int clickNum:0
                             onClicked: {
                                 clickNum ++
                                 if(clickNum == 1) { 

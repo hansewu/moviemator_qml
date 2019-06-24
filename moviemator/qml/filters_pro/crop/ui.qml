@@ -74,7 +74,7 @@ Item {
             leftslider.value = +filter.get('left')
             rightslider.value = +filter.get('right')
         }
-        centerCheckBox.checked = filter.get('center') == '1'
+        centerCheckBox.checked = filter.get('center') === '1'
         setEnabled()
     }
 
@@ -93,7 +93,7 @@ Item {
             Layout.columnSpan: 2
             parameters: defaultParameters
             onPresetSelected: {
-                centerCheckBox.checked = filter.get('center') == '1'
+                centerCheckBox.checked = filter.get('center') === '1'
                 biasslider.value = +filter.get('center_bias')
                 topslider.value = +filter.get('top')
                 bottomslider.value = +filter.get('bottom')
@@ -115,7 +115,7 @@ Item {
             id: centerCheckBox
             Layout.columnSpan: 1
 //            text: qsTr('Center')
-            checked: filter.get('center') == '1'
+            checked: filter.get('center') === '1'
             property bool isReady: false
             Component.onCompleted: isReady = true
             onClicked: {
