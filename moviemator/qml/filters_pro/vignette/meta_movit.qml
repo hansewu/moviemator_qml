@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "movit.vignette"
     needsGPU: true
     qml: "ui_movit.qml"
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('6 Light')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

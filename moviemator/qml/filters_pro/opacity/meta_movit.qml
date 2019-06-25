@@ -15,7 +15,7 @@ Metadata {
     mlt_service: "movit.opacity"
     needsGPU: true
     qml: "ui.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('3 Basic Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

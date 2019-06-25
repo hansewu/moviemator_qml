@@ -16,7 +16,7 @@ Metadata {
     isFavorite: true
     gpuAlt: "movit.opacity"
 //    allowMultiple: false
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('3 Basic Coloring Tool')
     keyframes {
             allowAnimateIn: true
             allowAnimateOut: true

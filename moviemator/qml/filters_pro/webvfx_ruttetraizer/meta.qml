@@ -14,7 +14,7 @@ Metadata {
     name: qsTr("Rutt-Etra-Izer (HTML)")
     mlt_service: "webvfx"
     qml: "ui.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('9 Effect')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

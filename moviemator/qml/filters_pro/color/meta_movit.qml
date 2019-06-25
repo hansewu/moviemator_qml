@@ -15,7 +15,7 @@ Metadata {
     needsGPU: true
     qml: "ui.qml"
     isFavorite: true
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('3 Basic Coloring Tool')
     // keyframes {
     //     parameters: [
     //         Parameter {

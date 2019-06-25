@@ -20,7 +20,7 @@ Metadata {
     gpuAlt: 'movit.rect'
     isFavorite: true
     allowMultiple: false
-    filterType: qsTr('Transform')
+    filterType: qsTr('2 Basic Processing')
     freeVersion: true
     keyframes {
         allowAnimateIn: true

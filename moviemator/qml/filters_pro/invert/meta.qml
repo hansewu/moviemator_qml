@@ -13,5 +13,5 @@ Metadata {
     name: qsTr("Invert Colors")
     mlt_service: "invert"
     qml: "ui.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('6 Light')
 }

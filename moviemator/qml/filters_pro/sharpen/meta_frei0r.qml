@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "frei0r.sharpness"
     qml: "ui_frei0r.qml"
     gpuAlt: "movit.sharpen"
-    filterType: qsTr('Effect')
+    filterType: qsTr('4 Denoise and Blur')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

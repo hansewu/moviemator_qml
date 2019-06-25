@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "boxblur"
     qml: "ui_boxblur.qml"
     gpuAlt: "movit.blur"
-    filterType: qsTr('Blur')
+    filterType: qsTr('4 Denoise and Blur')
     keyframes {
         minimumVersion: '3'
         allowAnimateIn: true

@@ -83,8 +83,8 @@ var EN_CH_list = [
 //https://www.mltframework.org/plugins/PluginsFilters/
 //https://www.freedesktop.org/software/gstreamer-sdk/data/docs/latest/gst-plugins-bad-plugins-0.10/gst-plugins-bad-plugins-plugin-frei0r.html
 var EN_SHORT_list = [
-    {"English":"3 point color balance", "Short":"3 Point",      "Description":"Adjust color balance with 3 color points"}
-    ,{"English":"3dflippo",             "Short":"3D Trans",     "Description":"Extracts Blue from Image"}
+    {"English":"3 point color balance", "Short":"3 Points",      "Description":"Adjust color balance with 3 color points"}
+    ,{"English":"3dflippo",             "Short":"3D Rotation",     "Description":"Frame rotation in 3d-space"}
     ,{"English":"B",                    "Short":"B Channel",    "Description":"Extracts Blue from Image"}
     ,{"English":"Baltan",               "Short":"Baltan",       "Description":"delayed alpha smoothed blit of time"}
     ,{"English":"BgSubtract0r",         "Short":"BgSubtract",   "Description":"Perform background subtraction on a still video"}
@@ -116,7 +116,7 @@ var EN_SHORT_list = [
     ,{"English":"Glow",                 "Short":"Glow",         "Description":"Creates a glamorous glow"}
     ,{"English":"hqdn3d",               "Short":"3D Denoise",        "Description":"High quality 3D denoiser "}
     ,{"English":"Hueshift0r",           "Short":"Hue Shift",        "Description":"Shifts the hue of a source image"}
-    ,{"English":"IIR blur",             "Short":"IIIR blur",        "Description":"Three types of fast IIR blurring"}
+    ,{"English":"IIR blur",             "Short":"IIR Blur",        "Description":"Three types of fast IIR blurring"}
     ,{"English":"Invert0r",             "Short":"Invert",        "Description":"Inverts all colors of a source image"}
     ,{"English":"K-Means Clustering",   "Short":"K-Means",        "Description":"Clusters of a source image by color and spatial distance"}
     ,{"English":"keyspillm0pup",        "Short":"KeySpill",        "Description":"Reduces the visibility of key color spill in chroma keying"}
@@ -129,7 +129,7 @@ var EN_SHORT_list = [
     ,{"English":"Medians",              "Short":"Medians",        "Description":"Implements several median-type filters"}
     ,{"English":"NDVI filter",          "Short":"NDVI filter",        "Description":"This filter creates a false image from a visible + infrared source."}
     ,{"English":"Nervous",              "Short":"Nervous",        "Description":"flushes frames in time in a nervous way"}
-    ,{"English":"Nikon D90 Stairstepping fix","Short":"D90 Fix",        "Description":""}
+    ,{"English":"Nikon D90 Stairstepping fix","Short":"D90 Fix",        "Description":"Nikon D90 Stairstepping fix"}
     ,{"English":"Normaliz0r",           "Short":"Normalize",        "Description":"Normalize (aka histogram stretch, contrast stretch)"}
     ,{"English":"nosync0r",             "Short":"No Sync",        "Description":"broken tv"}
     ,{"English":"pixeliz0r",            "Short":"Pixelize",        "Description":"Pixelize input image"}

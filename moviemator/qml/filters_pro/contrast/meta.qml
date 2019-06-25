@@ -16,7 +16,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.lift_gamma_gain"
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('3 Basic Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

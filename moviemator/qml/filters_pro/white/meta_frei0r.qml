@@ -15,7 +15,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     gpuAlt: "movit.white_balance"
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('3 Basic Coloring Tool')
     // keyframes {
     //     allowAnimateIn: true
     //     allowAnimateOut: true

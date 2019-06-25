@@ -16,7 +16,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
 //    allowMultiple: false
-    filterType: qsTr('Transform')
+    filterType: qsTr('2 Basic Processing')
     freeVersion: true
     keyframes {
         allowAnimateIn: true

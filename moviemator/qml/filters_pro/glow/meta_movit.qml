@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "movit.glow"
     needsGPU: true
     qml: "ui_movit.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('6 Light')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
