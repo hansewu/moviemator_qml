@@ -437,7 +437,7 @@ Rectangle {
                         Label {
                             id:filterDelegateName
                             z:3
-                            text: translate2CH?Trans.transEn2Ch(model.display):model.display
+                            text: translate2CH?Trans.transEn2Ch(model.display):Trans.transEn2Short(model.display)
                             verticalAlignment:Text.AlignHCenter
                             wrapMode: Text.Wrap
                             font.pixelSize: 11
