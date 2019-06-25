@@ -29,14 +29,14 @@ Item {
     property var defaultParameters: []
     property var neutralParam
     property var tempParam
-    property var defaultNeutral: "#7f7f7f"
-    property var defaultTemp: 6500.0
-    property var tempScale: 15000.0
+    property string defaultNeutral: "#7f7f7f"
+    property double defaultTemp: 6500.0
+    property double tempScale: 15000.0
     width: 300
     height: 250
 
     Component.onCompleted: {
-        if (filter.get("mlt_service").indexOf("movit.") == 0 ) {
+        if (filter.get("mlt_service").indexOf("movit.") === 0 ) {
             // Movit filter
             neutralParam = "neutral_color"
             tempParam = "color_temperature"

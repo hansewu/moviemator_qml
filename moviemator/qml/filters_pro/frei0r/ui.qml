@@ -13,12 +13,12 @@ Item {
     height: 250
 
     property rect color
-    property var levelValue: 100
+    property double levelValue: 100
     property var keyFrame
     function findControl(objectName,root){
         var controlList = root.children
         for(var i=0;i<controlList.length;i++){
-            if(objectName == controlList[i].objectName){
+            if(objectName === controlList[i].objectName){
                 return controlList[i]
             }
         }
@@ -27,7 +27,7 @@ Item {
     function getParamsAssociatedWithControl(id){
         var rt = [];
         for(var i=0;i<metadata.keyframes.parameters.length;i++){
-            if(id.objectName == metadata.keyframes.parameters[i].objectName)
+            if(id.objectName === metadata.keyframes.parameters[i].objectName)
             rt.push(i)
         }
         return  rt;
@@ -64,7 +64,7 @@ Item {
     function positionChanged(objectName){
         var ctr = keyFrame.findControl(objectName,layoutRoot)
         var paramIndexList = keyFrame.getParamsAssociatedWithControl(ctr)
-        if(paramIndexList.length != 2){
+        if(paramIndexList.length !== 2){
             console.log("getParamsAssociatedWithControl Error: "+paramIndexList.length)
             return;
         }

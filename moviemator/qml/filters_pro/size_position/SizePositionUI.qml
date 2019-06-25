@@ -203,7 +203,7 @@ Item {
 
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
-        }else if(distortRadioButton.checked = true){
+        }else if(distortRadioButton.checked === true){
             filter.resetProperty(fillProperty)
             filter.resetProperty(distortProperty)
 
@@ -259,7 +259,7 @@ Item {
         var scale = 1
         if(filter.producerAspect() > profile.width/profile.height) 
         {
-            if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
+            if ((filter.mediaHeight !== -1) && (filter.mediaWidth !== -1))
                 scale = filter.mediaWidth/profile.width
 
             filterRect.height   = 1.0/filter.producerAspect() * profile.width/profile.height * scale
@@ -267,7 +267,7 @@ Item {
         }
         else
         {   
-            if ((filter.mediaHeight != -1) && (filter.mediaWidth != -1))
+            if ((filter.mediaHeight !== -1) && (filter.mediaWidth !== -1))
                 scale = filter.mediaHeight/profile.height
 
             filterRect.width    = filter.producerAspect() * profile.height/profile.width * scale

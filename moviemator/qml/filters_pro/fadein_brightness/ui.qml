@@ -38,7 +38,7 @@ Item {
             filter.set('in', filter.producerIn)
             filter.set('out', filter.getDouble('in') + duration - 1)
         }
-        alphaCheckbox.checked = filter.get('alpha') != 1
+        alphaCheckbox.checked = filter.get('alpha') !== 1
     }
 
     ColumnLayout {

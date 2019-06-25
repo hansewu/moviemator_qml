@@ -27,7 +27,7 @@ import MovieMator.Controls 1.0
 Item {
     property string paramBlur: '0'
     property var defaultParameters: [paramBlur]
-    property var oValue: 0.5
+    property double oValue: 0.5
     width: 300
     height: 250
     Component.onCompleted: {

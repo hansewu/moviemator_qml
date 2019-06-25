@@ -27,8 +27,8 @@ import MovieMator.Controls 1.0
 
 Item {
     property var defaultParameters: ['lift_r', 'lift_g', 'lift_b', 'gamma_r', 'gamma_g', 'gamma_b', 'gain_r', 'gain_g', 'gain_b']
-    property var gammaFactor: 2.0
-    property var gainFactor: 4.0
+    property double gammaFactor: 2.0
+    property double gainFactor: 4.0
     width: 300
     height: 250
 

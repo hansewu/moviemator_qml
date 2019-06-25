@@ -40,7 +40,7 @@ Item {
             filter.set('in', inFrame)
             filter.set('out', out)
         }
-        alphaCheckbox.checked = filter.get('alpha') != 1
+        alphaCheckbox.checked = filter.get('alpha') !== 1
     }
 
     ColumnLayout {

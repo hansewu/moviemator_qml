@@ -42,7 +42,7 @@ Item {
     property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
-    property var  m_lastFrameNum: -1 
+    property int  m_lastFrameNum: -1
     property bool m_bLastEnableKeyFrame: false
 //    property var  m_parameterValue: new Array()
     property bool  m_refreshedUI:false

@@ -55,7 +55,7 @@ Rectangle {
 
         nextKeyFrameButton.enabled  = enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.bHasNextKeyFrame(position)
 
-        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.cache_bKeyFrame(position) && (position != 0) && (position != (timeline.getCurrentClipLength() - 1))
+        removeKeyFrameButton.enabled= enableKeyFrameCheckBox.checked && metadata && (metadata.keyframes.parameterCount > 0) && filter.cache_bKeyFrame(position) && (position !== 0) && (position !== (timeline.getCurrentClipLength() - 1))
 
         autoAddKeyFrameCheckBox.enabled = enableKeyFrameCheckBox.checked
     }
@@ -273,7 +273,7 @@ Rectangle {
                 onClicked: {
                     var position        = timeline.getPositionInCurrentClip()
 
-                    if((position == 0) || (position == (timeline.getCurrentClipLength() - 1))) 
+                    if((position === 0) || (position === (timeline.getCurrentClipLength() - 1)))
                         return   //首尾帧无法删除
 
                     var bKeyFrame       = filter.cache_bKeyFrame(position)
@@ -303,7 +303,7 @@ Rectangle {
                 //buttonWidth : 85
                 onClicked: {
                     var nFrame = filter.cache_getPreKeyFrameNum(timeline.getPositionInCurrentClip())
-                    if(nFrame != -1)
+                    if(nFrame !== -1)
                     {
                         filterDock.position = nFrame
                     }
@@ -340,7 +340,7 @@ Rectangle {
                 //buttonWidth : 85
                 onClicked: {
                     var nFrame = filter.cache_getNextKeyFrameNum(timeline.getPositionInCurrentClip())
-                    if(nFrame != -1)
+                    if(nFrame !== -1)
                     {
                         filterDock.position = nFrame
                         //frameChanged(nFrame)

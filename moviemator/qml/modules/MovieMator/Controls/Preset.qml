@@ -128,7 +128,7 @@ RowLayout {
             var nameUsed = false
             for(var index =0; index < listMode.count; index++)
             {
-                if(listMode.get(index).name  == fileName)
+                if(listMode.get(index).name  === fileName)
                 {
                     nameUsed = true
                 }
@@ -154,7 +154,7 @@ RowLayout {
                 Layout.fillWidth: true
                 onAccepted: nameDialog.acceptName()
                 Keys.onPressed: {
-                    if (event.key == Qt.Key_Escape) {
+                    if (event.key === Qt.Key_Escape) {
                         nameDialog.close()
                         event.accepted = true
                     }

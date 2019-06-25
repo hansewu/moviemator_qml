@@ -27,7 +27,7 @@ import MovieMator.Controls 1.0
 Item {
     width: 300
     height: 250
-    property var radiusValue: 2
+    property double radiusValue: 2
 
     Component.onCompleted: {
         keyFrame.initFilter(layoutRoot)

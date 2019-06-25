@@ -108,16 +108,16 @@ RowLayout{
         }
 
         //插入关键帧
-        var paramCount = metadata.keyframes.parameterCount
-        for(var i = 0; i < paramCount; i++)
+        paramCount = metadata.keyframes.parameterCount
+        for(i = 0; i < paramCount; i++)
         {            
-            var key = metadata.keyframes.parameters[i].property
+            key = metadata.keyframes.parameters[i].property
             var paraType = metadata.keyframes.parameters[i].paraType
             if (paraType === "rect") {
                 var rect = filter.getAnimRectValue(position, key)
                 filter.cache_setKeyFrameParaRectValue(position, key, rect, 1.0)
             } else {
-                var value = filter.get(key)
+                value = filter.get(key)
                 filter.cache_setKeyFrameParaValue(position, key, value.toString() );
             }
         }
@@ -133,7 +133,7 @@ RowLayout{
         while(true) 
         {  
             position = filter.cache_getPreKeyFrameNum(position)
-            if(position == -1) break;
+            if(position === -1) break;
  
             filter.removeKeyFrameParaValue(position);
             filter.syncCacheToProject();

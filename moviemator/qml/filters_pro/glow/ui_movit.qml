@@ -27,9 +27,9 @@ Item {
     property var defaultParameters: ['radius','blur_mix','highlight_cutoff']
     width: 300
     height: 250
-    property var radiusValue: 20.0
-    property var blurValue: 1.0
-    property var cutoffValue: 0.2
+    property double radiusValue: 20.0
+    property double blurValue: 1.0
+    property double cutoffValue: 0.2
 
     Component.onCompleted: {
         keyFrame.initFilter(layoutRoot)
