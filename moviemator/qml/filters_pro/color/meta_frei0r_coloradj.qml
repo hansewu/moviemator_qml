@@ -15,5 +15,5 @@ Metadata {
     mlt_service: "frei0r.coloradj_RGB"
     qml: "ui_frei0r_coloradj.qml"
     isHidden: true
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('5 Advanced Coloring Tool')
 }

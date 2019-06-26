@@ -16,7 +16,7 @@ Metadata {
     qml: "ui.qml"
     vui: 'vui.qml'
     isGpuCompatible: false
-    filterType: qsTr('1 Text')
+    filterType: qsTr('2 Text')
     freeVersion: true
      keyframes {
          allowAnimateIn: true

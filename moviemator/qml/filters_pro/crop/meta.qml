@@ -17,5 +17,5 @@ Metadata {
 //    allowMultiple: false
     isClipOnly: true
     freeVersion: true
-    filterType: qsTr('2 Basic Processing')
+    filterType: qsTr('1 Basic Processing')
 }

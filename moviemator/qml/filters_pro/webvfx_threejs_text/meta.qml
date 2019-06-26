@@ -14,7 +14,7 @@ Metadata {
     name: qsTr("Text3D(Eng.)")
     mlt_service: "webvfx"
     qml: "ui.qml"
-    filterType: qsTr("1 Text")
+    filterType: qsTr("2 Text")
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
