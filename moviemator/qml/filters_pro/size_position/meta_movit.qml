@@ -18,7 +18,7 @@ Metadata {
     vui: 'vui_movit.qml'
     allowMultiple: false
     isFavorite: true
-    filterType: qsTr('2 Basic processing')
+    filterType: qsTr('1 Basic Processing')
     keyframes {
         allowTrim: false
         allowAnimateIn: true

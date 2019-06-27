@@ -16,7 +16,7 @@ Metadata {
     needsGPU: true
     qml: "ui_movit.qml"
     isFavorite: true
-    filterType: qsTr('3 Basic Coloring Toolt')
+    filterType: qsTr('3 Basic Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
