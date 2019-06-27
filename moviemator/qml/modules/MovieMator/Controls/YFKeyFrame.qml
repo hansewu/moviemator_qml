@@ -104,7 +104,7 @@ RowLayout{
             throw new Error("metadata is abnormal")
         }
 
-        if(metadata.keyframes.parameters.length === 1)
+        //if(metadata.keyframes.parameters.length === 1)
             filter.setInAndOut(0, timeline.getCurrentClipParentLength()-1)
 
         //导入上次工程保存的关键帧
@@ -465,9 +465,9 @@ RowLayout{
         bBlockUpdateUI = false
 
         //重复点击不生效
-        var bKeyFrame = filter.cache_bKeyFrame(position)
-        if (bKeyFrame)
-            return
+        //var bKeyFrame = filter.cache_bKeyFrame(position)
+        //if (bKeyFrame)
+            //return
         bBlockUpdateUI = true
         //插入关键帧
         paramCount = metadata.keyframes.parameterCount
