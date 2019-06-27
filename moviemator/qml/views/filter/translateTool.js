@@ -3,8 +3,8 @@ var EN_CH_list = [
     ,{"English":"3dflippo","Chinese":"3D变换"}
     ,{"English":"B","Chinese":"蓝通道"}
     ,{"English":"Baltan","Chinese":"延迟alpha"}
-    ,{"English":"BgSubtract0r","Chinese":"去背景"}
-    ,{"English":"bluescreen0r","Chinese":"色彩alpha"}
+    ,{"English":"BgSubtract0r","Chinese":"去静背景"}
+    ,{"English":"bluescreen0r","Chinese":"绿幕抠像"}
     ,{"English":"Brightness","Chinese":"亮度"}
     ,{"English":"bw0r","Chinese":"黑白图像"}
     ,{"English":"c0rners","Chinese":"透视变换"}
@@ -88,7 +88,7 @@ var EN_SHORT_list = [
     ,{"English":"B",                    "Short":"B Channel",    "Description":"Extracts Blue from Image"}
     ,{"English":"Baltan",               "Short":"Baltan",       "Description":"delayed alpha smoothed blit of time"}
     ,{"English":"BgSubtract0r",         "Short":"BgSubtract",   "Description":"Perform background subtraction on a still video"}
-    ,{"English":"bluescreen0r",         "Short":"Color2Alpha",  "Description":"Color to alpha (blit SRCALPHA)"}
+    ,{"English":"bluescreen0r",         "Short":"Chroma Key",  "Description":"Color to alpha (blit SRCALPHA)"}
     ,{"English":"Brightness",           "Short":"Brightness",   "Description":"Adjusts the brightness of a source image"}
     ,{"English":"bw0r",                 "Short":"Gray",         "Description":"Turns image black/white."}
     ,{"English":"c0rners",              "Short":"Perspective",  "Description":"Perspective transform"}
