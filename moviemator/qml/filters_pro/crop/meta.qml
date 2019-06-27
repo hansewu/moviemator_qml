@@ -17,5 +17,5 @@ Metadata {
 //    allowMultiple: false
     isClipOnly: true
     freeVersion: true
-    filterType: qsTr('Crop')
+    filterType: qsTr('1 Basic Processing')
 }

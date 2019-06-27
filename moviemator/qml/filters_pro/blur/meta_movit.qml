@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "movit.blur"
     needsGPU: true
     qml: "ui_movit.qml"
-    filterType: qsTr('Blur')
+    filterType: qsTr('4 Denoise and Blur')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

@@ -14,5 +14,5 @@ Metadata {
     mlt_service: "mirror"
     gpuAlt: "movit.mirror"
     qml: "ui.qml"
-    filterType: qsTr('Transform')
+    filterType: qsTr('9 Effect')
 }

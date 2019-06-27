@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "frei0r.glow"
     qml: "ui_frei0r.qml"
     gpuAlt: "movit.glow"
-    filterType: qsTr('Effect')
+    filterType: qsTr('6 Light')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

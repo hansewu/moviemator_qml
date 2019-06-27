@@ -6,7 +6,7 @@ Metadata {
     name: qsTr("*")
     mlt_service: "frei0r.*"
     qml: "ui.qml"
-    filterType: qsTr('Common')
+    filterType: qsTr('C Other')
     keyframes {
             allowAnimateIn: true
             allowAnimateOut: true

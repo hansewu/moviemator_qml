@@ -14,5 +14,5 @@ Metadata {
     mlt_service: "movit.diffusion"
     needsGPU: true
     qml: "ui.qml"
-    filterType: qsTr('Effect')
+    filterType: qsTr('9 Effect')
 }

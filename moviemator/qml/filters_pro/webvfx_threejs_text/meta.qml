@@ -11,10 +11,10 @@ import com.moviemator.qml 1.0
 Metadata {
     type: Metadata.Filter
     objectName: 'webvfxThreejsText'
-    name: qsTr("3D Text (HTML)")
+    name: qsTr("Text3D(Eng.)")
     mlt_service: "webvfx"
     qml: "ui.qml"
-    filterType: qsTr("Text")
+    filterType: qsTr("2 Text")
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

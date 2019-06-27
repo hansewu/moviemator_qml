@@ -17,7 +17,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     allowMultiple: false
-    filterType: qsTr('Effect')
+    filterType: qsTr('1 Basic Processing')
     keyframes {
         allowTrim: false
         allowAnimateOut: true

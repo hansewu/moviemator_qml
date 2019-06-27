@@ -14,7 +14,7 @@ Metadata {
     mlt_service: "movit.saturation"
     needsGPU: true
     qml: "ui_movit.qml"
-    filterType: qsTr('Color Adjustment')
+    filterType: qsTr('3 Basic Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

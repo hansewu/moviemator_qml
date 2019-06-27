@@ -17,7 +17,7 @@ Metadata {
     isFavorite: true
     gpuAlt: "movit.opacity"
     allowMultiple: false
-    filterType: qsTr('Effect')
+    filterType: qsTr('1 Basic Processing')
     freeVersion: true
     keyframes {
         allowTrim: false

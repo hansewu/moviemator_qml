@@ -256,7 +256,7 @@ Rectangle {
                                 leftMargin: 5
                                 horizontalCenter: parent.horizontalLeft
                             }
-                            text: translate2CH?Trans.transEn2Ch(name):name
+                            text: translate2CH?Trans.transEn2Ch(name):Trans.transEn2Short(name)
                             color: '#ffffff'
                             font.pixelSize: 12
                         }

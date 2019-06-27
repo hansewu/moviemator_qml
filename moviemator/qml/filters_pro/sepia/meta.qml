@@ -15,7 +15,7 @@ Metadata {
     qml: 'ui.qml'
     isFavorite: true
 //    allowMultiple: false
-    filterType: qsTr('Sepia Tone')
+    filterType: qsTr('5 Advanced Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true
