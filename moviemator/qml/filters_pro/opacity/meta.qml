@@ -15,7 +15,7 @@ Metadata {
     mlt_service: "brightness"
     qml: "ui.qml"
     gpuAlt: "movit.opacity"
-    filterType: qsTr('1 Basic Processing')
+    filterType: qsTr('5 Advanced Coloring Tool')
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

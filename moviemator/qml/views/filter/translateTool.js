@@ -59,7 +59,7 @@ var EN_CH_list = [
     ,{"English":"rgbsplit0r","Chinese":"Rgb拆分"}
     ,{"English":"Saturat0r","Chinese":"饱和度"}
     ,{"English":"scanline0r","Chinese":"扫描线"}
-    ,{"English":"select0r","Chinese":"颜色遮罩"}
+    ,{"English":"select0r","Chinese":"选择"}
     ,{"English":"Sharpness","Chinese":"锐度"}
     ,{"English":"sigmoidaltransfer","Chinese":"去饱和"}
     ,{"English":"Sobel","Chinese":"索贝尔滤镜"}
@@ -142,8 +142,8 @@ var EN_SHORT_list = [
     ,{"English":"rgbnoise",             "Short":"Rgb noise",        "Description":"Adds RGB noise to image."}
     ,{"English":"rgbsplit0r",           "Short":"Rgb split",        "Description":"RGB splitting and shifting"}
     ,{"English":"Saturat0r",            "Short":"Saturation",        "Description":"Adjusts the saturation of a source image"}
-    ,{"English":"scanline0r",           "Short":"Scanline",        "Description":"interlaced black lines"}
-    ,{"English":"select0r",             "Short":"Color Mask",        "Description":"Color based alpha selection"}
+    ,{"English":"scanline0r",           "Short":"Scanline",        "Description":"interlaced blak lines"}
+    ,{"English":"select0r",             "Short":"Select",        "Description":"Color based alpha selection"}
     ,{"English":"Sharpness",            "Short":"Sharpness",        "Description":"Unsharp masking "}
     ,{"English":"sigmoidaltransfer",    "Short":"Desaturates", "Description":"Desaturates image and creates a particular look that could be called Stamp, Newspaper or Photocopy"}
     ,{"English":"Sobel",                "Short":"Sobel",        "Description":"Sobel filter"}
