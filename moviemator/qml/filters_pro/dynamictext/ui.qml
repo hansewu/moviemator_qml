@@ -39,7 +39,7 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: false
-    property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
+    property bool bEnableKeyFrame: (filter ? filter.cache_getKeyFrameNumber() > 0 : false)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property int  m_lastFrameNum: -1
@@ -1639,7 +1639,9 @@ Item {
         {
             console.log("---onAutoAddKeyFrameChanged---", bEnable)
             bAutoSetAsKeyFrame = bEnable
-            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            if (filter) {
+                filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            }
         }
     }
 
