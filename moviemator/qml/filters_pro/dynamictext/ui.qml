@@ -868,7 +868,10 @@ Item {
             id: textArea
             Layout.columnSpan: 4
             textFormat: TextEdit.PlainText
-            wrapMode: TextEdit.NoWrap
+            // 消除 warning：
+            // ScrollView.qml: QML : Possible anchor loop detected on fill.
+            // If you set a width, consider using TextEdit.Wrap.
+            wrapMode: TextEdit.Wrap
             Layout.minimumHeight: 40
             Layout.maximumHeight: 100
             Layout.minimumWidth: preset.width
