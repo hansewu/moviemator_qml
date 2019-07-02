@@ -11,6 +11,7 @@ import com.moviemator.qml 1.0
 Metadata {
     type: Metadata.Filter
     name: qsTr("White Balance")
+    objectName: "frei0r_colgate"
     mlt_service: "frei0r.colgate"
     qml: "ui.qml"
     isFavorite: true
