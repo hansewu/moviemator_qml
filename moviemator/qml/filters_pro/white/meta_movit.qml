@@ -11,7 +11,6 @@ import com.moviemator.qml 1.0
 Metadata {
     type: Metadata.Filter
     name: qsTr("White Balance")
-    objectName: "movit_white_balance"
     mlt_service: "movit.white_balance"
     needsGPU: true
     qml: "ui.qml"

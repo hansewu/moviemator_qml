@@ -28,7 +28,7 @@ Metadata {
                 objectName: 'brightnessSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '1.3'
+                defaultValue: '1'
                 value: '0'
                 factorFunc:  ['c:100.0']
             }
