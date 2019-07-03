@@ -14,6 +14,7 @@ Metadata {
     mlt_service: "crop"
     qml: "ui.qml"
     gpuAlt: "crop"
+    objectName: 'crop'
 //    allowMultiple: false
     isClipOnly: true
     freeVersion: true

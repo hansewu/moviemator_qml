@@ -39,7 +39,7 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: false
-    property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
+    property bool bEnableKeyFrame: (filter ? filter.cache_getKeyFrameNumber() > 0 : false)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property int  m_lastFrameNum: -1
@@ -868,7 +868,10 @@ Item {
             id: textArea
             Layout.columnSpan: 4
             textFormat: TextEdit.PlainText
-            wrapMode: TextEdit.NoWrap
+            // 消除 warning：
+            // ScrollView.qml: QML : Possible anchor loop detected on fill.
+            // If you set a width, consider using TextEdit.Wrap.
+            wrapMode: TextEdit.Wrap
             Layout.minimumHeight: 40
             Layout.maximumHeight: 100
             Layout.minimumWidth: preset.width
@@ -1636,7 +1639,9 @@ Item {
         {
             console.log("---onAutoAddKeyFrameChanged---", bEnable)
             bAutoSetAsKeyFrame = bEnable
-            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            if (filter) {
+                filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            }
         }
     }
 

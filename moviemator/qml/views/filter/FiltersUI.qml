@@ -32,7 +32,7 @@ Rectangle {
     property int repeaterItemWidth: 114
     property int repeaterItemHeight: 96
     property int currentChoosed : 0
-    property bool translate2CH: ("zh_CN" === Qt.locale().name)
+    property bool translate2CH: ("zh" === settings.language)/*("zh_CN" === Qt.locale().name)*/
     // property bool translate2CH:false
     
     function findFilterModel(name){
@@ -316,10 +316,12 @@ Rectangle {
             width: 50
             height: parent.height
             anchors{
-                horizontalCenter : parent.horizontalCenter
+//                horizontalCenter : parent.horizontalCenter
                 verticalCenter : parent.verticalCenter
                 top:parent.top
                 topMargin: 7
+                left: parent.left
+                leftMargin: 11
             }
             text: qsTr('Filters')
             font.pixelSize: 12
@@ -328,6 +330,7 @@ Rectangle {
 
         FilterComboBox {
             id:catCombox
+            width: 150
             anchors{
                 bottom: parent.bottom
                 bottomMargin: 6
@@ -336,6 +339,10 @@ Rectangle {
             }
             Component.onCompleted: {
                 catCombox.setModel(catListAll)
+                if(translate2CH)
+                {
+                    width = 85
+                }
             }
             onCatChanged:{
                 if(index <= 0){
