@@ -40,7 +40,6 @@ Item {
             filter.set('in', inFrame)
             filter.set('out', out)
         }
-        alphaCheckbox.checked = filter.get('alpha') !== 1
     }
 
     ColumnLayout {
@@ -75,7 +74,7 @@ Item {
         }
         CheckBox {
             id: alphaCheckbox
-//            text: qsTr('Adjust opacity instead of fade with black')
+            checked:false
             onClicked: {
                 if (checked) {
                     filter.set('level', 1)

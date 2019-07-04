@@ -29,7 +29,7 @@ Metadata {
                 objectName: '*'
                 controlType: ''
                 paraType: 'double'
-                defaultValue: '23'
+                defaultValue: '4459'
                 value: ''
                 factorFunc:  []
             },
@@ -50,6 +50,16 @@ Metadata {
                 controlType: ''
                 paraType: 'double'
                 defaultValue: '1.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('level')
+                property: 'level'
+                objectName: '*'
+                controlType: ''
+                paraType: 'string'
+                defaultValue: '0=1; 21=0'
                 value: ''
                 factorFunc:  []
             }
