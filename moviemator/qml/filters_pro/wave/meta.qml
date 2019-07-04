@@ -28,7 +28,7 @@ Metadata {
                 objectName: 'waveSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.10'
+                defaultValue: '1.0'
                 value: '0'
                 factorFunc:  []
             },

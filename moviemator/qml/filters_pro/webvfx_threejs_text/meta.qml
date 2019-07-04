@@ -36,7 +36,7 @@ Metadata {
                 objectName: '*'
                 controlType: ''
                 paraType: 'string'
-                defaultValue: qsTr('3D Text')
+                defaultValue: qsTr('3D文字')
                 value: '*'
                 factorFunc:  []
             },
@@ -85,9 +85,8 @@ Metadata {
                 name: qsTr('bevel')
                 property: 'bevel'
                 objectName: '*'
-                controlType: 'CheckBox'
-                paraType: 'int'
-                defaultValue: '0'
+                paraType: 'rect'
+                defaultValue: '0.0x0.0+0.0+0.0'
                 value: '*'
                 factorFunc:  []
             },
@@ -97,7 +96,7 @@ Metadata {
                 objectName: '*'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.2'
+                defaultValue: '20'
                 value: '*'
                 factorFunc:  ['c:100.0']
             },
@@ -107,9 +106,18 @@ Metadata {
                 objectName: '*'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.7'
+                defaultValue: '70'
                 value: '*'
                 factorFunc:  ['c:100.0']
+            },
+            Parameter {
+                name: qsTr('out')
+                property: 'out'
+                objectName: '*'
+                paraType: 'double'
+                defaultValue: '4459'
+                value: '*'
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('horizontal')

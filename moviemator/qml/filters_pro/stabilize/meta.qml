@@ -30,7 +30,7 @@ Metadata {
                 objectName: 'shakinessSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.04'
+                defaultValue: '1.0'
                 value: '0'
                 factorFunc:  []
             },
@@ -40,7 +40,7 @@ Metadata {
                 objectName: 'accuracySlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.04'
+                defaultValue: '1.0'
                 value: '0'
                 factorFunc:  []
             },

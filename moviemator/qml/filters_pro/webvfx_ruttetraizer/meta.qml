@@ -39,6 +39,66 @@ Metadata {
                 defaultValue: '0'
                 value: ''
                 factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('opacity')
+                property: 'opacity'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '1.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('thickness')
+                property: 'thickness'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '3.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('density')
+                property: 'density'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '10.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('depth')
+                property: 'depth'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '100.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('scale')
+                property: 'scale'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '3.0'
+                value: ''
+                factorFunc:  []
+            },
+            Parameter {
+                name: qsTr('out')
+                property: 'out'
+                objectName: '*'
+                controlType: ''
+                paraType: 'double'
+                defaultValue: '4459.0'
+                value: ''
+                factorFunc:  []
             }
         ]
     }

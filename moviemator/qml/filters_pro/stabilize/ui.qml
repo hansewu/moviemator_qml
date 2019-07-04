@@ -148,7 +148,7 @@ Item {
             maximumValue: 10
             tickmarksEnabled: true
             stepSize: 1
-            value: filter.getDouble('shakiness')
+            // value: filter.getDouble('shakiness')
             onValueChanged:
             {
                 keyFrame.controlValueChanged(shakinessSlider)
@@ -170,7 +170,7 @@ Item {
             maximumValue: 15
             tickmarksEnabled: true
             stepSize: 1
-            value: filter.getDouble('accuracy')
+            // value: filter.getDouble('accuracy')
             onValueChanged:{
                 keyFrame.controlValueChanged(accuracySlider)
             }
@@ -203,7 +203,7 @@ Item {
             maximumValue: 50
             decimals: 1
             suffix: ' %'
-            value: filter.getDouble('zoom')
+            // value: filter.getDouble('zoom')
             onValueChanged: {
                 keyFrame.controlValueChanged(zoomSlider)
             }

@@ -105,6 +105,15 @@ Metadata {
                  isSimple: true
                  paraType: "double"
              }
+             ,
+             Parameter {
+                 name: qsTr('size')
+                 property: 'size'
+                paraType: 'double'
+                defaultValue: '140.976'
+                value: ''
+                factorFunc:  []
+             }
              
          ]
      }
