@@ -384,18 +384,16 @@ Item {
                     var position2 = (timeline.getCurrentClipLength() - 1) //filter.producerOut - filter.producerIn + 1
                     filter.cache_setKeyFrameParaRectValue(0, rectProperty, rectValue)
                     filter.cache_setKeyFrameParaRectValue(position2, rectProperty, rectValue,1.0)
-                    filter.syncCacheToProject();
+                    //filter.syncCacheToProject();
                 }
                 filter.cache_setKeyFrameParaRectValue(nFrame, rectProperty, rectValue,1.0)
-                filter.syncCacheToProject();
+                //filter.syncCacheToProject();
 
                 setControls()
             }
             onRefreshUI:
             {   
                 var nFrame = keyFrame.getCurrentFrame()
-                if (filter.cache_bKeyFrame(nFrame)) filter.syncCacheToProject()
-
                 var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
                 rectOld  = filter.getAnimRectValue(keyFrameNum, rectProperty)
                 filterRect.x = rect.x
@@ -721,7 +719,8 @@ Item {
             var rect3 = filter.get(rectProperty)
             //keyFrame.removeAllKeyFrame()
             filter.removeAllKeyFrame()
-                
+            
+            console.log('Size and Position---', rect.x, rect.y, rect.width, rect.height)
             filter.set(rectProperty,rect)
             changeMode()
             
