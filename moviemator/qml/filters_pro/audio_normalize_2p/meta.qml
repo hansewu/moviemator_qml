@@ -26,7 +26,7 @@ Metadata {
                objectName: 'programSlider'
                controlType: 'SliderSpinner'
                paraType: 'double'
-               defaultValue: '-0.45'
+               defaultValue: '-23'
                value: '0'
                factorFunc:  []
            }
