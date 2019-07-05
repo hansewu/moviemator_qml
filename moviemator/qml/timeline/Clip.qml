@@ -469,6 +469,26 @@ Rectangle {
         }
     }
 
+    // 时间线可接收拖放内容的区域
+    DropArea {
+        id: dropArea
+        anchors.fill: parent
+        property int filterIndex: 0
+        keys: ["filter/filterindex"]
+        onDropped: {
+            filterIndex = parseInt(drop.getDataAsString("filter/filterindex"))
+
+            var model = metadatamodel.get(filterIndex)
+            if(model.isAudio) {
+                mainwindow.onShowPropertiesAudioFilterDock()
+            } else {
+                mainwindow.onShowPropertiesVideoFilterDock()
+            }
+
+            attachedfiltersmodel.add(model)
+        }
+    }
+
     // 使用的地方都已经被注释了
     TimelineTriangle {
         id: fadeInTriangle
