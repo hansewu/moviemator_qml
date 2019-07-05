@@ -104,6 +104,9 @@ Metadata {
                  property: 'transparent_alpha'
                  isSimple: true
                  paraType: "double"
+                 defaultValue: '0.77'
+                value: ''
+                factorFunc:  []
              }
              ,
              Parameter {

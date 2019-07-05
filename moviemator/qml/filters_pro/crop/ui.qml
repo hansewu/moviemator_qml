@@ -57,32 +57,27 @@ Item {
     }
     
     Component.onCompleted: {
-        if (filter.isNew) {
-            // Set default parameter values
-            filter.set("center", 0);
-            filter.set("center_bias", 0);
-            filter.set("top", 0);
-            filter.set("bottom", 0);
-            filter.set("left", 0);
-            filter.set("right", 0);
-            centerCheckBox.checked = false
-            filter.savePreset(defaultParameters)
-
-            biasslider.value = +filter.get('center_bias')
-            topslider.value = +filter.get('top')
-            bottomslider.value = +filter.get('bottom')
-            leftslider.value = +filter.get('left')
-            rightslider.value = +filter.get('right')
-        }
-        centerCheckBox.checked = filter.get('center') === '1'
+        keyFrame.initFilter(layoutRoot)
         setEnabled()
     }
 
     GridLayout {
+        id:layoutRoot
         columns: 3
         anchors.fill: parent
         anchors.margins: 20
         rowSpacing:12
+
+        YFKeyFrame{
+            id: keyFrame
+            Layout.columnSpan:3
+            onSyncUIDataToProject:{
+                keyFrame.syncDataToProject(layoutRoot)
+            }
+            onRefreshUI:{
+                keyFrame.updateParamsUI(layoutRoot)
+            }
+        }
 
         Label {
             text: qsTr('Preset')
@@ -114,13 +109,14 @@ Item {
         CheckBox {
             id: centerCheckBox
             Layout.columnSpan: 1
+            objectName:'centerCheckBox'
 //            text: qsTr('Center')
-            checked: filter.get('center') === '1'
+            checked: false
             property bool isReady: false
             Component.onCompleted: isReady = true
             onClicked: {
                 if (isReady) {
-                    filter.set('center', checked)
+                    keyFrame.controlValueChanged(centerCheckBox)
                     setEnabled()
                 }
             }
@@ -146,11 +142,12 @@ Item {
         }
         SliderSpinner {
             id: biasslider
+            objectName:'biasslider'
             minimumValue: -Math.max(profile.width, profile.height) / 2
             maximumValue: Math.max(profile.width, profile.height) / 2
             suffix: ' px'
-            value: +filter.get('center_bias')
-            onValueChanged: filter.set('center_bias', value)
+            // value: +filter.get('center_bias')
+            onValueChanged: keyFrame.controlValueChanged(biasslider)
         }
         UndoButton {
             id: biasundo
@@ -169,11 +166,12 @@ Item {
         }
         SliderSpinner {
             id: topslider
+            objectName:'topslider'
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
-            value: +filter.get('top')
-            onValueChanged: filter.set('top', value)
+            // value: +filter.get('top')
+            onValueChanged: keyFrame.controlValueChanged(topslider)
         }
         UndoButton {
             id: topundo
@@ -186,11 +184,12 @@ Item {
         }
         SliderSpinner {
             id: bottomslider
+            objectName:'bottomslider'
             minimumValue: 0
             maximumValue: profile.height
             suffix: ' px'
-            value: +filter.get('bottom')
-            onValueChanged: filter.set('bottom', value)
+            // value: +filter.get('bottom')
+            onValueChanged: keyFrame.controlValueChanged(bottomslider)
         }
         UndoButton {
             id: bottomundo
@@ -203,11 +202,12 @@ Item {
         }
         SliderSpinner {
             id: leftslider
+            objectName: 'leftslider'
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
-            value: +filter.get('left')
-            onValueChanged: filter.set('left', value)
+            // value: +filter.get('left')
+            onValueChanged: keyFrame.controlValueChanged(leftslider)
         }
         UndoButton {
             id: leftundo
@@ -220,11 +220,12 @@ Item {
         }
         SliderSpinner {
             id: rightslider
+            objectName: 'rightslider'
             minimumValue: 0
             maximumValue: profile.width
             suffix: ' px'
-            value: +filter.get('right')
-            onValueChanged: filter.set('right', value)
+            // value: +filter.get('right')
+            onValueChanged: keyFrame.controlValueChanged(rightslider)
         }
         UndoButton {
             id: rightundo

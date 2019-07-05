@@ -32,28 +32,30 @@ Metadata {
                 property: 'transition.rect_anim_relative'
                 paraType:'rect'
                 value: 'X0.0Y0.0W1.0H1.0'
-                defaultValue:'0.5x0.5+0.0+0.5'
-            },
-            Parameter {
-                name: qsTr('transition.fill')
-                property: 'transition.fill'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '1.0'
-                value: ''
-                factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('transition.distort')
-                property: 'transition.distort'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '0.0'
-                value: ''
-                factorFunc:  []
+                // defaultValue:'0.5x0.5+0.0+0.5'
             }
+            // ,
+            // Parameter {
+            //     name: qsTr('transition.fill')
+            //     property: 'transition.fill'
+            //     objectName: '*'
+            //     controlType: ''
+            //     paraType: 'double'
+            //     defaultValue: '1.0'
+            //     value: ''
+            //     factorFunc:  []
+            // }
+            // ,
+            // Parameter {
+            //     name: qsTr('transition.distort')
+            //     property: 'transition.distort'
+            //     objectName: '*'
+            //     controlType: ''
+            //     paraType: 'double'
+            //     defaultValue: '0.0'
+            //     value: ''
+            //     factorFunc:  []
+            // }
         ]
     }
 }
