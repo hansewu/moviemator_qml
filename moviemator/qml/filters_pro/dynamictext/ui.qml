@@ -825,6 +825,13 @@ Item {
         anchors.margins: 8
         rowSpacing : 25
 
+        KeyFrame{
+            id: keyFrame
+            Layout.columnSpan:5
+            onRefreshUI:{
+                setControls() 
+            }
+        }
 
         Label {
             text: qsTr('Preset')

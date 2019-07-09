@@ -70,7 +70,7 @@ Item {
             filter.set(fillProperty, 1)
             filter.set(distortProperty, 0)
 
-            loadPresets()
+            // loadPresets()
 
             rectTmp.x = 0.0
             rectTmp.y = 0.0
