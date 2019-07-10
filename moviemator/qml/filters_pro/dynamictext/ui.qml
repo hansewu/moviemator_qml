@@ -830,6 +830,7 @@ Item {
             Layout.columnSpan:5
             onRefreshUI:{
                 setControls() 
+                setKeyframedControls()
             }
         }
 
