@@ -100,24 +100,13 @@ Metadata {
                  paraType: "double"
              },
              Parameter {
-                 name: qsTr('transparent alpha')
-                 property: 'transparent_alpha'
-                 isSimple: true
-                 paraType: "double"
-                 defaultValue: '0.77'
-                value: ''
-                factorFunc:  []
-             }
-             ,
-             Parameter {
                  name: qsTr('size')
                  property: 'size'
-                paraType: 'double'
+                paraType: '*'
                 defaultValue: '140.976'
                 value: ''
                 factorFunc:  []
              }
-             
          ]
      }
 }
