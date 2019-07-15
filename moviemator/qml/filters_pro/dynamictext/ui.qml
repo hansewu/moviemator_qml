@@ -712,7 +712,8 @@ Item {
         idShadowRadius.value    = filter.getDouble('shadow_radius')
         idShadowColor.value     = getHexStrColor(-1, 'shadow_color')
 
-      //  idGlowEnable.value      = filter.get('glow_enable') === '1'
+        idGlowEnable.checked      = (filter.get('glow_enable') != 0)
+        
         idGlowColor.value       = getHexStrColor(-1, 'glow_color')
         idGlowRadius.value    = filter.getDouble('glow_radius')
 
@@ -1199,10 +1200,11 @@ Item {
           
             onCheckedChanged:
             {
-                if(filter.get('glow_enable') != 0) 
-                    filter.set('glow_enable', '0')
-                else
+                if(idGlowEnable.checked)
                     filter.set('glow_enable', '1')
+                else
+                    filter.set('glow_enable', '0')
+
             }
         
         }
