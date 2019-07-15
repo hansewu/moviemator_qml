@@ -39,7 +39,7 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: false
-    property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
+    property bool bEnableKeyFrame: (filter ? filter.cache_getKeyFrameNumber() > 0 : false)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property int  m_lastFrameNum: -1
@@ -48,7 +48,7 @@ Item {
     property bool  m_refreshedUI:false
 
     width: 550
-    height: 1150
+    height: 1500  //1150
 
     function getColorStr(colorValue)
     {
@@ -709,6 +709,12 @@ Item {
         idShearX.value          = filter.getDouble('shear_x')
         idShadowDistance.value  = filter.getDouble('shadow_distance')
         idShadowAngle.value     = filter.getDouble('shadow_angle')
+        idShadowRadius.value    = filter.getDouble('shadow_radius')
+        idShadowColor.value     = getHexStrColor(-1, 'shadow_color')
+
+      //  idGlowEnable.value      = filter.get('glow_enable') === '1'
+        idGlowColor.value       = getHexStrColor(-1, 'glow_color')
+        idGlowRadius.value    = filter.getDouble('glow_radius')
 
         rotationSlider.value            = filter.getDouble('trans_fix_rotate_x')
         scaleSlider.value               =  100.0/filter.getDouble('trans_scale_x')
@@ -836,7 +842,7 @@ Item {
             Layout.columnSpan: 4
             parameters: [rectProperty, 'shear_x', halignProperty, valignProperty, 'size', //'argument', 
             fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
-            'shadow_distance', 'shadow_angle']
+            'shadow_distance', 'shadow_angle', 'shadow_radius', 'shadow_color', 'glow_enable', 'glow_radius', 'glow_color']
           
             m_strType: "tst"
             onBeforePresetLoaded: 
@@ -1121,6 +1127,124 @@ Item {
             onValueChanged: 
             {
                 updateFilter('shadow_angle', value.toString())
+           }
+        }
+
+        Label 
+        {
+            text: qsTr('')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Label 
+        {
+            text: qsTr('Color')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+
+        ColorPicker 
+        {
+                id: idShadowColor
+                Layout.columnSpan: 1
+                eyedropper: false
+                alpha: true
+                onCancel: {
+                    removeTemporaryKeyFrame()
+                }
+                onTemporaryColorChanged: {
+                //    updateTemporaryKeyFrame(fgcolourProperty, getRectColor(temporaryColor))
+                }
+                onValueChanged:
+                {
+                    updateFilter("shadow_color", getRectColor(value))
+                    bTemporaryKeyFrame = false
+                }
+        }
+
+        Label 
+        {
+            text: qsTr('Blur')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowRadius
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 130
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_radius', value.toString())
+           }
+        }
+
+        
+
+        Label 
+        {
+            text: qsTr('Glow')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        CheckBox {
+            id: idGlowEnable
+            Layout.columnSpan: 1
+            checked: filter.get('glow_enable') != 0
+          
+            onCheckedChanged:
+            {
+                if(filter.get('glow_enable') != 0) 
+                    filter.set('glow_enable', '0')
+                else
+                    filter.set('glow_enable', '1')
+            }
+        
+        }
+
+        ColorPicker 
+        {
+                id: idGlowColor
+                Layout.columnSpan: 1
+                eyedropper: false
+                alpha: true
+                onCancel: {
+                    removeTemporaryKeyFrame()
+                }
+                onTemporaryColorChanged: {
+                //    updateTemporaryKeyFrame(fgcolourProperty, getRectColor(temporaryColor))
+                }
+                onValueChanged:
+                {
+                    updateFilter("glow_color", getRectColor(value))
+                    bTemporaryKeyFrame = false
+                }
+        }
+
+         Label 
+        {
+            text: qsTr('Range')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idGlowRadius
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 130
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('glow_radius', value.toString())
            }
         }
 
@@ -1585,6 +1709,7 @@ Item {
 
     }
 
+
     Connections 
     {
         target: filter
@@ -1639,7 +1764,9 @@ Item {
         {
             console.log("---onAutoAddKeyFrameChanged---", bEnable)
             bAutoSetAsKeyFrame = bEnable
-            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            if (filter) {
+                filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            }
         }
     }
 
@@ -1719,3 +1846,134 @@ Item {
     }
 }
 
+/*
+    Item 
+    {
+    width: 200
+    height: 300
+
+    ListView {
+        anchors.top: transparentAlphaSlider.bottom
+       anchors.topMargin: 50
+        //anchors.fill: parent
+        model: nestedModel
+        delegate: categoryDelegate
+    }
+
+    ListModel {
+        id: nestedModel
+        ListElement {
+            categoryName: "Veggies"
+            collapsed: true
+
+            // A ListElement can't contain child elements, but it can contain
+            // a list of elements. A list of ListElements can be used as a model
+            // just like any other model type.
+            subItems: [
+                ListElement { itemName: "Tomato" },
+                ListElement { itemName: "Cucumber" },
+                ListElement { itemName: "Onion" },
+                ListElement { itemName: "Brains" }
+            ]
+        }
+
+        ListElement {
+            categoryName: "Fruits"
+            collapsed: true
+            subItems: [
+                ListElement { itemName: "Orange" },
+                ListElement { itemName: "Apple" },
+                ListElement { itemName: "Pear" },
+                ListElement { itemName: "Lemon" }
+            ]
+        }
+
+        ListElement {
+            categoryName: "Cars"
+            collapsed: true
+            subItems: [
+                ListElement { itemName: "Nissan" },
+                ListElement { itemName: "Toyota" },
+                ListElement { itemName: "Chevy" },
+                ListElement { itemName: "Audi" }
+            ]
+        }
+    }
+
+    Component {
+        id: categoryDelegate
+        Column {
+            width: 200
+
+            Rectangle {
+                id: categoryItem
+                border.color: "black"
+                border.width: 5
+                color: "white"
+                height: 50
+                width: 200
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: 15
+                    font.pixelSize: 24
+                    text: categoryName
+                }
+
+                Rectangle {
+                    color: "red"
+                    width: 30
+                    height: 30
+                    anchors.right: parent.right
+                    anchors.rightMargin: 15
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        // Toggle the 'collapsed' property
+                        onClicked: nestedModel.setProperty(index, "collapsed", !collapsed)
+                    }
+                }
+            }
+
+            Loader {
+                id: subItemLoader
+
+                // This is a workaround for a bug/feature in the Loader element. If sourceComponent is set to null
+                // the Loader element retains the same height it had when sourceComponent was set. Setting visible
+                // to false makes the parent Column treat it as if it's height was 0.
+                visible: !collapsed
+                property variant subItemModel : subItems
+                sourceComponent: collapsed ? null : subItemColumnDelegate
+                onStatusChanged: if (status == Loader.Ready) item.model = subItemModel
+            }
+        }
+
+    }
+
+    Component {
+        id: subItemColumnDelegate
+        Column {
+            property alias model : subItemRepeater.model
+            width: 200
+            Repeater {
+                id: subItemRepeater
+                delegate: Rectangle {
+                    color: "#cccccc"
+                    height: 40
+                    width: 200
+                    border.color: "black"
+                    border.width: 2
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: 30
+                        font.pixelSize: 18
+                        text: itemName
+                    }
+                }
+            }
+        }
+    }
+    } */
