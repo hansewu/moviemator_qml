@@ -22,48 +22,16 @@ Metadata {
     keyframes {
         allowTrim: false
         allowAnimateOut: true
+        simpleProperties: ['alpha']
         parameters: [
             Parameter {
-                name: qsTr('out')
-                property: 'out'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '4459'
-                value: ''
-                factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('in')
-                property: 'in'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '4438'
-                value: ''
-                factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('alpha')
+                name: qsTr('Level')
                 property: 'alpha'
                 objectName: '*'
-                controlType: ''
+                controlType: '*'
                 paraType: 'double'
-                defaultValue: '1.0'
-                value: ''
-                factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('level')
-                property: 'level'
-                objectName: '*'
-                controlType: ''
-                paraType: 'string'
-                defaultValue: '0=1; 21=0'
-                value: ''
-                factorFunc:  []
+                defaultValue: '1'
             }
         ]
-        
     }
 }

@@ -36,7 +36,7 @@ Metadata {
                 objectName: '*'
                 controlType: ''
                 paraType: 'string'
-                defaultValue: qsTr('3D文字')
+                defaultValue: '3D Text'
                 value: '*'
                 factorFunc:  []
             },
@@ -85,8 +85,9 @@ Metadata {
                 name: qsTr('bevel')
                 property: 'bevel'
                 objectName: '*'
-                paraType: 'rect'
-                defaultValue: '0.0x0.0+0.0+0.0'
+                controlType: 'CheckBox'
+                paraType: 'int'
+                defaultValue: '0'
                 value: '*'
                 factorFunc:  []
             },
@@ -109,15 +110,6 @@ Metadata {
                 defaultValue: '70'
                 value: '*'
                 factorFunc:  ['c:100.0']
-            },
-            Parameter {
-                name: qsTr('out')
-                property: 'out'
-                objectName: '*'
-                paraType: 'double'
-                defaultValue: '4459'
-                value: '*'
-                factorFunc:  []
             },
             Parameter {
                 name: qsTr('horizontal')

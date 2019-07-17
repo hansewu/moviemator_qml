@@ -29,26 +29,6 @@ Metadata {
                 defaultValue: '1'
                 value: ''
                 factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('in')
-                property: 'in'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '0'
-                value: ''
-                factorFunc:  []
-            },
-            Parameter {
-                name: qsTr('out')
-                property: 'out'
-                objectName: '*'
-                controlType: ''
-                paraType: 'double'
-                defaultValue: '4459'
-                value: ''
-                factorFunc:  []
             }
         ]
     }

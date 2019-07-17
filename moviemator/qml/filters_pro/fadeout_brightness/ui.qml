@@ -29,6 +29,7 @@ Item {
     height: 250
     objectName: 'fadeOut'
     property alias duration: timeSpinner.value
+    property int blockUpdate: 0
 
     Component.onCompleted: {
         if (filter.isNew) {
@@ -37,9 +38,16 @@ Item {
             var inFrame = out - duration + 1
             filter.set('level', '0=1; %1=0'.arg(duration - 1))
             filter.set('alpha', 1)
-            filter.set('in', inFrame)
-            filter.set('out', out)
+            filter.setInAndOut(inFrame, out)
         }
+    }
+
+    function isInited(){
+        if(blockUpdate < 2){
+            blockUpdate += 1
+            return false
+        }
+        return true
     }
 
     ColumnLayout {
@@ -57,12 +65,15 @@ Item {
                 maximumValue: 5000
                 value: filter.getDouble('out') - filter.getDouble('in') + 1
                 onValueChanged: {
-                    var inFrame = filter.getDouble('out') - duration + 1
-                    filter.set('in', inFrame)
-                    if (filter.get('alpha') != 1)
-                        filter.set('alpha', '0=1; %1=0'.arg(duration - 1))
-                    else
-                        filter.set('level', '0=1; %1=0'.arg(duration - 1))
+                    if(isInited()){
+                        var inFrame = filter.getDouble('out') - duration + 1
+                        filter.set('in', inFrame)
+                        if (filter.get('alpha') != 1)
+                            filter.set('alpha', '0=1; %1=0'.arg(duration - 1))
+                        else
+                            filter.set('level', '0=1; %1=0'.arg(duration - 1))
+                    }
+                    
                 }
                 onSetDefaultClicked: {
                     duration = Math.ceil(settings.videoOutDuration * profile.fps)

@@ -43,18 +43,18 @@ Metadata {
             Parameter {
                 name: qsTr('opacity')
                 property: 'opacity'
-                objectName: '*'
-                controlType: ''
+                objectName: 'opacitySlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
                 defaultValue: '1.0'
                 value: ''
-                factorFunc:  []
+                factorFunc:  ['c:100']
             },
             Parameter {
                 name: qsTr('thickness')
                 property: 'thickness'
-                objectName: '*'
-                controlType: ''
+                objectName: 'thicknessSlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
                 defaultValue: '3.0'
                 value: ''
@@ -63,42 +63,52 @@ Metadata {
             Parameter {
                 name: qsTr('density')
                 property: 'density'
-                objectName: '*'
-                controlType: ''
+                objectName: 'densitySlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '10.0'
+                defaultValue: '10'
                 value: ''
                 factorFunc:  []
             },
             Parameter {
                 name: qsTr('depth')
                 property: 'depth'
-                objectName: '*'
-                controlType: ''
+                objectName: 'depthSlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '100.0'
+                defaultValue: '100'
                 value: ''
                 factorFunc:  []
             },
             Parameter {
                 name: qsTr('scale')
                 property: 'scale'
-                objectName: '*'
-                controlType: ''
+                objectName: 'scaleSlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
                 defaultValue: '3.0'
                 value: ''
-                factorFunc:  []
+                factorFunc:  ['x:3.0']
             },
             Parameter {
-                name: qsTr('out')
-                property: 'out'
-                objectName: '*'
-                controlType: ''
+                name: qsTr('rotation_x')
+                property: 'rotation_x'
+                objectName: 'xRotationSlider'
+                controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '4459.0'
+                defaultValue: '0'
                 value: ''
-                factorFunc:  []
+                factorFunc:  ['c:360']
+            },
+            Parameter {
+                name: qsTr('rotation_y')
+                property: 'rotation_y'
+                objectName: 'yRotationSlider'
+                controlType: 'SliderSpinner'
+                paraType: 'double'
+                defaultValue: '0'
+                value: ''
+                factorFunc:  ['c:360']
             }
         ]
     }
