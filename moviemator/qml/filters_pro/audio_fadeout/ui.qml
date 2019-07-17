@@ -28,14 +28,14 @@ Item {
     height: 250
     objectName: 'fadeOut'
     property alias duration: timeSpinner.value
+    property bool blockUpdate: true
 
     Component.onCompleted: {
         if (filter.isNew) {
             duration = Math.ceil(settings.audioOutDuration * profile.fps)
             filter.set('gain', 1)
             filter.set('end', 0)
-            filter.set('out', filter.producerOut)
-            filter.set('in', filter.getDouble('out') - duration + 1)
+            filter.setInAndOut(filter.producerOut - duration + 1, filter.producerOut)
         }
     }
 
@@ -54,6 +54,10 @@ Item {
                 maximumValue: 5000
                 // value: filter.getDouble('out') - filter.getDouble('in') + 1
                 onValueChanged: {
+                    if(blockUpdate){
+                        blockUpdate = false
+                        return
+                    }
                     filter.set('in', filter.getDouble('out') - duration + 1)
                 }
                 onSetDefaultClicked: {
