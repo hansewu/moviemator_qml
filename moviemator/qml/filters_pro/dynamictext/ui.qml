@@ -795,31 +795,9 @@ Item {
             filterRect.height = h
 
             updateFilter(rectProperty, getRelativeRect(filterRect))
-//            var nFrame = keyFrame.getCurrentFrame();
-//            if (filter.cache_getKeyFrameNumber() > 0) {
-//                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
-//            } else {
-//                filter.set(rectProperty, getRelativeRect(filterRect))
-//            }
+
         }
 
-//        if (blockUpdate === true) {
-//            return
-//        }
-//        if (bEnableKeyFrame) {
-//            var nFrame = keyFrame.getCurrentFrame()
-//            if (bAutoSetAsKeyFrame) {
-//                setKeyFrameParaValue(nFrame, currentProperty, value)
-//            } else {
-//                if (filter.cache_bKeyFrame(nFrame)) {
-//                    setKeyFrameParaValue(nFrame, currentProperty, value)
-//                } else {
-//                    filter.set(currentProperty, value)
-//                }
-//            }
-//        } else {
-//            filter.set(currentProperty, value)
-//        }
     }
 
     ExclusiveGroup { id: sizeGroup }
@@ -827,16 +805,89 @@ Item {
     ExclusiveGroup { id: valignGroup }
 
     GridLayout {
+        id: idGridLayoutPreset
+        width:parent.width 
         columns: 5
-        anchors.fill: parent
+        rows:2
+       // anchors.fill: parent
+        Layout.fillWidth: true 
         anchors.margins: 8
         rowSpacing : 25
 
-
         Label {
-            text: qsTr('Preset')
+            text: qsTr('Text')
+            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+            color: '#ffffff'
+            font.bold:true
+	    font.pointSize:10
+        }
+        TextArea {
+            id: textArea
+            Layout.columnSpan: 3
+            textFormat: TextEdit.PlainText
+            // 消除 warning：
+            // ScrollView.qml: QML : Possible anchor loop detected on fill.
+            // If you set a width, consider using TextEdit.Wrap.
+            wrapMode: TextEdit.Wrap
+            Layout.minimumHeight: 40
+            Layout.maximumHeight: 100
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            text: '__empty__' // workaround initialization problem
+            property int maxLength: 256
+            onTextChanged: {
+                if (text === '__empty__') return
+                if (length > maxLength) {
+                    text = text.substring(0, maxLength)
+                    cursorPosition = maxLength
+                }
+
+                filter.set('argument', text)
+            }
+        }
+/*
+        Label {
+            text: qsTr('Insert field')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
+        }*/
+        MyComboBox {
+            id: insertFieldCombo
+            Layout.columnSpan: 1
+            width: 100
+            height: 32
+            Layout.minimumHeight: 32
+            Layout.maximumHeight: 32
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            listModel: ListModel {
+                ListElement {name: qsTr('default')}
+                ListElement {name: qsTr('Timecode')}
+                ListElement {name: qsTr('Frame #', 'Frame number')}
+                ListElement {name: qsTr('File date')}
+                ListElement {name: qsTr('File name')}
+            }
+            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
+            function valueToIndex() {
+                var textStr = filter.get('argument')
+                for (var i = 0; i < values.length; ++i)
+                    if (values[i] === textStr) break;
+                if (i === values.length) i = 0;
+                return i;
+            }
+            onCurrentIndexChanged: {
+                textArea.insert(textArea.cursorPosition, values[currentIndex])
+            }
+        }
+
+        Label {
+            text: qsTr('Style')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+            font.bold:true
+            font.pointSize:10
+            //font.underline:true
+
         }
         Preset {
             id: preset
@@ -866,104 +917,64 @@ Item {
             }
         }
 
-        Label {
-            text: qsTr('Text')
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-            color: '#ffffff'
-        }
-        TextArea {
-            id: textArea
-            Layout.columnSpan: 4
-            textFormat: TextEdit.PlainText
-            // 消除 warning：
-            // ScrollView.qml: QML : Possible anchor loop detected on fill.
-            // If you set a width, consider using TextEdit.Wrap.
-            wrapMode: TextEdit.Wrap
-            Layout.minimumHeight: 40
-            Layout.maximumHeight: 100
-            Layout.minimumWidth: preset.width
-            Layout.maximumWidth: preset.width
-            text: '__empty__' // workaround initialization problem
-            property int maxLength: 256
-            onTextChanged: {
-                if (text === '__empty__') return
-                if (length > maxLength) {
-                    text = text.substring(0, maxLength)
-                    cursorPosition = maxLength
-                }
 
-                filter.set('argument', text)
-            }
-        }
 
-//        Label {
-//            text: qsTr('Insert field')
-//            Layout.alignment: Qt.AlignLeft
-//            color: '#ffffff'
-//        }
-//        ComboBox {
-//            id: insertFieldCombo
-//            Layout.columnSpan: 4
-//            Layout.minimumHeight: 32
-//            Layout.maximumHeight: 32
-//            Layout.minimumWidth: preset.width
-//            Layout.maximumWidth: preset.width
-//            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
-//            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
-//            function valueToIndex() {
-//                var textStr = filter.get('argument')
-//                for (var i = 0; i < values.length; ++i)
-//                    if (values[i] === textStr) break;
-//                if (i === values.length) i = 0;
-//                return i;
-//            }
-//            onActivated: {
-//                textArea.insert(textArea.cursorPosition, values[index])
-//            }
-//        }
-
-        Label {
-            text: qsTr('Insert field')
+        Button {
+            id: detailButton1
+            text: qsTr('Style >')
+            tooltip: qsTr('detail')
+            Layout.columnSpan: 1
             Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        MyComboBox {
-            id: insertFieldCombo
-            Layout.columnSpan: 4
-            width: 100
-            height: 32
-            Layout.minimumHeight: 32
-            Layout.maximumHeight: 32
-            Layout.minimumWidth: preset.width
-            Layout.maximumWidth: preset.width
-            listModel: ListModel {
-                ListElement {name: qsTr('default')}
-                ListElement {name: qsTr('Timecode')}
-                ListElement {name: qsTr('Frame #', 'Frame number')}
-                ListElement {name: qsTr('File date')}
-                ListElement {name: qsTr('File name')}
-            }
-            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
-            function valueToIndex() {
-                var textStr = filter.get('argument')
-                for (var i = 0; i < values.length; ++i)
-                    if (values[i] === textStr) break;
-                if (i === values.length) i = 0;
-                return i;
-            }
-            onCurrentIndexChanged: {
-                textArea.insert(textArea.cursorPosition, values[currentIndex])
-            }
-        }
+            onClicked: 
+            {
+	    	    if(idGridLayoutText.visible == false)
+		        {
 
+			        idGridLayoutText.anchors.topMargin = 20
+                    idGridLayoutText.visible = true
+		            idGridLayoutAnimationProfile.anchors.top = idGridLayoutPreset.bottom //idGridLayoutPreset.bottom// idSeparatorTextStyleEnd.bottom //
+                    //采用idSeparatorTextStyleEnd.bottom 没有作用，不知道什么原因，可能是初始隐藏了
+                    idGridLayoutAnimationProfile.anchors.topMargin = 680
+                    detailButton1.text = 'Style ^'
+
+		        }
+		        else
+		        {
+                    idGridLayoutText.visible = false
+			        idGridLayoutText.anchors.topMargin = 1000
+				    idGridLayoutAnimationProfile.anchors.top = idGridLayoutPreset.bottom
+                    idGridLayoutAnimationProfile.anchors.topMargin = 70
+                    detailButton1.text = 'Style >'
+		        }
+            }
+
+        }
         SeparatorLine {
-            Layout.columnSpan: 5
+            Layout.columnSpan: 4
             Layout.minimumWidth: parent.width
             Layout.maximumWidth: parent.width
             width: parent.width
         }
+    }
 
-        Label {
+
+    GridLayout {
+        id: idGridLayoutText
+        width:parent.width - 24
+
+        visible:false
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutPreset.bottom
+	    anchors.topMargin: 1000
+        
+        anchors.margins: 12
+        anchors.left : parent.left
+        anchors.leftMargin: 12 
+        rowSpacing : 25
+
+        Label 
+        {
             text: qsTr('Font')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
@@ -1011,25 +1022,7 @@ Item {
                     }
                 }
             }
-//            ComboBox {
-//                id: weightCombo
-//                Layout.minimumHeight: 32
-//                Layout.maximumHeight: 32
-//                Layout.minimumWidth: (preset.width - 8) / 2
-//                Layout.maximumWidth: (preset.width - 8) / 2
-//                model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
-//                property var values: [Font.Normal, Font.Bold, Font.Light]
-//                function valueToIndex() {
-//                    var w = filter.getDouble('weight')
-//                    for (var i = 0; i < values.length; ++i)
-//                        if (values[i] === w) break;
-//                    if (i === values.length) i = 0;
-//                    return i;
-//                }
-//                onActivated: {
-//                    filter.set('weight', 10 * values[index])
-//                }
-//           }
+
             MyComboBox {
                 id: weightCombo
                 Layout.minimumHeight: 32
@@ -1080,6 +1073,108 @@ Item {
             onClicked: idShearX.value = 0  
         }
         
+
+
+        Label {
+            text: qsTr('Letter Spaceing')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox {
+            id: letterSpaceing
+            Layout.minimumWidth: preset.width
+            Layout.maximumWidth: preset.width
+            Layout.columnSpan: 4
+            minimumValue: 0
+            maximumValue: 500
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: {
+                updateFilter(letterSpaceingProperty, value.toString())
+
+            }
+        }
+
+        Label {
+            text: qsTr('Outline')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        ColorPicker {
+            id: outlineColor
+            eyedropper: false
+            alpha: true
+            onCancel: {
+                removeTemporaryKeyFrame()
+            }
+            onTemporaryColorChanged: {
+            //    updateTemporaryKeyFrame(olcolourProperty, getRectColor(temporaryColor))
+            }
+            onValueChanged: {
+                updateFilter(olcolourProperty, getRectColor(value))
+                bTemporaryKeyFrame = false
+            }
+        }
+        Label {
+            text: qsTr('Thickness')
+            Layout.alignment: Qt.AlignRight
+            color: '#ffffff'
+        }
+        SpinBox {
+            id: outlineSpinner
+            Layout.minimumWidth: 150
+            Layout.maximumWidth: 150
+            Layout.columnSpan: 2
+            minimumValue: 0
+            maximumValue: 30
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: {
+                updateFilter(outlineProperty, value.toString())
+
+            }
+        }
+
+        Label {
+            text: qsTr('Background')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        ColorPicker {
+            id: bgColor
+            eyedropper: false
+            alpha: true
+            onCancel: {
+                removeTemporaryKeyFrame()
+            }
+            onTemporaryColorChanged: {
+            //    updateTemporaryKeyFrame(bgcolourProperty, getRectColor(temporaryColor))
+            }
+            onValueChanged: {
+                updateFilter(bgcolourProperty, getRectColor(value))
+                bTemporaryKeyFrame = false
+
+            }
+        }
+        Label {
+            text: qsTr('Padding')
+            Layout.alignment: Qt.AlignRight
+            color: '#ffffff'
+        }
+        SpinBox {
+            id: padSpinner
+            Layout.minimumWidth: 150
+            Layout.maximumWidth: 150
+            Layout.columnSpan: 2
+            minimumValue: 0
+            maximumValue: 100
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: {
+                updateFilter(padProperty, value.toString())
+
+            }
+        }
 
         Label 
         {
@@ -1250,132 +1345,6 @@ Item {
            }
         }
 
-
-        Label {
-            text: qsTr('Letter Spaceing')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        SpinBox {
-            id: letterSpaceing
-            Layout.minimumWidth: preset.width
-            Layout.maximumWidth: preset.width
-            Layout.columnSpan: 4
-            minimumValue: 0
-            maximumValue: 500
-            horizontalAlignment:Qt.AlignLeft
-            decimals: 0
-            onValueChanged: {
-                updateFilter(letterSpaceingProperty, value.toString())
-
-            }
-        }
-
-        Label {
-            text: qsTr('Outline')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        ColorPicker {
-            id: outlineColor
-            eyedropper: false
-            alpha: true
-            onCancel: {
-                removeTemporaryKeyFrame()
-            }
-            onTemporaryColorChanged: {
-            //    updateTemporaryKeyFrame(olcolourProperty, getRectColor(temporaryColor))
-            }
-            onValueChanged: {
-                updateFilter(olcolourProperty, getRectColor(value))
-                bTemporaryKeyFrame = false
-            }
-        }
-        Label {
-            text: qsTr('Thickness')
-            Layout.alignment: Qt.AlignRight
-            color: '#ffffff'
-        }
-        SpinBox {
-            id: outlineSpinner
-            Layout.minimumWidth: 150
-            Layout.maximumWidth: 150
-            Layout.columnSpan: 2
-            minimumValue: 0
-            maximumValue: 30
-            horizontalAlignment:Qt.AlignLeft
-            decimals: 0
-            onValueChanged: {
-                updateFilter(outlineProperty, value.toString())
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
-//                } else {
-//                    filter.set(outlineProperty, value)
-//                }
-            }
-        }
-
-        Label {
-            text: qsTr('Background')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        ColorPicker {
-            id: bgColor
-            eyedropper: false
-            alpha: true
-            onCancel: {
-                removeTemporaryKeyFrame()
-            }
-            onTemporaryColorChanged: {
-            //    updateTemporaryKeyFrame(bgcolourProperty, getRectColor(temporaryColor))
-            }
-            onValueChanged: {
-                updateFilter(bgcolourProperty, getRectColor(value))
-                bTemporaryKeyFrame = false
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
-//                } else {
-//                   filter.set(bgcolourProperty, getRectColor(value))
-//                }
-            }
-        }
-        Label {
-            text: qsTr('Padding')
-            Layout.alignment: Qt.AlignRight
-            color: '#ffffff'
-        }
-        SpinBox {
-            id: padSpinner
-            Layout.minimumWidth: 150
-            Layout.maximumWidth: 150
-            Layout.columnSpan: 2
-            minimumValue: 0
-            maximumValue: 100
-            horizontalAlignment:Qt.AlignLeft
-            decimals: 0
-            onValueChanged: {
-                updateFilter(padProperty, value.toString())
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
-//                } else {
-//                    filter.set(padProperty, value)
-//                }
-            }
-        }
-
         SeparatorLine {
             Layout.columnSpan: 5
             Layout.minimumWidth: parent.width
@@ -1510,19 +1479,35 @@ Item {
         }
 
         SeparatorLine {
+            id: idSeparatorTextStyleEnd
             Layout.columnSpan: 5
             Layout.minimumWidth: parent.width
             Layout.maximumWidth: parent.width
             width: parent.width
         }
+    }
 
+    GridLayout {
+        id: idGridLayoutAnimationProfile
+        width:parent.width 
+
+        visible:true
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutPreset.bottom
+	    anchors.topMargin: 70
+        anchors.margins: 8
+        rowSpacing : 25
 
         Label {
-            text: qsTr('Position Animation')
+            text: qsTr('Animation')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
+            font.bold:true
+	    font.pointSize:10
         }
-        Preset {
+        Preset 
+        {
             id: presetPositionAnimation
             Layout.columnSpan: 4
             parameters: [  'trans_fix_rotate_x', 'trans_scale_x', 'trans_scale_aspect_ratio', 'trans_ox', 'trans_oy', 'transparent_alpha']
@@ -1546,7 +1531,55 @@ Item {
                 presetPositionAnimation.presetCombo.currentIndex = 0 
             } 
         } 
- 
+
+        Button {
+            id: detailButtonAnimation
+            text: qsTr('Animation >')
+            
+            tooltip: qsTr('detail')
+            Layout.columnSpan: 1
+            Layout.alignment: Qt.AlignLeft
+            onClicked: 
+            {
+	    	    if(idGridLayoutAnimation.visible == false)
+		        {
+                
+			        idGridLayoutAnimation.anchors.topMargin = 20
+                    idGridLayoutAnimation.visible = true
+                    detailButtonAnimation.text = 'Animation ^'
+		        }
+		        else
+		        {
+		
+                    idGridLayoutAnimation.visible = false
+			        idGridLayoutAnimation.anchors.topMargin = 1000
+                    detailButtonAnimation.text = 'Animation >'
+		        }
+            }
+
+        }
+        SeparatorLine {
+            Layout.columnSpan: 4
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
+        }
+    }
+
+    GridLayout {
+        id: idGridLayoutAnimation
+        width:parent.width -24
+
+        visible:false
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutAnimationProfile.bottom
+	    anchors.topMargin: 20
+        anchors.margins: 12
+        anchors.left : parent.left
+        anchors.leftMargin: 12 
+        rowSpacing : 25
+
         Label {
             Layout.columnSpan: 1
             Layout.alignment: Qt.AlignLeft
@@ -1812,16 +1845,6 @@ Item {
         }
     }
 
- //           if (bEnableKeyFrame) {
- //               var nFrame = keyFrameNum
- //               console.log("sll------3333333333333333333333333333333333----nFrame---", nFrame)
-  //              if (bAutoSetAsKeyFrame === false) {
-  //                  if (filter.bKeyFrame(nFrame)) {
-  //                      console.log("sll------4444444444444444444444444444-------")
-  //                      loadSavedKeyFrame()  //此处作用，需要再考虑
-  //                  }
-  //              }
-  //          }
     // 移除关键帧信号
     Connections {
         target: keyFrameControl
