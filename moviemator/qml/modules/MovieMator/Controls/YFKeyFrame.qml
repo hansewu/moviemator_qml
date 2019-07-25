@@ -1043,27 +1043,6 @@ RowLayout{
         return currentFrame;
     }
 
-    // 删除所有关键帧，包括首尾帧  弃用
-    function removeAllKeyFrame(){
-        var position        = timeline.getCurrentClipLength()
-        
-        filter.syncCacheToProject();
-        while(true) 
-        {  
-//            position = filter.cache_getPreKeyFrameNum(position)
-//            if(position == -1) break;
-//            
-//            filter.removeKeyFrameParaValue(position);
-
-            var frameCount = filter.cache_getKeyFrameNumber()
-            if(frameCount <= 0) break;
-            filter.removeAllKeyFrame()
-
-            filter.syncCacheToProject();
-            syncUIDataToProject()
-        }
-    }
-
     Component.onCompleted:
     {
         currentFrame = timeline.getPositionInCurrentClip()
@@ -1121,7 +1100,6 @@ RowLayout{
              target: keyFrameControl
              onRemoveAllKeyFrame: {
                 bKeyFrame = false
-                //removeAllKeyFrame()
                 filter.removeAllKeyFrame()
                 filter.syncCacheToProject();
                 syncUIDataToProject()
