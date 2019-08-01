@@ -474,7 +474,7 @@ Rectangle {
         id: dropArea
         anchors.fill: parent
         property int filterIndex: 0
-        keys: ["filter/filterindex"]
+        keys: isBlank ? [""] : ["filter/filterindex"]
         onDropped: {
             filterIndex = parseInt(drop.getDataAsString("filter/filterindex"))
 
