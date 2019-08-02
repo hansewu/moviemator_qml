@@ -476,16 +476,52 @@ Rectangle {
         property int filterIndex: 0
         keys: isBlank ? [""] : ["filter/filterindex"]
         onDropped: {
-            filterIndex = parseInt(drop.getDataAsString("filter/filterindex"))
+            //当clip未选中时，先选中。因为添加滤镜的操作，是添加到选中的clip上的
+            if (!selected)
+            {
+                //选中鼠标放下的位置的clip
+                if (!isBlank)
+                {
+                    clipRoot.forceActiveFocus();
+                    clipRoot.clicked(clipRoot)
+                }
 
-            var model = metadatamodel.get(filterIndex)
-            if(model.isAudio) {
-                mainwindow.onShowPropertiesAudioFilterDock()
-            } else {
-                mainwindow.onShowPropertiesVideoFilterDock()
+                console.assert(mainwindow);
+                if (mainwindow)
+                {
+                    mainwindow.setMultitrackAsCurrentProducer()
+                }
+
             }
 
-            attachedfiltersmodel.add(model)
+            //添加滤镜到当前选中的clip上
+            filterIndex = parseInt(drop.getDataAsString("filter/filterindex"))
+            console.assert(metadatamodel);
+            if (metadatamodel)
+            {
+                var model   = metadatamodel.get(filterIndex)
+                if (model.isAudio)
+                {
+                    mainwindow.onShowPropertiesAudioFilterDock()
+                }
+                else
+                {
+                    mainwindow.onShowPropertiesVideoFilterDock()
+                }
+                attachedfiltersmodel.add(model)
+            }
+
+            //当光标不在当先选中的clip上时，则跳转到当先选中的clip上，用于更好的看到添加滤镜后的变化
+            console.assert(timeline);
+            if (timeline)
+            {
+                var clipPosition = clipRoot.x / multitrack.scaleFactor
+                if (timeline.position < clipPosition ||
+                        timeline.position > clipPosition + clipDuration)
+                {
+                    timeline.position = clipRoot.x / multitrack.scaleFactor
+                }
+            }
         }
     }
 
