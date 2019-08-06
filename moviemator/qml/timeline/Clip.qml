@@ -509,6 +509,10 @@ Rectangle {
                     mainwindow.onShowPropertiesVideoFilterDock()
                 }
                 attachedfiltersmodel.add(model)
+
+                // 表示目标区域接受拖拽事件
+                // Mac下拖放失败也就是目标区域禁止拖放会有个回弹动画
+                drop.acceptProposedAction()
             }
 
             //当光标不在当先选中的clip上时，则跳转到当先选中的clip上，用于更好的看到添加滤镜后的变化
