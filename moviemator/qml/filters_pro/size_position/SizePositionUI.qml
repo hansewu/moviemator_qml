@@ -133,17 +133,6 @@ Item {
         filterRect.width = w / profile.width
         filterRect.height = h / profile.height
 
-        /*
-        rectTmp.x = x / profile.width
-        rectTmp.y = y / profile.height
-        rectTmp.width = w / profile.width
-        rectTmp.height = h / profile.height
-        */
-
-        //filter.resetProperty(rectProperty)
-        //filter.set(rectProperty, filterRect)
-
-
         if(!keyFrame.bEnableKeyFrame)  //没有关键帧
         {   
             filter.resetProperty(rectProperty)
@@ -172,11 +161,7 @@ Item {
         filterRect.y        = y / profile.height
         filterRect.width    = w / profile.width
         filterRect.height   = h / profile.height
-/*
-        rectTmp.x = x / profile.width
-        rectTmp.y = y / profile.height
-        rectTmp.width = w / profile.width
-        rectTmp.height = h / profile.height*/
+
         filter.set(rectProperty, filterRect)
         
     }
@@ -355,18 +340,6 @@ Item {
                 if(filter.cache_getKeyFrameNumber() <= 0){
                     filter.resetProperty(rectProperty)
                     filter.set(rectProperty, rectOld)
-                    /*
-                    var x = parseFloat(rectX.text) / profile.width
-                    var y = parseFloat(rectY.text) / profile.height
-                    var w = parseFloat(rectW.text) / profile.width
-                    var h = parseFloat(rectH.text) / profile.height
-
-                    rectTmp.x = x
-                    rectTmp.y = y
-                    rectTmp.width = w
-                    rectTmp.height = h
-                    filter.set(rectProperty, rectTmp)
-                    */
                 }
                 else
                 {   
@@ -714,14 +687,12 @@ Item {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             var keyFrameNum = timeline.getPositionInCurrentClip()
-            filter.get(rectProperty)
             var rect = filter.getAnimRectValue(keyFrameNum, rectProperty)
-            var rect3 = filter.get(rectProperty)
-            //keyFrame.removeAllKeyFrame()
             filter.removeAllKeyFrame()
             
-            console.log('Size and Position---', rect.x, rect.y, rect.width, rect.height)
+            filter.resetProperty(rectProperty)
             filter.set(rectProperty,rect)
+
             changeMode()
             
             if (bTile) tile()
