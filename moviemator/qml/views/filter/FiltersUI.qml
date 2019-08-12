@@ -61,11 +61,11 @@ Rectangle {
         filtersResDock.addFilterItem(index)
     }
 
-    function previewFilter(index){
+    function previewFilter(perviewSettingFilePath){
         if(filtersResDock == null){
             throw new Error("filtersResDock is undefined")
         }
-        filtersResDock.previewFilter(index)
+        filtersResDock.previewFilter(perviewSettingFilePath)
     }
 
     function updateData()
@@ -82,6 +82,7 @@ Rectangle {
                 name : filtersInfo.get(i).name,
                 filterType : filtersInfo.get(i).filterType,
                 imageSourcePath : filtersInfo.get(i).imageSourcePath,
+                perviewSettingFilePath:filtersInfo.get(i).perviewSettingFilePath
             }
             filtersInfoList.append(filterInfo)
         }
@@ -294,7 +295,7 @@ Rectangle {
                                     mouseArea.clickNum = 0 
                                     clickTimer.stop() 
                                     currentChoosed = id.objectName
-                                    previewFilter(index)
+                                    previewFilter(perviewSettingFilePath)
                                 } 
                             }
                         }

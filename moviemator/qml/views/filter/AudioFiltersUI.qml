@@ -56,11 +56,11 @@ Rectangle {
 
         AudioFiltersResDock.addAudioFilterItem(index)
     }
-    function previewFilter(index){
+    function previewFilter(perviewSettingFilePath){
         if(AudioFiltersResDock == null){
             throw new Error("AudioFiltersResDock is undefined")
         }
-        AudioFiltersResDock.previewFilter(index)
+        AudioFiltersResDock.previewFilter(perviewSettingFilePath)
     }
 
     function updateData()
@@ -77,6 +77,7 @@ Rectangle {
                 name : AudioFiltersInfo.get(i).name,
                 filterType : AudioFiltersInfo.get(i).AudioFilterType,
                 imageSourcePath : AudioFiltersInfo.get(i).imageSourcePath,
+                perviewSettingFilePath:filtersInfo.get(i).perviewSettingFilePath
             }
             filtersInfoList.append(filterInfo)
         }
@@ -257,7 +258,7 @@ Rectangle {
                                     mouseArea.clickNum = 0 
                                     clickTimer.stop() 
                                     currentChoosed = id.objectName
-                                    previewFilter(index)
+                                    previewFilter(perviewSettingFilePath)
                                 } 
                             }
                         }
