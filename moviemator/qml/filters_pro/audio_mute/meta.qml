@@ -16,4 +16,21 @@ Metadata {
     mlt_service: "volume"
     qml: "ui.qml"
     isFavorite: true
+    keyframes {
+       allowAnimateIn: true
+       allowAnimateOut: true
+       simpleProperties: ['gain']
+       parameters: [
+           Parameter {
+               name: qsTr('gain')
+               property: 'gain'
+               objectName: '*'
+               controlType: 'SliderSpinner'
+               paraType: 'double'
+               defaultValue: '0'
+               value: '0'
+               factorFunc:  []
+           }
+       ]
+   }
 }

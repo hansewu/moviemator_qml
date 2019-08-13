@@ -193,6 +193,7 @@ Item {
         if(property == 'trans_ox')                  return  0.0
         if(property == 'trans_oy')                  return  0.0
         if(property == 'transparent_alpha')         return  1.0
+        if(property == 'size')                      return  filterRect.height
 
         return 0
     }
@@ -262,7 +263,7 @@ Item {
                 var valueStr = filter.getAnimDoubleValue(nFrame, property)
                 filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
             }
-            else 
+            else if(paraType === "int")
             {
                 var valueStr = filter.getAnimIntValue(nFrame, property)
                 filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
@@ -292,7 +293,6 @@ Item {
                     filter.cache_setKeyFrameParaValue(nFrame, property, value.toString());
                 }
             } 
-            
         }
         combineAllKeyFramePara();
     }
@@ -325,7 +325,7 @@ Item {
                 filter.cache_setKeyFrameParaValue(positionEnd, property, valueStr.toString());
                 console.log("paraType = ", paraType, " property = ", property, " valueStr = ", valueStr )
             }
-            else 
+            else if (paraType === "int") 
             {
                 var valueStr = filter.getInt(property)
               //  m_parameterValue[property] = valueStr
@@ -387,7 +387,7 @@ Item {
                     var valueStr = filter.getAnimDoubleValue(nFrame, property)
                     filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
                 }
-                else 
+                else if (paraType === "int")
                 {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
                     filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
@@ -416,7 +416,7 @@ Item {
                     var rectValue = filter.cache_getKeyFrameParaRectValue(nFrame, property)
                     filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 }
-                else 
+                else if (paraType === "double") 
                 {
                     //filter.resetProperty(property)
                     var valueStr = filter.cache_getKeyFrameParaDoubleValue(nFrame, property);//没有getKeyFrameParaIntValue
@@ -558,7 +558,6 @@ Item {
 
         if (bEnableKeyFrame &&  isKeyFramePropterty(currentProperty) === true) 
         {
-
             var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) 
             {
@@ -813,6 +812,48 @@ Item {
         Layout.fillWidth: true 
         anchors.margins: 8
         rowSpacing : 25
+
+        KeyFrame{
+            id: keyFrame
+            Layout.columnSpan:5
+            onRefreshUI:{
+                setControls() 
+                setKeyframedControls()
+            }
+        }
+
+        Label {
+            text: qsTr('Preset')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Preset {
+            id: preset
+            Layout.columnSpan: 4
+            parameters: [rectProperty, 'shear_x', halignProperty, valignProperty, 'size', //'argument', 
+            fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
+            'shadow_distance', 'shadow_angle']
+          
+            m_strType: "tst"
+            onBeforePresetLoaded: 
+            {
+                //removeAllKeyFrame()
+              
+                //resetFilterPara()
+            }
+            onPresetSelected: {
+                //加載關鍵幀
+                loadSavedKeyFrameNew()
+
+                //更新界面
+                setControls()
+                setKeyframedControls()
+
+                if (filter.isNew) {
+                    filter.set('size', filterRect.height)
+                } 
+            }
+        }
 
         Label {
             text: qsTr('Text')

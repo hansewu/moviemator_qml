@@ -772,7 +772,7 @@ Rectangle {
                 currentTrack = track.DelegateModel.itemsIndex
                 console.assert(timeline);
                 if(timeline){
-                    timeline.setSelection([clip.DelegateModel.itemsIndex], currentTrack, false, false)//sll modify
+                    timeline.setSelection([clip.DelegateModel.itemsIndex], currentTrack, false)
                 }
                 root.clipClicked()
                 toolbar.hasClipOrTrackSelected = true

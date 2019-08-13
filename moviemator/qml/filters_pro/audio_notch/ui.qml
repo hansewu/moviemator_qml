@@ -111,9 +111,9 @@ Item {
             minimumValue: 1
             maximumValue: 10
             spinnerWidth: 80
-            value: filter.get('1')
+            value: filter.get('2')
             onValueChanged: {
-                filter.set('1', value)
+                filter.set('2', value)
             }
         }
         UndoButton {

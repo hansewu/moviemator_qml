@@ -152,57 +152,57 @@ RowLayout{
         }
         */
 
-        var keyFrameCount = filter.cache_getKeyFrameNumber()
-        // 初始化关键帧控件
-        if (filter.isNew && keyFrameCount<=0){
-            for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
-                var parameter = metaParamList[paramIndex]
-                parameter.value = parameter.defaultValue
-                var control = findControl(parameter.objectName,layoutRoot)
-                if(control === null)
-                    continue;
-                switch(parameter.controlType)
-                {
-                case "SliderSpinner":
-                    control.value = parseFloat(parameter.defaultValue) * 100
-                    break;
+        // var keyFrameCount = filter.cache_getKeyFrameNumber()
+        // // 初始化关键帧控件
+        // if (filter.isNew && keyFrameCount<=0){
+        //     for(var paramIndex=0;paramIndex<metaParamList.length;paramIndex++){
+        //         var parameter = metaParamList[paramIndex]
+        //         parameter.value = parameter.defaultValue
+        //         var control = findControl(parameter.objectName,layoutRoot)
+        //         if(control === null)
+        //             continue;
+        //         switch(parameter.controlType)
+        //         {
+        //         case "SliderSpinner":
+        //             control.value = parseFloat(parameter.defaultValue) * 100
+        //             break;
 
-                case "CheckBox":
-                    control.checked = Math.round(parseFloat(parameter.defaultValue))
-                    break;
+        //         case "CheckBox":
+        //             control.checked = Math.round(parseFloat(parameter.defaultValue))
+        //             break;
 
-                case "ColorWheelItem":
-                    var parameter2 = metaParamList[paramIndex+1]
-                    var parameter3 = metaParamList[paramIndex+2]
-                    control.color = Qt.rgba(calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc), calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc), calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc), 1.0 )
-                    filter.set(parameter.property,calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc))
-                    filter.set(parameter2.property,calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc))
-                    filter.set(parameter3.property,calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc))
-                    paramIndex = paramIndex+2
+        //         case "ColorWheelItem":
+        //             var parameter2 = metaParamList[paramIndex+1]
+        //             var parameter3 = metaParamList[paramIndex+2]
+        //             control.color = Qt.rgba(calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc), calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc), calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc), 1.0 )
+        //             filter.set(parameter.property,calcProjValByUIVal(parseFloat(parameter.defaultValue) * 100,parameter.factorFunc))
+        //             filter.set(parameter2.property,calcProjValByUIVal(parseFloat(parameter2.defaultValue) * 100,parameter2.factorFunc))
+        //             filter.set(parameter3.property,calcProjValByUIVal(parseFloat(parameter3.defaultValue) * 100,parameter3.factorFunc))
+        //             paramIndex = paramIndex+2
                 
-                    break;
+        //             break;
                 
-                case "ColorPicker":
-                    var rgb = parameter.defaultValue.split(" ")
-                    control.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
-                    // filter.set(parameter.property,control.value)
-                    break;
+        //         case "ColorPicker":
+        //             var rgb = parameter.defaultValue.split(" ")
+        //             control.value = Qt.rgba(parseFloat(rgb[0]),parseFloat(rgb[1]),parseFloat(rgb[2]),1.0)
+        //             // filter.set(parameter.property,control.value)
+        //             break;
 
-                case "Slider":
-                    control.value = parseFloat(parameter.defaultValue)
-                    break;
+        //         case "Slider":
+        //             control.value = parseFloat(parameter.defaultValue)
+        //             break;
 
-                case "StringCtr":
-                    var index0 = findDefaultIndex(parameter.defaultValue,control.model)
-                    control.currentIndex = index0
-                    break
+        //         case "StringCtr":
+        //             var index0 = findDefaultIndex(parameter.defaultValue,control.model)
+        //             control.currentIndex = index0
+        //             break
                 
-                default :
-                    break;
-                }
+        //         default :
+        //             break;
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         refreshUI()
     }
@@ -1043,27 +1043,6 @@ RowLayout{
         return currentFrame;
     }
 
-    // 删除所有关键帧，包括首尾帧  弃用
-    function removeAllKeyFrame(){
-        var position        = timeline.getCurrentClipLength()
-        
-        filter.syncCacheToProject();
-        while(true) 
-        {  
-//            position = filter.cache_getPreKeyFrameNum(position)
-//            if(position == -1) break;
-//            
-//            filter.removeKeyFrameParaValue(position);
-
-            var frameCount = filter.cache_getKeyFrameNumber()
-            if(frameCount <= 0) break;
-            filter.removeAllKeyFrame()
-
-            filter.syncCacheToProject();
-            syncUIDataToProject()
-        }
-    }
-
     Component.onCompleted:
     {
         currentFrame = timeline.getPositionInCurrentClip()
@@ -1121,7 +1100,6 @@ RowLayout{
              target: keyFrameControl
              onRemoveAllKeyFrame: {
                 bKeyFrame = false
-                //removeAllKeyFrame()
                 filter.removeAllKeyFrame()
                 filter.syncCacheToProject();
                 syncUIDataToProject()

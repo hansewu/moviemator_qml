@@ -35,8 +35,7 @@ Item {
             duration = Math.ceil(settings.audioInDuration * profile.fps)
             filter.set('gain', 0)
             filter.set('end', 1)
-            filter.set('in', filter.producerIn)
-            filter.set('out', filter.getDouble('in') + duration - 1)
+            filter.setInAndOut(filter.producerIn, filter.getDouble('in') + duration - 1)
         }
     }
 

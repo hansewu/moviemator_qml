@@ -74,6 +74,8 @@ Item {
         visible: false
         model: comboBox.model
 
+        boundsBehavior: Flickable.StopAtBounds
+
         delegate: Rectangle{
             id: delegateItem
             width: comboButton.width
@@ -83,10 +85,12 @@ Item {
             Text {
                 renderType: Text.NativeRendering
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.horizontalCenter: parent.horizontalCenter
+//                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 3
                 font.pixelSize: 12
                 color: "white"
-                elide: Text.ElideMiddle
+//                elide: Text.ElideMiddle
                 text: typename
             }
             MouseArea {

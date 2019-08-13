@@ -36,7 +36,7 @@ Metadata {
                 objectName: '*'
                 controlType: ''
                 paraType: 'string'
-                defaultValue: qsTr('3D Text')
+                defaultValue: '3D Text'
                 value: '*'
                 factorFunc:  []
             },
@@ -97,7 +97,7 @@ Metadata {
                 objectName: '*'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.2'
+                defaultValue: '20'
                 value: '*'
                 factorFunc:  ['c:100.0']
             },
@@ -107,7 +107,7 @@ Metadata {
                 objectName: '*'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.7'
+                defaultValue: '70'
                 value: '*'
                 factorFunc:  ['c:100.0']
             },

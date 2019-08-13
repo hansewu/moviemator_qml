@@ -85,7 +85,7 @@ function createSlider(paramInfo,index){
         +       'objectName: "'+filterName+paramInfo.name+index+'";'
         +       'minimumValue: 0;'
         +       'maximumValue: 100;'
-        +       'value:0;'
+        +       'value:26;'
         +       'onValueChanged: {sliderValueChanged(objectName);}'
         +   '}'
     
