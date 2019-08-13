@@ -33,13 +33,13 @@ Item {
         if (filter.isNew) {
             filter.set('resource', filter.resourcePath + 'threejs_text.html')
             // Set default parameter values
-            textField.text = qsTr('3D Text')
+            textField.text = '3D Text'
             filter.set('text', textField.text)
             filter.set('color', '#CCCCCC')
             filter.set('x_rotation', 0.5)
             filter.set('font', 'droid sans')
             filter.set('weight', 'bold')
-            filter.set('bevel', true)
+            filter.set('bevel', 0)
             filter.set('depth', 20)
             filter.set('size', 70)
             filter.set('horizontal', 0.5)
@@ -48,8 +48,7 @@ Item {
 
             setControls();
         }
-        filter.set('in', filter.producerIn)
-        filter.set('out', filter.producerOut)
+        filter.setInAndOut(filter.producerIn, filter.producerOut)
     }
 
     function setControls() {
@@ -93,7 +92,9 @@ Item {
             text: filter.get('text')
             Layout.minimumWidth: sizeSlider.width
             Layout.maximumWidth: sizeSlider.width
-            onTextChanged: filter.set('text', text)
+            onTextChanged: {
+                filter.set('text', text)
+            }
         }
 
         Label {

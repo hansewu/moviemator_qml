@@ -387,7 +387,7 @@ Rectangle {
         enabled: !isBlank
         acceptedButtons: Qt.LeftButton
         //propagateComposedEvents: true
-        drag.target:isTransition ? NULL : parent
+        drag.target:isTransition ? null : parent
         drag.axis: Drag.XAxis
         property int startX
         onPressed: {

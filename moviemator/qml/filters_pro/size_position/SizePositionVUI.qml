@@ -252,8 +252,7 @@ Flickable {
 
             var position = timeline.getPositionInCurrentClip()
             if (!filter.enableAnimation())
-            {   
-                 filter.resetProperty(rectProperty)
+            {
                  filter.set(rectProperty, filterRect)
             }
             else if ((filter.enableAnimation() && filter.autoAddKeyFrame()) || filter.cache_bKeyFrame(position))

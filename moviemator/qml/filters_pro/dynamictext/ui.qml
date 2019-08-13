@@ -39,7 +39,7 @@ Item {
     property rect filterRect
     property var _locale: Qt.locale(application.numericLocale)
     property bool blockUpdate: false
-    property bool bEnableKeyFrame: (filter.cache_getKeyFrameNumber() > 0)
+    property bool bEnableKeyFrame: (filter ? filter.cache_getKeyFrameNumber() > 0 : false)
     property bool bAutoSetAsKeyFrame: false
     property bool bTemporaryKeyFrame: false
     property int  m_lastFrameNum: -1
@@ -48,7 +48,7 @@ Item {
     property bool  m_refreshedUI:false
 
     width: 550
-    height: 1150
+    height: 1500  //1150
 
     function getColorStr(colorValue)
     {
@@ -193,6 +193,7 @@ Item {
         if(property == 'trans_ox')                  return  0.0
         if(property == 'trans_oy')                  return  0.0
         if(property == 'transparent_alpha')         return  1.0
+        if(property == 'size')                      return  filterRect.height
 
         return 0
     }
@@ -262,7 +263,7 @@ Item {
                 var valueStr = filter.getAnimDoubleValue(nFrame, property)
                 filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
             }
-            else 
+            else if(paraType === "int")
             {
                 var valueStr = filter.getAnimIntValue(nFrame, property)
                 filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
@@ -292,7 +293,6 @@ Item {
                     filter.cache_setKeyFrameParaValue(nFrame, property, value.toString());
                 }
             } 
-            
         }
         combineAllKeyFramePara();
     }
@@ -325,7 +325,7 @@ Item {
                 filter.cache_setKeyFrameParaValue(positionEnd, property, valueStr.toString());
                 console.log("paraType = ", paraType, " property = ", property, " valueStr = ", valueStr )
             }
-            else 
+            else if (paraType === "int") 
             {
                 var valueStr = filter.getInt(property)
               //  m_parameterValue[property] = valueStr
@@ -387,7 +387,7 @@ Item {
                     var valueStr = filter.getAnimDoubleValue(nFrame, property)
                     filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
                 }
-                else 
+                else if (paraType === "int")
                 {
                     var valueStr = filter.getAnimIntValue(nFrame, property)
                     filter.cache_setKeyFrameParaValue(nFrame, property, valueStr.toString());
@@ -416,7 +416,7 @@ Item {
                     var rectValue = filter.cache_getKeyFrameParaRectValue(nFrame, property)
                     filter.cache_setKeyFrameParaRectValue(nFrame, property, rectValue, 1.0)
                 }
-                else 
+                else if (paraType === "double") 
                 {
                     //filter.resetProperty(property)
                     var valueStr = filter.cache_getKeyFrameParaDoubleValue(nFrame, property);//没有getKeyFrameParaIntValue
@@ -558,7 +558,6 @@ Item {
 
         if (bEnableKeyFrame &&  isKeyFramePropterty(currentProperty) === true) 
         {
-
             var nFrame = timeline.getPositionInCurrentClip()
             if (bAutoSetAsKeyFrame) 
             {
@@ -709,6 +708,13 @@ Item {
         idShearX.value          = filter.getDouble('shear_x')
         idShadowDistance.value  = filter.getDouble('shadow_distance')
         idShadowAngle.value     = filter.getDouble('shadow_angle')
+        idShadowRadius.value    = filter.getDouble('shadow_radius')
+        idShadowColor.value     = getHexStrColor(-1, 'shadow_color')
+
+        idGlowEnable.checked      = (filter.get('glow_enable') != 0)
+        
+        idGlowColor.value       = getHexStrColor(-1, 'glow_color')
+        idGlowRadius.value    = filter.getDouble('glow_radius')
 
         rotationSlider.value            = filter.getDouble('trans_fix_rotate_x')
         scaleSlider.value               =  100.0/filter.getDouble('trans_scale_x')
@@ -788,31 +794,9 @@ Item {
             filterRect.height = h
 
             updateFilter(rectProperty, getRelativeRect(filterRect))
-//            var nFrame = keyFrame.getCurrentFrame();
-//            if (filter.cache_getKeyFrameNumber() > 0) {
-//                setKeyFrameParaValue(nFrame, rectProperty, getRelativeRect(filterRect))
-//            } else {
-//                filter.set(rectProperty, getRelativeRect(filterRect))
-//            }
+
         }
 
-//        if (blockUpdate === true) {
-//            return
-//        }
-//        if (bEnableKeyFrame) {
-//            var nFrame = keyFrame.getCurrentFrame()
-//            if (bAutoSetAsKeyFrame) {
-//                setKeyFrameParaValue(nFrame, currentProperty, value)
-//            } else {
-//                if (filter.cache_bKeyFrame(nFrame)) {
-//                    setKeyFrameParaValue(nFrame, currentProperty, value)
-//                } else {
-//                    filter.set(currentProperty, value)
-//                }
-//            }
-//        } else {
-//            filter.set(currentProperty, value)
-//        }
     }
 
     ExclusiveGroup { id: sizeGroup }
@@ -820,11 +804,23 @@ Item {
     ExclusiveGroup { id: valignGroup }
 
     GridLayout {
+        id: idGridLayoutPreset
+        width:parent.width 
         columns: 5
-        anchors.fill: parent
+        rows:2
+       // anchors.fill: parent
+        Layout.fillWidth: true 
         anchors.margins: 8
         rowSpacing : 25
 
+        KeyFrame{
+            id: keyFrame
+            Layout.columnSpan:5
+            onRefreshUI:{
+                setControls() 
+                setKeyframedControls()
+            }
+        }
 
         Label {
             text: qsTr('Preset')
@@ -863,10 +859,12 @@ Item {
             text: qsTr('Text')
             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
             color: '#ffffff'
+            font.bold:true
+	    font.pointSize:10
         }
         TextArea {
             id: textArea
-            Layout.columnSpan: 4
+            Layout.columnSpan: 3
             textFormat: TextEdit.PlainText
             // 消除 warning：
             // ScrollView.qml: QML : Possible anchor loop detected on fill.
@@ -888,41 +886,15 @@ Item {
                 filter.set('argument', text)
             }
         }
-
-//        Label {
-//            text: qsTr('Insert field')
-//            Layout.alignment: Qt.AlignLeft
-//            color: '#ffffff'
-//        }
-//        ComboBox {
-//            id: insertFieldCombo
-//            Layout.columnSpan: 4
-//            Layout.minimumHeight: 32
-//            Layout.maximumHeight: 32
-//            Layout.minimumWidth: preset.width
-//            Layout.maximumWidth: preset.width
-//            model: [qsTr('default'), qsTr('Timecode'), qsTr('Frame #', 'Frame number'), qsTr('File date'), qsTr('File name')]
-//            property var values: ['welcome!', '#timecode#', '#frame#', '#localfiledate#', '#resource#']
-//            function valueToIndex() {
-//                var textStr = filter.get('argument')
-//                for (var i = 0; i < values.length; ++i)
-//                    if (values[i] === textStr) break;
-//                if (i === values.length) i = 0;
-//                return i;
-//            }
-//            onActivated: {
-//                textArea.insert(textArea.cursorPosition, values[index])
-//            }
-//        }
-
+/*
         Label {
             text: qsTr('Insert field')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
-        }
+        }*/
         MyComboBox {
             id: insertFieldCombo
-            Layout.columnSpan: 4
+            Layout.columnSpan: 1
             width: 100
             height: 32
             Layout.minimumHeight: 32
@@ -949,14 +921,101 @@ Item {
             }
         }
 
+        Label {
+            text: qsTr('Style')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+            font.bold:true
+            font.pointSize:10
+            //font.underline:true
+
+        }
+        Preset {
+            id: preset
+            Layout.columnSpan: 4
+            parameters: [rectProperty, 'shear_x', halignProperty, valignProperty, 'size', //'argument', 
+            fgcolourProperty, 'family', 'weight', olcolourProperty, outlineProperty, bgcolourProperty, padProperty, letterSpaceingProperty,
+            'shadow_distance', 'shadow_angle', 'shadow_radius', 'shadow_color', 'glow_enable', 'glow_radius', 'glow_color']
+          
+            m_strType: "tst"
+            onBeforePresetLoaded: 
+            {
+                //removeAllKeyFrame()
+              
+                //resetFilterPara()
+            }
+            onPresetSelected: {
+                //加載關鍵幀
+                loadSavedKeyFrameNew()
+
+                //更新界面
+                setControls()
+                setKeyframedControls()
+
+                if (filter.isNew) {
+                    filter.set('size', filterRect.height)
+                } 
+            }
+        }
+
+
+
+        Button {
+            id: detailButton1
+            text: qsTr('Style >')
+            tooltip: qsTr('detail')
+            Layout.columnSpan: 1
+            Layout.alignment: Qt.AlignLeft
+            onClicked: 
+            {
+	    	    if(idGridLayoutText.visible == false)
+		        {
+
+			        idGridLayoutText.anchors.topMargin = 20
+                    idGridLayoutText.visible = true
+		            idGridLayoutAnimationProfile.anchors.top = idGridLayoutPreset.bottom //idGridLayoutPreset.bottom// idSeparatorTextStyleEnd.bottom //
+                    //采用idSeparatorTextStyleEnd.bottom 没有作用，不知道什么原因，可能是初始隐藏了
+                    idGridLayoutAnimationProfile.anchors.topMargin = 680
+                    detailButton1.text = 'Style ^'
+
+		        }
+		        else
+		        {
+                    idGridLayoutText.visible = false
+			        idGridLayoutText.anchors.topMargin = 1000
+				    idGridLayoutAnimationProfile.anchors.top = idGridLayoutPreset.bottom
+                    idGridLayoutAnimationProfile.anchors.topMargin = 70
+                    detailButton1.text = 'Style >'
+		        }
+            }
+
+        }
         SeparatorLine {
-            Layout.columnSpan: 5
+            Layout.columnSpan: 4
             Layout.minimumWidth: parent.width
             Layout.maximumWidth: parent.width
             width: parent.width
         }
+    }
 
-        Label {
+
+    GridLayout {
+        id: idGridLayoutText
+        width:parent.width - 24
+
+        visible:false
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutPreset.bottom
+	    anchors.topMargin: 1000
+        
+        anchors.margins: 12
+        anchors.left : parent.left
+        anchors.leftMargin: 12 
+        rowSpacing : 25
+
+        Label 
+        {
             text: qsTr('Font')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
@@ -1004,25 +1063,7 @@ Item {
                     }
                 }
             }
-//            ComboBox {
-//                id: weightCombo
-//                Layout.minimumHeight: 32
-//                Layout.maximumHeight: 32
-//                Layout.minimumWidth: (preset.width - 8) / 2
-//                Layout.maximumWidth: (preset.width - 8) / 2
-//                model: [qsTr('Normal'), qsTr('Bold'), qsTr('Light', 'thin font stroke')]
-//                property var values: [Font.Normal, Font.Bold, Font.Light]
-//                function valueToIndex() {
-//                    var w = filter.getDouble('weight')
-//                    for (var i = 0; i < values.length; ++i)
-//                        if (values[i] === w) break;
-//                    if (i === values.length) i = 0;
-//                    return i;
-//                }
-//                onActivated: {
-//                    filter.set('weight', 10 * values[index])
-//                }
-//           }
+
             MyComboBox {
                 id: weightCombo
                 Layout.minimumHeight: 32
@@ -1073,56 +1114,6 @@ Item {
             onClicked: idShearX.value = 0  
         }
         
-
-        Label 
-        {
-            text: qsTr('Shadow')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        Label 
-        {
-            text: qsTr('Distance')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        SpinBox 
-        {
-            id: idShadowDistance
-            Layout.minimumWidth: preset.width/4
-            Layout.maximumWidth: preset.width/4
-            Layout.columnSpan: 1
-            minimumValue: 0
-            maximumValue: 30
-            horizontalAlignment:Qt.AlignLeft
-            decimals: 0
-            onValueChanged: 
-            {
-                updateFilter('shadow_distance', value.toString())
-           }
-        }
-
-        Label 
-        {
-            text: qsTr('Angle')
-            Layout.alignment: Qt.AlignLeft
-            color: '#ffffff'
-        }
-        SpinBox 
-        {
-            id: idShadowAngle
-            Layout.minimumWidth: preset.width/4
-            Layout.maximumWidth: preset.width/4
-            Layout.columnSpan: 1
-            minimumValue: 0
-            maximumValue: 360
-            horizontalAlignment:Qt.AlignLeft
-            decimals: 0
-            onValueChanged: 
-            {
-                updateFilter('shadow_angle', value.toString())
-           }
-        }
 
 
         Label {
@@ -1181,15 +1172,7 @@ Item {
             decimals: 0
             onValueChanged: {
                 updateFilter(outlineProperty, value.toString())
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, outlineProperty, value.toString())
-//                } else {
-//                    filter.set(outlineProperty, value)
-//                }
+
             }
         }
 
@@ -1211,15 +1194,7 @@ Item {
             onValueChanged: {
                 updateFilter(bgcolourProperty, getRectColor(value))
                 bTemporaryKeyFrame = false
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, bgcolourProperty, getRectColor(value))
-//                } else {
-//                   filter.set(bgcolourProperty, getRectColor(value))
-//                }
+
             }
         }
         Label {
@@ -1238,16 +1213,177 @@ Item {
             decimals: 0
             onValueChanged: {
                 updateFilter(padProperty, value.toString())
-//                if (blockUpdate === true) {
-//                    return
-//                }
-//                var nFrame = keyFrame.getCurrentFrame();
-//                if (filter.cache_getKeyFrameNumber() > 0) {
-//                    setKeyFrameParaValue(nFrame, padProperty, value.toString())
-//                } else {
-//                    filter.set(padProperty, value)
-//                }
+
             }
+        }
+
+        Label 
+        {
+            text: qsTr('Shadow')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Label 
+        {
+            text: qsTr('Distance')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowDistance
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 30
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_distance', value.toString())
+           }
+        }
+
+        Label 
+        {
+            text: qsTr('Angle')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowAngle
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 360
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_angle', value.toString())
+           }
+        }
+
+        Label 
+        {
+            text: qsTr('')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        Label 
+        {
+            text: qsTr('Color')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+
+        ColorPicker 
+        {
+                id: idShadowColor
+                Layout.columnSpan: 1
+                eyedropper: false
+                alpha: true
+                onCancel: {
+                    removeTemporaryKeyFrame()
+                }
+                onTemporaryColorChanged: {
+                //    updateTemporaryKeyFrame(fgcolourProperty, getRectColor(temporaryColor))
+                }
+                onValueChanged:
+                {
+                    updateFilter("shadow_color", getRectColor(value))
+                    bTemporaryKeyFrame = false
+                }
+        }
+
+        Label 
+        {
+            text: qsTr('Blur')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idShadowRadius
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 130
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('shadow_radius', value.toString())
+           }
+        }
+
+        
+
+        Label 
+        {
+            text: qsTr('Glow')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        CheckBox {
+            id: idGlowEnable
+            Layout.columnSpan: 1
+            checked: filter.get('glow_enable') != 0
+          
+            onCheckedChanged:
+            {
+                if(idGlowEnable.checked)
+                    filter.set('glow_enable', '1')
+                else
+                    filter.set('glow_enable', '0')
+
+            }
+        
+        }
+
+        ColorPicker 
+        {
+                id: idGlowColor
+                Layout.columnSpan: 1
+                eyedropper: false
+                alpha: true
+                onCancel: {
+                    removeTemporaryKeyFrame()
+                }
+                onTemporaryColorChanged: {
+                //    updateTemporaryKeyFrame(fgcolourProperty, getRectColor(temporaryColor))
+                }
+                onValueChanged:
+                {
+                    updateFilter("glow_color", getRectColor(value))
+                    bTemporaryKeyFrame = false
+                }
+        }
+
+         Label 
+        {
+            text: qsTr('Range')
+            Layout.alignment: Qt.AlignLeft
+            color: '#ffffff'
+        }
+        SpinBox 
+        {
+            id: idGlowRadius
+            Layout.minimumWidth: preset.width/4
+            Layout.maximumWidth: preset.width/4
+            Layout.columnSpan: 1
+            minimumValue: 0
+            maximumValue: 130
+            horizontalAlignment:Qt.AlignLeft
+            decimals: 0
+            onValueChanged: 
+            {
+                updateFilter('glow_radius', value.toString())
+           }
         }
 
         SeparatorLine {
@@ -1384,19 +1520,35 @@ Item {
         }
 
         SeparatorLine {
+            id: idSeparatorTextStyleEnd
             Layout.columnSpan: 5
             Layout.minimumWidth: parent.width
             Layout.maximumWidth: parent.width
             width: parent.width
         }
+    }
 
+    GridLayout {
+        id: idGridLayoutAnimationProfile
+        width:parent.width 
+
+        visible:true
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutPreset.bottom
+	    anchors.topMargin: 70
+        anchors.margins: 8
+        rowSpacing : 25
 
         Label {
-            text: qsTr('Position Animation')
+            text: qsTr('Animation')
             Layout.alignment: Qt.AlignLeft
             color: '#ffffff'
+            font.bold:true
+	    font.pointSize:10
         }
-        Preset {
+        Preset 
+        {
             id: presetPositionAnimation
             Layout.columnSpan: 4
             parameters: [  'trans_fix_rotate_x', 'trans_scale_x', 'trans_scale_aspect_ratio', 'trans_ox', 'trans_oy', 'transparent_alpha']
@@ -1420,7 +1572,55 @@ Item {
                 presetPositionAnimation.presetCombo.currentIndex = 0 
             } 
         } 
- 
+
+        Button {
+            id: detailButtonAnimation
+            text: qsTr('Animation >')
+            
+            tooltip: qsTr('detail')
+            Layout.columnSpan: 1
+            Layout.alignment: Qt.AlignLeft
+            onClicked: 
+            {
+	    	    if(idGridLayoutAnimation.visible == false)
+		        {
+                
+			        idGridLayoutAnimation.anchors.topMargin = 20
+                    idGridLayoutAnimation.visible = true
+                    detailButtonAnimation.text = 'Animation ^'
+		        }
+		        else
+		        {
+		
+                    idGridLayoutAnimation.visible = false
+			        idGridLayoutAnimation.anchors.topMargin = 1000
+                    detailButtonAnimation.text = 'Animation >'
+		        }
+            }
+
+        }
+        SeparatorLine {
+            Layout.columnSpan: 4
+            Layout.minimumWidth: parent.width
+            Layout.maximumWidth: parent.width
+            width: parent.width
+        }
+    }
+
+    GridLayout {
+        id: idGridLayoutAnimation
+        width:parent.width -24
+
+        visible:false
+        Layout.fillWidth: true
+        columns: 5
+        anchors.top:idGridLayoutAnimationProfile.bottom
+	    anchors.topMargin: 20
+        anchors.margins: 12
+        anchors.left : parent.left
+        anchors.leftMargin: 12 
+        rowSpacing : 25
+
         Label {
             Layout.columnSpan: 1
             Layout.alignment: Qt.AlignLeft
@@ -1585,6 +1785,7 @@ Item {
 
     }
 
+
     Connections 
     {
         target: filter
@@ -1639,7 +1840,9 @@ Item {
         {
             console.log("---onAutoAddKeyFrameChanged---", bEnable)
             bAutoSetAsKeyFrame = bEnable
-            filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            if (filter) {
+                filter.setAutoAddKeyFrame(bAutoSetAsKeyFrame)
+            }
         }
     }
 
@@ -1683,16 +1886,6 @@ Item {
         }
     }
 
- //           if (bEnableKeyFrame) {
- //               var nFrame = keyFrameNum
- //               console.log("sll------3333333333333333333333333333333333----nFrame---", nFrame)
-  //              if (bAutoSetAsKeyFrame === false) {
-  //                  if (filter.bKeyFrame(nFrame)) {
-  //                      console.log("sll------4444444444444444444444444444-------")
-  //                      loadSavedKeyFrame()  //此处作用，需要再考虑
-  //                  }
-  //              }
-  //          }
     // 移除关键帧信号
     Connections {
         target: keyFrameControl
@@ -1719,3 +1912,134 @@ Item {
     }
 }
 
+/*
+    Item 
+    {
+    width: 200
+    height: 300
+
+    ListView {
+        anchors.top: transparentAlphaSlider.bottom
+       anchors.topMargin: 50
+        //anchors.fill: parent
+        model: nestedModel
+        delegate: categoryDelegate
+    }
+
+    ListModel {
+        id: nestedModel
+        ListElement {
+            categoryName: "Veggies"
+            collapsed: true
+
+            // A ListElement can't contain child elements, but it can contain
+            // a list of elements. A list of ListElements can be used as a model
+            // just like any other model type.
+            subItems: [
+                ListElement { itemName: "Tomato" },
+                ListElement { itemName: "Cucumber" },
+                ListElement { itemName: "Onion" },
+                ListElement { itemName: "Brains" }
+            ]
+        }
+
+        ListElement {
+            categoryName: "Fruits"
+            collapsed: true
+            subItems: [
+                ListElement { itemName: "Orange" },
+                ListElement { itemName: "Apple" },
+                ListElement { itemName: "Pear" },
+                ListElement { itemName: "Lemon" }
+            ]
+        }
+
+        ListElement {
+            categoryName: "Cars"
+            collapsed: true
+            subItems: [
+                ListElement { itemName: "Nissan" },
+                ListElement { itemName: "Toyota" },
+                ListElement { itemName: "Chevy" },
+                ListElement { itemName: "Audi" }
+            ]
+        }
+    }
+
+    Component {
+        id: categoryDelegate
+        Column {
+            width: 200
+
+            Rectangle {
+                id: categoryItem
+                border.color: "black"
+                border.width: 5
+                color: "white"
+                height: 50
+                width: 200
+
+                Text {
+                    anchors.verticalCenter: parent.verticalCenter
+                    x: 15
+                    font.pixelSize: 24
+                    text: categoryName
+                }
+
+                Rectangle {
+                    color: "red"
+                    width: 30
+                    height: 30
+                    anchors.right: parent.right
+                    anchors.rightMargin: 15
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    MouseArea {
+                        anchors.fill: parent
+
+                        // Toggle the 'collapsed' property
+                        onClicked: nestedModel.setProperty(index, "collapsed", !collapsed)
+                    }
+                }
+            }
+
+            Loader {
+                id: subItemLoader
+
+                // This is a workaround for a bug/feature in the Loader element. If sourceComponent is set to null
+                // the Loader element retains the same height it had when sourceComponent was set. Setting visible
+                // to false makes the parent Column treat it as if it's height was 0.
+                visible: !collapsed
+                property variant subItemModel : subItems
+                sourceComponent: collapsed ? null : subItemColumnDelegate
+                onStatusChanged: if (status == Loader.Ready) item.model = subItemModel
+            }
+        }
+
+    }
+
+    Component {
+        id: subItemColumnDelegate
+        Column {
+            property alias model : subItemRepeater.model
+            width: 200
+            Repeater {
+                id: subItemRepeater
+                delegate: Rectangle {
+                    color: "#cccccc"
+                    height: 40
+                    width: 200
+                    border.color: "black"
+                    border.width: 2
+
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        x: 30
+                        font.pixelSize: 18
+                        text: itemName
+                    }
+                }
+            }
+        }
+    }
+    } */

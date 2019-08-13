@@ -11,6 +11,7 @@ import com.moviemator.qml 1.0
 Metadata {
     type: Metadata.Filter
     name: qsTr("Wave")
+    objectName: "wave"
     mlt_service: "wave"
     qml: "ui.qml"
     isFavorite: false
@@ -27,7 +28,7 @@ Metadata {
                 objectName: 'waveSlider'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
-                defaultValue: '0.10'
+                defaultValue: '1.0'
                 value: '0'
                 factorFunc:  []
             },

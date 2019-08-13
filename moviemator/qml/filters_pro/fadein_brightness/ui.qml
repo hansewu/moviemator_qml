@@ -29,14 +29,14 @@ Item {
     height: 250
     objectName: 'fadeIn'
     property alias duration: timeSpinner.value
+    property bool blockUpdate: true
 
     Component.onCompleted: {
         if (filter.isNew) {
-            duration = Math.ceil(settings.videoInDuration * profile.fps)
-            filter.set('level', '0=0; %1=1'.arg(duration - 1))
+            var fadeDuration = Math.ceil(settings.videoInDuration * profile.fps)
+            filter.set('level', '0=0; %1=1'.arg(fadeDuration - 1))
             filter.set('alpha', 1)
-            filter.set('in', filter.producerIn)
-            filter.set('out', filter.getDouble('in') + duration - 1)
+            filter.setInAndOut(filter.producerIn, filter.getDouble('in') + fadeDuration - 1)
         }
         alphaCheckbox.checked = filter.get('alpha') !== 1
     }
@@ -56,6 +56,10 @@ Item {
                 maximumValue: 5000
                 value: filter.getDouble('out') - filter.getDouble('in') + 1
                 onValueChanged: {
+                    if(blockUpdate){
+                        blockUpdate = false
+                        return
+                    }
                     var out = filter.getDouble('in') + value - 1
                     filter.set('out', filter.getDouble('in') + value - 1)
                     if (filter.get('alpha') != 1)
