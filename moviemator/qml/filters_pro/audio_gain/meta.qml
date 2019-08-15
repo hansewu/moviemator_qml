@@ -33,4 +33,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioGainVolume'
 }

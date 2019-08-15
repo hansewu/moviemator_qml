@@ -12,7 +12,7 @@ Metadata {
     type: Metadata.Filter
     objectName: 'webvfxRuttEtraIzer'
     name: qsTr("Rutt-Etra-Izer (HTML)")
-    mlt_service: "webvfx"
+    mlt_service: "webvfx_ruttetraizer"
     qml: "ui.qml"
     filterType: qsTr('9 Effect')
     keyframes {

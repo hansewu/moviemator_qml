@@ -71,4 +71,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioNormalizeOnePass'
 }

@@ -11,10 +11,11 @@ import com.moviemator.qml 1.0
 Metadata {
     type: Metadata.Filter
     name: qsTr("Overlay HTML")
-    mlt_service: "webvfx"
+    mlt_service: "webvfx_overlay"
     qml: "ui.qml"
     isFavorite: true
     filterType: qsTr('9 Effect')
+    objectName: 'overlayHTML'
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

@@ -67,4 +67,5 @@ Metadata {
             // }
         ]
     }
+    objectName: 'stabilize'
 }

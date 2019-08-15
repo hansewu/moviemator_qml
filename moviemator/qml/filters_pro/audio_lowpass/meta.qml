@@ -51,4 +51,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioLowPass'
 }

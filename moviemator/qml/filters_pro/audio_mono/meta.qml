@@ -13,4 +13,5 @@ Metadata {
     isAudio: true
     name: qsTr("Downmix")
     mlt_service: "mono"
+    objectName: 'audioDownmix'
 }

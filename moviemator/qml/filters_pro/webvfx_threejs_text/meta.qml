@@ -12,7 +12,7 @@ Metadata {
     type: Metadata.Filter
     objectName: 'webvfxThreejsText'
     name: qsTr("Text3D(Eng.)")
-    mlt_service: "webvfx"
+    mlt_service: "webvfx_threejs_text"
     qml: "ui.qml"
     filterType: qsTr("2 Text")
     keyframes {
@@ -99,7 +99,7 @@ Metadata {
                 paraType: 'double'
                 defaultValue: '20'
                 value: '*'
-                factorFunc:  ['c:100.0']
+                factorFunc:  ['c:2.0']
             },
             Parameter {
                 name: qsTr('size')
@@ -109,7 +109,7 @@ Metadata {
                 paraType: 'double'
                 defaultValue: '70'
                 value: '*'
-                factorFunc:  ['c:100.0']
+                factorFunc:  []
             },
             Parameter {
                 name: qsTr('horizontal')
