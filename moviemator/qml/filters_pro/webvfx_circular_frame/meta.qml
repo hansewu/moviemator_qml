@@ -12,7 +12,7 @@ Metadata {
     type: Metadata.Filter
     objectName: 'webvfxCircularFrame'
     name: qsTr("Circular Frame (HTML)")
-    mlt_service: "webvfx_circular_frame"
+    mlt_service: "webvfx"
     qml: "ui.qml"
     filterType: qsTr('6 Light')
     keyframes {

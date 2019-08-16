@@ -12,7 +12,7 @@ Metadata {
     type: Metadata.Filter
     objectName: 'webvfxThreejsText'
     name: qsTr("Text3D(Eng.)")
-    mlt_service: "webvfx_threejs_text"
+    mlt_service: "webvfx"
     qml: "ui.qml"
     filterType: qsTr("2 Text")
     keyframes {
