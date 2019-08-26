@@ -94,4 +94,5 @@ Metadata {
             }
         ]
     }
+    objectName: 'reduceNoise'
 }

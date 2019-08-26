@@ -61,4 +61,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioBassAndTreble'
 }

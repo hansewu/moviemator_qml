@@ -63,4 +63,5 @@ Metadata {
             }
         ]
     }
+    objectName: 'vignette'
 }

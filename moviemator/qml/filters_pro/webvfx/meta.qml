@@ -15,6 +15,7 @@ Metadata {
     qml: "ui.qml"
     isFavorite: true
     filterType: qsTr('9 Effect')
+    objectName: 'overlayHTML'
     keyframes {
         allowAnimateIn: true
         allowAnimateOut: true

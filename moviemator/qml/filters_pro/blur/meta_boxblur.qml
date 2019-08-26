@@ -43,4 +43,5 @@ Metadata {
             }
         ]
     }
+    objectName: 'boxblur'
 }

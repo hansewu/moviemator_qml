@@ -77,7 +77,7 @@ Rectangle {
                 name : AudioFiltersInfo.get(i).name,
                 filterType : AudioFiltersInfo.get(i).AudioFilterType,
                 imageSourcePath : AudioFiltersInfo.get(i).imageSourcePath,
-                perviewSettingFilePath:filtersInfo.get(i).perviewSettingFilePath
+                perviewSettingFilePath:AudioFiltersInfo.get(i).perviewSettingFilePath
             }
             filtersInfoList.append(filterInfo)
         }

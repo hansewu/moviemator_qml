@@ -35,4 +35,5 @@ Metadata {
             ]
         }
 
+    objectName: 'brightness'
 }

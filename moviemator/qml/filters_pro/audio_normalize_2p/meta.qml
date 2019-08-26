@@ -32,4 +32,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioNormalizeTwoPass'
 }

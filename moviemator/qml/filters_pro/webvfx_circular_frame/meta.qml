@@ -33,7 +33,7 @@ Metadata {
             Parameter {
                 name: qsTr('Radius')
                 property: 'radius'
-                objectName: 'slider'
+                objectName: '*'
                 controlType: 'SliderSpinner'
                 paraType: 'double'
                 defaultValue: '0.5'

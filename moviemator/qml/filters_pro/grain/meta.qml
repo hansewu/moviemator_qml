@@ -42,4 +42,5 @@ Metadata {
             }
         ]
     }
+    objectName: 'oldFilmGrain'
 }

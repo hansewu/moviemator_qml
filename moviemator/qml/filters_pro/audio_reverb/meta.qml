@@ -91,4 +91,5 @@ Metadata {
            }
        ]
    }
+    objectName: 'audioReverb'
 }

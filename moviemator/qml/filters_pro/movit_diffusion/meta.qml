@@ -15,4 +15,5 @@ Metadata {
     needsGPU: true
     qml: "ui.qml"
     filterType: qsTr('9 Effect')
+    objectName: 'diffusion'
 }
