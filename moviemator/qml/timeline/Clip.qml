@@ -469,6 +469,66 @@ Rectangle {
         }
     }
 
+    // 时间线可接收拖放内容的区域
+    DropArea {
+        id: dropArea
+        anchors.fill: parent
+        property int filterIndex: 0
+        keys: isBlank ? [""] : ["filter/filterindex"]
+        onDropped: {
+            //当clip未选中时，先选中。因为添加滤镜的操作，是添加到选中的clip上的
+            if (!selected)
+            {
+                //选中鼠标放下的位置的clip
+                if (!isBlank)
+                {
+                    clipRoot.forceActiveFocus();
+                    clipRoot.clicked(clipRoot)
+                }
+
+                console.assert(mainwindow);
+                if (mainwindow)
+                {
+                    mainwindow.setMultitrackAsCurrentProducer()
+                }
+
+            }
+
+            //添加滤镜到当前选中的clip上
+            filterIndex = parseInt(drop.getDataAsString("filter/filterindex"))
+            console.assert(metadatamodel);
+            if (metadatamodel)
+            {
+                var model   = metadatamodel.get(filterIndex)
+                if (model.isAudio)
+                {
+                    mainwindow.onShowPropertiesAudioFilterDock()
+                }
+                else
+                {
+                    mainwindow.onShowPropertiesVideoFilterDock()
+                }
+                attachedfiltersmodel.add(model)
+
+                // 表示目标区域接受拖拽事件
+                // Mac下拖放失败也就是目标区域禁止拖放会有个回弹动画
+                drop.acceptProposedAction()
+            }
+
+            //当光标不在当先选中的clip上时，则跳转到当先选中的clip上，用于更好的看到添加滤镜后的变化
+            console.assert(timeline);
+            if (timeline)
+            {
+                var clipPosition = clipRoot.x / multitrack.scaleFactor
+                if (timeline.position < clipPosition ||
+                        timeline.position > clipPosition + clipDuration)
+                {
+                    timeline.position = clipRoot.x / multitrack.scaleFactor
+                }
+            }
+        }
+    }
+
     // 使用的地方都已经被注释了
     TimelineTriangle {
         id: fadeInTriangle

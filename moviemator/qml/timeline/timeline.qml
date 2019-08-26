@@ -169,6 +169,7 @@ Rectangle {
         property bool hasUrls
         property bool hasAbstractItem
         property string teststring: 'dropArea'
+        keys: ["application/mlt+xml", "application/x-qabstractitemmodeldatalist", "text/uri-list"]//只接收整个三个源来的拖拽
         anchors.fill: parent
         // 取消拖放
         function endDrop()
